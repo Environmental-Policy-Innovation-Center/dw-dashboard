@@ -16,7 +16,6 @@ library(googledrive)
 PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
   mutate(across('Project Type', str_replace, 'Other', 'General'))
 
-
 ## SABs Data ### 
 Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
 
@@ -45,6 +44,45 @@ PPL_State_Data_Geo <- PPL_Data %>%
   left_join(.,Sabs_cleaned)%>%
   left_join(.,AdditionalData, by = c("State"= "State"))%>%
   mutate(FundPer100k = (`Funding Amount`/ Population))
+
+## Pushing to AWS For Application ##
+
+
+### To put in an AWS bucket, you need these credentials
+## Contact gabe@policyinnovation.org for questions/access
+## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
+
+# Sys.setenv("AWS_ACCESS_KEY_ID" = "YOUR ACCESS KEY",
+#            "AWS_SECRET_ACCESS_KEY" = "YOUR SECRET KEY",
+#            "AWS_DEFAULT_REGION" = "us-east-1")
+
+# Writing to temp 
+
+write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data.csv"), row.names = FALSE)
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dw-dashboard-data.csv"),
+  object = "apps/dw-dashboard/dw-dashboard-data.csv",
+  bucket = "water-team-data"
+)
+
+
+### PPL Parsing ###
+## TO DO ## 
+## Pull in data dictionaries from Google Drive 
+## Link:..
+## Split into 50 pdfs
+## Run through loop of all states and put in AWS Folder 
+## Aws folder: s3://water-team-data/apps/dw-dashboard/state-data-dict/
+
+# GET FROM DRIVE
+# SPLIT INTO 50 
+# For Each State 
+# Post to AWS folder-root-name/state-name-data-dict.pdf 
+
+
+
 
 
 

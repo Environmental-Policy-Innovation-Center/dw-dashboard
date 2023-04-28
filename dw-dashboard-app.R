@@ -84,54 +84,31 @@ server <- function(input, output,session) {
     new(theme = "overlay-percent")$
     start() # start
   
-
-    waitress$inc(20) # increase by 10
   
-  ## DATA PREPREATION ##  
-  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
-    mutate(across('Project Type', str_replace, 'Other', 'General'))
+  waitress$inc(20) # increase by 10
+  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
+  
   
   waitress$inc(20) # increase by 10
   
-  ## SABS DATA 
-  Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
-  Sabs_cleaned <- Sabs_raw %>%
-    mutate(Population = pop_tier1 + pop_tier2 + pop_tier3)%>%
-    mutate(Systems = num_sys_tier1 + num_sys_tier2 + num_sys_tier3)%>%
-    rename(NAME = State_Name)%>%
-    select(NAME,Population,Systems)
   
-  waitress$inc(20) # increase by 10
-  
+  ## Importing Geo Daeta 
   Geo_Data <- geojson_sf("www/states_ak_hi_v3.geojson")
+  waitress$inc(20) # increase by 10
   
+  ## Importing Google sheets data (Tool tips)
   gs4_deauth()
   URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
   Text <- read_sheet(URL, sheet = "Text")
-  
   waitress$inc(20) # increase by 10
   ToolTip <- read_sheet(URL, sheet = "Tooltip")
-  AdditionalData <- read.csv("www/AdditionalData-v4.csv", stringsAsFactors = FALSE)%>%
-    rename(`Emerging Contaminants` = "Emerging.Contaminants")
-  
-
-  # hide when it's done
   waitress$inc(20) # increase by 10
 
   ## Summarizing by state
   ## Adding color based on number of projects - This is subject to change/flexible ## 
   ## Adding Sabs Data 
-  PPL_State_Data_Geo <- PPL_Data %>%
-    mutate(Count = 1)%>%
+  PPL_State_Data_Geo <- DW_Data_Raw %>%
     left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
-    mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
-    mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
-    select(NAME, `Funding Amount`,`Principal Forgiveness`,DAC,Count)%>%
-    group_by(NAME)%>%
-    summarize_if(is.numeric,sum)%>%
-    left_join(.,Sabs_cleaned)%>%
-    left_join(.,AdditionalData, by = c("NAME"= "State"))%>%
-    mutate(FundPer100k = (`Funding Amount`/ Population))%>%
     mutate(Color = ifelse(FundPer100k > 0,"#BDD7E7", Color))%>%
     mutate(Color = ifelse(FundPer100k > 25 ,"#6BAED6", Color))%>%
     mutate(Color = ifelse(FundPer100k > 50,"#3182BD", Color))%>%

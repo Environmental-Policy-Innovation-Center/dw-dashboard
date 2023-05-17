@@ -28,6 +28,9 @@ library(shinyWidgets)
 library(waiter)
 library(tippy)
 library(shinycssloaders)
+library(zip)
+library(googledrive)
+library(pdftools)
 ## Major Components
 ## Data prep 
 ## Map 
@@ -47,34 +50,38 @@ ui <- fluidPage(
   sidebarLayout(
     div( id ="sidebar",
          sidebarPanel(
-           style = "position: fixed; height: 100%; overflow-y: auto; margin-left: -30px; width: 400px; overflow-x: auto;", div(style = "display:inline-block; float:right; margin-bottom: 20px"),
+           style = "position: fixed; height: 80%; overflow-y: auto; margin-left: -30px;", div(style = "display:inline-block; float:right; margin-bottom: 20px"),
            uiOutput("StateName", style = "font-size: 40px; margin-top: -20px;"), 
-           uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px;  margin-bottom: 10px;"), 
+           uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px; margin-bottom: 10px; "), 
+           actionButton("Context", "Toggle National Map or State Data Table",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
            bsCollapse(id = "CollapsePanel", open = c("Drinking Water Needs and Funding", "All Projects"), multiple = TRUE,
                       bsCollapsePanel("Drinking Water Needs and Funding",uiOutput("NeedsFunds", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "primary"),
                       bsCollapsePanel("All Projects",uiOutput("AllProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "info"),
-                      bsCollapsePanel("General Projects",uiOutput("GeneralProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "warning"),
-                      bsCollapsePanel("Lead Projects",uiOutput("LeadProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "danger"),
+                      bsCollapsePanel("General Projects",uiOutput("GeneralProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "none"),
+                      bsCollapsePanel("Lead Projects",uiOutput("LeadProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "warning"),
                       bsCollapsePanel("Emerging Contaminant Projects",uiOutput("ECProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "success")),
            #    uiOutput("StateNumbers", style = "line-height: 20px"),
            #    radioButtons("Chart_Select", "", choices = c("Percent of the population covered" = "Pop","Percent of water systems covered" = "Sys")),
            #    div(plotOutput("Chart"), style = "margin-left:-15px"),
-           actionButton("Context", "Table/Map",icon(name = "arrows-up-down", lib = "font-awesome"),style = "display:inline-block; float:left;"), 
-           actionButton("showInfo", " Info", icon(name = "question", lib = "font-awesome"), style = "display:inline-block; float:left;"), 
-           downloadButton('DataDownload','Download Data'),
-           img(src = 'epic-logo-transparent.png', height = '40px', width = '150px', style = "display:inline-block; float:center; margin-left: 5px; margin-top:10px"),
-           width = 3
+           downloadButton('DataDownload','Download State Data', style = "width: 300px; color: #e3672b; border-color: #e3672b;"),
+           actionButton("showInfo", " Info", icon(name = "question", lib = "font-awesome")), 
+           img(src = 'epic-logo-transparent.png', height = '40px', width = '150px', style = "margin-left: 5px; margin-top:5px"),
+
+           width = 4
          )),
     
     mainPanel(
       leafletOutput("Map", height = "100vh"),
-      hidden(uiOutput("StateNameTwo", style = "font-size: 30px; margin-left: 5px; position:relative; z-index: 500;"), uiOutput("Table", style = "margin-left: 5px; background-color: none;", width = "100px")),
+      hidden(uiOutput("StateNameTwo", style = "font-size: 30px; margin-left: 5px; position:relative; z-index: 500;"), 
+             uiOutput("ColumnMouseover", style = "font-size: 15px; margin-left: 5px; position:relative; z-index: 500; font-style: italic; margin-top: -5px;"),
+             uiOutput("Table", style = "margin-left: 5px; background-color: none;", width = "100px")),
       style = "margin-left: -15px;",
-      width = 9),
+      width = 8),
     
     position = c("right"), fluid = TRUE),
   
 )
+
 
 
 server <- function(input, output,session) {
@@ -103,25 +110,32 @@ server <- function(input, output,session) {
   gs4_deauth()
   URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
   Text <- read_sheet(URL, sheet = "Text")
+  
   waitress$inc(20) # increase by 10
   ToolTip <- read_sheet(URL, sheet = "Tooltip")
-  waitress$inc(20) # increase by 10
-
+  
+  waitress$inc(10) # increase by 10
+  ColumnToolTip <- read_sheet(URL, sheet = "ColumnToolTip")
+  
+  DataDictionaryIndex <- read_sheet(URL, sheet = "DataDictionaryIndex")
   ## Summarizing by state
   ## Adding color based on number of projects - This is subject to change/flexible ## 
   ## Adding Sabs Data 
+
   PPL_State_Data_Geo <- DW_Data_Raw %>%
     left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
-    mutate(Color = ifelse(FundPer100k > 0,"#BDD7E7", Color))%>%
-    mutate(Color = ifelse(FundPer100k > 25 ,"#6BAED6", Color))%>%
-    mutate(Color = ifelse(FundPer100k > 50,"#3182BD", Color))%>%
-    mutate(Color = ifelse(FundPer100k > 100,"#08519c", Color))%>%
-    mutate(Color = ifelse(FundPer100k > 200,"#02006c", Color))%>%
-    mutate(Color = ifelse(is.na(FundPer100k), "#D3D3D3",Color))
+    mutate(Color = ifelse(Count > 0 ,"#BDD7E7", Color))%>%
+    mutate(Color = ifelse(Count > 25,"#6BAED6", Color))%>%
+    mutate(Color = ifelse(Count > 50,"#3182BD", Color))%>%
+    mutate(Color = ifelse(Count > 75,"#08519c", Color))%>%
+    mutate(Color = ifelse(is.na(Count), "#D3D3D3",Color))
   
   
   
   
+
+  
+  waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)
   
   ## Var Decleration ## 
@@ -143,7 +157,7 @@ server <- function(input, output,session) {
   
   ##### MAP ##### 
   output$Map <- renderLeaflet({
-    leaflet(options = leafletOptions(zoomControl = FALSE,minZoom = 4.5, maxZoom = 4.5,dragging = FALSE))%>%
+    leaflet(options = leafletOptions(zoomControl = FALSE,minZoom = 4, maxZoom = 4,dragging = FALSE))%>%
       addPolygons(data = PPL_State_Data_Geo, 
                   layerId = ~NAME, 
                   label = ~htmlEscape(NAME), 
@@ -154,11 +168,11 @@ server <- function(input, output,session) {
                   color = "white", 
                   weight = 1.5)%>%
       addLegend("topleft", 
-                colors = c("#D3D3D3","#BDD7E7", "#6BAED6", "#3182BD", "#08519c", "#02006c"),
-                labels = c("No project data", "$1-$25", "$25-$50","$50-$100","$100-$200", "$200+"),
-                title = "Funding Per Water User",
+                colors = c("#D3D3D3", "#BDD7E7", "#6BAED6", "#3182BD", "#08519c"),
+                labels = c("No project data", "1-25", "25-50","50-75","75+"),
+                title = "Fundable Projects",
                 opacity = 1)%>%
-      setView(-95.5795, 36.8283, zoom = 5)
+      setView(-95.5795, 36.8283, zoom = 4)
     
   })
   
@@ -205,19 +219,30 @@ server <- function(input, output,session) {
 
  
     renderReactable({
+      with_tooltip <- function(value, tooltip, ...) {
+        div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: info; text-color: #2362d0",
+            tippy(value, tooltip, ...))
+      }
       reactable(TableData,
                 defaultSorted = 'Funding Amount',
                 defaultSortOrder = 'desc',
                 columns = list(
-                  `Principal Forgiveness` = colDef(name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  `Funding Amount` = colDef(minWidth = 100,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                   Population = colDef(format = colFormat(separators = TRUE, digits = 0)),
-                  `Project Type` = colDef(name = "Type"),
-                  `Project Name` = colDef(name = "Name", minWidth = 100),
-                  `Project Description` = colDef(html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
-                    div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: help font-size: 10;",
-                        tippy(value, value))
-                  })),
+                  `City Served` = colDef(header = with_tooltip("City Served",ColumnToolTip[1,2])),
+                  `Borrower`= colDef(header = with_tooltip("Borrower",ColumnToolTip[2,2])),
+                  `PWSID`= colDef(header = with_tooltip("PWSID",ColumnToolTip[3,2]),width = 80),
+                  `Project Name` = colDef(header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
+                  `Project Type` = colDef(header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
+                 `Funding Amount` = colDef(header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Principal Forgiveness` = colDef(header = with_tooltip("Principal Forgiveness",ColumnToolTip[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  
+                   Population = colDef(header = with_tooltip("Population",ColumnToolTip[8,2]),format = colFormat(separators = TRUE, digits = 0)),
+            
+                  `Project Description` = colDef(header = with_tooltip("Project Description",ColumnToolTip[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
+                    div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: help; font-size: 14px;",tippy(value, value))
+                  }),
+                   `Meets State Disadvantaged Criteria`= colDef(header = with_tooltip("Meets State Disadvantaged Criteria",ColumnToolTip[10,2]), minWidth = 250),
+                    `State Rank`= colDef(header = with_tooltip("State Rank",ColumnToolTip[11,2]))
+                  ),
                 highlight = TRUE,
                 bordered = TRUE,
                 resizable = TRUE,
@@ -234,9 +259,10 @@ server <- function(input, output,session) {
   
   # Context switch observe 
   observeEvent(input$Context, {
-    toggle("Map", anim = FALSE,animType = "slide",time = 0.5)
-    toggle("Table", anim = FALSE,animType = "slide",time = 0.5)
-    toggle("StateNameTwo", anim = FALSE,animType = "slide",time = 0.5)
+    toggle("Map", anim = FALSE,animType = "slide")
+    toggle("Table", anim = FALSE,animType = "slide")
+    toggle("StateNameTwo", anim = FALSE,animType = "slide")
+    toggle("ColumnMouseover", anim = FALSE,animType = "slide")
   })
   #### End Table 
   
@@ -244,7 +270,13 @@ server <- function(input, output,session) {
   #### Sidebar #### 
   #State Name
   output$StateName <- renderText({SelectedDataReactive$df$State[1]})
-  output$StateNameTwo <- renderText({paste(SelectedDataReactive$df$State[1],"Fundable Project List")})
+  output$StateNameTwo <- renderText({
+    paste(SelectedDataReactive$df$State[1],"Fundable Project List")
+    })
+  
+  output$ColumnMouseover <- renderText({
+    paste("Click a column to sort, mouse-over a column for details, and slide a column to expand")
+  })
   
   #State Description 
   output$StateDescription <- renderText({
@@ -256,27 +288,30 @@ server <- function(input, output,session) {
     State_Data <- PPL_State_Data_Geo %>%
       filter(NAME == SelectedDataReactive$df$State[1])
     
-    Population <- paste("<b>", "Population:", scales::number(State_Data %>% pull(Population), big.mark = ","),"</b>", "<br>")
+    Population <- paste("<b>", "Water System Users:", scales::number(State_Data %>% pull(Population), big.mark = ","),"</b>", "<br>")
     WaterSystems <- paste("<b>", "Water Systems:", scales::number(State_Data %>% pull(Systems), big.mark = ","),"</b>", "<br>")
-    TwentyYearNeed <- paste("<b>", "Estimated 20 Year Need:", scales::dollar(State_Data %>% pull(TwentyYearNeed) / 1000000000, suffix = "B"),"</b>", "<br>")
-    PipeCount <- paste("<b>", "Estimated Number of Lead Pipes", scales::number(State_Data %>% pull(PipeEstimates), big.mark = ","),"</b>", "<br>")
-    Base <- paste("<b> &ensp;", "Base:", dollar(State_Data %>% pull(Base)/1000000, suffix  = "M"),"</b>", "<br>")
-    General <- paste("<b> &ensp;", "General:", dollar(State_Data %>% pull(General)/1000000, suffix  = "M"),"</b>", "<br>")
-    Lead <- paste("<b> &ensp;", "Lead", dollar(State_Data %>% pull(Lead)/1000000, suffix  = "M"),"</b>", "<br>")
-    Emerging <- paste("<b> &ensp;", "Emerging Contaminants", dollar(State_Data %>% pull(`Emerging Contaminants`)/1000000, suffix  = "M"),"</b>", "<br>")
+    TwentyYearNeed <- paste("<b>", "EPA Estimated 20-Year Need:", scales::dollar(State_Data %>% pull(TwentyYearNeed) / 1000000000, suffix = "B"),"</b>", "<br>")
+    PipeCount <- paste("<b>", "EPA Estimated Number of Lead Pipes:", scales::number(State_Data %>% pull(PipeEstimates), big.mark = ","),"</b>", "<br>")
+    Base <- paste("<b>", "Base:", dollar(State_Data %>% pull(Base)/1000000, suffix  = "M"),"</b>", "<br>")
+    General <- paste("<b> ", "General Supplemental:", dollar(State_Data %>% pull(General)/1000000, suffix  = "M"),"</b>", "<br>")
+    Lead <- paste("<b> ", "Lead:", dollar(State_Data %>% pull(Lead)/1000000, suffix  = "M"),"</b>", "<br>")
+    Emerging <- paste("<b> ", "Emerging Contaminants:", dollar(State_Data %>% pull(`Emerging Contaminants`)/1000000, suffix  = "M"),"</b>", "<br>")
     
     tagList(
-      #HTML("<b> <font size=4> Need </b> </font> <br>"),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[1,2])), HTML(Population),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[2,2])),HTML(WaterSystems),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[3,2])),HTML(TwentyYearNeed),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[4,2])),HTML(PipeCount),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[1,2])), options = list("delay': 1000, 'it" = "sucks")), HTML(Population),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[2,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(WaterSystems),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[3,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(TwentyYearNeed),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[4,2]), options = list("delay': 1000, 'it" = "sucks")), HTML(PipeCount),
       HTML("<br>"),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[5,2])), HTML("<b> DWSRF Funds </b> </font> <br>"),
-      HTML(Base),
-      HTML(General),
-      HTML(Lead),
-      HTML(Emerging),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[5,2])), HTML("<b> DWSRF Funds </b> </font> <br>"),
+      HTML("&ensp;"),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[10,2]))), HTML(Base),
+      HTML("&ensp;"),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[11,2]))),HTML(General),
+      HTML("&ensp;"),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[12,2]))),HTML(Lead),
+      HTML("&ensp;"),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[13,2]))),HTML(Emerging),
     )
   })
   
@@ -289,14 +324,14 @@ server <- function(input, output,session) {
     # Total Forgiveness # 
     TotalForgive  <- paste("<b>", "Forgiveness:", ifelse(!is.na(SummaryData$df$`Principal Forgiveness`[1]),dollar(sum(SummaryData$df$`Principal Forgiveness`, na.rm = TRUE)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
     # % to DAC Communities # 
-    TotalDAC <- paste("<b>", "Projects in Disavantaged Areas:", scales::percent(sum(SummaryData$df$DAC) / sum(SummaryData$df$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+    TotalDAC <- paste("<b>", "Projects in Disadvantaged Areas:", scales::percent(sum(SummaryData$df$DAC) / sum(SummaryData$df$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
     
     tagList(
       # HTML("<b> All Projects: </b> <br>"),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[6,2])),HTML(TotalCount),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[7,2])),HTML(TotalFunding),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[8,2])),HTML(TotalForgive),
-      tipify(el = icon(name = "info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[9,2])),HTML(TotalDAC)
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[6,2])),HTML(TotalCount),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[7,2])),HTML(TotalFunding),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[8,2])),HTML(TotalForgive),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[9,2])),HTML(TotalDAC)
     )
   })
   
@@ -330,7 +365,7 @@ server <- function(input, output,session) {
     }
     
     tagList(
-      #   HTML("<b> General Projects: </b> <br>"),
+      #   HTML("<b> General Supplemental Projects: </b> <br>"),
       HTML(Count),
       HTML(Funding),
       HTML(Forgive),
@@ -414,26 +449,31 @@ server <- function(input, output,session) {
   
   InfoModal <- modalDialog(
     title = HTML("<b> EPIC’s Drinking Water Funding Dashboard </b>"),
-    HTML("<b> Tracking Lead Service Line Replacement: </b>"),
+    HTML("<b> About this dashboard: </b>"),
     HTML("<br>"),
-    HTML("There are still an estimated 6 to 10 million lead service lines in cities and towns across the country, 
-       many of which are in low-income neighborhoods and communities of color. The Infrastructure Investment and Jobs Act (IIJA), 
-       or the Bipartisan Infrastructure Law, includes unprecedented funding to improve water infrastructure, including $15 billion over 5 years  (2021-2026) 
-       to identify and replace toxic lead pipes carrying drinking water. The main mechanism through which this funding is distributed is the 
-       Drinking Water State Revolving Fund (DWSRF), which is a program where the US Environmental Protection Agency (EPA) allots money to 
-       each state to then distributes to utilities and municipalities with eligible water infrastructure projects. 
-       IIJA requires that 49 percent of all DWSRFs be distributed as Principal Forgiveness or forgivable loans to state-defined disadvantaged communities."),
+    HTML("This dashboard currently tracks Drinking Water State Revolving Funds (DWSRFs) from Federal Fiscal Year (FFY) 2022 appropriations, which will typically be addressed in State Fiscal Year (SFY) 2023 Intended Use Plans (IUPs) 
+         and Project Priority Lists (PPLs). Users of this dashboard can view states’ intended use of funds through PPLs. States can request their allotments of federal funding anytime up to the end of the FFY after the year in which the funds were appropriated 
+         (e.g. up to September 30, 2023 for FFY2022 DWSRF appropriations). Once states receive their allotment of federal funds (also known as a ‘federal capitalization grant’), they must designate the funds for specific projects within one year. 
+         This is particularly pertinent for the funding for lead service line replacement (LSLR) and emerging contaminants (EC), as several states have delayed requesting and/or designating this funding while they develop new programs and build project pipelines to administer and use the funds. 
+         Thus, some states may take up to September 2024 before their FFY2022 LSLR and EC funds are designated to projects."),
     HTML("<br>"),
     HTML("<br>"),
-    HTML("<b> About the Dashboard: </b>"),
+    HTML("<b> Data Limitations and Disclaimers: </b>"),
     HTML("<br>"),
-    HTML("This dashboard aims to help users identify how much money through the Drinking Water State Revolving Fund that 
-       will be used for lead service line replacements according to how each state intends to use of their DWSRF allotments 
-       from the US Environmental Protection Agency (EPA). This information is detailed in each state’s intended use plan (IUP) 
-       and the list of water infrastructure projects listed in priority order - the project priority list (PPL). 
-       The user can view how many of these dollars went towards lead pipe identification and replacement and how much of that benefits state-defined disadvantaged 
-       communities (DACs). Currently, the database provides information on 20 states and will be updated as more data is available. 
-       This is an ongoing project that EPIC will keep building on through the years of IIJA funding."),
+    HTML("Due to a large variation of IUP and PPL formats across different states, EPIC used discretion in interpreting the data in order to standardize and make it accessible in one dashboard. 
+         The sources of state data and how we interpreted it are outlined in state-specific data dictionaries, and we have provided explanations where we have noticed discrepancies or uncertainties. 
+         Because of several differences across states, state-to-state comparisons are difficult and likely will be inaccurate. Additionally, the data used for this dashboard is only what is available publicly and particular to the DWSRF and does not include all data maintained by the states and EPA. 
+         In addition, there are several reasons why a state’s data may not be included in the dashboard: 1) state documents may not clearly indicate projects they intend to fund, the dashboard only includes fundable projects; 2) state documents may not be finalized; or 3) state documents can be challenging 
+         to transform into a standardized table or ambiguous to interpret. To access the raw data, please visit each state’s appropriate website to download the IUPs and PPLs. To the extent possible, EPIC will continue to update the dashboard with additional data as it becomes available."),
+    HTML("<br>"),
+    HTML("<br>"),
+    HTML("<b> How to use this dashboard: </b>"),
+    HTML("<li> Centered, you’ll find a national map of where EPIC has data for DWSRF PPLs.  </li>"),
+    HTML("<li> Click a state to activate the sidebar and explore the funding and project category summary.  </li>"),
+    HTML("<li> Click ‘Toggle National Map or State Data Table’ to switch between the map and the selected states available PPL data. </li> "),
+    HTML("<li> Mousing over the ‘i’ icons will reveal additional information about the metrics. </li>"),
+    HTML("<li> Click ‘Download State Data’ to download the state specific data, accompanying data dictionary, and "),
+    tags$a(href="https://drive.google.com/file/d/1UIRpWkvI9VuGTmcbMSsQyKmXQT092O9E/view?usp=share_link", "glossary of key terms.",  target="_blank"),
     easyClose = FALSE,
     footer = modalButton("Close"),
   )
@@ -442,20 +482,41 @@ server <- function(input, output,session) {
                {
                  showModal(InfoModal)
                })
-  
-  
-  
-  ## Download Handler ## 
-  #download handler for project export 
+
+  # Download Handler ##
+ # download handler for project export
   output$DataDownload <- downloadHandler(
     
-    filename = function() { 
-      paste0(SelectedDataReactive$df$State[1],"-dw-funding-data.csv", sep="")
+    filename = function() {
+      paste0(tolower(SelectedDataReactive$df$State[1]),"-dw-funding.zip", sep="")
     },
     content = function(file) {
-      write.csv(SelectedDataReactive$df, file, row.names=FALSE)
+      
+      state_name <- tolower(SelectedDataReactive$df$State[1])
+      
+      state_link <- DataDictionaryIndex %>%
+                    filter(State == SelectedDataReactive$df$State[1])%>%
+                    pull(Link)
+
+      drive_deauth()
+      
+      ## TO DO - Add function for pulling in correct state data 
+      dictionary_pdf <- drive_download(state_link, file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")), overwrite = TRUE)
+      
+      ## Adding glossary data
+      glossary_pdf <- drive_download("https://drive.google.com/file/d/1UIRpWkvI9VuGTmcbMSsQyKmXQT092O9E/view?usp=share_link", 
+                               file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep="")), overwrite = TRUE)
+      
+      ## Adding state data
+      write.csv(SelectedDataReactive$df, file.path(tempdir(), paste0(state_name,"-dw-funding-data.csv", sep="")), row.names=FALSE)
+
+      zip::zip(file, files = c(file.path(tempdir(),paste0(state_name,"-dw-funding-data.csv", sep="")),
+                               file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")),
+                               file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep=""))),
+               mode = "cherry-pick")
     })
-  
+
+
   # 
   # output$Chart <- renderPlot({
   #   req(SummaryData$df)

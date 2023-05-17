@@ -52,9 +52,6 @@ PPL_State_Data_Geo <- PPL_Data %>%
 ## Contact gabe@policyinnovation.org for questions/access
 ## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
 
-# Sys.setenv("AWS_ACCESS_KEY_ID" = "YOUR ACCESS KEY",
-#            "AWS_SECRET_ACCESS_KEY" = "YOUR SECRET KEY",
-#            "AWS_DEFAULT_REGION" = "us-east-1")
 
 # Writing to temp 
 
@@ -64,7 +61,8 @@ write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data.csv"), row
 put_object(
   file = file.path(tempdir(), "dw-dashboard-data.csv"),
   object = "apps/dw-dashboard/dw-dashboard-data.csv",
-  bucket = "water-team-data"
+  bucket = "water-team-data",
+  acl = "public-read"
 )
 
 
@@ -80,6 +78,7 @@ put_object(
 # SPLIT INTO 50 
 # For Each State 
 # Post to AWS folder-root-name/state-name-data-dict.pdf 
+
 
 
 

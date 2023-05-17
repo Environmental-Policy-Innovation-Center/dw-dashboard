@@ -1,4 +1,4 @@
-![](www/epic-logo-transparent.png){width="806"}
+![](www/epic-logo-transparent.png)
 
 # EPIC's Drinking Water Funding Dashboard
 

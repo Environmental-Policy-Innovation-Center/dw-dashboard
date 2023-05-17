@@ -1,0 +1,59 @@
+Priority.Points,PWSID,System.Name,Status,Addl.Subsidy,Disadvantaged,Green.Project,Green.Amount,Equivalency.Project,County,Pop,Project.Title,Project.Total,SRF.Assistance,Principal.Forgiveness,ARPA.Funds.Authorized,BIL.Funds.Authorized,Funds.Authorized,Project.Segments.Sour,Project.Segments.Treat,Project.Segments.Stor,Project.Segments.Dist
+35.1,UT26069,Canyon Meadows,N,Y,Y,N,N,N,Wasatch,85,"additional funding: tank, treatment plant,waterline, SCADA","$287,879","$287,879","$                  57,879",,,,,,,
+49.6,UT29020,Uintah Town,N,N,N,N,N,N,Weber,"1,300","two new 375,000-gallon storage tanks","$4,273,831","$1,000,000",,,,,,,45,
+17.5,UT07072,Cedarview Montwell SSD,N,N,Y,N,N,N,Duchesne,402,transmission line to connect to DCWCD Victory Pipeline,"$4,715,000","$3,665,000",,"$             3,500,000",,,,,,10
+43.8,UT07067,South Duchesne,N,N,Y,N,N,N,Duchesne,525,"new waterline, PRV vault, customer meters, SCADA system","$1,992,500","$1,982,500",,"$             1,982,500",,,,,15,30
+42.6,UT26057,Timber Lakes,N,N,Y,N,N,N,Wasatch,"1,000","100,000-gallon tank, master meters, waterline upgrade, sprin","$3,295,630","$3,263,000",,,,,18,,30,
+35.3,UT20013,Moroni,N,Y,Y,N,N,N,Sanpete,"1,200","additional funding: complete 500,000-gallon tank, overflow lin","$2,357,000","$2,357,000","$                707,000",,,,,,,
+31.2,UT18007,Granger Hunter Improvement District,N,Y,Y,N,N,Y,Salt Lake,"121,083",replace aging water line and booster pump station,"$13,811,820","$13,811,820","$             2,811,820",,,,,,,20
+45.4,UT01001,Beaver City,N,Y,Y,N,N,N,Beaver,"3,240","Replace failing pipeline, new well house","$2,679,146","$2,652,620","$             1,330,620",,,,,,,30
+19.0,UT04004,Helper,N,N,Y,N,N,N,Carbon,"2,000","replace waterline, rehabilitate well, replace meters, install SC","$3,450,160","$3,146,000",,"$             3,146,000",,,10,,15,10
+15.1,UT25006,Provo City,N,N,Y,N,N,Y,Utah,"116,288","water treatment plant for ASR project, waterline","$69,500,000","$36,750,000",,,,,10,,,
+11.5,UT14011,Scipio,N,Y,Y,N,N,N,Millard,300,redevelop spring,"$3,545,000","$3,520,000","$             1,240,000",,,,25,,,
+11.4,UT05003,Manila,N,Y,Y,N,N,N,Daggett,701,evaluate and replace well equipment in three wells,"$505,000","$500,000","$                500,000",,,,10,,,
+11.3,UT07073,Pinion Forest SSD,N,N,Y,N,N,N,Duchesne,640,"500,000-gallon tank, install transmission/distribution line, pum","$8,552,520","$8,552,000",,,,,,15,,20
+9.8,UT14013,Holden,N,Y,Y,N,N,N,Millard,450,"drill a new well, new transmission line, 500,000-gallon tank, c","$8,841,000","$8,691,000","$             3,500,000",,,,20,5,15,20
+5.6,UT22006,Hoytsville,N,N,N,N,N,N,Summit,440,"400,000-gallon tank, transmission line","$1,595,000","$1,595,000",,,,,10,5,,
+110.6,UT04011,Wellington,A,Y,Y,N,N,N,Carbon,"1,676","replace asbestos pipe, PRV station, meter replacement","$7,580,170","$1,717,000","$                717,000",,,"$             1,717,000",,,,55
+105.6,UT04012,East Carbon City,A,Y,Y,N,N,N,Carbon,"1,600",1.5 MGD conventional treatment plant,"$3,650,000","$1,989,000","$                995,000",,,"$             1,989,000",,50,,
+99.3,UT02078,M&J Trailer Home,A,Y,Y,N,N,N,Box Elder,27,"New well, tank, dist line, arsenic tmnt","$1,660,000","$1,540,000","$             1,360,000",,,,85,65,20,40
+76.1,UT05001,Daggett Co - Dutch John,A,N,Y,N,N,N,Daggett,140,"1M-gallon raw water tank, new water treatment plant","$5,190,000","$3,500,000",,"$             3,500,000",,,,50,,
+65.8,UT11011,Brian Head Town,A,N,Y,N,N,N,Iron,165,Install new transmission line/fire hydrants along Snow Shoe D,"$863,116","$507,870",,"$                507,870",,,,,,20
+63.6,UT07004,Roosevelt City,A,N,Y,N,N,N,Duchesne,"6,800","pipeline replacement, lining of DI pipe, new pipe to bypass tan","$2,951,400","$2,841,400",,,,,,,25,35
+62.6,UT22021,High Valley Water Co.,A,Y,Y,N,N,N,Summit,850,"2 PRV, new mailine, service connections, meters, hydrants","$3,609,000","$3,309,000","$             1,659,000",,,"$             3,309,000",,,,40
+53.3,UT26023,Daniel Town / Storm Haven,A,Y,Y,N,N,N,Wasatch,499,"New tank, pump house, upgrade distribution lines","$5,792,000","$5,692,000","$             1,700,000",,,"$             5,692,000",55,,75,30
+49.8,UT07006,Johnson WID,A,N,Y,N,N,N,Uintah,"1,880","upgrading 24,000 ft undersized waterlines","$2,452,000","$2,352,000",,,,,,,,40
+48.6,UT09004,Escalante,A,Y,Y,N,N,N,Garfield,800,"spring redevelopment, collection box, source protection","$87,000","$40,000","$                  40,000",,,,30,,,
+48.5,UT07073,Pinion Forest SSD,A,Y,N,N,N,N,Duchesne,640,Water treatement improvements: chlorination and adressing c,"$300,000","$300,000","$                300,000",,,,,50,,
+47.1,UT11070,Irontown,A,N,Y,N,N,N,Iron,65,"upgrade/replace distribution, hydrants, & meters","$1,736,000","$1,635,000",,,,"$             1,635,000",,,,30
+42.6,UT12001,Levan,A,N,Y,N,N,N,Juab,862,lead-joined Iron service line upgrades,"$2,895,000","$2,866,050",,,,,,,,55
+42.4,UT13037,New Paria,A,N,N,N,N,N,Kane,35,"new well, tank, waterline, and meters in prep to regionalize w","$3,379,000","$3,359,000",,"$             3,359,000",,,10,,,40
+42.4,UT13002,Church Wells (ARPA Grant),A,N,Y,N,N,N,Kane,200,"300K tank, pipes, meters, SCADA, pump, repair well","$2,262,000","$2,252,000",,"$             2,252,000",,"$             2,252,000",,,,
+38.3,UT16002,Circleville Town (Incl. ARPA Grant),A,N,Y,N,N,N,Piute,488,"300K tank, well, spring redevelopment","$4,270,000","$3,970,000",,"$             3,500,000",,"$             3,970,000",,,,
+36.3,UT03005,Cornish Town,A,N,N,N,N,N,Cache,270,"well house, RO/Chlorine Treatment, Booster, 250K tank","$1,704,922","$1,504,922",,,,"$             1,504,922",,,,
+36.1,UT02010,East Grouse Creek,A,N,Y,N,N,N,Box Elder,70,"Chlorination syst, meters, backflow preventers, air/vac","$343,220","$340,000",,,,"$                340,000",,50,15,30
+33.8,UT21003,Austin SSD,A,N,Y,N,N,N,Sevier,272,Regionalization Project incl. waterline replacement & hydrant,"$3,210,000","$2,705,000",,"$             2,269,000",,,43,15,40,30
+31.7,UT22009,Weber Meadow View Ranches,A,N,Y,N,N,N,Summit,65,"150K tank, waterlines, hydrants, PRV station, well pump upgr","$2,158,400","$2,100,000",,,,"$             2,100,000",,,50,30
+31.6,UT13060,Clark Bench,A,N,Y,N,N,N,Kane,27,"new tank, upgrade pump station, waterline replacement and","$3,464,000","$3,444,000",,,,,,25,25,20
+26.7,UT08007,North Emery SSD,A,N,Y,N,N,N,Emery,"1,500","new 250,000-gallon tank, replace PRV vaults, replace 4000 f","$2,550,000","$2,050,000",,,,,,,20,20
+26.6,UT01032,Elk Meadows SSD,A,N,N,N,N,N,Beaver,303,"New: Line, hydrants, isolation valves, PRV stations","$1,660,000","$1,660,000",,,,"$             1,660,000",,,,20
+24.7,UT11052,Spring Creek Water Users,A,N,Y,N,N,N,Iron,204,New Well,"$542,000","$516,000",,,,"$                323,800",20,,,
+24.5,UT25024,Covered Bridge Canyon HOA,A,N,N,N,N,N,Utah,280,"Watermain & service connection replacement, meters, hydra","$714,000","$694,000",,,,"$                694,000",,,,30
+23.0,UT28001,Bicknell Town,A,N,N,N,N,N,Wayne,380,"300-k gal concrete storage tank, New Well","$2,278,000","$2,178,000",,,,"$             2,178,000",30,5,20,
+22.9,UT29028,Powder Mountain WSID,A,N,Y,N,N,N,Wasatch,"1,100","engineer study, pump house, lines, PRV station, hydrants","$1,397,000","$1,397,000",,,,"$             1,397,000",,,,20
+22.6,UT14008,Lynndyl Town,A,N,Y,N,N,N,Millard,110,"purchase property, new infrastructure, water rights, etc.","$1,744,152","$1,744,152",,,,,20,25,,
+21.3,UT02070,Bear River WCD,A,N,###,N,N,N,Box Elder,,"3 production well and well houses, pumphouse and pipeline (","$6,251,400","$2,440,000",,,,,20,,,
+21.0,UT20043,Skyline Mountain SSD,A,N,N,N,N,N,Sanpete,225,"41K tank and well house, impact fee study, loan refi.","$3,123,000","$3,123,000",,,,"$             3,123,000",,,15,
+20.0,UT20011,Ephraim City,A,N,N,N,N,N,Sanpete,"6,135","well, wellhouse, chlorinator, new line","$2,560,000","$500,000",,,,"$                500,000",,,,
+17.4,UT20051,Axtell SSD,A,N,Y,N,N,N,Sanpete,280,"New Spring, 30,000 ft of 8 inch spring line","$3,465,110","$3,255,110",,,,,10,,,
+13.5,UT24051,Desert Sage AVWID,A,Y,Y,N,N,N,Uintah,55,"Watermain replacement, hydrants, meters, service line replac","$598,460","$578,460","$                496,460",,,,,,,40
+11.5,UT09077,Bristlecone,A,N,Y,N,N,N,Garfield,180,"SCADA, drainage and overflow relocation","$93,500","$93,500",,,,"$                  93,500",8,,15,
+10.4,UT09007,Panguitch,A,Y,Y,N,N,N,Garfield,"1,730","9000 lf 10-in mainline, valves, hydrants, connect to existing cu","$1,629,000","$1,609,000","$805,000",,,,,,,10
+10.4,UT07002,Myton Town,A,N,Y,N,N,N,Duchesne,590,"New waterline and connections, hydrants.","$650,000","$650,000",,,,,,,,
+9.8,UT14063,Holden Town,A,N,N,N,N,N,Millard,450,"New well, tank, dist lines, meters, chlorination upgrades","$6,721,000","$6,571,000",,,,,20,5,15,20
+7.9,UT16011,Little Meadow Estates,A,N,###,N,N,N,Piute,45,"booster, chlorination, pressure reducing station, storage","$246,000","$246,000",,,,"$                246,000",,,,
+7.5,UT11004,Enoch City,A,N,N,N,N,N,Iron,"6,500",New 2M Gallon steel tank,"$1,639,440","$645,000",,,,"$                645,000",,,,
+6.5,UT17001,Bridgerland Water Co.,A,N,N,N,N,N,Rich,240,"Connect to Garden City system, 2 booster stations, SCADA, r","$1,128,170","$1,350,000",,,,"$             1,350,000",10,,,
+0.0,UT22005,Henefer (Secondary Irrigation),A,N,N,N,N,N,Summit,"1,025",Secondary irrigation,"$2,100,000","$2,100,000",,,,,,,,
+,UT19001,Blanding City - Westwater #2,A,N,N,N,N,N,San Juan,"3,760",Planning and design for westwater community,"$5,683,073","$340,984",,,,"$                340,984",,,,
+,UT19000,San Juan Co. - NTUA Westwater #2,A,N,N,N,N,N,San Juan,24,Planning and design advance for westwater project,"$4,355,105","$457,000",,,,"$                457,000",,,,

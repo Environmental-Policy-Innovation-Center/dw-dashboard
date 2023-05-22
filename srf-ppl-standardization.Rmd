@@ -720,11 +720,9 @@ mn_clean <- mn_raw %>%
     est_ec_pf = replace_na(est_ec_pf, 0),
     est_dac_pf = as.numeric(str_replace_all(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3,"[^0-9.]","")),
     est_dac_pf = replace_na(est_dac_pf, 0),
-    est_wif_grant = as.numeric(str_replace_all(estimated_wif_grant_not_final_4,"[^0-9.]","")),
-    est_wif_grant = replace_na(est_wif_grant, 0),
-    # Sum of Estmated DWRF Lead, Estimated DWRF Emerging Contaminant, 
-    # Estimated DWRF Disadvantaged Community, Estimated WIF Grant
-    principal_forgiveness_amount = est_lslr_pf + est_ec_pf + est_dac_pf + est_wif_grant,
+    # Sum of Estimated DWRF Lead, Estimated DWRF Emerging Contaminant, 
+    # Estimated DWRF Disadvantaged Community
+    principal_forgiveness_amount = est_lslr_pf + est_ec_pf + est_dac_pf,
     # transform to numeric to save rows where numbers are present,
     # but fill in 0s from adding above with "No Information" for the final database
     funding_amount = as.numeric(str_replace_all(estimated_dwrf_loan,"[^0-9.]","")),
@@ -742,12 +740,19 @@ mn_clean <- mn_raw %>%
     fundable = case_when(
       status != "Part B" ~ "Fundable",
       TRUE ~ "Applicant"),
+    # Projects with a dollar amount or “eligible” in any of the “estimated principal forgiveness columns” or in the “estimated WIF grant” column are considered DACs.
+    disadvantaged = case_when(
+      # if not NA or two characters (the space and dash in otherwise empty cells in the raw data), mark as DAC for each column
+      !is.na(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) & nchar(  estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) > 2 ~ "Yes",
+      !is.na(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2) & nchar(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2) > 2 ~ "Yes",
+      !is.na(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3) & nchar(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3) > 2 ~ "Yes",
+      !is.na(estimated_wif_grant_not_final_4) & nchar(estimated_wif_grant_not_final_4) > 2 ~ "Yes",
+      TRUE ~ "No"
+    ),
     state = "Minnesota"
   ) %>%
-  # rename
-  rename() %>%
   # subset columns
-  select(state_rank, state_score, borrower, pwsid, project_description, population, 
+  select(state_rank, state_score, borrower, pwsid, project_description, population, disadvantaged,
          funding_amount, principal_forgiveness_amount, fundable, project_type, state)
 
 

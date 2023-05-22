@@ -286,10 +286,14 @@ ga_clean <- ga_raw %>%
            grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
            TRUE ~ "Other"),
+         disadvantaged = case_when(
+          principal_forgiveness_amount > 0 ~ "Yes",
+           TRUE ~ "No"
+         ),
          state = "Georgia"
   ) %>% 
   select(state_score, borrower, project_description, funding_amount, principal_forgiveness_amount,
-         population, fundable, project_type, state)
+         population, disadvantaged, fundable, project_type, state)
 
 ```
 
@@ -737,8 +741,9 @@ mn_clean <- mn_raw %>%
       status == "Carryover,LSL" ~ "Lead",
       status == "Part A6,EC" ~ "Emerging Contaminants",
       TRUE ~ "Other"),
+    # Only projects with a dollar amount indicated for “Estimated DWRF Loan” and/or “Estimated Principal Forgiveness” are expected to receive SRF awards at this time and only these projects are included in the dashboard analysis.
     fundable = case_when(
-      status != "Part B" ~ "Fundable",
+      !is.na(funding_amount) | principal_forgiveness_amount > 0 ~ "Fundable",
       TRUE ~ "Applicant"),
     # Projects with a dollar amount or “eligible” in any of the “estimated principal forgiveness columns” or in the “estimated WIF grant” column are considered DACs.
     disadvantaged = case_when(

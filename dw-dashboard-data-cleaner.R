@@ -9,12 +9,16 @@
 library(tidyverse)
 library(aws.s3)
 library(googledrive)
-
+library(googlesheets4)
 
 ## Data Import ## 
 ## PPL Data ### 
 PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
-  mutate(across('Project Type', str_replace, 'Other', 'General'))
+  mutate(across('Project Type', str_replace, 'Other', 'General')) 
+
+## Filtering down to states approved based on this document: https://docs.google.com/document/d/1sapr_7U6mLciUpS7u-Yj3g44G3S-WchaukyiA2N8e-M/edit
+PPL_Data <- PPL_Data %>%
+            filter(State %in% c("Alabama","Idaho","Michigan"))
 
 ## SABs Data ### 
 Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
@@ -29,8 +33,11 @@ Sabs_cleaned <- Sabs_raw %>%
 ## TO DO: Put this on AWS ## 
 ## Sourced from Attachment A DWISNA Allotments and Pipe Estimates: https://www.epa.gov/system/files/documents/2023-04/Final_FY23%20DWSRF%20Allotment%20Memo%20and%20Attachments_April%202023.pdf
 ## Sourced from the 20-year need (page 9 + 10): https://www.epa.gov/system/files/documents/2023-04/Final_DWINSA%20Public%20Factsheet%204.4.23.pdf
-AdditionalData <- read.csv("www/AdditionalData-v4.csv", stringsAsFactors = FALSE)%>%
-  rename(`Emerging Contaminants` = "Emerging.Contaminants")
+
+URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
+
+AdditionalData <- read_sheet(URL, sheet = "AdditionalData")
+ # rename(`Emerging Contaminants` = "Emerging.Contaminants")
 
 ## Data For Application ## 
 PPL_State_Data_Geo <- PPL_Data %>%
@@ -52,6 +59,9 @@ PPL_State_Data_Geo <- PPL_Data %>%
 ## Contact gabe@policyinnovation.org for questions/access
 ## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
 
+ # Sys.setenv("AWS_ACCESS_KEY_ID" = "YourKey",
+ #            "AWS_SECRET_ACCESS_KEY" = "YourSecretAccessKey",
+ #            "AWS_DEFAULT_REGION" = "us-east-1")
 
 # Writing to temp 
 

@@ -50,8 +50,9 @@ ui <- fluidPage(
   sidebarLayout(
     div( id ="sidebar",
          sidebarPanel(
-           style = "position: fixed; height: 80%; overflow-y: auto; margin-left: -30px;", div(style = "display:inline-block; float:right; margin-bottom: 20px"),
+           style = "position: fixed; height: 82%; overflow-y: auto; margin-left: -30px;", div(style = "display:inline-block; float:right; margin-bottom: 20px"),
            uiOutput("StateName", style = "font-size: 40px; margin-top: -20px;"), 
+           uiOutput("StateCatagory", style = "font-size: 25px; margin-top: -10px; font-style: italic;"), 
            uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px; margin-bottom: 10px; "), 
            actionButton("Context", "Toggle National Map or State Data Table",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
            bsCollapse(id = "CollapsePanel", open = c("Drinking Water Needs and Funding", "All Projects"), multiple = TRUE,
@@ -124,11 +125,12 @@ server <- function(input, output,session) {
 
   PPL_State_Data_Geo <- DW_Data_Raw %>%
     left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
-    mutate(Color = ifelse(Count > 0 ,"#BDD7E7", Color))%>%
-    mutate(Color = ifelse(Count > 25,"#6BAED6", Color))%>%
-    mutate(Color = ifelse(Count > 50,"#3182BD", Color))%>%
-    mutate(Color = ifelse(Count > 75,"#08519c", Color))%>%
-    mutate(Color = ifelse(is.na(Count), "#D3D3D3",Color))
+    mutate(Color = "")%>%
+    mutate(Color = ifelse(Catagory == 1,"#08519c", Color))%>%
+    mutate(Color = ifelse(Catagory == 2,"#3182BD", Color))%>%
+    mutate(Color = ifelse(Catagory == 3,"#6BAED6", Color))%>%
+    mutate(Color = ifelse(Catagory == 4, "#D3D3D3",Color))%>%
+    mutate(Color = ifelse(is.na(Catagory), "#D3D3D3",Color))
   
   
   
@@ -168,9 +170,9 @@ server <- function(input, output,session) {
                   color = "white", 
                   weight = 1.5)%>%
       addLegend("topleft", 
-                colors = c("#D3D3D3", "#BDD7E7", "#6BAED6", "#3182BD", "#08519c"),
-                labels = c("No project data", "1-25", "25-50","50-75","75+"),
-                title = "Fundable Projects",
+                colors = c("#08519c", "#3182BD", "#6BAED6", "#D3D3D3"),
+                labels = c("Award Data", "No Award Data, Only Project Applicant Data","Partial Award Data","No Data"),
+                title = "Catagory",
                 opacity = 1)%>%
       setView(-95.5795, 36.8283, zoom = 4)
     
@@ -211,12 +213,6 @@ server <- function(input, output,session) {
       mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
       mutate(Population = as.numeric(Population))%>%
       select(2,3,4,5,7,8,9,10,6,11,12)
-    
-    # Funding = c('#e5f5e0', '#a1d99b', '#31a354', "#557153")
-    # Population = c("#ffb448", "#ffc784","#ffdc97","#fff4bd")
-    # Principal = c("#F45D01","#333C6B","#97A7B3")
-    # 
-
  
     renderReactable({
       with_tooltip <- function(value, tooltip, ...) {
@@ -270,9 +266,15 @@ server <- function(input, output,session) {
   #### Sidebar #### 
   #State Name
   output$StateName <- renderText({SelectedDataReactive$df$State[1]})
-  output$StateNameTwo <- renderText({
-    paste(SelectedDataReactive$df$State[1],"Fundable Project List")
-    })
+  output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1],"Project Priority List")})
+
+  output$StateCatagory <- renderText({
+    Catagory <- PPL_State_Data_Geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Catagory)
+    CatagoryText <- ifelse(Catagory == 1,"Award Data","")
+    CatagoryText <- ifelse(Catagory == 2,"No Award Data, Only Project Applicant Data",CatagoryText)
+    CatagoryText <- ifelse(Catagory == 3,"Partial Award Data",CatagoryText)
+    return(paste("Catagory:", CatagoryText))
+  })
   
   output$ColumnMouseover <- renderText({
     paste("Click a column to sort, mouse-over a column for details, and slide a column to expand")
@@ -451,20 +453,15 @@ server <- function(input, output,session) {
     title = HTML("<b> EPIC’s Drinking Water Funding Dashboard </b>"),
     HTML("<b> About this dashboard: </b>"),
     HTML("<br>"),
-    HTML("This dashboard currently tracks Drinking Water State Revolving Funds (DWSRFs) from Federal Fiscal Year (FFY) 2022 appropriations, which will typically be addressed in State Fiscal Year (SFY) 2023 Intended Use Plans (IUPs) 
-         and Project Priority Lists (PPLs). Users of this dashboard can view states’ intended use of funds through PPLs. States can request their allotments of federal funding anytime up to the end of the FFY after the year in which the funds were appropriated 
-         (e.g. up to September 30, 2023 for FFY2022 DWSRF appropriations). Once states receive their allotment of federal funds (also known as a ‘federal capitalization grant’), they must designate the funds for specific projects within one year. 
-         This is particularly pertinent for the funding for lead service line replacement (LSLR) and emerging contaminants (EC), as several states have delayed requesting and/or designating this funding while they develop new programs and build project pipelines to administer and use the funds. 
-         Thus, some states may take up to September 2024 before their FFY2022 LSLR and EC funds are designated to projects."),
+    HTML("This dashboard attempts to track Drinking Water State Revolving Funds (DWSRFs) from Federal Fiscal Year (FFY) 2022 appropriations, based on data presented in Project Priority Lists (PPLs) published by states for State Fiscal Year (SFY) 2023. 
+         For a full understanding of each state’s PPL, we recommend reviewing the Intended Use Plan (IUP) for that state. Also, some states may take up to September 2024 before their FFY2022 lead service line replacement (LSLR) and emerging contaminant (EC) funds are designated to projects."),
     HTML("<br>"),
     HTML("<br>"),
     HTML("<b> Data Limitations and Disclaimers: </b>"),
     HTML("<br>"),
-    HTML("Due to a large variation of IUP and PPL formats across different states, EPIC used discretion in interpreting the data in order to standardize and make it accessible in one dashboard. 
-         The sources of state data and how we interpreted it are outlined in state-specific data dictionaries, and we have provided explanations where we have noticed discrepancies or uncertainties. 
-         Because of several differences across states, state-to-state comparisons are difficult and likely will be inaccurate. Additionally, the data used for this dashboard is only what is available publicly and particular to the DWSRF and does not include all data maintained by the states and EPA. 
-         In addition, there are several reasons why a state’s data may not be included in the dashboard: 1) state documents may not clearly indicate projects they intend to fund, the dashboard only includes fundable projects; 2) state documents may not be finalized; or 3) state documents can be challenging 
-         to transform into a standardized table or ambiguous to interpret. To access the raw data, please visit each state’s appropriate website to download the IUPs and PPLs. To the extent possible, EPIC will continue to update the dashboard with additional data as it becomes available."),
+    HTML("The data in this dashboard draws from states’ PPLs. Due to a large variation of formats across different states, EPIC used discretion in interpreting the data in order to standardize and make it accessible in one dashboard. The sources of state data and how we interpreted it are outlined in state-specific data dictionaries, including explanations where we have noticed discrepancies or uncertainties and some relevant notes from the states’ IUPs. 
+         Because of differences across states, state-to-state comparisons are difficult and likely will be inaccurate. The data used for this dashboard is only what is available publicly and particular to the DWSRF and does not include all data maintained by the states and EPA. State data in the dashboard can be categorized in the following ways: 1) States with award data; 2) States with no award data, only project applicant data; 3) States with partial award data; 4) 
+         States with no data, which may indicate that the PPLs are not finalized, not released, or are challenging to interpret and transform into a standardized table. To access the raw data, please visit each state’s appropriate website to download the IUPs and PPLs. To the extent possible, EPIC will continue to update and make corrections to the dashboard with additional data as it becomes available."),
     HTML("<br>"),
     HTML("<br>"),
     HTML("<b> How to use this dashboard: </b>"),
@@ -504,7 +501,7 @@ server <- function(input, output,session) {
       dictionary_pdf <- drive_download(state_link, file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding glossary data
-      glossary_pdf <- drive_download("https://drive.google.com/file/d/1UIRpWkvI9VuGTmcbMSsQyKmXQT092O9E/view?usp=share_link", 
+      glossary_pdf <- drive_download("https://drive.google.com/file/d/1Qils_r_X8pyMe3F9qJ77bqzsnG_6PQqb/view?usp=share_link", 
                                file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding state data
@@ -517,30 +514,6 @@ server <- function(input, output,session) {
     })
 
 
-  # 
-  # output$Chart <- renderPlot({
-  #   req(SummaryData$df)
-  #   
-  #     print(SummaryData$df)
-  #     ggplot(data = SummaryData$df, aes(x = "", y = Count, fill = `Project Type`))+
-  #       geom_bar(stat = "identity", color = "black", alpha = .8, width = 1)+
-  #        coord_polar("y", start=0)+
-  #       scale_fill_manual(values=c("Tier 1" = "#326138", "Tier 2" ="#f45d00", "Tier 3" ="#b6174b"))+
-  #       geom_text(aes(label = Count, vjust = -1.5, colour = "black", size = 4))+
-  #       ylab("")+
-  #       #scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0,107), breaks = c(0,25,50,75,100))+
-  #       xlab("")+
-  #       theme_classic()+
-  #       theme(legend.position='none')+
-  #       theme(axis.text = element_text(size = 14, color = "black"))+
-  #       theme(plot.margin = margin(0,0,0,0, "cm"))+
-  #       theme(plot.background = element_rect(fill = "#f5f5f5"))+
-  #       theme(panel.border = element_blank())
-  # 
-  #   
-  # })
-  
-  
   
 }
 

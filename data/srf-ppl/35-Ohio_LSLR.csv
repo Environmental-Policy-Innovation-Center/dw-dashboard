@@ -1,0 +1,60 @@
+Entity,Project,County,Estimated.Loan.Amount,Estimated.LSL.Eligible.Costs,Loan.Type,Estimated.Award.Date,Rate
+Addyston,Lead Service Line Replacement,Hamilton,"$88,269","$88,269",Design,Jun-23,PLN/DES
+Addyston,Lead Service Line Replacement,Hamilton,"$1,881,488","$1,881,488",Construction,Jun-23,LSL
+Addyston,Sekitan Avenue Water Main and LSL Replacement,Hamilton,"$79,233","$22,057",Design,Jan-23,PLN/DES
+Addyston,Sekitan Avenue Lead Service Line Replacement,Hamilton,"$558,394","$558,394",Construction,Jun-23,LSL
+Akron,Lead Service Line Replacement Program 2022,Summit,"$5,000,000","$5,000,000",Construction,Sep-22,LSL
+Alliance,"Lead Service Line Replacement Project, Phase 3",Stark,"$1,000,000","$1,000,000",Construction,Jun-23,LSL
+Bellaire,Lead Service Line Replacement,Belmont,"$1,000,000","$1,000,000",Construction,Sep-22,LSL
+Bowerston,Water System (LSLR) Improvements Project,Harrison,"$225,000","$225,000",Construction,Mar-23,LSL
+Cadiz,Lead Service Line Replacement Project,Harrison,"$578,000","$578,000",Construction,Sep-22,LSL
+Cincinnati,Apple Cooper Hanfield Water Main Replacement,Hamilton,"$2,307,000","$963,300",Construction,May-23,STD/LSL
+Cincinnati,Bevis Bonaparte Clarion Water Main Replacement,Hamilton,"$2,665,000","$1,453,500",Construction,May-23,STD/LSL
+Cincinnati,Burch East Hill Shaw Water Main Replacement,Hamilton,"$2,422,000","$991,800",Construction,May-23,STD/LSL
+Cincinnati,Cappel Drive Waterline Replacement,Hamilton,"$2,422,000","$991,800",Construction,May-23,STD/LSL
+Cincinnati,Carson Avenue Waterline Replacement,Hamilton,"$2,485,000","$1,111,500",Construction,May-23,STD/LSL
+Cincinnati,CUF Water Main Replacement,Hamilton,"$2,111,000","$780,900",Construction,May-23,STD/LSL
+Cincinnati,Dayton Horace Naeher Water Main Replacement,Hamilton,"$2,979,000","$1,100,100",Construction,May-23,STD/LSL
+Cincinnati,Dunore Road Waterline Replacement,Hamilton,"$593,000","$5,700",Construction,May-23,STD/LSL
+Cincinnati,E. McMillan Street Waterline Replacement,Hamilton,"$1,614,000","$216,600",Construction,May-23,STD/LSL
+Cincinnati,East Price Hill Water Main Replacement,Hamilton,"$3,321,000","$1,179,900",Construction,May-23,STD/LSL
+Cincinnati,Fairview Graham Probasco Water Main Replacement,Hamilton,"$2,817,000","$1,362,300",Construction,May-23,STD/LSL
+Cincinnati,Fire Flow Collection Waterline Replacement,Hamilton,"$2,913,000","$974,700",Construction,May-23,STD/LSL
+Cincinnati,Hyde Park Water Main Replacement,Hamilton,"$2,688,000","$1,117,200",Construction,May-23,STD/LSL
+Cincinnati,Lisbon Avenue Waterline Replacement,Hamilton,"$2,006,000","$11,400",Construction,May-23,STD/LSL
+Cincinnati,Symmes Fowler Water Main Replacement,Hamilton,"$5,561,000","$1,065,900",Construction,May-23,STD/LSL
+Cincinnati,West Price Hill Water Main Replacement,Hamilton,"$2,810,000","$969,000",Construction,May-23,STD/LSL
+"Del-Co Water Company, Inc.",Centerburg Lead Service Line Replacement,Delaware,"$175,450","$175,450",Construction,Oct-22,LSL
+Delphos,South Main Street Water Service Replacement,Allen,"$1,433,515","$620,135",Construction,Jul-22,SML/LSL
+Dunkirk,Lead Service Line and Water Line Replacement,Hardin,"$4,621,200","$1,020,000",Construction,Jun-23,SML/LSL
+Dunkirk,Lead Service Line and Waterline Replacement,Hardin,"$407,000","$89,834",Design,Aug-22,PLN/DES
+East Palestine,Waterline Replacement Project,Columbiana,"$5,605,510","$500,000",Construction,Apr-23,DIS/LSL
+Elyria,City of Elyria Lead Service Line Replacement Project #3,Lorain,"$1,000,000","$1,000,000",Construction,Jul-22,LSL
+Glendale,Water Treatment System Upgrades*,Hamilton,"$2,003,883","$873,000",Construction,Jun-23,SML/LSL
+Glenmont,Water Line and Household Lead Line Replacement*,Holmes,"$1,766,850","$301,950",Construction,Jan-23,SML/LSL
+Glenmont,Waterline and Household Lead Line Replacement,Holmes,"$365,700","$100,000",Design,Jul-22,PLN/DES
+Hubbard,2022 Lead Service Line Replacement*,Trumbull,"$180,000","$180,000",Construction,Dec-22,LSL
+Hubbard,2023 Lead Service Line Replacement Project*,Trumbull,"$250,000","$250,000",Construction,Apr-23,LSL
+Hubbard,South Main St Waterline Replacement*,Trumbull,"$60,000","$10,000",Design,Dec-22,PLN/DES
+Hubbard,South Main Street Waterline Replacement (Lincoln to Helen)*,Trumbull,"$680,000","$100,000",Construction,Jun-23,SML/LSL
+Kenton,Downtown Revitalization Phase 2 (WL and LSLR),Hardin,"$6,519,108","$511,500",Construction,Dec-22,DIS/LSL
+Licking County,Harbor Hills Watermain and Lead Service Line Replacement*,Licking,"$11,000,000","$1,300,000",Construction,Jan-23,SML/LSL
+Licking County,Prescott Estates Water Line and New Tank*,Licking,"$2,901,300","$466,000",Construction,Feb-23,SML/LSL
+Licking County - Harbor Hills,Water Main and Lead Service Line Replacement*,Licking,"$950,000","$369,204",Design,Aug-22,PLN/DES
+Lockland,Water Treatment System Upgrades,Hamilton,"$9,900,000","$900,000",Construction,Jun-23,SML/LSL
+Lorain,2023 Lead Service line Replacement Project,Lorain,"$5,000,000","$5,000,000",Construction,May-23,LSL
+Malvern,Phase 1 Waterline Replacement,Carroll,"$506,000","$17,750",Construction,Sep-22,DIS/LSL
+Malvern,Waterline Replacement Phase 2,Carroll,"$3,886,000","$62,000",Construction,Jun-23,DIS/LSL
+New London,Coleman Court/Clinton Street Lead Waterline Replacement,Huron,"$369,204","$369,204",Construction,Jun-23,LSL
+North Baltimore,Watermain Replacement Project,Wood,"$4,838,251","$30,000",Construction,Oct-22,SML/LSL
+Port Clinton,Water and Sanitary Sewer Infrastructure Improvements,Ottawa,"$10,704,265","$750,000",Construction,Jun-23,REG/LSL
+Proctorville,Lead Service Line Replacement,Lawrence,"$150,000","$150,000",Construction,Oct-22,LSL
+Scio,Waterline and Household Line Replacement,Harrison,"$258,890","$258,890",Construction,Aug-22,LSL
+Toronto,E. 5th St/Myers St Waterline & Lead Line Replacement,Jefferson,"$169,344","$32,658",Design,May-22,PLN/DES
+Toronto,E. 5th/Myers Street Waterline & Lead Line Replacement,Jefferson,"$1,694,047","$326,700",Construction,Jan-23,SML/LSL
+Utica,Riverside Dr Watermain Replacement,Licking,"$67,526","$8,161",Design,Jul-22,PLN/DES
+Utica,Riverside Drive Watermain Replacement,Licking,"$624,312","$75,460",Construction,Sep-22,SML/LSL
+Warren,2022 Waterline Replacement Program,Trumbull,"$2,424,000","$806,111",Construction,May-23,STD/LSL
+West Union,North Street Water Line Replacement,Adams,"$1,235,000","$396,000",Construction,Sep-22,SML/LSL
+Willard,Park Street Water Line Replacement,Huron,"$895,295","$462,816",Construction,Oct-22,SML/LSL
+Woodville,Water Line Improvements Phase 3,Sandusky,"$557,530","$55,753",Construction,Jan-23,SML/LSL

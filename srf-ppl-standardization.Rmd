@@ -36,19 +36,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 options(scipen=999999999)
 
-library(data.table)
-library(tigris)
+
 library(tidyverse)
-library(tidycensus)
-library(sf)
-library(units)
-library(censusapi)
-library(readxl)
-library(tictoc)
-library(googlesheets4)
-library(fuzzyjoin)
-library(tm)
-library(stringi)
+library(data.table)
 library(janitor)
 library(aws.s3)
 library(googledrive)
@@ -130,7 +120,6 @@ ar_merge <- fread(paste0(ppl_folder_path, "4-Arkansas_Merged.csv"),
 ar_comp <- fread(paste0(ppl_folder_path, "4-Arkansas.csv"),
                       colClasses = "character", na.strings = "") %>%
   clean_names()
-
 
 ar_app <- ar_comp %>%
   ## get rid of rows that the rank is not a number (not a project, total columns, etc)
@@ -729,7 +718,8 @@ mn_clean <- mn_raw %>%
     principal_forgiveness_amount = est_lslr_pf + est_ec_pf + est_dac_pf,
     # transform to numeric to save rows where numbers are present,
     # but fill in 0s from adding above with "No Information" for the final database
-    funding_amount = as.numeric(str_replace_all(estimated_dwrf_loan,"[^0-9.]","")),
+    # per State Sources Data Dictionary, funding amount = estimated loan + PFA
+    funding_amount = as.numeric(str_replace_all(estimated_dwrf_loan,"[^0-9.]","")) + principal_forgiveness_amount,
   ) %>%
   # process text columns
   mutate(
@@ -1098,7 +1088,7 @@ pa_raw <- fread(paste0(ppl_folder_path, "38-Pennsylvania_manual_fundable_PPL.csv
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
-# -> (62,13)
+# -> (62,14)
 pa_clean <- pa_raw %>%
   mutate(state_rank = as.numeric(gsub(",", "", projrank)),
          state_score = as.numeric(gsub(",", "",pv_rating)),
@@ -1135,12 +1125,19 @@ pa_clean <- pa_raw %>%
          fundable = case_when(fundable == "yes" ~ "Fundable",
                               TRUE ~ "Applicant"),
          cities_served = str_to_title(city),
+         # only three EC projects have a disadvantaged distinction
+         disadvantaged = case_when(
+           borrower == "Susquehanna Area Reg. Airport Authority" ~ "No",
+           project_name == "Pa American Water Company Frackville" ~ "Yes",
+           project_name == "Saegertown Borough" ~ "No",
+           TRUE ~ as.character(NA)
+         ),
          state = "Pennsylvania"
          ) %>%
   ## standardize names
   ## keep relevant columns
   select(borrower, pwsid, cities_served, project_name, project_description, project_type,
-         state_rank, state_score, funding_amount, principal_forgiveness_amount, population, fundable, state)
+         state_rank, state_score, funding_amount, principal_forgiveness_amount, disadvantaged, population, fundable, state)
 ```
 
 
@@ -1501,45 +1498,47 @@ wv_clean <- wv_raw %>%
 ## Wisconsin
 
 ```{r}
-# (54,17)
+# (54,17) -> (46,19)
 wi_fund_raw <- fread(paste0(ppl_folder_path, "49-Wisconsin_PPL.csv"),
-                     colClasses = "character", na.strings = "")
+                     colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+  ## remove non project rows
+  filter(!is.na(project_points)) %>%
+  # define disadvantaged for the non-EC projects as total points > 59 per data dictionary
+  mutate(disadvantaged = case_when(
+    as.numeric(str_replace_all(total_pf_points,"[^0-9.]", "")) > 59 ~ "Yes",
+                         TRUE ~ "No"),
+         # determine project type by keyword search for non-EC projects
+         project_type = case_when(grepl("lsl", project_description, ignore.case = T) ~ "Lead",
+                                  grepl("pfas", project_description, ignore.case=T) ~ "Emerging Contaminants",
+                                  TRUE ~ "Other"),)
 
-# (4,17)
+# (4,17) -> (4,19)
 wi_ec_fund <- fread(paste0(ppl_folder_path, "49-Wisconsin_EC_Funding_List.csv"),
-                    colClasses = "character", na.strings = "")
+                    colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # define disadvantaged as financial need points > 29 for only EC projects
+  mutate(disadvantaged = case_when(as.numeric(str_replace_all(financial_need_points,"[^0-9.]", "")) > 29 ~ "Yes",
+                         TRUE ~ "No"),
+         project_type = "Emerging Contaminants")
 
-# (58,17)
+# (50,19)
 wi_fund_raw <- bind_rows(wi_fund_raw, wi_ec_fund)
 
 # -> (50,11)
 wi_clean <- wi_fund_raw %>%
-  clean_names() %>%
-  ## remove non project rows
-  filter(!is.na(project_points)) %>%
-  ## rowwise operations for sums
-  rowwise() %>%
   ## make relevant columns numbers
   mutate(state_score = as.numeric(str_replace_all(priority_score,"[^0-9.]","")),
          ## sum of columns, getting rid of $ and comma and replacing blanks with zero
-         funding_amount = sum(as.numeric(str_replace_all(estimated_loan_amount,"[^0-9.]", "")),
-                              as.numeric(str_replace_all(pf_estimate,"[^0-9.]", "")),
-                              na.rm = T),
+         funding_amount = as.numeric(str_replace_all(requested_project_costs,"[^0-9.]", "")),
          principal_forgiveness_amount = as.numeric(str_replace_all(pf_estimate,"[^0-9.]", "")),
          ## make principal forgiveness NAs zeros
          principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
          population = as.numeric(str_replace_all(population,"[^0-9.]", ""))
          ) %>%
-  ungroup() %>%
   ## non-numeric columns
-  mutate(project_type = case_when(grepl("lsl", project_description, ignore.case = T) ~ "Lead",
-                                  grepl("pfas", project_description, ignore.case=T) ~ "Emerging Contaminants",
-                                  TRUE ~ "Other"),
-         fundable = case_when(!is.na(funding_amount) ~ "Fundable",
+  mutate(fundable = case_when(!is.na(funding_amount) ~ "Fundable",
                               TRUE ~ "Applicant"),
-         ## dac if mhi < 49397
-         disadvantaged = case_when(as.numeric(str_replace_all(project_points,"[^0-9.]", "")) >= 60 ~ "Yes",
-                         TRUE ~ "No"),
          ## get rid of numbers from borrower name
          borrower = str_to_title(str_replace_all(municipality, "[0-9.\\#]", "")),
          cities_served = borrower,

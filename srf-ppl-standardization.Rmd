@@ -200,6 +200,114 @@ ar_clean <- bind_rows(ar_app, ar_fnd)
 
 ```
 
+## California (DD)
+
+```{r}
+
+# presumably applicant projects, not currently used in funding database, 
+# but could be used in future expansion that considers all potential projects
+# ca_comp <- fread(paste0(ppl_folder_path, "5-California_Comprehensive_PPL.csv"),
+#                      colClasses = "character", na.strings = "")
+
+# (16,12) -> (15,9)
+# intended to be funded projects that are not EC
+ca_fund <- fread(paste0(ppl_folder_path, "5-California_Fundable_PPL.csv"),
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # correct typo in column name
+  rename(district_number = disrict_number) %>%
+  # get rid of non-project columns
+  filter(!grepl("Total", project_number)) %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
+         # no longer using service connections, but can be added back in if expanded
+         # service_connections = as.numeric(str_replace_all(service_connections,"[^0-9.]", "")),
+         funding_amount = as.numeric(str_replace_all(estimated_dwsrf_loan,"[^0-9.]", "")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(estimated_pf_grant_amount,"[^0-9.]", "")),
+  ) %>%
+  # process text columns
+  # pwsid is CA + first seven characters of project number
+  mutate(pwsid = paste0("CA", as.character(map(strsplit(project_number, split = "-"), 1))),
+         borrower = str_squish(applicant),
+         project_name = str_squish(project_number),
+         project_description = str_squish(project_title_description),
+         project_type = "Other",
+         # it is possible disadvantaged is denoted in the Class column, but the IUP does not define it explicitly
+         # disadvantaged = ,
+         state = "California",
+         fundable = "Fundable"
+         ) %>%
+  select(borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
+         project_type, population, state, fundable)
+
+
+# (11,9) -> (11,10)
+# EC projects that have funding data
+ca_ec <- fread(paste0(ppl_folder_path, "5-California_EC.csv"),
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
+         funding_amount = as.numeric(str_replace_all(requested_funding,"[^0-9.]", "")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(estimated_maximum_pf_grant_amount,"[^0-9.]", "")),
+         ) %>%
+  # process text columns
+  mutate(pwsid = paste0("CA", as.character(map(strsplit(project_number, split = "-"), 1))),
+         borrower = str_squish(applicant),
+         project_name = str_squish(project_number),
+         project_description = str_squish(project_title_description),
+         project_type = "Emerging Contaminants",
+         disadvantaged = case_when(
+           grepl("Not", degree_of_disadvantaged) ~ "No",
+           TRUE ~ "Yes"
+         ),
+         state = "California",
+         fundable = "Fundable") %>%
+  select(borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
+         project_type, population, disadvantaged, state, fundable)
+
+# -> (26,11)
+ca_clean <- bind_rows(ca_fund, ca_ec)
+
+```
+
+## Colorado (Q)
+
+```{r}
+
+# (165,11)
+co_raw <- fread(paste0(ppl_folder_path, "7-Colorado_AppendixB.csv"),
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+# TODO: this set up currently assumes that we want each row to be distinct by the loan amount since several project rows 'split' in the original table into multiple sources. If instead we need to make it one project each, we'll need to subset the unique text columns, aggregate the numeric columns (sum of funding, maybe PF, max of score, etc.) and then merge those two sub-tables by the project_number.
+
+co_clean <- co_raw %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(pop,"[^0-9.]", "")),
+         funding_amount = as.numeric(str_replace_all(approved_loan_amount,"[^0-9.]", "")),
+         # principal_forgiveness_amount = ,
+         state_score = as.numeric(str_replace_all(pts,"[^0-9.]", "")),
+         ) %>%
+  mutate(pwsid= str_squish(pws_id_number),
+         project_name = str_squish(project_number),
+         borrower = str_squish(facility),
+         cities_served = str_squish(county),
+         disadvantaged = case_when(
+           dac == "Y" ~ "Yes",
+           TRUE ~ "No"
+         ),
+         project_type = "Other",
+         project_description = str_squish(project_description),
+         state = "Colorado",
+         fundable = "Fundable") %>%
+  select(borrower, pwsid, project_name, project_description, state_score, 
+         funding_amount, population, cities_served, disadvantaged, project_type, state, fundable)
+  
+
+
+```
+
 
 ## Delaware
 
@@ -245,6 +353,31 @@ de_clean <- de_fund %>%
          state_rank, state_score, funding_amount, principal_forgiveness_amount,
          disadvantaged, population, fundable) %>%
   mutate(state = "Delaware")
+```
+
+
+## Florida (Q)
+
+```{r}
+
+fl_fund <- fread(paste0(ppl_folder_path, "9-Florida_ppl_fundable.csv"),
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # format numeric columns
+  mutate(funding_amount = as.numeric(str_replace_all(authorized_loan_amount,"[^0-9.]","")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness_amt,"[^0-9.]","")),
+         state_score = as.numeric(str_replace_all(priority_score,"[^0-9.]",""))) %>%
+  # formant text columns
+  mutate(borrower = str_squish(applicant),
+         project_name = str_squish(project_number),
+         project_description = str_squish(project_description),
+         project_type = "Other",
+         state = "Florida",
+         fundable = "Fundable") %>%
+  select(borrower, project_name, project_description, state_score, funding_amount, 
+         principal_forgiveness_amount, project_type, state, fundable)
+  
+
 ```
 
 
@@ -754,6 +887,40 @@ mn_clean <- mn_raw %>%
 ```
 
 
+## Mississippi (DD)
+
+```{r}
+
+# (48,9)
+ms_raw <- fread(paste0(ppl_folder_path, "24-Mississippi_PPL.csv"),
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names()
+
+# -> (16,7)
+ms_clean <- ms_raw %>%
+  # keep only the projects above the ----- funding line
+  slice_head(n=20) %>%
+  # drop category rows
+  filter(!grepl("Category", project)) %>%
+  # format numeric columns
+  mutate(state_score = as.numeric(str_replace_all(priority_points,"[^0-9.]","")),
+         population = as.numeric(str_replace_all(service_area_population,"[^0-9.]","")),
+         funding_amount = as.numeric(str_replace_all(loan_amount_requested,"[^0-9.]","")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")),) %>%
+  # format text columns
+  mutate(borrower = str_squish(project),
+         project_description = str_squish(project_description),
+         state = "Mississippi",
+         project_type = "Other",
+         fundable = "Fundable") %>%
+  select(borrower, project_description, state_score, funding_amount, principal_forgiveness_amount,
+         state, project_type, fundable)
+  
+
+
+```
+
+
 ## Missouri
 
 ```{r}
@@ -1032,6 +1199,90 @@ nm_clean <- nm_raw %>%
 ```
 
 
+## Nevada (DD)
+
+```{r}
+# (172, 16)
+nv_raw <- fread(paste0(ppl_folder_path, "28-Nevada_PPL.csv"),
+                colClass="character", na.strings="") %>%
+  clean_names()
+
+# -> (22, 11) - drop is due to the removal of "Total" rows and non fundable projects
+nv_clean <- nv_raw %>%
+  # remove non project rows
+  filter(!grepl("Total", priority_number)) %>%
+  # process numeric columns
+  mutate(state_rank = as.numeric(str_replace_all(priority_number, "[^0-9.]", "")),
+         state_score = as.numeric(str_replace_all(revised_points, "[^0-9.]", "")),
+         population = as.numeric(str_replace_all(project_population, "[^0-9.]", "")),
+         # no longer using service connections, but can be added back in if expanded
+         # service_connections = as.numeric(str_replace_all(project_service_connections, "[^0-9.]", "")),
+         funding_amount = as.numeric(str_replace_all(estimated_loan_amount, "[^0-9.]", ""))) %>%
+  # process text columns
+  mutate(disadvantaged = case_when(
+    is.na(d2) ~ "No",
+    TRUE ~ "Yes"
+  ),
+         borrower = str_squish(entity),
+         pwsid = str_squish(state_id),
+         state = "Nevada",
+         # assumed to be other because no consistent mention of lead, lslr, contaminants, pfas, etc.
+         project_type = "Other",
+         project_description = str_squish(project_description),
+         fundable = case_when(
+           # fundable column bled into the loan amount
+           grepl("Yes", estimated_loan_amount) ~ "Yes",
+           TRUE ~ "No")
+  ) %>%
+  filter(fundable == "Yes") %>%
+  select(borrower, pwsid, project_description, state_rank, state_score, funding_amount, 
+         population, disadvantaged, project_type, state, fundable)
+
+```
+
+
+## North Carolina (Q)
+
+```{r}
+
+# (221, 15)
+nc_raw <- fread(paste0(ppl_folder_path, "33-NorthCarolina_PPL_Comprehensive.csv"),
+                colClass="character", na.strings="") %>%
+  clean_names()
+
+# -> (16,11)
+nc_clean <- nc_raw %>%
+  # format numeric columns
+  mutate(state_score = as.numeric(str_replace_all(priorit_y_points, "[^0-9.]", "")),
+         population = as.numeric(str_replace_all(service_populati_on, "[^0-9.]", "")),
+         # pre-format columns that will add up to funding amount and PF
+         base_dwsrf_loans = as.numeric(str_replace_all(base_dwsrf_loans, "[^0-9.]", "")),
+         bil_suppl_dwsrf_loans = as.numeric(str_replace_all(bil_suppl_dwsrf_loans, "[^0-9.]", "")),
+         bil_suppl_dwsrf_principal_forgivene_ss = as.numeric(str_replace_all(bil_suppl_dwsrf_principal_forgivene_ss, "[^0-9.]", "")),
+         base_dwsrf_principal_forgivene_ss = as.numeric(str_replace_all(base_dwsrf_principal_forgivene_ss, "[^0-9.]", "")),
+         # combine for funding amount and PF
+         # does dwsrf loans already include PF? - does not appear so, as there are rows with only PF and DWSRF loans are 0, 
+         # so they will need to be added together as well
+         principal_forgiveness_amount = bil_suppl_dwsrf_principal_forgivene_ss + base_dwsrf_principal_forgivene_ss,
+         funding_amount = base_dwsrf_loans + bil_suppl_dwsrf_loans + principal_forgiveness_amount
+         )%>%
+  # format text columns
+  mutate(borrower = str_squish(applicant_name),
+         project_name = str_squish(project_name),
+         pwsid = case_when(
+           pwsid == 'x' ~ as.character(NA),
+           TRUE ~ pwsid),
+         cities_served = str_squish(county),
+         project_type = "Other",
+         state = "North Carolina") %>%
+  filter(!is.na(funding_amount)) %>% #to fundable
+  mutate(fundable = "Fundable") %>%
+  select(borrower, pwsid, project_name, state_score, funding_amount, principal_forgiveness_amount,
+         cities_served, project_type, population, state, fundable)
+
+```
+
+
 ## North Dakota
 
 ```{r}
@@ -1141,13 +1392,57 @@ pa_clean <- pa_raw %>%
 ```
 
 
+## South Carolina (DD)
+
+
+```{r}
+
+# (20,11)
+sc_raw <- fread(paste0(ppl_folder_path, "37-SouthCarolina_PPL.csv"),
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names()
+
+# -> (18,11)
+sc_clean <- sc_raw %>%
+  # remove non-project rows
+  filter(sponsor_and_project_name != "") %>%
+  # process numeric columns
+  mutate(funding_amount = as.numeric(str_replace_all(estimated_srf_loan_amount,"[^0-9.]","")),
+         funding_amount = replace_na(funding_amount, 0),
+         principal_forgiveness_amount = as.numeric(str_replace_all(estimated_principal_forgiveness_assistance2,"[^0-9.]","")),
+         principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
+         # funding amount should include PF
+         funding_amount = funding_amount + principal_forgiveness_amount,
+         population = as.numeric(str_replace_all(population_affected_by_project,"[^0-9.]","")),
+         state_score = as.numeric(str_replace_all(total_points,"[^0-9.]",""))) %>%
+  # process text columns
+  mutate(project_description = str_squish(project_description),
+         # take the first portion of the water system id number and attach SC
+         pwsid = paste0("SC", as.character(map(strsplit(srf_project_number, split = "-"), 1))),
+         borrower = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 1))),
+         project_name = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 2))),
+         state = "South Carolina",
+         project_type = case_when(
+           grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
+           grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
+           TRUE ~ "Other"),
+         fundable = "Fundable"
+         ) %>%
+  select(borrower, pwsid, state_score, project_name, project_description, funding_amount, principal_forgiveness_amount,
+         population, project_type, state, fundable)
+
+
+```
+
+
 ## South Dakota
 
 ```{r}
 
 # (23,8)
 sd_fnd <- fread(paste0(ppl_folder_path, "41-SouthDakota_Fundable.csv"),
-                      colClasses = "character", na.strings = "") %>% clean_names()
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names()
 
 # (136,8)
 sd_ppl <- fread(paste0(ppl_folder_path, "41-SouthDakota_PPL2023.csv"),

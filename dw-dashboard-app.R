@@ -52,7 +52,7 @@ ui <- fluidPage(
          sidebarPanel(
            style = "position: fixed; height: 82%; overflow-y: auto; margin-left: -30px;", div(style = "display:inline-block; float:right; margin-bottom: 20px"),
            uiOutput("StateName", style = "font-size: 40px; margin-top: -20px;"), 
-           uiOutput("StateCatagory", style = "font-size: 25px; margin-top: -10px; font-style: italic;"), 
+           uiOutput("StateCategory", style = "font-size: 25px; margin-top: -10px; font-style: italic;"), 
            uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px; margin-bottom: 10px; "), 
            actionButton("Context", "Toggle National Map or State Data Table",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
            bsCollapse(id = "CollapsePanel", open = c("Drinking Water Needs and Funding", "All Projects"), multiple = TRUE,
@@ -126,11 +126,11 @@ server <- function(input, output,session) {
   PPL_State_Data_Geo <- DW_Data_Raw %>%
     left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
     mutate(Color = "")%>%
-    mutate(Color = ifelse(Catagory == 1,"#08519c", Color))%>%
-    mutate(Color = ifelse(Catagory == 2,"#3182BD", Color))%>%
-    mutate(Color = ifelse(Catagory == 3,"#6BAED6", Color))%>%
-    mutate(Color = ifelse(Catagory == 4, "#D3D3D3",Color))%>%
-    mutate(Color = ifelse(is.na(Catagory), "#D3D3D3",Color))
+    mutate(Color = ifelse(Category == 1,"#08519c", Color))%>%
+    mutate(Color = ifelse(Category == 2,"#3182BD", Color))%>%
+    mutate(Color = ifelse(Category == 3,"#6BAED6", Color))%>%
+    mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
+    mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
   
   
   
@@ -172,7 +172,7 @@ server <- function(input, output,session) {
       addLegend("topleft", 
                 colors = c("#08519c", "#3182BD", "#6BAED6", "#D3D3D3"),
                 labels = c("Award Data", "No Award Data, Only Project Applicant Data","Partial Award Data","No Data"),
-                title = "Catagory",
+                title = "Category",
                 opacity = 1)%>%
       setView(-95.5795, 36.8283, zoom = 4)
     
@@ -268,12 +268,12 @@ server <- function(input, output,session) {
   output$StateName <- renderText({SelectedDataReactive$df$State[1]})
   output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1],"Project Priority List")})
 
-  output$StateCatagory <- renderText({
-    Catagory <- PPL_State_Data_Geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Catagory)
-    CatagoryText <- ifelse(Catagory == 1,"Award Data","")
-    CatagoryText <- ifelse(Catagory == 2,"No Award Data, Only Project Applicant Data",CatagoryText)
-    CatagoryText <- ifelse(Catagory == 3,"Partial Award Data",CatagoryText)
-    return(paste("Catagory:", CatagoryText))
+  output$StateCategory <- renderText({
+    Category <- PPL_State_Data_Geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Category)
+    CategoryText <- ifelse(Category == 1,"Award Data","")
+    CategoryText <- ifelse(Category == 2,"No Award Data, Only Project Applicant Data",CategoryText)
+    CategoryText <- ifelse(Category == 3,"Partial Award Data",CategoryText)
+    return(paste("Category:", CategoryText))
   })
   
   output$ColumnMouseover <- renderText({
@@ -341,19 +341,19 @@ server <- function(input, output,session) {
   output$GeneralProjects <- renderUI({
     req(SummaryData$df)
     
-    CatagoryData <- SummaryData$df %>%
+    CategoryData <- SummaryData$df %>%
       filter(`Project Type` == ("General"))
     
-    if(nrow(CatagoryData) > 0)
+    if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CatagoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CatagoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CatagoryData$`Principal Forgiveness`[1]),dollar(sum(CatagoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CatagoryData$DAC) / sum(CatagoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
     }
     else
     {
@@ -378,19 +378,19 @@ server <- function(input, output,session) {
   output$LeadProjects <- renderUI({
     req(SummaryData$df)
     
-    CatagoryData <- SummaryData$df %>%
+    CategoryData <- SummaryData$df %>%
       filter(`Project Type` == ("Lead"))
     
-    if(nrow(CatagoryData) > 0)
+    if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CatagoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CatagoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CatagoryData$`Principal Forgiveness`[1]),dollar(sum(CatagoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CatagoryData$DAC) / sum(CatagoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
     }
     else
     {
@@ -415,19 +415,19 @@ server <- function(input, output,session) {
   output$ECProjects <- renderUI({
     req(SummaryData$df)
     
-    CatagoryData <- SummaryData$df %>%
+    CategoryData <- SummaryData$df %>%
       filter(`Project Type` == ("Emerging Contaminants"))
     
-    if(nrow(CatagoryData) > 0)
+    if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CatagoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CatagoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CatagoryData$`Principal Forgiveness`[1]),dollar(sum(CatagoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", scales::percent(sum(CatagoryData$DAC) / sum(CatagoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
     }
     else
     {

@@ -59,8 +59,8 @@ PPL_State_Data_Geo <- PPL_Data %>%
 ## Contact gabe@policyinnovation.org for questions/access
 ## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
 
- # Sys.setenv("AWS_ACCESS_KEY_ID" = "YourKey",
- #            "AWS_SECRET_ACCESS_KEY" = "YourSecretAccessKey",
+ # Sys.setenv("AWS_ACCESS_KEY_ID" = "",
+ #            "AWS_SECRET_ACCESS_KEY" = "",
  #            "AWS_DEFAULT_REGION" = "us-east-1")
 
 # Writing to temp 

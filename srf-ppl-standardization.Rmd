@@ -214,8 +214,6 @@ ar_clean <- bind_rows(ar_app, ar_fnd)
 ca_fund <- fread(paste0(ppl_folder_path, "5-California_Fundable_PPL.csv"),
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
-  # correct typo in column name
-  rename(district_number = disrict_number) %>%
   # get rid of non-project columns
   filter(!grepl("Total", project_number)) %>%
   # process numeric columns
@@ -659,6 +657,37 @@ la_clean <- la_comb %>%
   select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, fundable, state)
   
 ```
+
+
+## Maine (WIP)
+
+```{r}
+
+me_raw <- fread(paste0(ppl_folder_path, "19-Maine_PPL_Comprehensive.csv"),
+                colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+me_clean <- me_raw %>%
+  # drop columns
+  select(-pf_percent, -arpa_mjrp, -percent_annual_water_bill_of_mhi, -project_type) %>%
+  # process numeric columns
+  mutate(funding_amount = as.numeric(str_replace_all(amount_requested, "[^0-9.]", "")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness, "[^0-9.]", "")),
+         population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
+         # TODO: need to define BP
+         state_score = as.numeric(str_replace_all(total_priority_points, "[^0-9.]", ""))) %>%
+  # process text columns
+  mutate(borrower = str_squish(water_system),
+         pwsid = str_squish(pwsid),
+         project_name = str_squish(srf_project_number),
+         fundable = "Fundable",
+         state = "Maine",
+         project_type = "Other",
+         ) %>%
+  select(borrower, pwsid, state_score, project_name, funding_amount, 
+         principal_forgiveness_amount, project_type, population, state, fundable)
+```
+
 
 ## Maryland
 
@@ -1389,6 +1418,59 @@ pa_clean <- pa_raw %>%
   ## keep relevant columns
   select(borrower, pwsid, cities_served, project_name, project_description, project_type,
          state_rank, state_score, funding_amount, principal_forgiveness_amount, disadvantaged, population, fundable, state)
+```
+
+
+## Rhode Island (WIP)
+
+```{r}
+
+# the comprehensive list provides data on each borrower such as population and PWSID
+# as well as project descriptions and scores for each project, even where there are multiple projects for the same borrower
+
+# the funding list, on the other hand, is only at the borrower level and only includes
+# the loan amount, the borrower's name (which often does not match the comprehensive list),
+# and has been manually updated to include project_type based on which table the projects were listed
+
+# the one:many relationship in the comprehensive list and the different units of analysis creates a
+# degree of uncertainty in which projects are funded or not.
+
+# Easy example: City of Newport is listed as receiving one loan for Lead and 
+# have only one Lead project which matches between the requested amount and the loan amount
+
+# More Difficult example: Providence Water is receiving two loans. $25M for Lead and $21M for General.
+# While they only have one Lead project, it is for $184M.
+# They have 3 General projects with different Project Descriptions that are all requesting more than $25M,
+# so it is not clear which project is being funded and which data should be included in the dashboard.
+
+ri_comp <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Comprehensive.csv"),
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  # drop columns
+  select(-a, -b, -c, -d, -e, -f, -g, -source_fund, -new, -est_start_date) %>%
+  # process numeric columns
+  mutate(
+         funding_amount = as.numeric(str_replace_all(funds_requested,"[^0-9.]", "")),
+         population = as.numeric(str_replace_all(pop_served,"[^0-9.]", "")),
+         state_score = as.numeric(str_replace_all(scores_total,"[^0-9.]", ""))
+         ) %>%
+  # process text columns
+  mutate(borrower = str_squish(system_name),
+         borrower = str_remove(borrower, "\\*"),
+         pwsid = paste0("RI", pws_id),
+         project_description = str_squish(project_description),
+         state = "Rhode Island"
+         )
+
+ri_fund <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Fundable_Manual.csv"),
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  mutate(funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]", "")),
+         fundable = "Fundable",
+         borrower = str_remove(borrower, "\\*")) %>%
+  select(-loan_amount) %>%
+  left_join(ri_comp, by="borrower")
+
 ```
 
 

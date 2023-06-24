@@ -10,8 +10,7 @@ editor_options:
 
 This notebook transforms raw data scraped from state PPLs and IUPs and provides a single, harmonized output. 
 
-Details for necessary transformations, crucial context, and discussion on decisions and assumptions can be found in each state's Background Information PDFs,
-available as a data download through the SRF Dashboard.
+Details for necessary transformations, crucial context, and discussion on decisions and assumptions can be found in each state's Background Information PDFs, available as a data download through the SRF Dashboard.
 
 
 Process Overview
@@ -659,39 +658,77 @@ la_clean <- la_comb %>%
 ```
 
 
-## Maine (WIP)
+## Maine
 
 ```{r}
 
-me_raw <- fread(paste0(ppl_folder_path, "19-Maine_PPL_Comprehensive.csv"),
+# process three projects in separate list for emerging contaminants
+me_ec <- fread(paste0(ppl_folder_path, "19-Maine_PL_EC.csv"),
                 colClasses = "character", na.strings = "") %>%
-  clean_names()
-
-me_clean <- me_raw %>%
-  # drop columns
-  select(-pf_percent, -arpa_mjrp, -percent_annual_water_bill_of_mhi, -project_type) %>%
+  clean_names() %>%
+  # rename columns that don't need to be modified
+  rename(borrower = water_system,
+         project_name = srf_project_number,
+         state_score = total_priority_points) %>%
   # process numeric columns
   mutate(funding_amount = as.numeric(str_replace_all(amount_requested, "[^0-9.]", "")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness, "[^0-9.]", ""))
+           ) %>%
+  # process text columns
+  mutate(project_type = "Emerging Contaminants",
+         state = "Maine", 
+         fundable = "Fundable"
+         ) %>%
+  select(borrower, project_name, project_description, state_score, funding_amount, 
+         principal_forgiveness_amount, project_type, state, fundable)
+  
+
+# process comprehensive list
+me_comp <- fread(paste0(ppl_folder_path, "19-Maine_PPL_Comprehensive.csv"),
+                colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # drop columns
+  select(-pf_percent, -percent_annual_water_bill_of_mhi, -project_type) %>%
+  # process numeric columns
+         # subtract ARPA funding from funding amount after setting both to numeric
+  mutate(funding_amount = as.numeric(str_replace_all(amount_requested, "[^0-9.]", "")),
+         arpa_mjrp = replace_na(arpa_mjrp, "0"),
+         arpa_mjrp = as.numeric(str_replace_all(arpa_mjrp, "[^0-9.]", "")),
+         funding_amount = funding_amount - arpa_mjrp,
          principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness, "[^0-9.]", "")),
-         population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
-         # TODO: need to define BP
-         state_score = as.numeric(str_replace_all(total_priority_points, "[^0-9.]", ""))) %>%
+         population = as.numeric(str_replace_all(population_served, "[^0-9.]", ""))
+  ) %>%
   # process text columns
   mutate(borrower = str_squish(water_system),
          pwsid = str_squish(pwsid),
+         # NOTE: project_description was manually extracted from borrower given inconsistent
+         # splitting and spacing throughout the projects.
+         project_description = str_squish(project_description),
          project_name = str_squish(srf_project_number),
+         # NOTE: typically state_score would be a numeric column, but in Maine's case, they
+         # denote projects as BP and BP-EC, which is information we want to retain, so treat as text
+         state_score = str_squish(total_priority_points),
+         # disadvantaged = case_when PF > 10% funding amount
+         disadvantaged = case_when(
+           principal_forgiveness_amount > funding_amount * .1 ~ "Yes",
+           TRUE ~ "No"),
          fundable = "Fundable",
          state = "Maine",
          project_type = "Other",
          ) %>%
-  select(borrower, pwsid, state_score, project_name, funding_amount, 
-         principal_forgiveness_amount, project_type, population, state, fundable)
+  select(borrower, pwsid, state_score, project_name,  project_description, funding_amount, 
+         principal_forgiveness_amount,  disadvantaged, project_type, population, state, fundable)
+
+##TODO: row bind EC and clean
+me_clean <- bind_rows(me_comp, me_ec)
 ```
 
 
 ## Maryland
 
 ```{r}
+# Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
+# before further cleaning and standardization
 # (24,19)
 md_raw <- fread(paste0(ppl_folder_path, "20-Maryland_PPL_manual.csv"),
                       colClasses = "character", na.strings = "") %>%
@@ -1260,10 +1297,10 @@ nv_clean <- nv_raw %>%
          project_description = str_squish(project_description),
          fundable = case_when(
            # fundable column bled into the loan amount
-           grepl("Yes", estimated_loan_amount) ~ "Yes",
-           TRUE ~ "No")
+           grepl("Yes", estimated_loan_amount) ~ "Fundable",
+           TRUE ~ "Applicant")
   ) %>%
-  filter(fundable == "Yes") %>%
+  filter(fundable == "Fundable") %>%
   select(borrower, pwsid, project_description, state_rank, state_score, funding_amount, 
          population, disadvantaged, project_type, state, fundable)
 
@@ -1836,17 +1873,26 @@ wv_clean <- wv_raw %>%
   mutate(state_rank = as.numeric(str_replace_all(ranking,"[^0-9.]", "")),
          state_score = as.numeric(str_replace_all(points,"[^0-9.]", "")),
          population = as.numeric(str_replace_all(new_popu_lation,"[^0-9.]", "")),
-         ## sum of columns, getting rid of $ and comma and replacing blanks with zero
-         funding_amount = as.numeric(str_replace_all(total_dwtrf_assistance,"[^0-9.]", "")),
-         ## replace NAs with zero
-         funding_amount = replace_na(funding_amount, 0),
-         ## difference, getting rid of everything besides numbers and .
          principal_forgiveness_amount =
+           # Sum of DWTRF Principal Forgiveness from Base Grant, 
+           # DWTRF Principal Forgiveness from Supplemental Grant, 
+           # DWTRF Principal Forgiveness from Emerging Cont. Grant, and 
+           # DWTRF Principal Forgiveness from LSLR Grant in Funding List
            sum(as.numeric(str_replace_all(dwtrf_principal_forgiveness_from_base_grant,"[^0-9.]","")),
                as.numeric(str_replace_all(dwtrf_principal_forgiveness_from_supplemental_grant,"[^0-9.]","")),
                as.numeric(str_replace_all(dwtrf_principal_forgiveness_from_emerging_cont_grant,"[^0-9.]","")),
                as.numeric(str_replace_all(dwtrf_principal_forgiveness_from_lslr_grant,"[^0-9.]","")),
-               na.rm = T)
+               na.rm = T),
+         funding_amount = 
+           # Sum of all PF sources and
+           # DWTRF Assistance from Base Grant, 
+           # DWTRF Assistance from Supplemental Grant, 
+           # DWTRF Assistance from LSLR Grant
+           sum(principal_forgiveness_amount,
+               as.numeric((str_replace_all(dwtrf_assisitance_from_base_grant,"[^0-9.]",""))),
+               as.numeric((str_replace_all(dwtrf_assisitance_from_supplemental_grant,"[^0-9.]",""))),
+               as.numeric((str_replace_all(dwtrf_assisitance_from_lslr_grant,"[^0-9.]",""))),
+                                         na.rm=T)
          ) %>%
   ungroup() %>%
   ## split applicant name to borrower and project name
@@ -1856,8 +1902,7 @@ wv_clean <- wv_raw %>%
                                   grepl("pfas", dwtrf_eligible_funding_type, ignore.case = T) ~
                                     "Emerging Contaminants",
                                   TRUE ~ "Other"),
-         fundable = case_when(funding_amount > 0 ~ "Fundable",
-                              TRUE ~ "Applicant"),
+         fundable = "Fundable",
          project_description = str_squish(project_description_x),
          project_name = str_squish(project_name),
          borrower = str_squish(system),

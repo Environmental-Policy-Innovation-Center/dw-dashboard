@@ -2006,7 +2006,7 @@ combined_clean <- bind_rows(
            ne_clean, 
            #nh_clean,
            #nm_clean,
-           #pa_clean, 
+           pa_clean, 
            #sd_clean, 
            tx_clean, 
            #vt_clean,
@@ -2023,7 +2023,7 @@ This format is then pre-processed by the Dashboard cleaning script for it's fina
 ```{r}
 
 ## Cleaning for table on web 
-web_ppl_combined_clean <- ppl_combined_clean %>%
+web_combined_clean <- combined_clean %>%
                           filter(fundable == "Fundable",
                                  funding_amount > 0
                                  ) %>%
@@ -2054,7 +2054,7 @@ web_ppl_combined_clean <- ppl_combined_clean %>%
 ## Write to AWS
 
 ```{r}
-data <- web_ppl_combined_clean
+data <- web_combined_clean
 filename <- "web_ppl_combined_clean.csv"
 aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv"
 
@@ -2076,3 +2076,5 @@ put_object(
   bucket = "water-team-data",
   acl = "public-read"
 )
+
+```

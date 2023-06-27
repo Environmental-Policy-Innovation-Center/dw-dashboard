@@ -98,8 +98,8 @@ server <- function(input, output,session) {
   
   PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
     mutate(across('Project Type', str_replace, 'Other', 'General'))
-  
-  
+
+
   waitress$inc(20) # increase by 10
   
   
@@ -131,11 +131,6 @@ server <- function(input, output,session) {
     mutate(Color = ifelse(Category == 3,"#6BAED6", Color))%>%
     mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
-  
-  
-  
-  
-
   
   waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)
@@ -266,7 +261,7 @@ server <- function(input, output,session) {
   #### Sidebar #### 
   #State Name
   output$StateName <- renderText({SelectedDataReactive$df$State[1]})
-  output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1],"Project Priority List")})
+  output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1],"Data Table")})
 
   output$StateCategory <- renderText({
     Category <- PPL_State_Data_Geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Category)

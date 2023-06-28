@@ -45,7 +45,10 @@ ui <- fluidPage(
   useWaitress(),
   useShinyjs(),
   tags$head(
-    tags$style(HTML(".leaflet-container { background: #FFFFFF;} .sidebar form.well { background: transparent;border: 0px;} .panel-primary>.panel-heading+.panel-collapse>.panel-body{border-right: 1px solid rgba(0, 0, 0, 0.05);}"))
+    tags$style(HTML(".leaflet-container { background: #FFFFFF;} 
+                    .sidebar form.well { background: transparent;border: 0px;} 
+                    .panel-primary>.panel-heading+.panel-collapse>.panel-body{border-right: 1px solid rgba(0, 0, 0, 0.05);}
+                    .shiny-notification {position:fixed;top: calc(15%);left: calc(15%); max-width: 300px}"))
   ),
   sidebarLayout(
     div( id ="sidebar",
@@ -95,7 +98,7 @@ server <- function(input, output,session) {
   
   waitress$inc(20) # increase by 10
   DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
-  
+
   PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
     mutate(across('Project Type', str_replace, 'Other', 'General'))
 
@@ -103,8 +106,9 @@ server <- function(input, output,session) {
   waitress$inc(20) # increase by 10
   
   
-  ## Importing Geo Daeta 
+  ## Importing Geo Data 
   Geo_Data <- geojson_sf("www/states_ak_hi_v3.geojson")
+
   waitress$inc(20) # increase by 10
   
   ## Importing Google sheets data (Tool tips)
@@ -131,6 +135,7 @@ server <- function(input, output,session) {
     mutate(Color = ifelse(Category == 3,"#6BAED6", Color))%>%
     mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
+  
   
   waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)
@@ -180,6 +185,7 @@ server <- function(input, output,session) {
     {
       SelectedDataReactive$df <- PPL_Data %>%
         filter(State == input$Map_shape_click$id)
+
       
       SummaryData$df <- SelectedDataReactive$df %>%
         mutate(Count = 1)%>%
@@ -187,12 +193,13 @@ server <- function(input, output,session) {
         mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
         select(`Project Type`,`Funding Amount`,`Principal Forgiveness`,Count,DAC)%>%
         group_by(`Project Type`)%>%
-        summarize_if(is.numeric,sum)%>%
+        summarize_if(is.numeric,list(sum), na.rm = TRUE)%>%
         mutate(`Percent DAC` = DAC / Count)
+      
     }
     else
     {
-      showNotification(paste0("No project data available for ", input$Map_shape_click$id, ", please choose another state"),type = "warning")
+      showNotification(id = "notification", Text %>% filter(State == input$Map_shape_click$id) %>% pull(Description) ,type = "warning")
     }
   })
   
@@ -218,21 +225,21 @@ server <- function(input, output,session) {
                 defaultSorted = 'Funding Amount',
                 defaultSortOrder = 'desc',
                 columns = list(
-                  `City Served` = colDef(header = with_tooltip("City Served",ColumnToolTip[1,2])),
-                  `Borrower`= colDef(header = with_tooltip("Borrower",ColumnToolTip[2,2])),
-                  `PWSID`= colDef(header = with_tooltip("PWSID",ColumnToolTip[3,2]),width = 80),
-                  `Project Name` = colDef(header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
-                  `Project Type` = colDef(header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
-                 `Funding Amount` = colDef(header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  `Principal Forgiveness` = colDef(header = with_tooltip("Principal Forgiveness",ColumnToolTip[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `City Served` = colDef(na = "No Information",header = with_tooltip("City Served",ColumnToolTip[1,2])),
+                  `Borrower`= colDef(na = "No Information",header = with_tooltip("Borrower",ColumnToolTip[2,2])),
+                  `PWSID`= colDef(na = "No Information",header = with_tooltip("PWSID",ColumnToolTip[3,2]),width = 80),
+                  `Project Name` = colDef(na = "No Information",header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
+                  `Project Type` = colDef(na = "No Information",header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
+                 `Funding Amount` = colDef(na = "No Information",header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Principal Forgiveness` = colDef(na = "No Information", header = with_tooltip("Principal Forgiveness",ColumnToolTip[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
                   
-                   Population = colDef(header = with_tooltip("Population",ColumnToolTip[8,2]),format = colFormat(separators = TRUE, digits = 0)),
+                   Population = colDef(na = "No Information",header = with_tooltip("Population",ColumnToolTip[8,2]),format = colFormat(separators = TRUE, digits = 0)),
             
-                  `Project Description` = colDef(header = with_tooltip("Project Description",ColumnToolTip[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
+                  `Project Description` = colDef(na = "No Information",header = with_tooltip("Project Description",ColumnToolTip[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
                     div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: help; font-size: 14px;",tippy(value, value))
                   }),
-                   `Meets State Disadvantaged Criteria`= colDef(header = with_tooltip("Meets State Disadvantaged Criteria",ColumnToolTip[10,2]), minWidth = 250),
-                    `State Rank`= colDef(header = with_tooltip("State Rank",ColumnToolTip[11,2]))
+                   `Meets State Disadvantaged Criteria`= colDef(na = "No Information",header = with_tooltip("Meets State Disadvantaged Criteria",ColumnToolTip[10,2]), minWidth = 250),
+                    `State Rank`= colDef(na = "No Information",header = with_tooltip("State Rank",ColumnToolTip[11,2]))
                   ),
                 highlight = TRUE,
                 bordered = TRUE,
@@ -319,7 +326,7 @@ server <- function(input, output,session) {
     # Funding Amount # 
     TotalFunding  <- paste("<b>", "Funding Amount:", dollar(sum(SummaryData$df$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
     # Total Forgiveness # 
-    TotalForgive  <- paste("<b>", "Forgiveness:", ifelse(!is.na(SummaryData$df$`Principal Forgiveness`[1]),dollar(sum(SummaryData$df$`Principal Forgiveness`, na.rm = TRUE)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+    TotalForgive  <- paste("<b>", "Forgiveness:", ifelse(sum(as.numeric(SummaryData$df$`Principal Forgiveness`),na.rm = TRUE) != 0,dollar(sum(SummaryData$df$`Principal Forgiveness`, na.rm = TRUE)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
     # % to DAC Communities # 
     TotalDAC <- paste("<b>", "Projects in Disadvantaged Areas:", scales::percent(sum(SummaryData$df$DAC) / sum(SummaryData$df$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
     

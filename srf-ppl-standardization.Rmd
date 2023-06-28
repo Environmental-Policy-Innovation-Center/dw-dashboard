@@ -2028,7 +2028,6 @@ web_combined_clean <- combined_clean %>%
                                  funding_amount > 0
                                  ) %>%
                           mutate(across(everything(), as.character)) %>%
-                          replace(is.na(.),"No Information") %>%
                           select(state, cities_served, borrower,
                                  pwsid, project_name, project_description,
                                  project_type, funding_amount, principal_forgiveness_amount, 

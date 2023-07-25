@@ -48,7 +48,7 @@ ppl_folder_path <- paste0("data/srf-ppl/")
 ```
 
 
-## Alabama
+## Alabama (A)
 
 ```{r}
 
@@ -201,7 +201,7 @@ ar_clean <- bind_rows(ar_app, ar_fnd)
 
 ```
 
-## California (DD)
+## California (DD) (A)
 
 ```{r}
 
@@ -270,7 +270,7 @@ ca_clean <- bind_rows(ca_fund, ca_ec)
 
 ```
 
-## Colorado (Q)
+## Colorado (Q) (A)
 
 ```{r}
 
@@ -309,7 +309,7 @@ co_clean <- co_raw %>%
 ```
 
 
-## Delaware
+## Delaware (A)
 
 ```{r}
 de_fund <- fread(paste0(ppl_folder_path, "8-Delaware_PPL.csv"),
@@ -356,7 +356,7 @@ de_clean <- de_fund %>%
 ```
 
 
-## Florida (Q)
+## Florida (Q) (A)
 
 ```{r}
 
@@ -382,7 +382,7 @@ fl_fund <- fread(paste0(ppl_folder_path, "9-Florida_ppl_fundable.csv"),
 ```
 
 
-## Georgia
+## Georgia (A)
 
 ```{r}
 
@@ -455,7 +455,7 @@ hi_clean <- hi_fund %>%
 ```
 
 
-## Idaho
+## Idaho (A)
 
 ```{r}
 
@@ -663,7 +663,7 @@ la_clean <- la_comb %>%
 ```
 
 
-## Maine
+## Maine (A)
 
 ```{r}
 
@@ -727,7 +727,7 @@ me_clean <- bind_rows(me_comp, me_ec)
 ```
 
 
-## Maryland
+## Maryland (A)
 
 ```{r}
 # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
@@ -957,7 +957,7 @@ mn_clean <- mn_raw %>%
 ```
 
 
-## Mississippi (DD)
+## Mississippi (DD) (A)
 
 ```{r}
 
@@ -1035,7 +1035,7 @@ mo_clean <- mo_ppl %>%
 ```
 
 
-## Montana
+## Montana (A)
 
 ```{r}
 # (37,4)
@@ -1085,7 +1085,7 @@ mt_clean <- mt_raw %>%
 ```
 
 
-## Nebraska
+## Nebraska (A)
 
 ```{r}
 
@@ -1233,7 +1233,7 @@ nh_clean <- nh_raw %>%
 ```
 
 
-## New Mexico
+## New Mexico (A)
 
 ```{r}
 # (6,13)
@@ -1313,7 +1313,7 @@ nv_clean <- nv_raw %>%
 ```
 
 
-## North Carolina (Q)
+## North Carolina (Q) (A)
 
 ```{r}
 
@@ -1464,7 +1464,7 @@ pa_clean <- pa_raw %>%
 ```
 
 
-## Rhode Island (WIP)
+## Rhode Island (WIP) (A)
 
 ```{r}
 
@@ -1518,7 +1518,7 @@ ri_fund <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Fundable_Manual.csv
 ```
 
 
-## South Carolina (DD)
+## South Carolina (DD) (A)
 
 
 ```{r}
@@ -1679,6 +1679,47 @@ tx_clean <- tx_merge %>%
 ```
 
 
+## Utah (WIP)
+
+```{r}
+
+ut_ppl <- fread(paste0(ppl_folder_path, "44-Utah_Comprehensive.csv"),
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names()
+
+ut_clean <- ut_ppl %>%
+  # drop columns
+  select(-green_project, -green_amount, -equivalency_project,
+         -project_segments_sour, -project_segments_treat, -project_segments_stor, -project_segments_dist) %>%
+  # format numeric columns
+  mutate(
+    population = as.numeric(str_replace_all(pop,"[^0-9.]","")),
+    # TODO: determine if ARPA needs to be subtracted from it
+    funding_amount = as.numeric(str_replace_all(srf_assistance,"[^0-9.]","")),
+    principal_forgiveness = as.numeric(str_replace_all(principal_forgiveness,"[^0-9.]","")),
+  ) %>%
+  # format non-numeric columns
+  mutate(
+    pwsid = str_squish(pwsid),
+    state_score = str_squish(priority_points),
+    borrower = str_squish(system_name),
+    cities_served = str_squish(county),
+    project_description = str_squish(project_title),
+    disadvantaged = case_when(disadvantaged == "Y" ~ "Yes",
+                              TRUE ~ "No"),
+    project_type = case_when(
+      grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
+      TRUE ~ "Other"),
+    state = "Utah",
+    # TODO: Add fundable / applicant depending on interpretation
+  ) %>%
+  select(state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness,
+         project_type, cities_served, disadvantaged, population, state)
+  
+
+```
+
+
 ## Vermont
 
 ```{r}
@@ -1820,7 +1861,7 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
 ```
 
 
-## Washington
+## Washington (A)
 
 ```{r}
 # import manually merged file (31,12)
@@ -1862,7 +1903,7 @@ wa_clean <- wa_merged %>%
 ```
 
 
-## West Virginia
+## West Virginia (A)
 
 ```{r}
 # (163,36)
@@ -2022,11 +2063,8 @@ This format is then pre-processed by the Dashboard cleaning script for it's fina
 
 ```{r}
 
-## Cleaning for table on web 
+## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
 web_combined_clean <- combined_clean %>%
-                          filter(fundable == "Fundable",
-                                 funding_amount > 0
-                                 ) %>%
                           mutate(across(everything(), as.character)) %>%
                           select(state, cities_served, borrower,
                                  pwsid, project_name, project_description,

@@ -16,7 +16,7 @@ RUN mkdir -p /home/epic
 RUN cd /home/epic
 
 
-RUN install2.r --error shiny
+RUN install2.r --error shiny \
 leaflet \
 googlesheets4 \
 tidyverse \

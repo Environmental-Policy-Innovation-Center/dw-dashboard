@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:latest
+FROM rocker/rstudio:latest
 
 RUN apt-get update && apt-get install -y \
 libcurl4-openssl-dev \
@@ -48,7 +48,7 @@ aws.ec2metadata
 
 #------------
 RUN ls -al '/home/epic'
-ADD Worker.R /home/epic/
+ADD dw-dashboard-app.R /home/epic/
 
 CMD Rscript /home/epic/dw-dashboard-app.R
 

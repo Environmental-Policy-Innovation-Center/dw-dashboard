@@ -16,12 +16,40 @@ RUN mkdir -p /home/epic
 RUN cd /home/epic
 
 
-RUN install2.r --error RSocrata tidyverse tidygeocoder mapboxapi lubridate httr jsonlite aws.s3 aws.ec2metadata plyr
+RUN install2.r --error shiny
+leaflet \
+googlesheets4 \
+tidyverse \
+rgdal \
+geojsonsf \
+jsonlite \
+sf \
+scales \
+htmltools \
+shinyBS \
+aws.s3 \
+shinyjs \
+DT \
+shinyalert \
+janitor \
+formattable \
+reactable \
+shinybrowser \
+reactablefmtr \
+stringr \
+shinyWidgets \
+waiter \
+tippy \
+shinycssloaders \
+zip \
+googledrive \
+pdftools \
+aws.ec2metadata 
 
 #------------
 RUN ls -al '/home/epic'
 ADD Worker.R /home/epic/
 
-CMD Rscript /home/epic/Worker.R
+CMD Rscript /home/epic/dw-dashboard-app.R
 
 #------------

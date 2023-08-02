@@ -19,8 +19,9 @@ RUN cd /home/epic
 RUN install2.r --error shiny \
 leaflet \
 googlesheets4 \
-tidyverse \
 rgdal \
+dplyr \
+readr \
 geojsonsf \
 jsonlite \
 sf \
@@ -42,14 +43,20 @@ waiter \
 tippy \
 shinycssloaders \
 zip \
-googledrive \
-pdftools \
-aws.ec2metadata 
+googledrive 
+
+RUN install2.r --error aws.ec2metadata 
 
 #------------
 RUN ls -al '/home/epic'
 ADD dw-dashboard-app.R /home/epic/
 
-CMD Rscript /home/epic/dw-dashboard-app.R
+ADD ./www /home/epic/www
+
+EXPOSE 2000
+
+WORKDIR /home/epic
+
+CMD ["R", "-e", "shiny::runApp('/home/epic/dw-dashboard-app.R', port = 2000, host = '0.0.0.0')"]
 
 #------------

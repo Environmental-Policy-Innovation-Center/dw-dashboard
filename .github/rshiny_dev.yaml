@@ -1,0 +1,94 @@
+name: rshiny_dev
+
+on:
+  push:
+    branches: [main]
+    # paths:
+    #  - "**"
+
+env:
+  ENV: dev
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 833394423843.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPOSITORY: ep_dw_dashboard_rshiny
+  SERVICE_NAME: ep_dw_dashboard_rshiny
+  SERVICE_PORT: 2000
+
+jobs:
+  build_container:  
+
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+
+    #-------------------------------
+    # GIT_CHECKOUT
+    - name: checkout main repo
+      uses: actions/checkout@v3
+      with:
+        path: main
+    
+    #-------------------------------
+    # INITIALIZE_PYTHON
+    - name: initialize python3
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+      
+    #-------------------------------
+    # CONTAINER_BUILD
+    - name: build container
+      run: |
+        docker -v
+        DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} .
+
+    #-------------------------------
+    # INITIALIZE_AWS_CREDS
+    - name: initialize AWS creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    #-------------------------------
+    # AWS_ECR_LOGIN
+    - name: login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    #-------------------------------
+    # CONTAINER_PUBLISH
+    - name: container publish to AWS ECR
+      id: push-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA"
+    
+    #-------------------------------
+    # DEPLOY
+    - name: deploy service
+      run: |
+
+        echo '{
+          "containers": {
+            "${{ env.SERVICE_NAME }}": {
+              "image": "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}",
+              "ports": {
+                "${{ env.SERVICE_PORT }}": "HTTP"
+              }
+            }
+          },
+          "publicEndpoint": {
+            "containerName": "${{ env.SERVICE_NAME }}",
+            "containerPort": ${{ env.SERVICE_PORT }}
+          }
+        }' > /tmp/deployment-config.json
+
+        aws lightsail create-container-service-deployment --service-name ${{ env.SERVICE_NAME }} --containers file://tmp/deployment-config.json
+
+    #-------------------------------

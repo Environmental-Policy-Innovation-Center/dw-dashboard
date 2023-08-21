@@ -35,35 +35,67 @@ knitr::opts_chunk$set(echo = TRUE)
 
 options(scipen=999999999)
 
-
 library(tidyverse)
 library(data.table)
 library(janitor)
 library(aws.s3)
 library(googledrive)
 
-
-## Raw data folder path, will need to updated once the CSV files are downloaded from Google Drive (see project ReadME for links)
-ppl_folder_path <- paste0("data/srf-ppl/")
 ```
 
 
-## Alabama (A)
+## Alabama (Q) (A) 
+- Applicant data has been tracked down and added in below, however, it has highlighted a potential discrepancy. In the applicant file "ARPA/SRF combined PPL", there are roughly 90 projects with a "Yes" for `project_approved_yes_or_no`, whereas the combined projects listed as fundable from the other files is much less than this number. 
+- Is this the result of ARPA being included? Should all projects that aren't "Yes" be listed as Applicant? 
+- There is not a unique ID for projects, so the only way to determine which projects with a "Yes" but not in one of the other files should be included as "Applicant" would be to manually compare the communities and funding data listed. 
 
 ```{r}
 
+### APPLICANT ### 
+
+# (364, 11)
+al_applicant <- fread("data/srf-ppl/1-Alabama_ARPA_SRF_Combined_PPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+al_app_clean <- al_applicant %>%
+  # remove columns
+  select(-date_pre_app_or_supp_received, -project_award_date_when_grant_is_signed,
+         -unfunded_mat_ch_portion) %>%
+  # process numeric columns
+  mutate(
+  requested_amount = as.numeric(str_replace_all(applied_for_project_amount,"[^0-9.]", "")),
+  funding_amount = as.numeric(str_replace_all(funded_portion,"[^0-9.]", "")),
+  principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness_and_or_grant,"[^0-9.]", "")),
+  ) %>%
+  # process text columns
+  mutate(
+    borrower = str_squish(applicant_name),
+    project_description = str_squish(project_description),
+    cities_served = str_squish(county),
+    fundable = case_when(
+      project_approved_yes_or_no == "Yes" ~ "Fundable",
+      TRUE ~ "Applicant"),
+    state = "Alabama"
+  ) %>%
+  select(borrower, cities_served, project_description, requested_amount, funding_amount,
+         principal_forgiveness_amount, state, fundable)
+
+
+### FUNDABLE ### 
+
 # (7,14)
-al_base <- fread(paste0(ppl_folder_path, "1-Alabama_Base-PPL.csv"),
+al_base <- fread("data/srf-ppl/1-Alabama_Base-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (19,14)
-al_bil <- fread(paste0(ppl_folder_path, "1-Alabama_BIL-PPL.csv"),
+al_bil <- fread("data/srf-ppl/1-Alabama_BIL-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (3,14)
-al_lead <- fread(paste0(ppl_folder_path, "1-Alabama_Lead-PPL.csv"),
+al_lead <- fread("data/srf-ppl/1-Alabama_Lead-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -108,16 +140,19 @@ al_clean <- al_comb %>%
 
 ## Arkansas
 
+- Applicant data is preprocessed and ready to be merged in at next update.
+- Need to check for requested_amount columns though.
+
 ```{r}
 # the manually merged data from MDI includes fundable projects with columns from the comprehensive list
 # this is a combination of charts 3 and 4 from the IUP
 # (15,21)
-ar_merge <- fread(paste0(ppl_folder_path, "4-Arkansas_Merged.csv"),
+ar_merge <- fread("data/srf-ppl/4-Arkansas_Merged.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # the comprehensive PPL includes applicant projects, (747,13)
-ar_comp <- fread(paste0(ppl_folder_path, "4-Arkansas.csv"),
+ar_comp <- fread("data/srf-ppl/4-Arkansas.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -166,7 +201,7 @@ ar_app <- ar_comp %>%
 
 
 ## Process Fundable
-ar_fnd <- ar_merge %>% 
+ar_fund <- ar_merge %>% 
   clean_names() %>%
   select(-b_c_date_actual_estimated, -term_in_years, -interest_rate,
          -green_project_reserve_amt_estimate, -gpr_category_estimate,
@@ -197,22 +232,24 @@ ar_fnd <- ar_merge %>%
          funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, fundable, state)
 
 # expect (760,12)
-ar_clean <- bind_rows(ar_app, ar_fnd)
+ar_clean <- bind_rows(ar_app, ar_fund)
 
 ```
 
-## California (DD) (A)
+
+## California (DD)
+
+- Applicant data has been added in. 
+- Possible we might extract some Disadvantaged info from COMP that isn't currently in FUND
+- Do we need to bring in requested amount for projects that got funding? Probably? New column across the board?
 
 ```{r}
 
-# presumably applicant projects, not currently used in funding database, 
-# but could be used in future expansion that considers all potential projects
-# ca_comp <- fread(paste0(ppl_folder_path, "5-California_Comprehensive_PPL.csv"),
-#                      colClasses = "character", na.strings = "")
+### FUNDABLE ###
 
 # (16,12) -> (15,9)
 # intended to be funded projects that are not EC
-ca_fund <- fread(paste0(ppl_folder_path, "5-California_Fundable_PPL.csv"),
+ca_fund <- fread("data/srf-ppl/5-California_Fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # get rid of non-project columns
@@ -242,7 +279,7 @@ ca_fund <- fread(paste0(ppl_folder_path, "5-California_Fundable_PPL.csv"),
 
 # (11,9) -> (11,10)
 # EC projects that have funding data
-ca_ec <- fread(paste0(ppl_folder_path, "5-California_EC.csv"),
+ca_ec <- fread("data/srf-ppl/5-California_EC.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # process numeric columns
@@ -265,8 +302,51 @@ ca_ec <- fread(paste0(ppl_folder_path, "5-California_EC.csv"),
   select(borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
          project_type, population, disadvantaged, state, fundable)
 
+
 # -> (26,11)
-ca_clean <- bind_rows(ca_fund, ca_ec)
+ca_merge <- bind_rows(ca_fund, ca_ec)
+
+### APPLICANT ### 
+
+# (345, 11) -> (313, 8) when dropping non-project rows and likely to be funded projects and consolidating columns
+ca_app <- fread("data/srf-ppl/5-California_Comprehensive_PPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # drop non-project rows
+  filter(!is.na(applicant) & applicant != "Applicant" & !is.na(project_number2)) %>%
+  # drop fundable projects already processed
+  filter(!project_number2 %in% ca_merge$project_name) %>%
+  # process numeric columns
+  mutate(
+    requested_amount = as.numeric(str_replace_all(estimated_requested_project_costs,"[^0-9.]", "")),
+    population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
+  ) %>%
+  # process text columns
+  mutate(
+    borrower = str_squish(applicant),
+    project_name = str_squish(project_number2),
+    project_description = str_squish(project_title_description),
+    # classify different categorical variables of DAC status
+    degree_of_disadvantaged = str_squish(degree_of_disadvantaged),
+    disadvantaged = case_when(
+      degree_of_disadvantaged == "DAC" | degree_of_disadvantaged == "DAC" | degree_of_disadvantaged == "SDAC" | degree_of_disadvantaged == "Large Disadvantaged" | degree_of_disadvantaged == "Large Severely Disadvantaged" ~ "Yes",
+      degree_of_disadvantaged == "non-DAC" | degree_of_disadvantaged == "Not Disadvantaged" ~ "No",
+      degree_of_disadvantaged == "Pending" ~ "No Information",
+      TRUE ~ "No Information"
+    ),
+    project_type = case_when(
+      grepl("Lead", project_title_description, ignore.case=TRUE) ~ "Lead",
+      TRUE ~ "Other"
+    ),
+    fundable = "Applicant",
+    state = "California"
+  ) %>%
+  select(borrower, project_name, project_description, project_type, requested_amount, population, 
+         disadvantaged, state, fundable)
+
+
+# (339, 12)
+ca_clean <- bind_rows(ca_merge, ca_app)
 
 ```
 
@@ -275,7 +355,7 @@ ca_clean <- bind_rows(ca_fund, ca_ec)
 ```{r}
 
 # (165,11)
-co_raw <- fread(paste0(ppl_folder_path, "7-Colorado_AppendixB.csv"),
+co_raw <- fread("data/srf-ppl/7-Colorado_AppendixB.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -312,7 +392,7 @@ co_clean <- co_raw %>%
 ## Delaware (A)
 
 ```{r}
-de_fund <- fread(paste0(ppl_folder_path, "8-Delaware_PPL.csv"),
+de_fund <- fread("data/srf-ppl/8-Delaware_PPL.csv",
                       colClasses = "character", na.strings = "")
 
 de_clean <- de_fund %>%
@@ -360,7 +440,7 @@ de_clean <- de_fund %>%
 
 ```{r}
 
-fl_fund <- fread(paste0(ppl_folder_path, "9-Florida_ppl_fundable.csv"),
+fl_fund <- fread("data/srf-ppl/9-Florida_ppl_fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # format numeric columns
@@ -386,21 +466,21 @@ fl_fund <- fread(paste0(ppl_folder_path, "9-Florida_ppl_fundable.csv"),
 
 ```{r}
 
+## BASE IUP
 # (60,14)
-ga_raw <- fread(paste0(ppl_folder_path, "10-Georgia_Comp_clean.csv"),
+ga_raw <- fread("data/srf-ppl/10-Georgia_Comp_clean.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (60,14) -> (60,8)
-ga_clean <- ga_raw %>%
+ga_base <- ga_raw %>%
   # remove columns
   select(-est_notice_to_proceed, -est_construction_start, -est_construction_completion, -
            est_interst_rate, -est_terms) %>%
   # process numeric columns
   mutate(
          population = as.numeric(str_replace_all(population,"[^0-9.]","")),
-         principal_forgiveness_amount = as.numeric(str_replace_all(potential_principal_forgiveness, "[^0-9.]","")),
-         funding_amount = as.numeric(str_replace_all(total_project_cost, "[^0-9.]","")),
+         funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
   ) %>%
   # process text columns
   mutate(borrower = str_squish(community),
@@ -410,14 +490,119 @@ ga_clean <- ga_raw %>%
            grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
            TRUE ~ "Other"),
+         # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
          disadvantaged = case_when(
-          principal_forgiveness_amount > 0 ~ "Yes",
+          affordability_score >= 29 ~ "Yes",
            TRUE ~ "No"
+         ),
+         fundable = case_when(
+           funding_amount > 0 ~ "Fundable",
+           TRUE ~ "Applicant"
          ),
          state = "Georgia"
   ) %>% 
-  select(state_score, borrower, project_description, funding_amount, principal_forgiveness_amount,
+  select(state_score, borrower, project_description, funding_amount,
          population, disadvantaged, fundable, project_type, state)
+
+
+
+## SUPPLEMENTAL IUP
+
+ga_supp_1 <- fread("data/srf-ppl/10-Georgia_Supplemental_IUP_A1.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+ga_supp_2 <- fread("data/srf-ppl/10-Georgia_Supplemental_IUP_A2.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(project, total_disburs) %>%
+  # manually standardize names for matching
+  mutate(project = str_replace(project, "Clayton County Water Authority", "Clayton County Water Authority (CCWA)"),
+         total_disburs = str_squish(total_disburs)) %>%
+  rename(community = project)
+
+ga_supp <- ga_supp_1 %>%
+  left_join(ga_supp_2) %>%
+  # remove columns
+  select(-est_notice_to_proceed, -est_construction_start, -est_construction_completion, -
+           est_interst_rate, -est_terms) %>%
+  # process numeric columns
+  mutate(
+         population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+         funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
+  ) %>%
+  # process text columns
+  mutate(borrower = str_squish(community),
+         project_description = str_squish(project_description),
+         state_score = str_replace_all(project_score,"[^0-9.]",""),
+         project_type = case_when(
+           grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
+           grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+           TRUE ~ "Other"),
+         # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
+         disadvantaged = case_when(
+          affordability_score >= 29 ~ "Yes",
+           TRUE ~ "No"
+         ),
+         fundable = case_when(
+           funding_amount > 0 ~ "Fundable",
+           TRUE ~ "Applicant"
+         ),
+         state = "Georgia"
+  ) %>% 
+  select(state_score, borrower, project_description, funding_amount,
+         population, disadvantaged, fundable, project_type, state)
+  
+
+
+## LEAD IUP
+ga_lead_1 <- fread("data/srf-ppl/10-Georgia_Lead_IUP_A1.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+ga_lead_2 <- fread("data/srf-ppl/10-Georgia_Lead_IUP_A2.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(project, total_disburs) %>%
+  # manually standardize names for matching
+  mutate(
+    project = str_squish(str_replace(project, "Bartow County Water", "Bartow County Water Department")),
+    project = str_squish(str_replace(project, "Lee County Water Authority", "Lee County Utility Authority")),
+    project = str_squish(str_replace(project, "City of Monroe", "Monroe County")),
+    project = str_squish(str_replace(project, "Cobb County Water Authority", "Cobb County Water System")),
+    project = str_squish(str_replace(project, "Jackson County Water Authority", "Jackson County Water and Sewerage Authority")),
+    total_disburs = str_squish(total_disburs)) %>%
+  rename(community = project)
+
+ga_lead <- ga_lead_1 %>%
+  # remove asterisks for joining second table by community name
+  mutate(community = str_squish(str_remove_all(community, "\\*"))) %>%
+  full_join(ga_lead_2) %>%
+  # process numeric columns
+  mutate(
+         population = as.numeric(str_replace_all(x2020_pop,"[^0-9.]","")),
+         funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
+  ) %>%
+  # process text columns
+  mutate(borrower = str_squish(community),
+         project_description = str_squish(project_description),
+         state_score = str_replace_all(affordability_score,"[^0-9.]",""),
+         project_type = "Lead",
+         # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
+         disadvantaged = case_when(
+          affordability_score >= 29 ~ "Yes",
+           TRUE ~ "No"
+         ),
+         fundable = case_when(
+           funding_amount > 0 ~ "Fundable",
+           TRUE ~ "Applicant"
+         ),
+         state = "Georgia"
+  ) %>% 
+  select(state_score, borrower, project_description, funding_amount,
+         population, disadvantaged, fundable, project_type, state)
+
+## EC IUP
 
 ```
 
@@ -426,7 +611,7 @@ ga_clean <- ga_raw %>%
 
 ```{r}
 # (33,8)
-hi_fund <- fread(paste0(ppl_folder_path, "11-Hawaii_PPL.csv"),
+hi_fund <- fread("data/srf-ppl/11-Hawaii_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -460,14 +645,14 @@ hi_clean <- hi_fund %>%
 ```{r}
 
 # (81, 9)
-id_ppl <- fread(paste0(ppl_folder_path, "12-Idaho_PPL.csv"), 
+id_ppl <- fread("data/srf-ppl/12-Idaho_PPL.csv", 
                       colClasses = "character", na.strings = "") %>% 
           clean_names()
 
 # (13,11) -> (13,4)
 # reduce fundable projects to only their rank (a UID in this case), 
 # principal forgiveness amount, and loan amount
-id_fnd <- fread(paste0(ppl_folder_path, "12-Idaho_Fundable.csv"),
+id_fnd <- fread("data/srf-ppl/12-Idaho_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
         clean_names() %>%
         mutate(rank = str_replace_all(rank,"[^0-9.]", ""),
@@ -532,7 +717,7 @@ id_clean <- id_merged %>%
 ## from the excel spreadsheets sent by the state
 
 # (70,11)
-il_ppl_f <- fread(paste0(ppl_folder_path, "13-Illinois_PPL_Fundable.csv"),
+il_ppl_f <- fread("data/srf-ppl/13-Illinois_PPL_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable",
@@ -542,7 +727,7 @@ il_ppl_f <- fread(paste0(ppl_folder_path, "13-Illinois_PPL_Fundable.csv"),
            )
 
 # (19,11)
-il_ppl_a <- fread(paste0(ppl_folder_path, "13-Illinois_PPL_Applicant.csv"),
+il_ppl_a <- fread("data/srf-ppl/13-Illinois_PPL_Applicant.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant",
@@ -563,14 +748,14 @@ dacs <- il_ppl %>%
 
 # Preprocess Lead Projects
 # (18,10)
-il_lead_f <- fread(paste0(ppl_folder_path, "13-Illinois_Lead_Fundable.csv"),
+il_lead_f <- fread("data/srf-ppl/13-Illinois_Lead_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable",
          project_type="Lead")
 
 # (1,10)
-il_lead_a <- fread(paste0(ppl_folder_path, "13-Illinois_Lead_Applicant.csv"),
+il_lead_a <- fread("data/srf-ppl/13-Illinois_Lead_Applicant.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant",
@@ -617,13 +802,13 @@ il_clean <- il_merge %>%
 
 ```{r}
 # (40,9)
-la_ppl <- fread(paste0(ppl_folder_path, "18-Lousiana_Comprehensive_PPL-clean.csv"),
+la_ppl <- fread("data/srf-ppl/18-Lousiana_Comprehensive_PPL-clean.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant")
 
 # (8,11)
-la_fnd <- fread(paste0(ppl_folder_path, "18-Lousiana_Fundable_PPL.csv"),
+la_fnd <- fread("data/srf-ppl/18-Lousiana_Fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable")
@@ -668,7 +853,7 @@ la_clean <- la_comb %>%
 ```{r}
 
 # process three projects in separate list for emerging contaminants
-me_ec <- fread(paste0(ppl_folder_path, "19-Maine_PL_EC.csv"),
+me_ec <- fread("data/srf-ppl/19-Maine_PL_EC.csv",
                 colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # rename columns that don't need to be modified
@@ -689,7 +874,7 @@ me_ec <- fread(paste0(ppl_folder_path, "19-Maine_PL_EC.csv"),
   
 
 # process comprehensive list
-me_comp <- fread(paste0(ppl_folder_path, "19-Maine_PPL_Comprehensive.csv"),
+me_comp <- fread("data/srf-ppl/19-Maine_PPL_Comprehensive.csv",
                 colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # drop columns
@@ -733,7 +918,7 @@ me_clean <- bind_rows(me_comp, me_ec)
 # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
 # before further cleaning and standardization
 # (24,19)
-md_raw <- fread(paste0(ppl_folder_path, "20-Maryland_PPL_manual.csv"),
+md_raw <- fread("data/srf-ppl/20-Maryland_PPL_manual.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -781,10 +966,10 @@ md_clean <- md_raw %>%
 
 ```{r}
 # (120,7)
-ma_comp_raw <- fread(paste0(ppl_folder_path, "21-Massachusetts_PPL.csv"),
+ma_comp_raw <- fread("data/srf-ppl/21-Massachusetts_PPL.csv",
                       colClasses = "character", na.strings = "")
 # (74,6)
-ma_fund_raw <- fread(paste0(ppl_folder_path, "21-Massachusetts_Fundable.csv"),
+ma_fund_raw <- fread("data/srf-ppl/21-Massachusetts_Fundable.csv",
                       colClasses = "character", na.strings = "")
 
 # -> (113,7)
@@ -842,7 +1027,7 @@ ma_clean <- ma_comp_clean %>%
 
 ```{r}
 # (112,24)
-mi_raw <- fread(paste0(ppl_folder_path, "22-Michigan_PPL.csv"),
+mi_raw <- fread("data/srf-ppl/22-Michigan_PPL.csv",
                       colClasses = "character", na.strings = "")
 # -> (110,12)
 mi_clean <- mi_raw %>%
@@ -896,7 +1081,7 @@ mi_clean <- mi_raw %>%
 
 ```{r}
 # (142, 16)
-mn_raw <- fread(paste0(ppl_folder_path, "23-Minnesota_IUP_manual.csv"),
+mn_raw <- fread("data/srf-ppl/23-Minnesota_IUP_manual.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -962,7 +1147,7 @@ mn_clean <- mn_raw %>%
 ```{r}
 
 # (48,9)
-ms_raw <- fread(paste0(ppl_folder_path, "24-Mississippi_PPL.csv"),
+ms_raw <- fread("data/srf-ppl/24-Mississippi_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -996,7 +1181,7 @@ ms_clean <- ms_raw %>%
 
 ```{r}
 # (43,12)
-mo_ppl <- fread(paste0(ppl_folder_path, "25-Missouri_PPL_Cleaned.csv"),
+mo_ppl <- fread("data/srf-ppl/25-Missouri_PPL_Cleaned.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1039,7 +1224,7 @@ mo_clean <- mo_ppl %>%
 
 ```{r}
 # (37,4)
-mt_raw <- fread(paste0(ppl_folder_path, "26-Montana_PPL.csv"),
+mt_raw <- fread("data/srf-ppl/26-Montana_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() 
 
@@ -1090,25 +1275,25 @@ mt_clean <- mt_raw %>%
 ```{r}
 
 # read in base, all non-lead or ec projects, (14,9)
-ne_base <- fread(paste0(ppl_folder_path, "27-Nebraska_ppl_base.csv"),
+ne_base <- fread("data/srf-ppl/27-Nebraska_ppl_base.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Other")
 
 # read in bil, all non-lead or ec projects, (13,9)
-ne_bil <- fread(paste0(ppl_folder_path, "27-Nebraska_ppl_bil.csv"),
+ne_bil <- fread("data/srf-ppl/27-Nebraska_ppl_bil.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Other")
 
 # read in ec projects, (7,9)
-ne_ec <- fread(paste0(ppl_folder_path, "27-Nebraska_ec.csv"),
+ne_ec <- fread("data/srf-ppl/27-Nebraska_ec.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Emerging Contaminants")
 
 # read in lead projects (19,9)
-ne_lsl <- fread(paste0(ppl_folder_path, "27-Nebraska_lslr.csv"),
+ne_lsl <- fread("data/srf-ppl/27-Nebraska_lslr.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Lead")
@@ -1146,7 +1331,7 @@ ne_clean <- ne_merged %>%
 
 ```{r}
 # (190,32)
-nh_raw <- fread(paste0(ppl_folder_path, "29-NewHampshire_PPL.csv"),
+nh_raw <- fread("data/srf-ppl/29-NewHampshire_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1237,7 +1422,7 @@ nh_clean <- nh_raw %>%
 
 ```{r}
 # (6,13)
-nm_raw <- fread(paste0(ppl_folder_path, "31-NewMexico_PPL.csv"),
+nm_raw <- fread("data/srf-ppl/31-NewMexico_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1275,7 +1460,7 @@ nm_clean <- nm_raw %>%
 
 ```{r}
 # (172, 16)
-nv_raw <- fread(paste0(ppl_folder_path, "28-Nevada_PPL.csv"),
+nv_raw <- fread("data/srf-ppl/28-Nevada_PPL.csv",
                 colClass="character", na.strings="") %>%
   clean_names()
 
@@ -1318,7 +1503,7 @@ nv_clean <- nv_raw %>%
 ```{r}
 
 # (221, 15)
-nc_raw <- fread(paste0(ppl_folder_path, "33-NorthCarolina_PPL_Comprehensive.csv"),
+nc_raw <- fread("data/srf-ppl/33-NorthCarolina_PPL_Comprehensive.csv",
                 colClass="character", na.strings="") %>%
   clean_names()
 
@@ -1355,17 +1540,42 @@ nc_clean <- nc_raw %>%
 ```
 
 
-## North Dakota
+## North Dakota (F)
 
 ```{r}
 
+## Read in tables for PF funding from the tables in page 10-13 of PPL
+
+## NOTE THESE COME FROM DIFFERENT YEARS AND MAY NEED TO BE REPLACED OR RECONCILED
+
+nd_gen <- fread("data/srf-ppl/34-NorthDakota_GeneralSupplementalFunding.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  mutate(project_type = "Other")
+
+
+nd_ec <- fread("data/srf-ppl/34-NorthDakota_EmergingContaminantsFunding.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  mutate(project_type = "Emerging Contaminants")
+
+
+nd_lead <- fread("data/srf-ppl/34-NorthDakota_LeadFunding.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  mutate(project_type = "Lead")
+
+
+nd_funding <- bind_rows(nd_gen, nd_ec, nd_lead) %>%
+  mutate(principal_forgiveness = as.numeric(str_replace_all(additional_subsidy,"[^0-9.]","")),
+         project_name = str_squish(tracking_no))
+
 # (262,14) -> (262,9)
-nd_ppl <- fread(paste0(ppl_folder_path, "34-NorthDakota_PPL.csv"),
+nd_ppl <- fread("data/srf-ppl/34-NorthDakota_PPL.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
             # drop columns not needed for analysis
-  select(-construction_start_date, -est_loan_term, -v14, -priority_ranking_emerging_contaminants,
-         -priority_ranking_lead)
+  select(-construction_start_date, -est_loan_term, -v14)
 
 #funded projects by rank determined by highlighting in table
 funded <- c(1,4,5,6,8,9,10,12,13,22,25,35,38,39,40,50,60,75,76,78,88,93,108,109,110,111,122,124,125,126,127,
@@ -1382,6 +1592,7 @@ nd_clean <- nd_ppl %>%
   ) %>%
   # process text columns
   mutate(project_description = str_squish(project_description),
+         project_name = str_squish(tracking_no),
          fundable = case_when(
            state_rank %in% funded ~ "Fundable",
            TRUE ~ "Applicant"),
@@ -1396,9 +1607,12 @@ nd_clean <- nd_ppl %>%
   # rename columns
   rename(disadvantaged = disadvantaged_community,
          borrower = system_name) %>%
+  left_join(nd_funding) %>%
   # keep columns for analysis
-  select(borrower, pwsid, project_type, project_description,
-         state_rank, funding_amount, disadvantaged, population, fundable, state)
+  select(borrower, project_name, pwsid, project_type, project_description,
+         state_rank, funding_amount, principal_forgiveness, disadvantaged, population, fundable, state)
+
+
 
 ```
 
@@ -1407,7 +1621,7 @@ nd_clean <- nd_ppl %>%
 
 ```{r}
 # (62,23)
-pa_raw <- fread(paste0(ppl_folder_path, "38-Pennsylvania_manual_fundable_PPL.csv"),
+pa_raw <- fread("data/srf-ppl/38-Pennsylvania_manual_fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1486,7 +1700,7 @@ pa_clean <- pa_raw %>%
 # They have 3 General projects with different Project Descriptions that are all requesting more than $25M,
 # so it is not clear which project is being funded and which data should be included in the dashboard.
 
-ri_comp <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Comprehensive.csv"),
+ri_comp <- fread("data/srf-ppl/39-RhodeIsland_PPL_Comprehensive.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   # drop columns
@@ -1506,7 +1720,7 @@ ri_comp <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Comprehensive.csv")
          state = "Rhode Island"
          )
 
-ri_fund <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Fundable_Manual.csv"),
+ri_fund <- fread("data/srf-ppl/39-RhodeIsland_PPL_Fundable_Manual.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   mutate(funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]", "")),
@@ -1524,7 +1738,7 @@ ri_fund <- fread(paste0(ppl_folder_path, "39-RhodeIsland_PPL_Fundable_Manual.csv
 ```{r}
 
 # (20,11)
-sc_raw <- fread(paste0(ppl_folder_path, "37-SouthCarolina_PPL.csv"),
+sc_raw <- fread("data/srf-ppl/37-SouthCarolina_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1567,12 +1781,12 @@ sc_clean <- sc_raw %>%
 ```{r}
 
 # (23,8)
-sd_fnd <- fread(paste0(ppl_folder_path, "41-SouthDakota_Fundable.csv"),
+sd_fnd <- fread("data/srf-ppl/41-SouthDakota_Fundable.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
 # (136,8)
-sd_ppl <- fread(paste0(ppl_folder_path, "41-SouthDakota_PPL2023.csv"),
+sd_ppl <- fread("data/srf-ppl/41-SouthDakota_PPL2023.csv",
                       colClasses = "character", na.strings = "") %>% clean_names()
 
 # (136,14)
@@ -1585,7 +1799,7 @@ sd_clean <- sd_merged %>%
   # drop columns
   select(-expected_loan_rate_term, -loan_recipient, -funding_date, -expected_funding_source) %>%
   # process numeric columns
-  mutate(funding_amount = as.numeric(str_replace_all(est_loan_amount,"[^0-9.]","")),
+  mutate(funding_amount = as.numeric(str_replace_all(assistance_amount,"[^0-9.]","")),
          population = as.numeric(str_replace_all(pop_served,"[^0-9.]",""))
          ) %>%
   # process numeric columns with NAs
@@ -1607,7 +1821,7 @@ sd_clean <- sd_merged %>%
            TRUE ~ "Other"
          ),
          fundable = case_when(
-           principal_forgiveness_amount > 0 ~ "Fundable",
+           funding_amount > 0 ~ "Fundable",
            TRUE ~ "Applicant"
          ),
          state = "South Dakota"
@@ -1623,7 +1837,7 @@ sd_clean <- sd_merged %>%
 ```{r}
 
 # (267,14) -> (265,9)
-tx_ppl <- fread(paste0(ppl_folder_path, "43-Texas_PPL.csv"),
+tx_ppl <- fread("data/srf-ppl/43-Texas_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   # drop & rename columns for easier merge
@@ -1636,7 +1850,7 @@ tx_ppl <- fread(paste0(ppl_folder_path, "43-Texas_PPL.csv"),
   filter(!grepl("Total", rank, ignore.case=TRUE))
   
 # (38,13) -> (38,10)
-tx_fnd <- fread(paste0(ppl_folder_path, "43-Texas_Fundable_K.csv"),
+tx_fnd <- fread("data/srf-ppl/43-Texas_Fundable_K.csv",
                colClasses= "character", na.strings="") %>% 
   clean_names() %>%
   select(-eligible_phase_s, -green_type, -related_pif_number_s, -gpr) %>%
@@ -1683,7 +1897,7 @@ tx_clean <- tx_merge %>%
 
 ```{r}
 
-ut_ppl <- fread(paste0(ppl_folder_path, "44-Utah_Comprehensive.csv"),
+ut_ppl <- fread("data/srf-ppl/44-Utah_Comprehensive.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1725,8 +1939,9 @@ ut_clean <- ut_ppl %>%
 ```{r}
 
 # PPL - Fundable and Applicants
+# Document: DWSRF FFY2022 Priority Funding List - General, IUP for FFY22, PPLs are on pp. 45-48. 
 # (99,12)
-vt_ppl <- fread(paste0(ppl_folder_path, "45-Vermont_PPL.csv"),
+vt_ppl <- fread("data/srf-ppl/45-Vermont_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1768,25 +1983,22 @@ vt_ppl <- vt_ppl %>%
          # for fundable projects, if PF > 0, Disadvantaged 
          # because it is just the sum of GB_disadv_subsidy and gs_disadv_subsidy
          # Applicants assume unknown since PF will be 0 by default of not receiving subsidy
-         disadvantaged = case_when(
-           principal_forgiveness_amount > 0 ~ "Yes",
-           fundable == "Applicant" ~ as.character(NA),
-           TRUE ~ "No"
-         ),
          state="Vermont"
   ) %>%
   # subset columns
-  select(state_score, borrower, pwsid, project_description, population, disadvantaged,
+  select(state_score, borrower, pwsid, project_description, population,
          funding_amount, principal_forgiveness_amount, project_type, fundable, project_type, state)
 
 
 ## Import Lead tables independently to reconcile column head differences
+## Document: DWSRF FFY22 Priority List - Lead service line removal and service line inventories, IUP for FFY22, pp. 49-50. 
 # (3,7)
-vt_lead_t1 <- fread(paste0(ppl_folder_path, "45-Vermont_Lead_Table1.csv"),
+vt_lead_t1 <- fread("data/srf-ppl/45-Vermont_Lead_Table1.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
+
 # (70,7)
-vt_lead_t2 <- fread(paste0(ppl_folder_path, "45-Vermont_Lead_Table2.csv"),
+vt_lead_t2 <- fread("data/srf-ppl/45-Vermont_Lead_Table2.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   rename(line_loan_amount = loan4,
@@ -1825,7 +2037,7 @@ vt_lead <- vt_lead %>%
 
 # Emerging Contaminants
 # (17,7) -> (8,7)
-vt_ec <- fread(paste0(ppl_folder_path, "45-Vermont_EC.csv"),
+vt_ec <- fread("data/srf-ppl/45-Vermont_EC.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 # keep only the top section of the table that are not internal account transfers
@@ -1839,6 +2051,7 @@ vt_ec <- vt_ec %>%
          principal_forgiveness_amount = as.numeric(str_replace_all(line_items,"[^0-9.]","")),
   ) %>%
   mutate(borrower = str_squish(water_system),
+         project_description = str_squish(project),
          pwsid = case_when(
            nchar(wsid) == 4 ~ paste0("VT000", wsid),
            nchar(wsid) == 5 ~ paste0("VT00", wsid)),
@@ -1851,7 +2064,7 @@ vt_ec <- vt_ec %>%
          ),
          state = "Vermont") %>%
   select(state_score, borrower, pwsid, funding_amount, principal_forgiveness_amount,
-         disadvantaged, population, project_type, fundable, state)
+         project_description, disadvantaged, population, project_type, fundable, state)
 
 
 # combine (174,11)
@@ -1865,7 +2078,7 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
 
 ```{r}
 # import manually merged file (31,12)
-wa_merged <- fread(paste0(ppl_folder_path, "46-Washington_PPL_Merged.csv"),
+wa_merged <- fread("data/srf-ppl/46-Washington_PPL_Merged.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1907,7 +2120,7 @@ wa_clean <- wa_merged %>%
 
 ```{r}
 # (163,36)
-wv_raw <- fread(paste0(ppl_folder_path, "48-West_Virginia_Merged_Updated.csv"),
+wv_raw <- fread("data/srf-ppl/48-West_Virginia_Merged_Updated.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1970,7 +2183,7 @@ wv_clean <- wv_raw %>%
 
 ```{r}
 # (54,17) -> (46,19)
-wi_fund_raw <- fread(paste0(ppl_folder_path, "49-Wisconsin_PPL.csv"),
+wi_fund_raw <- fread("data/srf-ppl/49-Wisconsin_PPL.csv",
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
   ## remove non project rows
@@ -1985,7 +2198,7 @@ wi_fund_raw <- fread(paste0(ppl_folder_path, "49-Wisconsin_PPL.csv"),
                                   TRUE ~ "Other"),)
 
 # (4,17) -> (4,19)
-wi_ec_fund <- fread(paste0(ppl_folder_path, "49-Wisconsin_EC_Funding_List.csv"),
+wi_ec_fund <- fread("data/srf-ppl/49-Wisconsin_EC_Funding_List.csv",
                     colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # define disadvantaged as financial need points > 29 for only EC projects
@@ -2046,9 +2259,9 @@ combined_clean <- bind_rows(
            #nd_clean, 
            ne_clean, 
            #nh_clean,
-           #nm_clean,
+           nm_clean,
            pa_clean, 
-           #sd_clean, 
+           sd_clean, 
            tx_clean, 
            #vt_clean,
            #wa_clean, 
@@ -2091,6 +2304,7 @@ web_combined_clean <- combined_clean %>%
 ## Write to AWS
 
 ```{r}
+
 data <- web_combined_clean
 filename <- "web_ppl_combined_clean.csv"
 aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv"

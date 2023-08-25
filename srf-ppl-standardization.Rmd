@@ -48,6 +48,7 @@ library(googledrive)
 - Applicant data has been tracked down and added in below, however, it has highlighted a potential discrepancy. In the applicant file "ARPA/SRF combined PPL", there are roughly 90 projects with a "Yes" for `project_approved_yes_or_no`, whereas the combined projects listed as fundable from the other files is much less than this number. 
 - Is this the result of ARPA being included? Should all projects that aren't "Yes" be listed as Applicant? 
 - There is not a unique ID for projects, so the only way to determine which projects with a "Yes" but not in one of the other files should be included as "Applicant" would be to manually compare the communities and funding data listed. 
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -141,7 +142,9 @@ al_clean <- al_comb %>%
 ## Arkansas
 
 - Applicant data is preprocessed and ready to be merged in at next update.
-- Need to check for requested_amount columns though.
+- TODO: Confirm `project_cost` should be used for `funding_amount` in both Applicant and Fundable.
+- Mention of *Interest Rates or Loan Terms* in the fundable list
+
 
 ```{r}
 # the manually merged data from MDI includes fundable projects with columns from the comprehensive list
@@ -241,7 +244,8 @@ ar_clean <- bind_rows(ar_app, ar_fund)
 
 - Applicant data has been added in. 
 - Possible we might extract some Disadvantaged info from COMP that isn't currently in FUND
-- Do we need to bring in requested amount for projects that got funding? Probably? New column across the board?
+- Does not have `requested_amount`, but does have `estimated_project_cost` that could be included
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -350,7 +354,10 @@ ca_clean <- bind_rows(ca_merge, ca_app)
 
 ```
 
+
 ## Colorado (Q) (A)
+
+- Mentions *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -389,10 +396,13 @@ co_clean <- co_raw %>%
 ```
 
 
-## Delaware (A)
+## Delaware (A - WIP)
+
+- Need to scrape additional data for Applicants. Scrape is a WIP due to formatting issues.
+- Mentions *Interest Rates or Loan Terms*
 
 ```{r}
-de_fund <- fread("data/srf-ppl/8-Delaware_PPL.csv",
+de_fund <- fread("data/srf-ppl/8-Delaware_PPL_fund.csv",
                       colClasses = "character", na.strings = "")
 
 de_clean <- de_fund %>%
@@ -438,6 +448,8 @@ de_clean <- de_fund %>%
 
 ## Florida (Q) (A)
 
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 
 fl_fund <- fread("data/srf-ppl/9-Florida_ppl_fundable.csv",
@@ -462,7 +474,11 @@ fl_fund <- fread("data/srf-ppl/9-Florida_ppl_fundable.csv",
 ```
 
 
-## Georgia (A)
+## Georgia (WIP)
+
+- Applicant data is preprocessed and ready to be merged in at next update.
+- Need to check for `requested_amount` columns, as Georgia seems to instead provide an estiamted project cost, which could also be valuable.
+- Mentions *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -609,6 +625,10 @@ ga_lead <- ga_lead_1 %>%
 
 ## Hawaii
 
+- Applicant data is processed and ready to be added in future update.
+- Does not include a `requested_amount` or `project_cost`, so no new variables to include
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # (33,8)
 hi_fund <- fread("data/srf-ppl/11-Hawaii_PPL.csv",
@@ -640,7 +660,10 @@ hi_clean <- hi_fund %>%
 ```
 
 
-## Idaho (A)
+## Idaho
+- Applicant data is preprocessed and ready to be merged in at next update.
+- TODO: Confirm `project_cost` should be included in both Applicant and Fundable.
+- id_fund mentions *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -671,10 +694,10 @@ id_fnd <- fread("data/srf-ppl/12-Idaho_Fundable.csv",
                ) %>%
         select(rank, loan_amt, principal_forgiveness_amount, disadvantaged)
         
-# (13,19)
-id_merged <- merge(id_fnd, id_ppl, by=c("rank"), all.x=TRUE)
+# (81,12)
+id_merged <- merge(id_ppl, id_fnd, by=c("rank"), all.x=TRUE)
 
-# -> (13,12)
+# -> (81,12)
 id_clean <- id_merged %>%
   # process numeric columns
   mutate(state_rank = as.numeric(rank),
@@ -694,7 +717,9 @@ id_clean <- id_merged %>%
          # custom touch-up squishing doesn't fix
          project_description = str_replace(project_description, "C onstruction", "Construction"),
          # if from fundable table, else Applicant
-         fundable = "Fundable",
+         fundable = case_when(
+           !is.na(funding_amount) ~ "Fundable",
+           TRUE ~ "Applicant"),
          state="Idaho",
          # only project with Lead is the "All System fund"
          project_type = case_when(
@@ -711,6 +736,10 @@ id_clean <- id_merged %>%
 
 
 ## Illinois
+
+- Applicant data is processed
+- No mention of `project_cost` or `requested_amount``
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 ## Read in the manually separated versions of the PPL and lead data 
@@ -800,6 +829,10 @@ il_clean <- il_merge %>%
 
 ## Louisiana
 
+- Applicant data is processed
+- No mention of `requested_funds` or `loan_amount`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # (40,9)
 la_ppl <- fread("data/srf-ppl/18-Lousiana_Comprehensive_PPL-clean.csv",
@@ -849,6 +882,10 @@ la_clean <- la_comb %>%
 
 
 ## Maine (A)
+
+- TODO: Applicant data
+- TODO: Confirm addition of `amount_requested` from EC/Comp as `funding_amount`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -914,6 +951,10 @@ me_clean <- bind_rows(me_comp, me_ec)
 
 ## Maryland (A)
 
+- TODO: Applicant data
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
 # before further cleaning and standardization
@@ -963,6 +1004,10 @@ md_clean <- md_raw %>%
 
 
 ## Massachusetts
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (120,7)
@@ -1025,6 +1070,10 @@ ma_clean <- ma_comp_clean %>%
 
 ## Michigan
 
+- Applicant data processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # (112,24)
 mi_raw <- fread("data/srf-ppl/22-Michigan_PPL.csv",
@@ -1078,6 +1127,10 @@ mi_clean <- mi_raw %>%
 
 
 ## Minnesota
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (142, 16)
@@ -1144,6 +1197,10 @@ mn_clean <- mn_raw %>%
 
 ## Mississippi (DD) (A)
 
+- TODO: Applicant data needs to be processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 
 # (48,9)
@@ -1178,6 +1235,10 @@ ms_clean <- ms_raw %>%
 
 
 ## Missouri
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (43,12)
@@ -1221,6 +1282,10 @@ mo_clean <- mo_ppl %>%
 
 
 ## Montana (A)
+
+- TODO: Applicant data needs to be processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (37,4)
@@ -1271,6 +1336,10 @@ mt_clean <- mt_raw %>%
 
 
 ## Nebraska (A)
+
+- TODO: Applicant data needs to be processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1328,6 +1397,10 @@ ne_clean <- ne_merged %>%
 
 
 ## New Hampshire
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (190,32)
@@ -1420,6 +1493,10 @@ nh_clean <- nh_raw %>%
 
 ## New Mexico (A)
 
+- TODO: Applicant data needs to be processed
+- mentions `amount_requested`, but used for funding amount
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # (6,13)
 nm_raw <- fread("data/srf-ppl/31-NewMexico_PPL.csv",
@@ -1457,6 +1534,10 @@ nm_clean <- nm_raw %>%
 
 
 ## Nevada (DD)
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (172, 16)
@@ -1498,7 +1579,11 @@ nv_clean <- nv_raw %>%
 ```
 
 
-## North Carolina (Q) (A)
+## North Carolina (Q)
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1507,7 +1592,7 @@ nc_raw <- fread("data/srf-ppl/33-NorthCarolina_PPL_Comprehensive.csv",
                 colClass="character", na.strings="") %>%
   clean_names()
 
-# -> (16,11)
+# -> (221,11)
 nc_clean <- nc_raw %>%
   # format numeric columns
   mutate(population = as.numeric(str_replace_all(service_populati_on, "[^0-9.]", "")),
@@ -1532,15 +1617,20 @@ nc_clean <- nc_raw %>%
          cities_served = str_squish(county),
          project_type = "Other",
          state = "North Carolina") %>%
-  filter(!is.na(funding_amount)) %>% #to fundable
-  mutate(fundable = "Fundable") %>%
+  mutate(fundable = case_when(
+    !is.na(funding_amount) ~ "Fundable",
+    TRUE ~ "Applicant")) %>%
   select(borrower, pwsid, project_name, state_score, funding_amount, principal_forgiveness_amount,
          cities_served, project_type, population, state, fundable)
 
 ```
 
 
-## North Dakota (F)
+## North Dakota (Q in DD)
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1619,6 +1709,10 @@ nd_clean <- nd_ppl %>%
 
 ## Pennsylvania
 
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # (62,23)
 pa_raw <- fread("data/srf-ppl/38-Pennsylvania_manual_fundable_PPL.csv",
@@ -1678,7 +1772,11 @@ pa_clean <- pa_raw %>%
 ```
 
 
-## Rhode Island (WIP) (A)
+## Rhode Island (WIP)
+
+- Applicant data is processed, but not ready to add
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1734,6 +1832,9 @@ ri_fund <- fread("data/srf-ppl/39-RhodeIsland_PPL_Fundable_Manual.csv",
 
 ## South Carolina (DD) (A)
 
+- TODO: Applicant data needs to be processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1777,6 +1878,10 @@ sc_clean <- sc_raw %>%
 
 
 ## South Dakota
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- Mentions *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1834,9 +1939,14 @@ sd_clean <- sd_merged %>%
 
 ## Texas
 
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 
 # (267,14) -> (265,9)
+# 
 tx_ppl <- fread("data/srf-ppl/43-Texas_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
@@ -1849,8 +1959,10 @@ tx_ppl <- fread("data/srf-ppl/43-Texas_PPL.csv",
   # get rid of total columns
   filter(!grepl("Total", rank, ignore.case=TRUE))
   
+
 # (38,13) -> (38,10)
-tx_fnd <- fread("data/srf-ppl/43-Texas_Fundable_K.csv",
+# Appendix K: Initial Invited Project List
+tx_k <- fread("data/srf-ppl/43-Texas_Fundable_K.csv",
                colClasses= "character", na.strings="") %>% 
   clean_names() %>%
   select(-eligible_phase_s, -green_type, -related_pif_number_s, -gpr) %>%
@@ -1860,7 +1972,7 @@ tx_fnd <- fread("data/srf-ppl/43-Texas_Fundable_K.csv",
          fundable = "Fundable")
 
 # (268,10)
-tx_merge <- merge(tx_ppl, tx_fnd, by=c("pif_number", "rank", "points", "entity", "pws_id", "population",
+tx_merge <- merge(tx_ppl, tx_k, by=c("pif_number", "rank", "points", "entity", "pws_id", "population",
                                        "project_description", "project_cost", "disadv_percent"), all=TRUE)
 
 # -> (268,11)
@@ -1894,6 +2006,10 @@ tx_clean <- tx_merge %>%
 
 
 ## Utah (WIP)
+
+- TODO: Applicant data is processed, but needs to be interpretted and assigned the variable
+- `project_total` is mentioned, similar to `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -1935,6 +2051,10 @@ ut_clean <- ut_ppl %>%
 
 
 ## Vermont
+
+- Applicant data is processed
+- No mention of `funding_requested` or `project_cost`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
@@ -2076,6 +2196,11 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
 
 ## Washington (A)
 
+- TODO: Applicant data needs to be processed
+- No mention of `project_cost`
+- `loan_request_amount` present, but used for `funding_amount`
+- No mention of *Interest Rates or Loan Terms*
+
 ```{r}
 # import manually merged file (31,12)
 wa_merged <- fread("data/srf-ppl/46-Washington_PPL_Merged.csv",
@@ -2117,6 +2242,10 @@ wa_clean <- wa_merged %>%
 
 
 ## West Virginia (A)
+
+- TODO: Applicant data needs to be processed
+- Mentions `funding_requested`
+- Mentions *Interest Rates or Loan Terms*
 
 ```{r}
 # (163,36)
@@ -2180,6 +2309,10 @@ wv_clean <- wv_raw %>%
 
 
 ## Wisconsin
+
+- Applicant data is processed
+- Mentions `funding_requested`
+- No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 # (54,17) -> (46,19)

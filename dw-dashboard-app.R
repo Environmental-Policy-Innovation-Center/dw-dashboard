@@ -123,6 +123,9 @@ server <- function(input, output,session) {
   ColumnToolTip <- read_sheet(URL, sheet = "ColumnToolTip")
   
   DataDictionaryIndex <- read_sheet(URL, sheet = "DataDictionaryIndex")
+  glossary_link <- DataDictionaryIndex %>%
+    filter(State == "Glossary")%>%
+    pull(Link)
   ## Summarizing by state
   ## Adding color based on number of projects - This is subject to change/flexible ## 
   ## Adding Sabs Data 
@@ -472,7 +475,7 @@ server <- function(input, output,session) {
     HTML("<li> Click ‘Toggle National Map or State Data Table’ to switch between the map and the selected states available PPL data. </li> "),
     HTML("<li> Mousing over the ‘i’ icons will reveal additional information about the metrics. </li>"),
     HTML("<li> Click ‘Download State Data’ to download the state specific data, accompanying data dictionary, and "),
-    tags$a(href="https://drive.google.com/file/d/1Qils_r_X8pyMe3F9qJ77bqzsnG_6PQqb/view", "glossary of key terms.",  target="_blank"),
+    tags$a(href=paste(glossary_link), "glossary of key terms.",  target="_blank"),
     easyClose = FALSE,
     footer = modalButton("Close"),
   )
@@ -503,7 +506,7 @@ server <- function(input, output,session) {
       dictionary_pdf <- drive_download(state_link, file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding glossary data
-      glossary_pdf <- drive_download("https://drive.google.com/file/d/1Qils_r_X8pyMe3F9qJ77bqzsnG_6PQqb/view?usp=share_link", 
+      glossary_pdf <- drive_download(glossary_link, 
                                file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding state data

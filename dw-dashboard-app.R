@@ -472,7 +472,7 @@ server <- function(input, output,session) {
     HTML("<li> Click ‘Toggle National Map or State Data Table’ to switch between the map and the selected states available PPL data. </li> "),
     HTML("<li> Mousing over the ‘i’ icons will reveal additional information about the metrics. </li>"),
     HTML("<li> Click ‘Download State Data’ to download the state specific data, accompanying data dictionary, and "),
-    tags$a(href="https://drive.google.com/file/d/1UIRpWkvI9VuGTmcbMSsQyKmXQT092O9E/view?usp=share_link", "glossary of key terms.",  target="_blank"),
+    tags$a(href="https://drive.google.com/file/d/1Qils_r_X8pyMe3F9qJ77bqzsnG_6PQqb/view", "glossary of key terms.",  target="_blank"),
     easyClose = FALSE,
     footer = modalButton("Close"),
   )

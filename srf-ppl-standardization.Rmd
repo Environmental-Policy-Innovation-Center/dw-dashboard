@@ -8,6 +8,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Introduction
+
 This notebook transforms raw data scraped from state PPLs and IUPs and provides a single, harmonized output. 
 
 Details for necessary transformations, crucial context, and discussion on decisions and assumptions can be found in each state's Background Information PDFs, available as a data download through the SRF Dashboard.
@@ -28,7 +30,20 @@ Once this process is done for each state, the cleaned dataframes are combined an
 which prepares the data for external presentation in the SRF Dashboard.
 
 
-# Process States
+Outline code
+
+Within this documents outline, parenthetical codes denote where in process each state is:
+- None: Not currently in need of updates
+- A: Applicant data needs to be added
+- ADD: Add to Data Dictionary, awaiting adding documentation page
+- DD: Added to Data Dictionary, awaiting review from policy team
+- NS: Not Started
+- Q: Question currently blocking progress, awaiting resolution from policy team
+- WIP: Work in progress
+
+
+
+## Process States
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -44,7 +59,7 @@ library(googledrive)
 ```
 
 
-## Alabama (Q) (A) 
+## Alabama (Q in SS) (A) 
 - Applicant data has been tracked down and added in below, however, it has highlighted a potential discrepancy. In the applicant file "ARPA/SRF combined PPL", there are roughly 90 projects with a "Yes" for `project_approved_yes_or_no`, whereas the combined projects listed as fundable from the other files is much less than this number. 
 - Is this the result of ARPA being included? Should all projects that aren't "Yes" be listed as Applicant? 
 - There is not a unique ID for projects, so the only way to determine which projects with a "Yes" but not in one of the other files should be included as "Applicant" would be to manually compare the communities and funding data listed. 
@@ -355,8 +370,9 @@ ca_clean <- bind_rows(ca_merge, ca_app)
 ```
 
 
-## Colorado (Q) (A)
+## Colorado (Q in SS) (A)
 
+- TODO Applicant data, waiting for question resolution to dive in further
 - Mentions *Interest Rates or Loan Terms*
 
 ```{r}
@@ -398,7 +414,7 @@ co_clean <- co_raw %>%
 
 ## Delaware (A - WIP)
 
-- Need to scrape additional data for Applicants. Scrape is a WIP due to formatting issues.
+- TODO: Need to scrape additional data for Applicants. Scrape is a WIP due to formatting issues.
 - Mentions *Interest Rates or Loan Terms*
 
 ```{r}
@@ -446,8 +462,34 @@ de_clean <- de_fund %>%
 ```
 
 
-## Florida (Q) (A)
+## District of Columbia (DD)
 
+- Assumes `requested_amount` should be included, needs to be removed otherwise
+
+```{r}
+
+# 13,3
+dc_ppl <- fread("data/srf-ppl/DistrictofColumbia_PPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+# -> (13,5)
+dc_clean <- dc_ppl %>%
+  mutate(
+  project_name = str_squish(project),
+  requested_amount = as.numeric(str_replace_all(grant_funding,"[^0-9.]","")),
+  state = "District of Columbia",
+  project_type = "Other",
+  fundable = "Applicant"
+  ) %>%
+  select(project_name, requested_amount, project_type, state, fundable)
+
+```
+
+
+## Florida (Q in SS) (A)
+
+- TODO: Applicant data - waiting for Q to be answered before addressing
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -474,7 +516,7 @@ fl_fund <- fread("data/srf-ppl/9-Florida_ppl_fundable.csv",
 ```
 
 
-## Georgia (WIP)
+## Georgia (Q in DD)
 
 - Applicant data is preprocessed and ready to be merged in at next update.
 - Need to check for `requested_amount` columns, as Georgia seems to instead provide an estiamted project cost, which could also be valuable.
@@ -827,10 +869,153 @@ il_clean <- il_merge %>%
 ```
 
 
+## Indiana (DD)
+
+- IUP only includes Q1 2023, need to determine how to handle this in dashboard
+- Can fundable range depict "fundable" or are they all applicant projects anyways?
+- Assumes `requested_amount` to be included
+
+```{r}
+
+## PPL
+# (60,18)
+in_ppl <- fread("data/srf-ppl/14-Indiana_IUP_PPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+## Lead
+# (8,17)
+in_lead_q123 <- fread("data/srf-ppl/14-Indiana_PPL_Lead(Q1 2023).csv",
+                 colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+# -> (68,18)
+in_comb <- bind_rows(in_ppl, in_lead_q123)
+
+
+# -> (68,12)  
+in_clean <- in_comb %>%  
+  # drop non-project rows
+  filter(participant != "NA") %>%
+  # process numeric columns
+  mutate(
+    population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
+    requested_amount = as.numeric(str_replace_all(requested_funds, "[^0-9.]", "")),
+  ) %>%
+  # process text column
+  mutate(
+    borrower = str_squish(participant),
+    pwsid = case_when(
+      pwsid_no_s == "TBD" ~ "No Information",
+      TRUE ~ paste0("IN", pwsid_no_s)),
+    project_name = str_squish(srf_project_no),
+    project_description = str_squish(project_description),
+    state_score = str_replace_all(ppl_score, "[^0-9.]", ""),
+    state_rank = str_replace_all(ppl_rank, "[^0-9.]", ""),
+    disadvantaged = str_squish(disadvantaged_community),
+    project_type = case_when(
+      emerging_contaminants == "Yes" ~ "Emerging Contaminants",
+      grepl("Lead service", project_description, ignore.case=TRUE) ~ "Lead",
+      TRUE ~ "Other"
+    ),
+    state = "Indiana",
+    fundable = "Applicant"
+  ) %>%
+  select(borrower, pwsid, state_rank, state_score, project_name, project_description,
+         project_type, requested_amount, population, disadvantaged, project_type, state, fundable)
+
+
+```
+
+
+## Iowa (NS)
+
+- We currently have three quarters of data, need to combine, see if projects are listed duplicately?
+- Convert excel files to CSV and transform color coding to column variables?
+- Need to confirm that this is only applicant data considering there are some marks for loans being signed?
+
+```{r}
+
+```
+
+
+## Kansas (Q in DD)
+
+- assumes `requested_amount` should be included
+- need to untangle the variations of loan_forgiveness variables
+- can disadvantaged be assumed from the `loan_forgiveness_disadvantaged_community` in base and lead?
+- should PF be defined as sum of the `loan_forigveness` variables?
+- is receiving `loan_forgiveness` indicative of being a fundable project?
+
+```{r}
+
+## Base
+# -> (98,9)
+ks_base <- fread("data/srf-ppl/16-Kansas_PPL-base.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(-v3, -v5, -v9, -v10, -v12, -v14, -v15, -v17) %>%
+  mutate(
+    project_type = "Other"
+  )
+
+## Lead
+# -> (16,8)
+ks_lead <- fread("data/srf-ppl/16-Kansas_PPL-lead.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(-v3, -v5, -v7, -v8, -v10, -v11, -v13, -v14, -v16) %>%
+  mutate(
+    project_type = "Lead"
+  ) 
+
+# Emerging Contaminants
+# -> (9,7)
+ks_ec <- fread("data/srf-ppl/16-Kansas_PPL-ec.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(-v3, -v5, -v7, -v8, -v9, -v10, -v12, -v13, -v14, -v16, -v18) %>%
+  mutate(
+    project_type = "Emerging Contaminants"
+  ) %>%
+  rename(loan_request = x,
+         population_served = served,
+         loan_forgiveness = forgiveness)
+
+## Combine
+# -> (123,12)
+ks_comb <- bind_rows(ks_base, ks_lead, ks_ec)
+
+
+## Clean
+ks_clean <- ks_comb %>%
+  # process numeric columns
+  mutate(
+    requested_amount = as.numeric(str_replace_all(loan_request, "[^0-9.]", "")),
+    population = as.numeric(str_replace_all(population_served, "[^0-9.]", ""))
+  ) %>%
+  # process text columns
+  mutate(
+    borrower = str_squish(municipality_name),
+    project_name = str_squish(project_number),
+    state_score = str_squish(rating),
+    project_description = str_squish(project_description),
+    state = "Kansas",
+    # assume all applicant until confirmed otherwise
+    fundable = "Applicant"
+  ) %>%
+  select(borrower, state_score, project_name, project_description, requested_amount,
+         population, project_type, state, fundable)
+
+  
+```
+
+
+
 ## Louisiana
 
 - Applicant data is processed
-- No mention of `requested_funds` or `loan_amount`
+- No mention of `requested_amount` or `loan_amount`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -881,9 +1066,9 @@ la_clean <- la_comb %>%
 ```
 
 
-## Maine (A)
+## Maine (Q in DD)(A)
 
-- TODO: Applicant data
+- TODO: Applicant data - Q in DD about where to interpret it
 - TODO: Confirm addition of `amount_requested` from EC/Comp as `funding_amount`
 - No mention of *Interest Rates or Loan Terms*
 
@@ -951,8 +1136,8 @@ me_clean <- bind_rows(me_comp, me_ec)
 
 ## Maryland (A)
 
-- TODO: Applicant data
-- No mention of `funding_requested` or `project_cost`
+- TODO: Applicant data - https://mde.maryland.gov/programs/water/WQFA/Documents/FFY22%20SFY24%20Final%20DW%20PPL.pdf
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1006,7 +1191,7 @@ md_clean <- md_raw %>%
 ## Massachusetts
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1071,7 +1256,7 @@ ma_clean <- ma_comp_clean %>%
 ## Michigan
 
 - Applicant data processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1129,7 +1314,7 @@ mi_clean <- mi_raw %>%
 ## Minnesota
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1195,10 +1380,10 @@ mn_clean <- mn_raw %>%
 ```
 
 
-## Mississippi (DD) (A)
+## Mississippi (DD)
 
-- TODO: Applicant data needs to be processed
-- No mention of `funding_requested` or `project_cost`
+- Applicant data processed
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1208,24 +1393,27 @@ ms_raw <- fread("data/srf-ppl/24-Mississippi_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
-# -> (16,7)
+# -> (42,8)
 ms_clean <- ms_raw %>%
-  # keep only the projects above the ----- funding line
-  slice_head(n=20) %>%
-  # drop category rows
-  filter(!grepl("Category", project)) %>%
+  # drop category rows and funding line row
+  filter(!grepl("Category", project) & project_description != "NA") %>%
   # format numeric columns
   mutate(
          population = as.numeric(str_replace_all(service_area_population,"[^0-9.]","")),
          funding_amount = as.numeric(str_replace_all(loan_amount_requested,"[^0-9.]","")),
-         principal_forgiveness_amount = as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")),) %>%
+         principal_forgiveness_amount = as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")),
+         # use this to separate funding/applicant projects, but don't keep in standardized data
+         state_cumulative = as.numeric(str_replace_all(statewide_cum, "[^0-9.]",""))) %>%
   # format text columns
   mutate(borrower = str_squish(project),
          project_description = str_squish(project_description),
          state_score = str_replace_all(priority_points,"[^0-9.]",""),
          state = "Mississippi",
          project_type = "Other",
-         fundable = "Fundable") %>%
+         fundable = case_when(
+           # funding line set at 42,500,000 in PPL
+           state_cumulative < 42500000 ~ "Fundable",
+           TRUE ~ "Applicant")) %>%
   select(borrower, project_description, state_score, funding_amount, principal_forgiveness_amount,
          state, project_type, fundable)
   
@@ -1237,7 +1425,7 @@ ms_clean <- ms_raw %>%
 ## Missouri
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1283,8 +1471,8 @@ mo_clean <- mo_ppl %>%
 
 ## Montana (A)
 
-- TODO: Applicant data needs to be processed
-- No mention of `funding_requested` or `project_cost`
+- TODO: Applicant data needs to be scraped from Appendix 2 of this doc - https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1337,8 +1525,8 @@ mt_clean <- mt_raw %>%
 
 ## Nebraska (A)
 
-- TODO: Applicant data needs to be processed
-- No mention of `funding_requested` or `project_cost`
+- TODO: Applicant data needs to be processed - scrape appendix B2 https://drive.google.com/file/d/19Pb8cJRKm-fO2s_Zt2iKilELdTDhmpIX/view
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1399,7 +1587,7 @@ ne_clean <- ne_merged %>%
 ## New Hampshire
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1491,9 +1679,51 @@ nh_clean <- nh_raw %>%
 ```
 
 
+## New Jersey (DD)
+
+- Applicant data processed
+- Assumes `project_cost` should be included
+- No mention of *Interest Rates or Loan Terms*
+
+```{r}
+
+# (676, 19)
+nj_raw <- fread("data/srf-ppl/30-NewJersey_PPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+# -> (676,10)
+nj_clean <- nj_raw %>%
+  select(-cat_a, -cat_b, -cat_c_a, -cat_c_b, -cat_c_c, -cat_c_d, -cat_d, -cat_e) %>%
+  # process numeric columns
+  mutate(
+    population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
+    project_cost = as.numeric(str_replace_all(estimated_cost, "[^0-9.]", "")),
+  ) %>%
+  # process text columns
+  mutate(
+    borrower = str_squish(project_sponsor),
+    project_name = str_squish(project_number),
+    pwsid = str_squish(pwsid),
+    project_description = str_squish(project_name),
+    state_rank = str_squish(rank),
+    state_score = str_squish(rank_points),
+    project_type = case_when(
+      grepl("EC", bil_eligibility) ~ "Emerging Contaminants",
+      grepl("LSL", bil_eligibility) ~ "Lead",
+      TRUE ~ "Other"),
+    state = "New Jersey",
+    fundable = "Applicant"
+  ) %>%
+  select(borrower, pwsid, state_rank, state_score, project_name, project_description, project_cost, 
+         population, state, fundable)
+
+```
+
+
 ## New Mexico (A)
 
-- TODO: Applicant data needs to be processed
+- TODO: Applicant data needs to be processed - need to find it, not in a separate list in the document in our data dictionary
 - mentions `amount_requested`, but used for funding amount
 - No mention of *Interest Rates or Loan Terms*
 
@@ -1536,7 +1766,7 @@ nm_clean <- nm_raw %>%
 ## Nevada (DD)
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1579,10 +1809,85 @@ nv_clean <- nv_raw %>%
 ```
 
 
-## North Carolina (Q)
+## New York (DD)
+
+- Walker's notes say that when Score == H, it denotes disadvantaged in the base PPL. Should projects with a numeric Score be marked as not disadvantaged or "No Information"? Below assumes No Info since that is the more conservative interpretation.
+
+```{r}
+
+## Base
+# (558,10) -> (558,12)
+ny_base <- fread("data/srf-ppl/32-NewYork_base_ppl.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  mutate(project_type = "Other",
+         disadvantaged = case_when(
+           score == "H" ~ "Yes",
+           TRUE ~ "No Information"))
+
+## BIL
+# (120,10) -> (120,11)
+ny_bil <- fread("data/srf-ppl/32-NewYork_bil_ppl.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  select(-v1) %>%
+  mutate(project_type = "Other",
+         dac = "No Information")
+
+## Lead
+# (109,11) -> (109,12)
+ny_lead <- fread("data/srf-ppl/32-NewYork_lead.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  select(-v1) %>%
+  mutate(project_type = "Lead",
+         disadvantaged = case_when(
+           dac == "DAC" ~ "Yes",
+           TRUE ~ "No"
+         ))
+
+## Emerging Contaminants
+# (37,10) -> (37,11)
+ny_ec <- fread("data/srf-ppl/32-NewYork_ec.csv",
+                colClass="character", na.strings="") %>%
+  clean_names() %>%
+  select(-pfas) %>%
+  mutate(project_type = "Emerging Contaminants",
+         disadvantaged = case_when(
+           dac == "DAC" ~ "Yes",
+           TRUE ~ "No")
+         )
+
+## Combine & Clean
+# -> (824, 13)
+ny_comb <- bind_rows(ny_base, ny_bil, ny_lead, ny_ec)
+
+# -> (824,11)
+ny_clean <- ny_comb %>%
+  select(-dac, -cumulative_total, -code) %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(pop, "[^0-9.]", "")),
+         project_cost = as.numeric(str_replace_all(project_cost, "[^0-9.]", "")),
+         ) %>%
+  # process text columns
+  mutate(project_name = str_squish(project_number),
+         cities_served = str_squish(county),
+         borrower = paste(str_squish(system_name), "/", str_squish(borrower)),
+         state_score = str_squish(score),
+         project_description = str_squish(description),
+         state = "New York",
+         fundable = "Applicant") %>%
+  select(borrower, state_score, project_name, project_description, project_cost,
+         population, cities_served, disadvantaged, project_type, state, fundable)
+
+
+```
+
+
+## North Carolina (Q in SS)
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1629,7 +1934,7 @@ nc_clean <- nc_raw %>%
 ## North Dakota (Q in DD)
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1707,10 +2012,187 @@ nd_clean <- nd_ppl %>%
 ```
 
 
+## Ohio (Q in DD)
+
+- From the IUP, it looks like 35-Ohio_PPL_Base includes all projects and the other tables simply add data
+- what should we call `estimated_loan_amount` considering we are treating this like Applicant data because clearly they are not all going to get funded? is it `project_cost`? Shouldn't be `funding_amount` if we are keeping that for only fundable projects
+- what should be done with `estimated_principal_forgiveness`? Similar questions as above, but also note that three of the six projects are listed as BYPASS, meaning that would need to be dropped for it to be a numeric column and we'd lose half of the values from that table
+
+```{r}
+
+## Base
+# -> (440,9)
+oh_base <- fread("data/srf-ppl/35-Ohio_PPL_Base.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(-v1) %>%
+  # reset all column names and drop column name row
+  rename(entity = v2, project = v3, pwsid = v4, population = v5, county = v6, 
+         estimated_loan_amount = v7, loan_type = v8, estimated_award_date = v9, rate = v10) %>%
+  filter(entity != "Entity")
+  
+
+
+## HAB Regional PF
+#
+oh_pf <- fread("data/srf-ppl/35-Ohio_PPL_RegionalPF.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  filter(!is.na(estimated_principal_forgiveness)) %>%
+  select(entity, estimated_loan_amount, estimated_principal_forgiveness)
+
+
+# merge PF into the base table
+oh_base <- oh_base %>%
+  left_join(oh_pf) %>%
+  # manually fix one instance where est. PF is assigned to a single project where two projects are listed in base,
+  # assume that it goes to the larger portion of funds for construction
+  mutate(estimated_principal_forgiveness = case_when(
+    entity == "Walnut Creek Water Company" & estimated_loan_amount == "$3,950,000" ~ "$2,070,000",
+    TRUE ~ estimated_principal_forgiveness
+  ))
+
+
+## Lead
+#
+oh_lead <- fread("data/srf-ppl/35-Ohio_LSLR.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(entity, project, estimated_loan_amount) %>%
+  mutate(project_type = "Lead")
+  
+
+## Emerging Contaminants
+# 
+oh_ec <- fread("data/srf-ppl/35-Ohio_PPL_HAB_PFAS.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  select(entity, project, estimated_loan_amount) %>%
+  mutate(project_type = "Emerging Contaminants")
+
+
+# combined lead and ec for single left join to bring in project_type
+oh_lead_ec <- bind_rows(oh_lead, oh_ec)
+
+oh_comb <- oh_base %>%
+  left_join(oh_lead_ec, by=c("entity", "estimated_loan_amount"))
+
+# -> (440,9)
+oh_clean_2 <- oh_comb %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+         project_cost = as.numeric(str_replace_all(estimated_loan_amount,"[^0-9.]","")),
+         ) %>%
+  # process text columns
+  mutate(borrower = str_squish(entity),
+         project_description = str_squish(project.x),
+         pwsid = str_squish(pwsid),
+         cities_served = str_squish(county),
+         state = "Ohio",
+         fundable = "Applicant",
+         project_type = case_when(
+           # fill in a few gaps from the joins
+           is.na(project_type) & grepl("HAB", rate) ~ "Emerging Contaminants",
+           grepl("Lead", project_description) | grepl("LSL", project_description) | grepl("LSL", rate) ~ "Lead",
+           is.na(project_type) ~ "Other",
+           TRUE ~ project_type),
+         disadvantaged = case_when(
+           grepl("DIS", rate) ~ "Yes",
+           TRUE ~ "No")
+         ) %>%
+  select(borrower, pwsid, project_description, project_cost,
+         cities_served, population, disadvantaged, state, project_type, fundable) %>%
+  # remove duplicates from potential one:many relationship from the left_join for project_type
+  distinct()
+
+```
+
+
+## Oklahoma (DD)
+
+- Applicant data processed
+- Similar to OH, how to handle `loan_amount` for projects we don't expect to be fundable? Currently assumes `requested_amount`
+- No mention of *Interest Rates or Loan Terms*
+
+```{r}
+
+
+## base / bil
+# (69,12)
+ok_b <- fread("data/srf-ppl/36-Oklahoma_PPL-AppB.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  mutate(project_type = "Other") %>%
+  rename(disadvantaged = severly_disadvantged_disadvantged_or_no)
+
+
+## lead
+# (42,11)
+ok_e <- fread("data/srf-ppl/36-Oklahoma_PPL-AppE.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  mutate(project_type = "Lead") %>%
+  rename(disadvantaged = disadvantaged_y_or_n)
+
+
+## emerging contaminants
+# (42,11)
+ok_f <- fread("data/srf-ppl/36-Oklahoma_PPL-AppF.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  mutate(project_type = "Emerging Contaminants") %>%
+  rename(disadvantaged = disadvantaged_y_or_n)
+
+
+# (114, 12)
+ok_comb <- bind_rows(ok_b, ok_e, ok_f)
+
+# -> (114,10)
+ok_clean <- ok_comb %>%
+  # drop columns
+  select(-base, -cumulative_amount, -anticipated_binding_commitment_date, -anticipated_construction_date) %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+         requested_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),) %>%
+  # process text columns
+  mutate(state_score = case_when(
+    priority_points == "Being Ranked" ~ "No Information",
+    TRUE ~ str_squish(priority_points)),
+    borrower = str_squish(system),
+    project_description = str_squish(project_description),
+    project_name = str_squish(project_number),
+    # disadvantaged can either be S/D/Y for some degree of disadvantaged or N for No
+    disadvantaged = case_when(
+      disadvantaged == "N" ~ "No",
+      TRUE ~ "Yes"),
+    state = "Oklahoma",
+    fundable = "Applicant"
+         ) %>%
+  select(borrower, state_score, project_name, project_description, requested_amount, disadvantaged, 
+         population, project_type, state, fundable)
+
+
+```
+
+
+## Oregon (NS)
+
+- Data exists in Excel spreadsheet as well as in PDF tables that appear to have not been scraped, though it is unclear precisely which document is which or how to interpret
+- Imported purely as a CSV, data will be difficult to parse when combined in the same columns, will likely require manual edits for a file that can be processed
+
+```{r}
+
+or_ppl_1 <- fread("data/srf-ppl/Oregon_2023-1Q2023/2023 COMBINED (H&C&C) PPL-Table 1.csv",
+                  colClasses = "character", na.strings = "") %>%
+  clean_names()
+
+```
+
+
 ## Pennsylvania
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1775,28 +2257,27 @@ pa_clean <- pa_raw %>%
 ## Rhode Island (WIP)
 
 - Applicant data is processed, but not ready to add
-- No mention of `funding_requested` or `project_cost`
+- Mentions `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
+the comprehensive list provides data on each borrower such as population and PWSID
+as well as project descriptions and scores for each project, even where there are multiple projects for the same borrower
+
+the funding list, on the other hand, is only at the borrower level and only includes
+the loan amount, the borrower's name (which often does not match the comprehensive list),
+and has been manually updated to include project_type based on which table the projects were listed
+the one:many relationship in the comprehensive list and the different units of analysis creates a
+degree of uncertainty in which projects are funded or not.
+
+Easy example: City of Newport is listed as receiving one loan for Lead and 
+have only one Lead project which matches between the requested amount and the loan amount
+
+More Difficult example: Providence Water is receiving two loans. 25M for Lead and 21M for General.
+While they only have one Lead project, it is for $184M.
+They have 3 General projects with different Project Descriptions that are all requesting more than $25M,
+so it is not clear which project is being funded and which data should be included in the dashboard.
+
 ```{r}
-
-# the comprehensive list provides data on each borrower such as population and PWSID
-# as well as project descriptions and scores for each project, even where there are multiple projects for the same borrower
-
-# the funding list, on the other hand, is only at the borrower level and only includes
-# the loan amount, the borrower's name (which often does not match the comprehensive list),
-# and has been manually updated to include project_type based on which table the projects were listed
-
-# the one:many relationship in the comprehensive list and the different units of analysis creates a
-# degree of uncertainty in which projects are funded or not.
-
-# Easy example: City of Newport is listed as receiving one loan for Lead and 
-# have only one Lead project which matches between the requested amount and the loan amount
-
-# More Difficult example: Providence Water is receiving two loans. $25M for Lead and $21M for General.
-# While they only have one Lead project, it is for $184M.
-# They have 3 General projects with different Project Descriptions that are all requesting more than $25M,
-# so it is not clear which project is being funded and which data should be included in the dashboard.
 
 ri_comp <- fread("data/srf-ppl/39-RhodeIsland_PPL_Comprehensive.csv",
                       colClasses = "character", na.strings = "") %>% 
@@ -1832,8 +2313,9 @@ ri_fund <- fread("data/srf-ppl/39-RhodeIsland_PPL_Fundable_Manual.csv",
 
 ## South Carolina (DD) (A)
 
-- TODO: Applicant data needs to be processed
-- No mention of `funding_requested` or `project_cost`
+- TODO: Applicant data needs to be processed - may not be available
+- TODO: Add in supplemental, EC, and lead tables (to be scraped) - see data dictionary
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1880,7 +2362,7 @@ sc_clean <- sc_raw %>%
 ## South Dakota
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - Mentions *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1940,7 +2422,7 @@ sd_clean <- sd_merged %>%
 ## Texas
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -2005,9 +2487,9 @@ tx_clean <- tx_merge %>%
 ```
 
 
-## Utah (WIP)
+## Utah (Q in DD)
 
-- TODO: Applicant data is processed, but needs to be interpretted and assigned the variable
+- TODO: Applicant data is processed, but needs to be interpreted and assigned the variable
 - `project_total` is mentioned, similar to `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
@@ -2053,7 +2535,7 @@ ut_clean <- ut_ppl %>%
 ## Vermont
 
 - Applicant data is processed
-- No mention of `funding_requested` or `project_cost`
+- No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -2196,7 +2678,7 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
 
 ## Washington (A)
 
-- TODO: Applicant data needs to be processed
+- TODO: Applicant data needs to be processed - may not be published/available unless we count the "rejected/declined" projects in Appendix C, but this doesn't seem to fit the other definitions of Applicant projects in other states
 - No mention of `project_cost`
 - `loan_request_amount` present, but used for `funding_amount`
 - No mention of *Interest Rates or Loan Terms*
@@ -2241,14 +2723,15 @@ wa_clean <- wa_merged %>%
 ```
 
 
-## West Virginia (A)
+## West Virginia
 
-- TODO: Applicant data needs to be processed
-- Mentions `funding_requested`
+- Applicant data processed
+- Mentions `requested_amount`
 - Mentions *Interest Rates or Loan Terms*
 
 ```{r}
 # (163,36)
+# this manually merged updated file includes 
 wv_raw <- fread("data/srf-ppl/48-West_Virginia_Merged_Updated.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
@@ -2292,7 +2775,9 @@ wv_clean <- wv_raw %>%
                                   grepl("pfas", dwtrf_eligible_funding_type, ignore.case = T) ~
                                     "Emerging Contaminants",
                                   TRUE ~ "Other"),
-         fundable = "Fundable",
+         fundable = case_when(
+           funding_amount > 0 | principal_forgiveness_amount > 0 ~ "Fundable",
+           TRUE ~ "Applicant"),
          state_score = str_replace_all(points,"[^0-9.]", ""),
          project_description = str_squish(project_description_x),
          project_name = str_squish(project_name),
@@ -2311,7 +2796,7 @@ wv_clean <- wv_raw %>%
 ## Wisconsin
 
 - Applicant data is processed
-- Mentions `funding_requested`
+- Mentions `requested_amount`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}

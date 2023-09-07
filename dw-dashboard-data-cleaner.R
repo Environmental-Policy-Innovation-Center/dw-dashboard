@@ -48,7 +48,7 @@ PPL_State_Data_Geo <- PPL_Data %>%
   mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
   select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count)%>%
   group_by(State)%>%
-  summarize_if(is.numeric,sum)%>%
+  summarize_if(is.numeric,sum,na.rm = TRUE)%>%
   left_join(.,Sabs_cleaned)%>%
   left_join(.,AdditionalData, by = c("State"= "State"))%>%
   mutate(FundPer100k = (`Funding Amount`/ Population))

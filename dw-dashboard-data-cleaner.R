@@ -19,7 +19,7 @@ PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/
 ## Filtering down to states approved based on this document: https://docs.google.com/document/d/1sapr_7U6mLciUpS7u-Yj3g44G3S-WchaukyiA2N8e-M/edit
 PPL_Data <- PPL_Data %>%
             filter(State %in% c("Alabama", "Arkansas", "Delaware", "Idaho", "Illinois", "Louisiana", "Maryland",
-                                "Maine", "Michigan", "Minnesota", "Nebraska", "Pennsylvania", "Texas", "West Virginia", "Wisconsin"))
+                                "Maine", "Michigan", "Minnesota", "Nebraska", "New Mexico", "Pennsylvania", "South Dakota", "Texas", "Vermont", "West Virginia", "Wisconsin"))
 
 ## SABs Data ### 
 Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))

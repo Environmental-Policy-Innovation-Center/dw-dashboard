@@ -1941,7 +1941,7 @@ nc_clean <- nc_raw %>%
 
 ## Read in tables for PF funding from the tables in page 10-13 of PPL
 
-## NOTE THESE COME FROM DIFFERENT YEARS AND MAY NEED TO BE REPLACED OR RECONCILED
+## TODO: Replace these underlying files with the correct year, but maintain this code
 
 nd_gen <- fread("data/srf-ppl/34-NorthDakota_GeneralSupplementalFunding.csv",
                 colClass="character", na.strings="") %>%
@@ -2881,10 +2881,16 @@ combined_clean <- bind_rows(
            pa_clean, 
            sd_clean, 
            tx_clean, 
-           #vt_clean,
+           vt_clean,
            #wa_clean, 
            wi_clean, 
            wv_clean)
+
+
+# remove Applicant data until Dashboard 1.1 ready
+combined_clean <- combined_clean %>%
+  filter(fundable == "Fundable")
+
 ```
 
 

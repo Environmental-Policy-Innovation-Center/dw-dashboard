@@ -6,5 +6,5 @@ Because states release their Intended Use Plans (IUPs) and Project Priority List
 
 Thus, it is often easier to distinguish between years of data by focusing on which federal funds are allocated. The Year X denotation is used in place of FFY/SFY nomenclature to try and reduce confusion between which years are being referenced and where various documents or spreadsheets should go in their respective folder structures.
 
-For more information on how FFY and SFY calendars work, see [this table crecated by Janet](https://docs.google.com/document/d/1lRC8tGbltx8jn0ftaRE153NHyKYSicxbbBjISlBzFXE/edit?usp=sharing).
+For more information on how FFY and SFY calendars work, see [this table created by Janet](https://docs.google.com/document/d/1lRC8tGbltx8jn0ftaRE153NHyKYSicxbbBjISlBzFXE/edit?usp=sharing).
 

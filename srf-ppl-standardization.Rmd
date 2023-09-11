@@ -2886,6 +2886,78 @@ combined_clean <- bind_rows(
            wi_clean, 
            wv_clean)
 
+```
+
+
+```{r}
+
+# use this as a simple on/off switch for sending test data to AWS,
+adding_test_data <- TRUE
+
+if (adding_test_data == TRUE) { 
+
+# create sample data for Gabe to test 1.1
+# this data should include
+# - states with funded AND applicant data (multiple)
+# - states with only applicant data (DC)
+# - states with new columns, project_cost (NJ) and requested_amount (OK)
+combined_test <- combined_clean %>%
+  # TODO: standardize all states so rank is CHAR, it was originally NUM but there are some states that use non-numeric symbols for ranking implying
+  # projects are being bypassed or ranked based soley on DAC status or some other feature.
+  mutate(state_rank = as.character(state_rank)) %>%
+  bind_rows(dc_clean, nj_clean, ok_clean)
+
+## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
+web_combined_clean_test <- combined_test %>%
+                          mutate(across(everything(), as.character)) %>%
+                          select(state, cities_served, borrower,
+                                 pwsid, project_name, project_description,
+                                 project_type, funding_amount, principal_forgiveness_amount, 
+                                 population, disadvantaged, state_rank, state_score,
+                                 project_cost, requested_amount) %>%
+                          rename(State = state,
+                                Borrower = borrower, 
+                                `City Served` = cities_served, 
+                                `Project Description` = project_description,
+                                `Project Type` = project_type,
+                                `State Rank` = state_rank,
+                                `State Score` = state_score,
+                                `Funding Amount` = funding_amount, 
+                                `Principal Forgiveness` = principal_forgiveness_amount,
+                                `Meets State Disadvantaged Criteria` = disadvantaged,
+                                 Population = population,
+                                 PWSID = pwsid, 
+                                `Project Name` = project_name,
+                                `Project Cost` = project_cost,
+                                `Requested Amount` = requested_amount)
+
+data <- web_combined_clean_test
+filename <- "web_ppl_combined_clean_v4.csv"
+aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v4.csv"
+
+### To put in an AWS bucket, you need these credentials
+## Contact gabe@policyinnovation.org for questions/access
+## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
+
+# Sys.setenv("AWS_ACCESS_KEY_ID" = "YOUR ACCESS KEY",
+#            "AWS_SECRET_ACCESS_KEY" = "YOUR SECRET KEY",
+#            "AWS_DEFAULT_REGION" = "us-east-1")
+
+# Writing to temp 
+fwrite(data, file.path(tempdir(), filename))
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), filename),
+  object = aws_filepath,
+  bucket = "water-team-data",
+  acl = "public-read"
+)
+
+}
+```
+
+```{r}
 
 # remove Applicant data until Dashboard 1.1 ready
 combined_clean <- combined_clean %>%

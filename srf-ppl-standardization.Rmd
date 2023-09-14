@@ -70,7 +70,7 @@ New Columns:
 ### APPLICANT ### 
 
 # (364, 11)
-al_applicant <- fread("data/srf-ppl/year1/1-Alabama_ARPA_SRF_Combined_PPL.csv",
+al_applicant <- fread("data/year1/csv/1-Alabama_ARPA_SRF_Combined_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -101,17 +101,17 @@ al_app_clean <- al_applicant %>%
 ### FUNDABLE ### 
 
 # (7,14)
-al_base <- fread("data/srf-ppl/year1/1-Alabama_Base-PPL.csv",
+al_base <- fread("data/year1/csv/1-Alabama_Base-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (19,14)
-al_bil <- fread("data/srf-ppl/year1/1-Alabama_BIL-PPL.csv",
+al_bil <- fread("data/year1/csv/1-Alabama_BIL-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (3,14)
-al_lead <- fread("data/srf-ppl/year1/1-Alabama_Lead-PPL.csv",
+al_lead <- fread("data/year1/csv/1-Alabama_Lead-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -148,7 +148,9 @@ al_clean <- al_comb %>%
          fundable = "Fundable",
          state = "Alabama"
   ) %>%
-  select(state_score, borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, requested_amount,
+  select(state_score, borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
+         # add requested amount in once the applicant data is added to al_comb
+         #requested_amount, 
          population, cities_served, disadvantaged, project_type, fundable, state)
   
 ```
@@ -165,12 +167,12 @@ al_clean <- al_comb %>%
 # the manually merged data from MDI includes fundable projects with columns from the comprehensive list
 # this is a combination of charts 3 and 4 from the IUP
 # (15,21)
-ar_merge <- fread("data/srf-ppl/year1/4-Arkansas_Merged.csv",
+ar_merge <- fread("data/year1/csv/4-Arkansas_Merged.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # the comprehensive PPL includes applicant projects, (747,13)
-ar_comp <- fread("data/srf-ppl/year1/4-Arkansas.csv",
+ar_comp <- fread("data/year1/csv/4-Arkansas.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -272,7 +274,7 @@ New Columns:
 
 # (16,12) -> (15,9)
 # intended to be funded projects that are not EC
-ca_fund <- fread("data/srf-ppl/year1/5-California_Fundable_PPL.csv",
+ca_fund <- fread("data/year1/csv/5-California_Fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # get rid of non-project columns
@@ -303,7 +305,7 @@ ca_fund <- fread("data/srf-ppl/year1/5-California_Fundable_PPL.csv",
 
 # (11,9) -> (11,10)
 # EC projects that have funding data
-ca_ec <- fread("data/srf-ppl/year1/5-California_EC.csv",
+ca_ec <- fread("data/year1/csv/5-California_EC.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # process numeric columns
@@ -333,7 +335,7 @@ ca_merge <- bind_rows(ca_fund, ca_ec)
 ### APPLICANT ### 
 
 # (345, 11) -> (313, 8) when dropping non-project rows and likely to be funded projects and consolidating columns
-ca_app <- fread("data/srf-ppl/year1/5-California_Comprehensive_PPL.csv",
+ca_app <- fread("data/year1/csv/5-California_Comprehensive_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # drop non-project rows
@@ -383,7 +385,7 @@ ca_clean <- bind_rows(ca_merge, ca_app)
 ```{r}
 
 # (165,11)
-co_raw <- fread("data/srf-ppl/year1/7-Colorado_AppendixB.csv",
+co_raw <- fread("data/year1/csv/7-Colorado_AppendixB.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -423,7 +425,7 @@ co_clean <- co_raw %>%
 - Mentions *Interest Rates or Loan Terms*
 
 ```{r}
-de_fund <- fread("data/srf-ppl/year1/8-Delaware_PPL_fund.csv",
+de_fund <- fread("data/year1/csv/8-Delaware_PPL_fund.csv",
                       colClasses = "character", na.strings = "")
 
 de_clean <- de_fund %>%
@@ -474,7 +476,7 @@ de_clean <- de_fund %>%
 ```{r}
 
 # 13,3
-dc_ppl <- fread("data/srf-ppl/year1/DistrictofColumbia_PPL.csv",
+dc_ppl <- fread("data/year1/csv/DistrictofColumbia_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -499,7 +501,7 @@ dc_clean <- dc_ppl %>%
 
 ```{r}
 
-fl_fund <- fread("data/srf-ppl/year1/9-Florida_ppl_fundable.csv",
+fl_fund <- fread("data/year1/csv/9-Florida_ppl_fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # format numeric columns
@@ -521,7 +523,7 @@ fl_fund <- fread("data/srf-ppl/year1/9-Florida_ppl_fundable.csv",
 ```
 
 
-## Georgia (WIP)
+## Georgia (DD)
 
 - Applicant data is preprocessed and ready to be merged in at next update.
 - Need to check for `requested_amount` columns, as Georgia seems to instead provide an estimated project cost, which could also be valuable.
@@ -531,7 +533,7 @@ fl_fund <- fread("data/srf-ppl/year1/9-Florida_ppl_fundable.csv",
 
 ## BASE IUP
 # (60,14)
-ga_raw <- fread("data/srf-ppl/year1/10-Georgia_Comp_clean.csv",
+ga_raw <- fread("data/year1/csv/10-Georgia_Comp_clean.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -572,11 +574,11 @@ ga_base <- ga_raw %>%
 
 ## SUPPLEMENTAL IUP
 
-ga_supp_1 <- fread("data/srf-ppl/year1/10-Georgia_Supplemental_IUP_A1.csv",
+ga_supp_1 <- fread("data/year1/csv/10-Georgia_Supplemental_IUP_A1.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
-ga_supp_2 <- fread("data/srf-ppl/year1/10-Georgia_Supplemental_IUP_A2.csv",
+ga_supp_2 <- fread("data/year1/csv/10-Georgia_Supplemental_IUP_A2.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(project, total_disburs) %>%
@@ -621,11 +623,11 @@ ga_supp <- ga_supp_1 %>%
 
 
 ## LEAD IUP
-ga_lead_1 <- fread("data/srf-ppl/year1/10-Georgia_Lead_IUP_A1.csv",
+ga_lead_1 <- fread("data/year1/csv/10-Georgia_Lead_IUP_A1.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
-ga_lead_2 <- fread("data/srf-ppl/year1/10-Georgia_Lead_IUP_A2.csv",
+ga_lead_2 <- fread("data/year1/csv/10-Georgia_Lead_IUP_A2.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(project, total_disburs) %>%
@@ -671,12 +673,12 @@ ga_lead <- ga_lead_1 %>%
 
 ## EC IUP
 # (2,10)
-ga_ec_1 <- fread("data/srf-ppl/year1/10-Georgia_EC_IUP_A1.csv",
+ga_ec_1 <- fread("data/year1/csv/10-Georgia_EC_IUP_A1.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (2,10) -> (2,2)
-ga_ec_2 <- fread("data/srf-ppl/year1/10-Georgia_EC_IUP_A2.csv",
+ga_ec_2 <- fread("data/year1/csv/10-Georgia_EC_IUP_A2.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(project, total_disburs) %>%
@@ -728,7 +730,7 @@ ga_clean <- bind_rows(ga_base, ga_supp, ga_lead, ga_ec)
 
 ```{r}
 # (33,8)
-hi_fund <- fread("data/srf-ppl/year1/11-Hawaii_PPL.csv",
+hi_fund <- fread("data/year1/csv/11-Hawaii_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -765,14 +767,14 @@ hi_clean <- hi_fund %>%
 ```{r}
 
 # (81, 9)
-id_ppl <- fread("data/srf-ppl/year1/12-Idaho_PPL.csv", 
+id_ppl <- fread("data/year1/csv/12-Idaho_PPL.csv", 
                       colClasses = "character", na.strings = "") %>% 
           clean_names()
 
 # (13,11) -> (13,4)
 # reduce fundable projects to only their rank (a UID in this case), 
 # principal forgiveness amount, and loan amount
-id_fnd <- fread("data/srf-ppl/year1/12-Idaho_Fundable.csv",
+id_fnd <- fread("data/year1/csv/12-Idaho_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
         clean_names() %>%
         mutate(rank = str_replace_all(rank,"[^0-9.]", ""),
@@ -843,7 +845,7 @@ id_clean <- id_merged %>%
 ## from the excel spreadsheets sent by the state
 
 # (70,11)
-il_ppl_f <- fread("data/srf-ppl/year1/13-Illinois_PPL_Fundable.csv",
+il_ppl_f <- fread("data/year1/csv/13-Illinois_PPL_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable",
@@ -853,7 +855,7 @@ il_ppl_f <- fread("data/srf-ppl/year1/13-Illinois_PPL_Fundable.csv",
            )
 
 # (19,11)
-il_ppl_a <- fread("data/srf-ppl/year1/13-Illinois_PPL_Applicant.csv",
+il_ppl_a <- fread("data/year1/csv/13-Illinois_PPL_Applicant.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant",
@@ -874,14 +876,14 @@ dacs <- il_ppl %>%
 
 # Preprocess Lead Projects
 # (18,10)
-il_lead_f <- fread("data/srf-ppl/year1/13-Illinois_Lead_Fundable.csv",
+il_lead_f <- fread("data/year1/csv/13-Illinois_Lead_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable",
          project_type="Lead")
 
 # (1,10)
-il_lead_a <- fread("data/srf-ppl/year1/13-Illinois_Lead_Applicant.csv",
+il_lead_a <- fread("data/year1/csv/13-Illinois_Lead_Applicant.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant",
@@ -934,13 +936,13 @@ il_clean <- il_merge %>%
 
 ## PPL
 # (60,18)
-in_ppl <- fread("data/srf-ppl/year1/14-Indiana_IUP_PPL.csv",
+in_ppl <- fread("data/year1/csv/14-Indiana_IUP_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
 ## Lead
 # (8,17)
-in_lead_q123 <- fread("data/srf-ppl/year1/14-Indiana_PPL_Lead(Q1 2023).csv",
+in_lead_q123 <- fread("data/year1/csv/14-Indiana_PPL_Lead(Q1 2023).csv",
                  colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1006,7 +1008,7 @@ in_clean <- in_comb %>%
 
 ## Base
 # -> (98,9)
-ks_base <- fread("data/srf-ppl/year1/16-Kansas_PPL-base.csv",
+ks_base <- fread("data/year1/csv/16-Kansas_PPL-base.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(-v3, -v5, -v9, -v10, -v12, -v14, -v15, -v17) %>%
@@ -1016,7 +1018,7 @@ ks_base <- fread("data/srf-ppl/year1/16-Kansas_PPL-base.csv",
 
 ## Lead
 # -> (16,8)
-ks_lead <- fread("data/srf-ppl/year1/16-Kansas_PPL-lead.csv",
+ks_lead <- fread("data/year1/csv/16-Kansas_PPL-lead.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(-v3, -v5, -v7, -v8, -v10, -v11, -v13, -v14, -v16) %>%
@@ -1026,7 +1028,7 @@ ks_lead <- fread("data/srf-ppl/year1/16-Kansas_PPL-lead.csv",
 
 # Emerging Contaminants
 # -> (9,7)
-ks_ec <- fread("data/srf-ppl/year1/16-Kansas_PPL-ec.csv",
+ks_ec <- fread("data/year1/csv/16-Kansas_PPL-ec.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(-v3, -v5, -v7, -v8, -v9, -v10, -v12, -v13, -v14, -v16, -v18) %>%
@@ -1075,13 +1077,13 @@ ks_clean <- ks_comb %>%
 
 ```{r}
 # (40,9)
-la_ppl <- fread("data/srf-ppl/year1/18-Lousiana_Comprehensive_PPL-clean.csv",
+la_ppl <- fread("data/year1/csv/18-Lousiana_Comprehensive_PPL-clean.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Applicant")
 
 # (8,11)
-la_fnd <- fread("data/srf-ppl/year1/18-Lousiana_Fundable_PPL.csv",
+la_fnd <- fread("data/year1/csv/18-Lousiana_Fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(fundable="Fundable")
@@ -1130,7 +1132,7 @@ la_clean <- la_comb %>%
 ```{r}
 
 # process three projects in separate list for emerging contaminants
-me_ec <- fread("data/srf-ppl/year1/19-Maine_PL_EC.csv",
+me_ec <- fread("data/year1/csv/19-Maine_PL_EC.csv",
                 colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # rename columns that don't need to be modified
@@ -1151,7 +1153,7 @@ me_ec <- fread("data/srf-ppl/year1/19-Maine_PL_EC.csv",
   
 
 # process comprehensive list
-me_comp <- fread("data/srf-ppl/year1/19-Maine_PPL_Comprehensive.csv",
+me_comp <- fread("data/year1/csv/19-Maine_PPL_Comprehensive.csv",
                 colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # drop columns
@@ -1199,7 +1201,7 @@ me_clean <- bind_rows(me_comp, me_ec)
 # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
 # before further cleaning and standardization
 # (24,19)
-md_raw <- fread("data/srf-ppl/year1/20-Maryland_PPL_manual.csv",
+md_raw <- fread("data/year1/csv/20-Maryland_PPL_manual.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1251,10 +1253,10 @@ md_clean <- md_raw %>%
 
 ```{r}
 # (120,7)
-ma_comp_raw <- fread("data/srf-ppl/year1/21-Massachusetts_PPL.csv",
+ma_comp_raw <- fread("data/year1/csv/21-Massachusetts_PPL.csv",
                       colClasses = "character", na.strings = "")
 # (74,6)
-ma_fund_raw <- fread("data/srf-ppl/year1/21-Massachusetts_Fundable.csv",
+ma_fund_raw <- fread("data/year1/csv/21-Massachusetts_Fundable.csv",
                       colClasses = "character", na.strings = "")
 
 # -> (113,7)
@@ -1316,7 +1318,7 @@ ma_clean <- ma_comp_clean %>%
 
 ```{r}
 # (112,24)
-mi_raw <- fread("data/srf-ppl/year1/22-Michigan_PPL.csv",
+mi_raw <- fread("data/year1/csv/22-Michigan_PPL.csv",
                       colClasses = "character", na.strings = "")
 # -> (110,12)
 mi_clean <- mi_raw %>%
@@ -1374,7 +1376,7 @@ mi_clean <- mi_raw %>%
 
 ```{r}
 # (142, 16)
-mn_raw <- fread("data/srf-ppl/year1/23-Minnesota_IUP_manual.csv",
+mn_raw <- fread("data/year1/csv/23-Minnesota_IUP_manual.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1444,7 +1446,7 @@ mn_clean <- mn_raw %>%
 ```{r}
 
 # (48,9)
-ms_raw <- fread("data/srf-ppl/year1/24-Mississippi_PPL.csv",
+ms_raw <- fread("data/year1/csv/24-Mississippi_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1485,7 +1487,7 @@ ms_clean <- ms_raw %>%
 
 ```{r}
 # (43,12)
-mo_ppl <- fread("data/srf-ppl/year1/25-Missouri_PPL_Cleaned.csv",
+mo_ppl <- fread("data/year1/csv/25-Missouri_PPL_Cleaned.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -1532,7 +1534,7 @@ mo_clean <- mo_ppl %>%
 
 ```{r}
 # (37,4)
-mt_raw <- fread("data/srf-ppl/year1/26-Montana_PPL.csv",
+mt_raw <- fread("data/year1/csv/26-Montana_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() 
 
@@ -1587,25 +1589,25 @@ mt_clean <- mt_raw %>%
 ```{r}
 
 # read in base, all non-lead or ec projects, (14,9)
-ne_base <- fread("data/srf-ppl/year1/27-Nebraska_ppl_base.csv",
+ne_base <- fread("data/year1/csv/27-Nebraska_ppl_base.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Other")
 
 # read in bil, all non-lead or ec projects, (13,9)
-ne_bil <- fread("data/srf-ppl/year1/27-Nebraska_ppl_bil.csv",
+ne_bil <- fread("data/year1/csv/27-Nebraska_ppl_bil.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Other")
 
 # read in ec projects, (7,9)
-ne_ec <- fread("data/srf-ppl/year1/27-Nebraska_ec.csv",
+ne_ec <- fread("data/year1/csv/27-Nebraska_ec.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Emerging Contaminants")
 
 # read in lead projects (19,9)
-ne_lsl <- fread("data/srf-ppl/year1/27-Nebraska_lslr.csv",
+ne_lsl <- fread("data/year1/csv/27-Nebraska_lslr.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type="Lead")
@@ -1647,7 +1649,7 @@ ne_clean <- ne_merged %>%
 
 ```{r}
 # (190,32)
-nh_raw <- fread("data/srf-ppl/year1/29-NewHampshire_PPL.csv",
+nh_raw <- fread("data/year1/csv/29-NewHampshire_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1743,7 +1745,7 @@ nh_clean <- nh_raw %>%
 ```{r}
 
 # (676, 19)
-nj_raw <- fread("data/srf-ppl/year1/30-NewJersey_PPL.csv",
+nj_raw <- fread("data/year1/csv/30-NewJersey_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1784,7 +1786,7 @@ nj_clean <- nj_raw %>%
 
 ```{r}
 # (6,13)
-nm_raw <- fread("data/srf-ppl/year1/31-NewMexico_PPL.csv",
+nm_raw <- fread("data/year1/csv/31-NewMexico_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -1826,7 +1828,7 @@ nm_clean <- nm_raw %>%
 
 ```{r}
 # (172, 16)
-nv_raw <- fread("data/srf-ppl/year1/28-Nevada_PPL.csv",
+nv_raw <- fread("data/year1/csv/28-Nevada_PPL.csv",
                 colClass="character", na.strings="") %>%
   clean_names()
 
@@ -1872,7 +1874,7 @@ nv_clean <- nv_raw %>%
 
 ## Base
 # (558,10) -> (558,12)
-ny_base <- fread("data/srf-ppl/year1/32-NewYork_base_ppl.csv",
+ny_base <- fread("data/year1/csv/32-NewYork_base_ppl.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Other",
@@ -1882,7 +1884,7 @@ ny_base <- fread("data/srf-ppl/year1/32-NewYork_base_ppl.csv",
 
 ## BIL
 # (120,10) -> (120,11)
-ny_bil <- fread("data/srf-ppl/year1/32-NewYork_bil_ppl.csv",
+ny_bil <- fread("data/year1/csv/32-NewYork_bil_ppl.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   select(-v1) %>%
@@ -1891,7 +1893,7 @@ ny_bil <- fread("data/srf-ppl/year1/32-NewYork_bil_ppl.csv",
 
 ## Lead
 # (109,11) -> (109,12)
-ny_lead <- fread("data/srf-ppl/year1/32-NewYork_lead.csv",
+ny_lead <- fread("data/year1/csv/32-NewYork_lead.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   select(-v1) %>%
@@ -1903,7 +1905,7 @@ ny_lead <- fread("data/srf-ppl/year1/32-NewYork_lead.csv",
 
 ## Emerging Contaminants
 # (37,10) -> (37,11)
-ny_ec <- fread("data/srf-ppl/year1/32-NewYork_ec.csv",
+ny_ec <- fread("data/year1/csv/32-NewYork_ec.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   select(-pfas) %>%
@@ -1948,7 +1950,7 @@ ny_clean <- ny_comb %>%
 ```{r}
 
 # (221, 15)
-nc_raw <- fread("data/srf-ppl/year1/33-NorthCarolina_PPL_Comprehensive.csv",
+nc_raw <- fread("data/year1/csv/33-NorthCarolina_PPL_Comprehensive.csv",
                 colClass="character", na.strings="") %>%
   clean_names()
 
@@ -1998,19 +2000,19 @@ nc_clean <- nc_raw %>%
 
 ## TODO: Replace these underlying files with the correct year, but maintain this code
 
-nd_gen <- fread("data/srf-ppl/year1/34-NorthDakota_GeneralSupplementalFunding.csv",
+nd_gen <- fread("data/year1/csv/34-NorthDakota_GeneralSupplementalFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Other")
 
 
-nd_ec <- fread("data/srf-ppl/year1/34-NorthDakota_EmergingContaminantsFunding.csv",
+nd_ec <- fread("data/year1/csv/34-NorthDakota_EmergingContaminantsFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Emerging Contaminants")
 
 
-nd_lead <- fread("data/srf-ppl/year1/34-NorthDakota_LeadFunding.csv",
+nd_lead <- fread("data/year1/csv/34-NorthDakota_LeadFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Lead")
@@ -2021,7 +2023,7 @@ nd_funding <- bind_rows(nd_gen, nd_ec, nd_lead) %>%
          project_name = str_squish(tracking_no))
 
 # (262,14) -> (262,9)
-nd_ppl <- fread("data/srf-ppl/year1/34-NorthDakota_PPL.csv",
+nd_ppl <- fread("data/year1/csv/34-NorthDakota_PPL.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
             # drop columns not needed for analysis
@@ -2077,7 +2079,7 @@ nd_clean <- nd_ppl %>%
 
 ## Base
 # -> (440,9)
-oh_base <- fread("data/srf-ppl/year1/35-Ohio_PPL_Base.csv",
+oh_base <- fread("data/year1/csv/35-Ohio_PPL_Base.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(-v1) %>%
@@ -2090,7 +2092,7 @@ oh_base <- fread("data/srf-ppl/year1/35-Ohio_PPL_Base.csv",
 
 ## HAB Regional PF
 #
-oh_pf <- fread("data/srf-ppl/year1/35-Ohio_PPL_RegionalPF.csv",
+oh_pf <- fread("data/year1/csv/35-Ohio_PPL_RegionalPF.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   filter(!is.na(estimated_principal_forgiveness)) %>%
@@ -2110,7 +2112,7 @@ oh_base <- oh_base %>%
 
 ## Lead
 #
-oh_lead <- fread("data/srf-ppl/year1/35-Ohio_LSLR.csv",
+oh_lead <- fread("data/year1/csv/35-Ohio_LSLR.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(entity, project, estimated_loan_amount) %>%
@@ -2119,7 +2121,7 @@ oh_lead <- fread("data/srf-ppl/year1/35-Ohio_LSLR.csv",
 
 ## Emerging Contaminants
 # 
-oh_ec <- fread("data/srf-ppl/year1/35-Ohio_PPL_HAB_PFAS.csv",
+oh_ec <- fread("data/year1/csv/35-Ohio_PPL_HAB_PFAS.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   select(entity, project, estimated_loan_amount) %>%
@@ -2174,7 +2176,7 @@ oh_clean_2 <- oh_comb %>%
 
 ## base / bil
 # (69,12)
-ok_b <- fread("data/srf-ppl/year1/36-Oklahoma_PPL-AppB.csv",
+ok_b <- fread("data/year1/csv/36-Oklahoma_PPL-AppB.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type = "Other") %>%
@@ -2183,7 +2185,7 @@ ok_b <- fread("data/srf-ppl/year1/36-Oklahoma_PPL-AppB.csv",
 
 ## lead
 # (42,11)
-ok_e <- fread("data/srf-ppl/year1/36-Oklahoma_PPL-AppE.csv",
+ok_e <- fread("data/year1/csv/36-Oklahoma_PPL-AppE.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type = "Lead") %>%
@@ -2192,7 +2194,7 @@ ok_e <- fread("data/srf-ppl/year1/36-Oklahoma_PPL-AppE.csv",
 
 ## emerging contaminants
 # (42,11)
-ok_f <- fread("data/srf-ppl/year1/36-Oklahoma_PPL-AppF.csv",
+ok_f <- fread("data/year1/csv/36-Oklahoma_PPL-AppF.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type = "Emerging Contaminants") %>%
@@ -2237,10 +2239,6 @@ ok_clean <- ok_comb %>%
 
 ```{r}
 
-or_ppl_1 <- fread("data/srf-ppl/year1/Oregon_2023-1Q2023/2023 COMBINED (H&C&C) PPL-Table 1.csv",
-                  colClasses = "character", na.strings = "") %>%
-  clean_names()
-
 ```
 
 
@@ -2252,7 +2250,7 @@ or_ppl_1 <- fread("data/srf-ppl/year1/Oregon_2023-1Q2023/2023 COMBINED (H&C&C) P
 
 ```{r}
 # (62,23)
-pa_raw <- fread("data/srf-ppl/year1/38-Pennsylvania_manual_fundable_PPL.csv",
+pa_raw <- fread("data/year1/csv/38-Pennsylvania_manual_fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -2334,7 +2332,7 @@ so it is not clear which project is being funded and which data should be includ
 
 ```{r}
 
-ri_comp <- fread("data/srf-ppl/year1/39-RhodeIsland_PPL_Comprehensive.csv",
+ri_comp <- fread("data/year1/csv/39-RhodeIsland_PPL_Comprehensive.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   # drop columns
@@ -2354,7 +2352,7 @@ ri_comp <- fread("data/srf-ppl/year1/39-RhodeIsland_PPL_Comprehensive.csv",
          state = "Rhode Island"
          )
 
-ri_fund <- fread("data/srf-ppl/year1/39-RhodeIsland_PPL_Fundable_Manual.csv",
+ri_fund <- fread("data/year1/csv/39-RhodeIsland_PPL_Fundable_Manual.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   mutate(funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]", "")),
@@ -2376,7 +2374,7 @@ ri_fund <- fread("data/srf-ppl/year1/39-RhodeIsland_PPL_Fundable_Manual.csv",
 ```{r}
 
 # (20,11)
-sc_raw <- fread("data/srf-ppl/year1/37-SouthCarolina_PPL.csv",
+sc_raw <- fread("data/year1/csv/37-SouthCarolina_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -2423,12 +2421,12 @@ sc_clean <- sc_raw %>%
 ```{r}
 
 # (23,8)
-sd_fnd <- fread("data/srf-ppl/year1/41-SouthDakota_Fundable.csv",
+sd_fnd <- fread("data/year1/csv/41-SouthDakota_Fundable.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
 # (136,8)
-sd_ppl <- fread("data/srf-ppl/year1/41-SouthDakota_PPL2023.csv",
+sd_ppl <- fread("data/year1/csv/41-SouthDakota_PPL2023.csv",
                       colClasses = "character", na.strings = "") %>% clean_names()
 
 # (136,14)
@@ -2484,7 +2482,7 @@ sd_clean <- sd_merged %>%
 
 # (267,14) -> (265,9)
 # 
-tx_ppl <- fread("data/srf-ppl/year1/43-Texas_PPL.csv",
+tx_ppl <- fread("data/year1/csv/43-Texas_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   # drop & rename columns for easier merge
@@ -2499,7 +2497,7 @@ tx_ppl <- fread("data/srf-ppl/year1/43-Texas_PPL.csv",
 
 # (38,13) -> (38,10)
 # Appendix K: Initial Invited Project List
-tx_k <- fread("data/srf-ppl/year1/43-Texas_Fundable_K.csv",
+tx_k <- fread("data/year1/csv/43-Texas_Fundable_K.csv",
                colClasses= "character", na.strings="") %>% 
   clean_names() %>%
   select(-eligible_phase_s, -green_type, -related_pif_number_s, -gpr) %>%
@@ -2550,7 +2548,7 @@ tx_clean <- tx_merge %>%
 
 ```{r}
 
-ut_ppl <- fread("data/srf-ppl/year1/44-Utah_Comprehensive.csv",
+ut_ppl <- fread("data/year1/csv/44-Utah_Comprehensive.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -2599,7 +2597,7 @@ ut_clean <- ut_ppl %>%
 # PPL - Fundable and Applicants
 # Document: DWSRF FFY2022 Priority Funding List - General, IUP for FFY22, PPLs are on pp. 45-48. 
 # (99,12)
-vt_ppl <- fread("data/srf-ppl/year1/45-Vermont_PPL.csv",
+vt_ppl <- fread("data/year1/csv/45-Vermont_PPL.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
@@ -2651,12 +2649,12 @@ vt_ppl <- vt_ppl %>%
 ## Import Lead tables independently to reconcile column head differences
 ## Document: DWSRF FFY22 Priority List - Lead service line removal and service line inventories, IUP for FFY22, pp. 49-50. 
 # (3,7)
-vt_lead_t1 <- fread("data/srf-ppl/year1/45-Vermont_Lead_Table1.csv",
+vt_lead_t1 <- fread("data/year1/csv/45-Vermont_Lead_Table1.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 
 # (70,7)
-vt_lead_t2 <- fread("data/srf-ppl/year1/45-Vermont_Lead_Table2.csv",
+vt_lead_t2 <- fread("data/year1/csv/45-Vermont_Lead_Table2.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names() %>%
   rename(line_loan_amount = loan4,
@@ -2695,7 +2693,7 @@ vt_lead <- vt_lead %>%
 
 # Emerging Contaminants
 # (17,7) -> (8,7)
-vt_ec <- fread("data/srf-ppl/year1/45-Vermont_EC.csv",
+vt_ec <- fread("data/year1/csv/45-Vermont_EC.csv",
                       colClasses = "character", na.strings = "") %>% 
   clean_names()
 # keep only the top section of the table that are not internal account transfers
@@ -2741,7 +2739,7 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
 
 ```{r}
 # import manually merged file (31,12)
-wa_merged <- fread("data/srf-ppl/year1/46-Washington_PPL_Merged.csv",
+wa_merged <- fread("data/year1/csv/46-Washington_PPL_Merged.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -2788,7 +2786,7 @@ wa_clean <- wa_merged %>%
 ```{r}
 # (163,36)
 # this manually merged updated file includes 
-wv_raw <- fread("data/srf-ppl/year1/48-West_Virginia_Merged_Updated.csv",
+wv_raw <- fread("data/year1/csv/48-West_Virginia_Merged_Updated.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -2863,7 +2861,7 @@ wv_clean <- wv_raw %>%
 
 ```{r}
 # (54,17) -> (46,19)
-wi_fund_raw <- fread("data/srf-ppl/year1/49-Wisconsin_PPL.csv",
+wi_fund_raw <- fread("data/year1/csv/49-Wisconsin_PPL.csv",
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
   ## remove non project rows
@@ -2878,7 +2876,7 @@ wi_fund_raw <- fread("data/srf-ppl/year1/49-Wisconsin_PPL.csv",
                                   TRUE ~ "Other"),)
 
 # (4,17) -> (4,19)
-wi_ec_fund <- fread("data/srf-ppl/year1/49-Wisconsin_EC_Funding_List.csv",
+wi_ec_fund <- fread("data/year1/csv/49-Wisconsin_EC_Funding_List.csv",
                     colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   # define disadvantaged as financial need points > 29 for only EC projects
@@ -2898,7 +2896,7 @@ wi_clean <- wi_fund_raw %>%
          ## make principal forgiveness NAs zeros
          principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
          population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-         requested_amount = as.numeric(str_replace_all(requested_,"[^0-9.]", "")),
+         requested_amount = as.numeric(str_replace_all(requested_project_costs,"[^0-9.]", "")),
          ) %>%
   ## non-numeric columns
   mutate(fundable = case_when(!is.na(funding_amount) ~ "Fundable",

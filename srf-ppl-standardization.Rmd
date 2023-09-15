@@ -1998,26 +1998,25 @@ nc_clean <- nc_raw %>%
 
 ## Read in tables for PF funding from the tables in page 10-13 of PPL
 
-## TODO: Replace these underlying files with the correct year, but maintain this code
-
+# (4,6) -> (4,7)
 nd_gen <- fread("data/year1/csv/34-NorthDakota_GeneralSupplementalFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Other")
 
-
+# (2,6) -> (2,7)
 nd_ec <- fread("data/year1/csv/34-NorthDakota_EmergingContaminantsFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Emerging Contaminants")
 
-
+# (45,6) -> (45,7)
 nd_lead <- fread("data/year1/csv/34-NorthDakota_LeadFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   mutate(project_type = "Lead")
 
-
+# -> (51, 8)
 nd_funding <- bind_rows(nd_gen, nd_ec, nd_lead) %>%
   mutate(principal_forgiveness = as.numeric(str_replace_all(additional_subsidy,"[^0-9.]","")),
          project_name = str_squish(tracking_no))
@@ -2059,7 +2058,7 @@ nd_clean <- nd_ppl %>%
   # rename columns
   rename(disadvantaged = disadvantaged_community,
          borrower = system_name) %>%
-  left_join(nd_funding) %>%
+  full_join(nd_funding) %>%
   # keep columns for analysis
   select(borrower, project_name, pwsid, project_type, project_description,
          state_rank, funding_amount, principal_forgiveness, disadvantaged, population, fundable, state)

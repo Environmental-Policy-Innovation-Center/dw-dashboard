@@ -13,6 +13,7 @@ on:
 env:
   ENV: dev
   AWS_REGION: us-east-1
+  AWS_DEFAULT_REGION: us-east-1
   SERVICE_PORT: 2000
 
   # ECR

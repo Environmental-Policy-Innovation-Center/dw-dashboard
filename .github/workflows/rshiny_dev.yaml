@@ -101,6 +101,16 @@ jobs:
     steps:
     
     #-------------------------------
+    # INITIALIZE_AWS_CREDS
+    # creds needed for init_ops and subsequent stages that use aws CLI tool
+    - name: initialize AWS creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    #-------------------------------
     # ECS_SERVICE_UPDATE
     - name: update ECS service with new image
       env:

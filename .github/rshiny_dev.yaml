@@ -2,18 +2,27 @@ name: rshiny_dev
 
 on:
   push:
-    branches: [main]
+    branches: [infra-pipeline]
     # paths:
     #  - "**"
 
+#----------------------------
 env:
   ENV: dev
   AWS_REGION: us-east-1
-  ECR_REGISTRY: 833394423843.dkr.ecr.us-east-1.amazonaws.com
-  ECR_REPOSITORY: ep_dw_dashboard_rshiny
   SERVICE_NAME: ep_dw_dashboard_rshiny
   SERVICE_PORT: 2000
 
+  # ECR
+  ECR_REGISTRY: 833394423843.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPOSITORY: ep_dw_dashboard_rshiny
+
+  # ECS
+  ECS_CLUSTER_NAME: ep_dw_dashboard_rshiny
+  ECS_FAMILY: ep_dw_dashboard
+  ECS_SERVICE_NAME: ep_dw_dashboard_rshiny
+
+#----------------------------
 jobs:
   build_container:  
 
@@ -69,26 +78,35 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA"
     
-    #-------------------------------
-    # DEPLOY
-    - name: deploy service
+    #-------------------------------    
+    # ECS_SERVICE_UPDATE
+    - name: update ECS service with new image
+      env:
+        ECS_IMAGE: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}
       run: |
 
-        echo '{
-          "containers": {
-            "${{ env.SERVICE_NAME }}": {
-              "image": "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}",
-              "ports": {
-                "${{ env.SERVICE_PORT }}": "HTTP"
-              }
-            }
-          },
-          "publicEndpoint": {
-            "containerName": "${{ env.SERVICE_NAME }}",
-            "containerPort": ${{ env.SERVICE_PORT }}
-          }
-        }' > /tmp/deployment-config.json
+        sudo apt-get install -y awscli jq
 
-        aws lightsail create-container-service-deployment --service-name ${{ env.SERVICE_NAME }} --containers file://tmp/deployment-config.json
+        #-----------------------
+        # 1. Describe the task definition
+
+        task_def_json=$(aws ecs describe-task-definition --task-definition ${{ env.ECS_FAMILY }})
+
+        #-----------------------
+        # 2. Modify the JSON to use a new image and exclude unwanted properties
+
+        new_task_def_json=$(echo $task_def_json | jq '.taskDefinition | .containerDefinitions[0].image = "${{ env.ECS_IMAGE }}" | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+
+        #-----------------------
+        # 3. Register a new task definition
+
+        task_def_arn=$(aws ecs register-task-definition --cli-input-json "$new_task_def_json" | jq -r '.taskDefinition.taskDefinitionArn')
+
+        #-----------------------
+        # UPDATE_SERVICE
+        
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_NAME }} --task-definition $task_def_arn
+
+        #-----------------------
 
     #-------------------------------

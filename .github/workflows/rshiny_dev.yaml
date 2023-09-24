@@ -54,7 +54,7 @@ jobs:
     - name: build container
       run: |
         docker -v
-        DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} .
+        DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ./main
 
     #-------------------------------
     # INITIALIZE_AWS_CREDS

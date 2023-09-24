@@ -1,6 +1,6 @@
 
 
-
+import os
 import boto3
 
 #-----------------------------------------------------------
@@ -20,7 +20,7 @@ def main():
 #-----------------------------------------------------------
 def check_service_exists(p_cluster_name_str, p_service_name_str):
     
-    client = boto3.client('ecs')
+    client = boto3.client('ecs', region=os.environ["AWS_REGION"])
     
     try:
         response = client.describe_services(

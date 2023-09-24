@@ -90,6 +90,17 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA"
     
     #-------------------------------    
+    
+
+  deploy_container:
+    needs: build_container
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+    
+    #-------------------------------
     # ECS_SERVICE_UPDATE
     - name: update ECS service with new image
       env:

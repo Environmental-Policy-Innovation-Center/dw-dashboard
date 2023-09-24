@@ -50,6 +50,16 @@ jobs:
         python-version: '3.x'
 
     #-------------------------------
+    # INITIALIZE_AWS_CREDS
+    # creds needed for init_ops and subsequent stages that use aws CLI tool
+    - name: initialize AWS creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    #-------------------------------
     # INIT_OPS
     - name: initialize ops
       run: |
@@ -62,15 +72,6 @@ jobs:
       run: |
         docker -v
         DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ./main
-
-    #-------------------------------
-    # INITIALIZE_AWS_CREDS
-    - name: initialize AWS creds
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
 
     #-------------------------------
     # AWS_ECR_LOGIN

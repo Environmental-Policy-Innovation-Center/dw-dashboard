@@ -22,7 +22,7 @@ env:
 
   # ECS
   ECS_CLUSTER_NAME: ep_core__dev_us-east-1
-  ECS_FAMILY: ep_dw_dashboard
+  ECS_FAMILY: dw_dashboard
   ECS_SERVICE_NAME: ep_app__dw_dashboard__dev_us-east-1
 
 #----------------------------

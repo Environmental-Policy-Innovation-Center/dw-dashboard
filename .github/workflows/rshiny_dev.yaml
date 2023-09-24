@@ -47,7 +47,14 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-      
+
+    #-------------------------------
+    # INIT_OPS
+    - name: initialize ops
+      run: |
+        pip3 install -r ./main/ops/requirements.txt
+        python3 ./main/ops/main.py
+
     #-------------------------------
     # CONTAINER_BUILD
     - name: build container

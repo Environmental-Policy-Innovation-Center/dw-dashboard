@@ -6,6 +6,9 @@ on:
     # paths:
     #  - "**"
 
+  # workflow is also triggered via github REST API (gf_cmonkeyd)
+  workflow_dispatch:
+  
 #----------------------------
 env:
   ENV: dev

@@ -73,6 +73,9 @@ jobs:
         docker -v
         DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ./main
 
+        # add second "latest" tag to this image
+        docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
     #-------------------------------
     # AWS_ECR_LOGIN
     - name: login to AWS ECR

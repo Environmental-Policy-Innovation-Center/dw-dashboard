@@ -89,7 +89,7 @@ ui <- fluidPage(
 
 
 
-server <- function(input, output,session) {
+server <- function(input, output, session) {
   
   #-------------------
   # HEALTH_CHECK - needed by runtime infrastructure to determine health of
@@ -108,7 +108,6 @@ server <- function(input, output,session) {
         text = "OK",
         content_type = "text/plain"
       )
-      stopApp()  # Stop the app to end the connection. Critical for health check to work.
     }
   })
 

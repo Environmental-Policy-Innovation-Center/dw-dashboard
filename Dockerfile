@@ -43,7 +43,10 @@ waiter \
 tippy \
 shinycssloaders \
 zip \
-googledrive 
+googledrive
+
+# needed for healthcheck endpoint
+RUN install2.r --error httpuv
 
 RUN install2.r --error aws.ec2metadata 
 
@@ -53,10 +56,10 @@ ADD dw-dashboard-app.R /home/epic/
 
 ADD ./www /home/epic/www
 
-EXPOSE 2000
+EXPOSE 2000 2001
 
 WORKDIR /home/epic
 
-CMD ["R", "-e", "shiny::runApp('/home/epic/dw-dashboard-app.R', port = 2000, host = '0.0.0.0')"]
+CMD ["R", "-e", "httpuv::startServer('0.0.0.0', 2001, list(call = function(req) { list(status = 200, body = 'OK', headers = list('Content-Type' = 'text/plain')) })); shiny::runApp('/home/epic/dw-dashboard-app.R', port = 2000, host = '0.0.0.0')"]
 
 #------------

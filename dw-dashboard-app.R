@@ -90,28 +90,6 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  
-  #-------------------
-  # HEALTH_CHECK - needed by runtime infrastructure to determine health of
-  #   this service instance and whether its routable.
-
-  observe({
-    req <- session$clientData$url_pathname
-    if (req == "/v1/ops/healthz") {
-
-      # You can perform additional health checks here.
-      cat("OK\n")  # Sends "OK" to stdout. Replace with your logging method.
-      
-      # Respond with 200 HTTP status and end the connection.
-      session$sendResponse(
-        status = 200,
-        text = "OK",
-        content_type = "text/plain"
-      )
-    }
-  })
-
-  #-------------------
 
   # call the waitress
   waitress <- Waitress$

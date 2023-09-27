@@ -1,26 +1,55 @@
-Rank,Water System/Borrower,PWSID #,Population Served,Fundable Project Name,Project Description,Amount,"DAC? - A, E, W, U",Total Points,Funding Appropriation,Financing,Terms,Anticipated Subsidy,Anticipated Subsidy Amount
-40,Bethany Crest MHP,DE0000628,115,PFAs Treatment,Installation of PFAs resin,"$300,500",,170,State,2.00%,20 years,State Grant,"$300,500"
-1,Countryside Hamlet MHP,DE0000817,66,Upgrades and Interconnect,Consolidation to Artesian - See Adam Gould emails,"$745,470",,800,State,,,State Grant,"$745,470"
-12,Dover,DE0000571,38000,LSL inventory,LSL regulatory requirements,"$60,000","E,",480,LSLR,,,,"$60,000"
-22,Dover,DE0000571,38000,Brandywine Court,LSL inventory and replacement,"$115,000","E,",360,LSLR,2.00%,20 years,,"$115,000"
-10,Frederica,DE0000587,870,Jackson St. Service Connections,LSL replacement,"$512,000",A*,530,LSLR,,,,"$512,000"
-15,Frederica,DE0000587,870,Market Street,"Water Main Renewal $328,000",,A*,420,Base,,,Base DAC,"$328,000"
-28,Frederica,DE0000587,870,LSL inventory,LSL inventory,"$102,000",A*,310,LSLR,,,,"$102,000"
-31,Lewes BPW,DE0000602,3000,Jones Farm,Tank,"$5,320,000",,290,Corpus,2.00%,20 years,,$0
-31,Lewes BPW,DE0000602,3000,Savannah Road Bridge,Canal Crossing Water Main,"$2,260,000",,290,Corpus,2.00%,20 years,,$0
-20,Magnolia,DE0000610,425,Water Production Well,Well Improvements,"$752,100",A*,375,Corpus,2.00%,20 years,,$0
-34,Middletown,DE0000614,22582,NE Quadrant,Water System Improvements,"$1,963,287",,270,Corpus,2.00%,20 years,,$0
-36,Middletown,DE0000614,22582,North Broad Street,Water Main Upgrade,"$1,451,026",,240,Corpus,2.00%,20 years,,$0
-4,New Castle,DE0000634,5364,Hewlett-Janvier,Water Main Replacement,"$1,490,000",W,670,Supplemental,,,Sup DAC,"$1,490,000"
-19,Newark,DE0000630,40000,SWFWTP PFAs Treatment - $4.4M EC,PFA WTP Upgrades,"$1,500,000",,380,EC,,,25% EC,"$1,591,169"
-19,Newark,DE0000630,40000,SWFWTP PFAs Treatment $4.4M Base,PFA WTP Upgrades,"$2,900,000",,380,Corpus,2.00%,20 years,,$0
-40,Sussex Shores,DE0000557,350,SSWC - Plant 2 Iron and Manganese RemovalImprovement Project,Contaminant removal Treatmentand Filtration,"$3,860,700",,170,Corpus,2.00%,20 years,,$0
-33,Tidewater,DE0000248,4000,Consolidation  - Angola Meadows,Interconnection Phase 2B resiliency,"$4,998,000",,280,Base,2.00%,20 years,,$0
-34,Tidewater,DE0000991,23463,Consolidation - Dairy Farm Road,Interconnection for resiliency and redundancy,"$1,875,000",,270,Base,2.00%,20 years,,$0
-39,Tidewater,DE0000991,23463,DelDOT SR 24 Love Creek to Mulberry Knoll,Join DelDOT and Tidewater SR 24 Reho,"$3,302,000",,180,Base,2.00%,20 years,,$0
-3,Willow Tree MHP,DE0000134,141,MHP Water System Upgrades,"System Upgrades, add storage Kitts Hummock Road","$1,700,000",U,680,Supplemental Federal Grant,,,Sup DAC,"$1,700,000"
-6,Wilmington,DE0000663,107976,LSL Removal,Water Main and Service line improvements and LSL removal $22.5M LSLR,"$18,501,872","E, W",620,LSLR,,,94% LSLR,"$12,875,792"
-8,Wilmington,DE0000663,107976,Raw Water Transmission Improvements,From Brandywine Creek to either Porter or Hoopes,"$5,626,800","E, W",580,Supplemental,,,Sup DAC,"$5,626,080"
-13,Wilmington,DE0000663,107976,Porter Filter Plant PFAs Removal- $45M project EC,Construct GAC vessels,"$4,787,405","E, W",450,EC,,,75% EC,"$4,787,405"
-19,Wilmington,DE0000663,107976,Clearwell/Storage Improvements at Porter,Phase I Design application,"$1,200,000","E, W",380,Corpus,2.00%,20 years,,$0
-25,Wilmington,DE0000663,107976,Porter Reliability Improvements,Porter Reliability Improvements,"$11,000,000","E, W",330,Corpus,2.00%,20 years,,$0
+Rank,Water System/Borrower,Population Served,Comprehensive Project Name,Project Description,Amount,"DAC? - A, E, W, U",Total Points,Funding Appropriation,Financing,Terms,Anticipated Subsidy,Anticipated Subsidy Amount,Notes
+1,Countryside Hamlet MHP,66,Upgrades and Interconnect,Consolidation to Artesian - See Adam Gould emails,"$745,470.00",,800,State,,,State Grant,"$745,470.00",Anticipated to be Bypassed for State Funds
+2,Stage Village MHP,93,Water System Improvements and Consolidation with Delmar,"New distribution, fire hydrants, water meters and connections to Delmar","$687,800.00",U,730,State,,,State Grant,"$687,800.00",Anticipated to be Bypassed for State Funds
+3,Willow Tree MHP,141,MHP Water System Upgrades,"System Upgrades, add storage Kitts Hummock Road","$1,700,000.00",U,680,Supplemental,,,Sup DAC,"$1,700,000.00",
+4,New Castle,5364,Hewlett-Janvier,Water Main Replacement,"$1,490,000.00",W,670,Supplemental,,,Sup DAC,"$1,490,000.00",
+5,Delmar to Holly Oak MHP,4500 210,Water Line Extension,Consolidation Holly Oak MHP,"$1,100,000.00",,630,Base,2.00%,20 years,Base Congres sional,"$981,120.00",
+6,Milton,3200,LSL replacement,"Carey, Walnut and Mill Street Main Replacement and LSL replacement","$1,330,000.00",,620,LSLR,2.00%,20 years,,$0.00,
+6,Wilmington,107976,LSL Removal,Service line improvements and LSL removal $22.5M LSLR,"$22,500,000.00","E, W",620,LSLR,,,94% LSLR,"$12,875,792.00",
+7,Seaford,6699,Martin Farms LSL Abatement,Abatement,"$2,072,149.00",,590,Corpus,2.00%,TBD,,$0.00,
+8,Wilmington,107976,Raw Water Transmission Improvements,From Brandywine Creek to either Porter or Hoopes,"$10,000,000.00","E, W",580,Supplemental,,,Sup DAC,"$5,626,080.00",
+9,Lewes BPW,3000,Capes Cove,Consolidation Capes Cove MHP,"$320,600.00",,560,Supplemental,2.00%,20 years,,$0.00,
+9,Seaford,6699,Woolford Street LSL Abatement,Abatement,"$601,574.00",,560,Corpus,2.00%,TBD,,$0.00,
+10,Frederica,870,Jackson St. Service Connections,LSL replacement,"$512,000.00",A*,530,LSLR,,,,"$512,000.00",
+11,Magnolia,425,North Main Street,Water Main Improvements,"$900,000.00",A*,525,Base,,,Base DAC,"$900,000.00",
+12,Dover,38000,LSL inventory,LSL regulatory requirements,"$60,000.00","E,",480,LSLR,,,,"$60,000.00",
+12,New Castle,5364,Delaware Street,Water Main Extension ,"$1,743,000.00",W,480,Supplemental,2.00%,20 years,,$0.00,
+13,Wilmington,107976,Porter Filter Plant PFAs Removal- $45M project EC,Construct GAC vessels ,"$4,787,405","E, W",450,EC,,,,"75% EC $4,787,405",
+13,Wilmington,107976,Porter Filter Plant PFAs Removal - $45M project Base,Construct GAC vessels ,"$40,212,595","E, W",450,Corpus,2.00%,20 years,,$0.00,
+14,Seaford,6699,Dulany Well Abandon and Nylon Well Rehab,Abandonment and Rehabilitation,"$1,901,990",,430,Corpus,2.00%,20 years,,$0.00,
+15,Frederica,870,Market Street,Water Main Renewal,"$328,000",A*,420,Base,,,Base DAC,"$328,000.00",
+16,Rehoboth Beach,1400,Waterline and Service Line Replacements Phase I,1 of (7?) Phases to replace water and service lines ,"$2,527,000.00",,410,LSLR,2.00%,20 years,,$0.00,
+17,Magnolia,425,Elevated Storage Tank,Pressure and Redundancy,"$2,637,700",A*,405,Base,,,Base DAC,"$800,000.00",
+18,Lewes BPW,3000,LSL inventory,Mapping and Replacement Planning ,"$263,000.00",,400,LSLR,2.00%,20 years,,$0.00,
+18,Milton,3200,Federal Street Well and WT,Well and Treatment upgrades with ARPA match,"$301,381",,400,Base,2.00%,20 years,,$0.00,
+19,Newark,40000,SWFWTP PFAs Treatment - $4.4M EC,PFA WTP Upgrades,"$1,591,169.00",,380,EC,,,,"25% EC $1,591,169",
+19,Newark,40000,SWFWTP PFAs Treatment $4.4M Base,PFA WTP Upgrades,"$2,808,831",,380,Corpus,2.00%,20 years,,$0.00,
+19,Wilmington,107976,Porter Clearwell Improvements,Clearwell and associated infrastrucure,"$19,000,000","E, W",380,Corpus,2.00%,20 years,,$0.00,
+20,Artesian,209706,Brandywine Springs Manor,Water Main Renewal,"$1,035,000",,375,Supplemental,2.00%,20 years,,$0.00,
+20,Artesian,13511,Knox Street,Water Main Renewal,"$250,000",,375,Supplemental,2.00%,20 years,,$0.00,
+20,Artesian,209706,Stratford,Water Main Renewal,"$1,354,000",,375,Corpus,2.00%,20 years,,$0.00,
+20,Magnolia,425,Water Production Well,Well Improvements,"$850,500",A*,375,Corpus,2.00%,20 years,,$0.00,
+31,Lewes BPW,3000,Savannah Road Bridge,Canal Crossing Water Main,"$2,260,000.00",,290,Corpus,2.00%,20 years,,$0.00,
+32,DE State Fair,452,Water System Lead Abatement,LSL,"$1,660,000.00",,285,Corpus,2.00%,TBD,,$0.00,
+33,Tidewater,4000,Consolidation  - Angola Meadows,Interconnection Phase 2B resiliency,"$3,410,000.00",,280,Corpus,2.00%,20 years,,$0.00,
+34,Middletown,22582,NE Quadrant,Water System Improvements,"$1,963,287.00",,270,Corpus,2.00%,20 years,,$0.00,
+34,Newark,40000,Elevated Storage Tank,"Install of new storage, pressure and turnover","$5,500,000.00",,270,Corpus,2.00%,20 years,,$0.00,
+34,Tidewater,23463,Consolidation - Dairy Farm Road,Interconnection for resiliency and redundancy,"$1,650,000.00",,270,Corpus,2.00%,20 years,,$0.00,
+35,Frederica,870,Water Loop,Water System Hydraulic Loop,"$404,000",A*,260,Corpus,2.00%,20 years,,$0.00,
+35,Frederica,870,Water System SCADA,SCADA and monitoring Upgrades,"$64,000",A*,260,Corpus,2.00%,20 years,,$0.00,
+35,Magnolia,425,LSL inventory,Inventory and Replacement,"$1,500,000",A*,260,Corpus,2.00%,TBD,,$0.00,
+35,New Castle,5364,LSL Inventory,LSL Inventory and Mapping,"$284,000",W,260,Corpus,2.00%,TBD,,$0.00,
+36,Middletown,22582,North Broad Street,Water Main Upgrade,"$1,451,026.00",,240,Corpus,2.00%,20 years,,$0.00,
+37,Seaford,6699,LSL Inventory,Inventory,"$212,000.00",,220,Corpus,2.00%,TBD,,$0.00,
+38,Artesian,7035,Choptank and Westside Hunt,Bring Westside Hunt Well online and upgrade Choptank WTP,"$3,850,000.00",,190,Corpus,2.00%,20 years,,$0.00,
+39,Artesian,,Slaughter Beach,Fire Protection,"$2,000,000.00",,180,Fire Protection,,,,,
+39,Newark,40000,LSL Inventory,Inventory and Replacement,"$2,250,000.00",,180,Corpus,2.00%,TBD,,$0.00,
+39,Tidewater,23463,DelDOT SR 24 Love Creek to Mulberry Knoll,Joint DelDOT and Tidewater SR 24 Reho,"$1,700,000.00",,180,Corpus,2.00%,20 years,,$0.00,
+40,Bethany Crest MHP,115,PFAs Treatment,Installation of PFAs resin,"$300,500.00",,170,State,2.00%,20 years,,"$300,500.00",Bypassed for State Funds
+40,Newark,40000,Water Mains,Water Main Replacement,"$2,200,000.00",,170,Corpus,2.00%,20 years,,$0.00,
+40,Sussex Shores,350,SSWC - Plant 2 Iron and Manganese Removal Improvement Project,Contaminant removal Treatment and Filtration,"$4,000,000.00",,170,Corpus,2.00%,20 years,,$0.00,
+41,Artesian,7035,Lester Farms and Hyetts,Bring Lester Wells online and upgrad Hyetts,"$2,970,000.00",,160,Corpus,2.00%,20 years,,$0.00,
+42,Newark,40000,Assessment,Water Mains,"$2,100,000.00",,150,Corpus,2.00%,20 years,,$0.00,
+43,Angola Crest 1 and 2,60 159,WT Security Improvements,New Security Measures,"$50,000.00",,130,Corpus,2.00%,20 years,,$0.00,
+43,Artesian,7035,Cedar Lane Tank,Elevated Storage Tank,"$3,685,000.00",,130,Growth? Fire,,,,,
+44,Artesian,13511,Route 1 Elevated Tank,"Sussex Co. north of Lewes, along route 1 Storage tank","$3,025,000.00",,80,Growth? Fire,,,,,

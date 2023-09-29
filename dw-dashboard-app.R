@@ -58,7 +58,7 @@ ui <- fluidPage(
            uiOutput("StateCategory", style = "font-size: 25px; margin-top: -10px; font-style: italic;"), 
            uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px; margin-bottom: 10px; "), 
            actionButton("Context", "National Map or State Data Table",icon(name = "arrows-left-right", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
-           actionButton("Chart_Summary", "Fundable Data or Applied vs Fundable",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #ffb448; border-color: #ffb448;"),
+           actionButton("Chart_Summary", "Visualization",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #ffb448; border-color: #ffb448;"),
            shinyjs::hidden(uiOutput("ChartSelect")),
            shinyjs::hidden(uiOutput("ChartText", style = "font-style: italic; margin-bottom: 10px")),
            shinyjs::hidden(plotOutput("ChartOne")),
@@ -101,16 +101,15 @@ server <- function(input, output,session) {
   
   
   waitress$inc(20) # increase by 10
-  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data_v2.csv", bucket = "water-team-data"))
-  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v4.csv", bucket = "water-team-data"))%>%
+  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv", bucket = "water-team-data"))
+  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv", bucket = "water-team-data"))%>%
                 mutate(across('Project Type', str_replace, 'Other', 'General'))
-   
 
   waitress$inc(20) # increase by 10
   
   
   ## Importing Geo Data 
-  Geo_Data <- geojson_sf("www/states_ak_hi_v3.geojson")
+  Geo_Data <- geojson_sf("www/states_ak_hi_v4.geojson")
 
   waitress$inc(20) # increase by 10
   
@@ -126,6 +125,7 @@ server <- function(input, output,session) {
   ColumnToolTip <- read_sheet(URL, sheet = "ColumnToolTip")
   
   DataDictionaryIndex <- read_sheet(URL, sheet = "DataDictionaryIndex")
+  
   glossary_link <- DataDictionaryIndex %>%
     filter(State == "Glossary")%>%
     pull(Link)
@@ -142,14 +142,17 @@ server <- function(input, output,session) {
     mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
   
+  print(PPL_State_Data_Geo %>% filter(NAME == "District of Columbia"))
   
   waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)
   
   ## Var Decleration ## 
+  
+
   SelectedDataReactive <- reactiveValues(df = PPL_Data %>% filter(State == "Alabama"))
   SummaryData <- reactiveValues(df = PPL_Data %>%
-                                  filter(Fundable == "Fundable")%>%
+                                  filter(`Funding Status` == "Funded")%>%
                                   filter(State == "Alabama")%>%
                                   mutate(Count = 1)%>%
                                   mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%  
@@ -241,7 +244,7 @@ server <- function(input, output,session) {
                   `Project Name` = colDef(na = "No Information",header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
                   `Project Type` = colDef(na = "No Information",header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
                   # Add tooltip for fundable
-                   Fundable = colDef(name = "Fundable", minWidth = 80, header = with_tooltip("Fundable",ColumnToolTip[12,2])),
+                   `Funding Status` = colDef(name = "Funding Status", minWidth = 80, header = with_tooltip("Funding Status",ColumnToolTip[12,2])),
                   `Requested Amount` = colDef(na = "No Information",minWidth = 150,header = with_tooltip("Requested Amount",ColumnToolTip[14,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
                   `Project Cost` = colDef(na = "No Information",minWidth = 120, header = with_tooltip("Project Cost",ColumnToolTip[13,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
                   `Funding Amount` = colDef(na = "No Information", header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
@@ -499,11 +502,11 @@ server <- function(input, output,session) {
   
   ## Note that sumarization is needed and the correct variables need to align with options in ChartSelect - down to the correct name/spelling!
   Counts <- SelectedDataReactive$df %>%
-            group_by(Fundable, `Project Type`)%>%
+            group_by(`Funding Status`, `Project Type`)%>%
             tally()
     
    ChartData <- SelectedDataReactive$df %>%
-               group_by(Fundable, `Project Type`)%>%
+               group_by(`Funding Status`, `Project Type`)%>%
                select(c("Project Cost","Population","Meets State Disadvantaged Criteria"))%>%
                mutate(`Meets State Disadvantaged Criteria` = ifelse(`Meets State Disadvantaged Criteria` == "Yes",1, 0))%>%
                summarise_if(is.numeric,sum ,na.rm = TRUE)%>%
@@ -514,9 +517,9 @@ server <- function(input, output,session) {
             #   mutate(`Meets State Disadvantaged Criteria` = `Meets State Disadvantaged Criteria`/Count * 100)
             
 
-    ggplot(data = ChartData, aes(x = `Project Type`, y = !!sym(input$ChartSelect), fill = Fundable))+
+    ggplot(data = ChartData, aes(x = `Project Type`, y = !!sym(input$ChartSelect), fill = `Funding Status`))+
       geom_bar(stat="identity", position = "dodge")+
-      scale_fill_manual(values=c("Applicant" = "#326138", "Fundable" ="#f45d00"), name = "")+
+      scale_fill_manual(values=c("Not Funded" = "#326138", "Funded" ="#f45d00"), name = "")+
       ylab(as.character(input$ChartSelect))+
       xlab("")+
       theme_classic()+
@@ -532,7 +535,7 @@ server <- function(input, output,session) {
   
 
   InfoModal <- modalDialog(
-    title = HTML("<b> EPIC’s Drinking Water Funding Dashboard </b>"),
+    title = HTML("<b> EPIC’s Drinking Water Funding Dashboard v1.1 </b>"),
     HTML("<b> About this dashboard: </b>"),
     HTML("<br>"),
     HTML("This dashboard attempts to track Drinking Water State Revolving Funds (DWSRFs) from Federal Fiscal Year (FFY) 2022 appropriations, based on data presented in Project Priority Lists (PPLs) published by states for State Fiscal Year (SFY) 2023. 

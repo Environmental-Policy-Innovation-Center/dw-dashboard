@@ -1,105 +1,105 @@
-PPL Rank,PPL Score,Participant,MHI,Population Served,PWSID No(s).,SRF Project No.,Project Description,Lead Service Line Replacement Cost,Emerging Contaminants?,Disadvantaged Community?,Estimated Green Project Reserve Cost,Green Project Reserve Category,"Current User Rate (per 4,000 gallons)","Estimated Post-Project User Rate (per 4,000 gallons)",Requested Funds,Cumulative Requested Funds,Rank
+PPL Rank,PPL Score,Participant,MHI,Population Served,PWSID No(s).,SRF Project No.,Project Description,Lead Service Line Replacement Cost,Emerging Contaminants?,Disadvantaged Community?,Estimated Green Project Reserve Cost,Green Project Reserve Category,"Current User Rate (per 4,000 gallons)","Estimated Post-Project User Rate (per 4,000 gallons)",Requested Funds,Cumulative Requested Funds
 1,138,Huntington,"$45,068","1,049",5235001,DW160935 01,"Regionalization with Andrews, Distribution Improvemets + 
-Lead Service Line Replacements","$1,669,000",No,Yes,N/A,N/A,$37.95,TBD,"$28,454,000","$28,454,000",
-2,118,Evansville,"$45,649","173,000",5282002,DW220482 03,New Water Treatment Plant,$0,Yes - PFAS,Yes,TBD,TBD,$33.74,$45.86,"$200,000,000","$228,454,000",
+Lead Service Line Replacements","$1,669,000",No,Yes,N/A,N/A,$37.95,TBD,"$28,454,000","$28,454,000"
+2,118,Evansville,"$45,649","173,000",5282002,DW220482 03,New Water Treatment Plant,$0,Yes - PFAS,Yes,TBD,TBD,$33.74,$45.86,"$200,000,000","$228,454,000"
 3,111,Frankton,"$56,907","1,800",5248008,DW223648 01,"Source, Storage, and Distribution Improvements + Lead 
-Service Line Replacement","$2,784,000",TBD,No,TBD,TBD,$42.28,$236.58,"$21,362,000","$249,816,000",
+Service Line Replacement","$2,784,000",TBD,No,TBD,TBD,$42.28,$236.58,"$21,362,000","$249,816,000"
 4,101,Kewanna,"$47,083",663,5225003,DW233325 01,"Source and Treatment Improvements + Lead Service Line 
-Replacements","$1,402,000",Yes - Mn,Yes,N/A,N/A,$45.83,$283.85,"$6,486,000","$256,302,000",
+Replacements","$1,402,000",Yes - Mn,Yes,N/A,N/A,$45.83,$283.85,"$6,486,000","$256,302,000"
 5,97,Gosport,"$51,875",826,5260003,DW234560 02,"Treatment and Distribution Improvements + Lead Service 
-Line Replacement","$900,000",Yes - Mn,No,TBD,"WE, EE, GI",$35.76,$101.20,"$5,150,000","$261,452,000",
-6,91,Northwest Jasper Regional Water District,"$73,555","3,815",5237015,DW210837 02,Storage and Distribution Improvements,$0,No,No,$0,N/A,$44.01,$49.50,"$5,500,000","$266,952,000",
-7,88,Montezuma,"$48,654","1,022",5261005,DW233461 02,New Water Treatment Plant,$0,No,Yes,N/A,N/A,$44.16,$170.84,"$8,235,000","$275,187,000",
+Line Replacement","$900,000",Yes - Mn,No,TBD,"WE, EE, GI",$35.76,$101.20,"$5,150,000","$261,452,000"
+6,91,Northwest Jasper Regional Water District,"$73,555","3,815",5237015,DW210837 02,Storage and Distribution Improvements,$0,No,No,$0,N/A,$44.01,$49.50,"$5,500,000","$266,952,000"
+7,88,Montezuma,"$48,654","1,022",5261005,DW233461 02,New Water Treatment Plant,$0,No,Yes,N/A,N/A,$44.16,$170.84,"$8,235,000","$275,187,000"
 8,81,Chesterfield,"$43,944","2,800",5248004,DW230648 01,"Source, Treatment, and Distribution System Improvements 
-+ Lead Service Line Replacement","$8,700,000",No,Yes,$0,N/A,$23.80,$73.59,"$16,912,000","$292,099,000",
++ Lead Service Line Replacement","$8,700,000",No,Yes,$0,N/A,$23.80,$73.59,"$16,912,000","$292,099,000"
 9,75,Chalmers,"$62,143",550,5291003,DW230891 01,"Source, Treatment, Storage, and Distribution 
-Improvements + Lead Service Line Replacement","$1,140,000",No,No,$0,N/A,$48.11,$86.10,"$1,573,000","$293,672,000",
+Improvements + Lead Service Line Replacement","$1,140,000",No,No,$0,N/A,$48.11,$86.10,"$1,573,000","$293,672,000"
 10,74,Milton,"$46,229",650,5289011,DW224189 01,"Storage, Treatment, Distribution Improvements + Lead 
-Service Line Replacement","$1,200,000",No,Yes,TBD,TBD,$58.76,$186.77,"$2,700,000","$296,372,000",
+Service Line Replacement","$1,200,000",No,Yes,TBD,TBD,$58.76,$186.77,"$2,700,000","$296,372,000"
 11,72,St. Bernice Water Corporation,"$43,807",750,5283010,DW235083 01,"Distribution and Storage Improvements + Lead Service 
-Line Replacement","$1,400,000",No,Yes,TBD,WE,$53.23,$128.03,"$9,431,000","$305,803,000",
+Line Replacement","$1,400,000",No,Yes,TBD,WE,$53.23,$128.03,"$9,431,000","$305,803,000"
 12,70,Evansville,"$45,702","173,000",5282002,DW220482 04,"Distribution Improvements + Lead Service Line 
-Replacements (Phase I)","$6,010,000",No,Yes,N/A,N/A,$33.74,$45.86,"$22,793,000","$328,596,000",
+Replacements (Phase I)","$6,010,000",No,Yes,N/A,N/A,$33.74,$45.86,"$22,793,000","$328,596,000"
 13,67,South Bend,"$38,675","115,000",5271014,DW234671 03,"Distribution Improvements + Lead Service Line 
-Replacements","$5,000,000",No,Yes,TBD,TBD,$17.27,$17.99,"$14,253,000","$342,849,000",
-14,67,Kentland,"$51,326","1,735",5256005,DW222156 01,Source and Treatment Improvements,$0,Yes - Mn,No,TBD,TBD,$26.13,$80.01,"$10,934,000","$353,783,000",
+Replacements","$5,000,000",No,Yes,TBD,TBD,$17.27,$17.99,"$14,253,000","$342,849,000"
+14,67,Kentland,"$51,326","1,735",5256005,DW222156 01,Source and Treatment Improvements,$0,Yes - Mn,No,TBD,TBD,$26.13,$80.01,"$10,934,000","$353,783,000"
 15,66,Glenwood,"$52,546",313,5270002,DW233070 03,"Regionalization with Connersville and Distribution 
-Improvements",$0,Yes,No,N/A,N/A,$68.27,$816.57,"$13,215,000","$366,998,000",
+Improvements",$0,Yes,No,N/A,N/A,$68.27,$816.57,"$13,215,000","$366,998,000"
 16,65,Citizens Water (Indianapolis),"$37,232","936,630",5249004,DW234049 02,"Disribution Improvements + Lead Service Line 
-Replacement","$1,300,000",No,Yes,N/A,N/A,$29.08,$29.08,"$16,992,000","$383,990,000",
+Replacement","$1,300,000",No,Yes,N/A,N/A,$29.08,$29.08,"$16,992,000","$383,990,000"
 17,62,Brownsburg,"$80,001","23,750",5232002,DW231032 02,"Distribution Improvements + Lead Service Line 
-Replacements","$666,000",No,No,$0,N/A,$19.21,$19.82,"$4,725,000","$388,715,000",
+Replacements","$666,000",No,No,$0,N/A,$19.21,$19.82,"$4,725,000","$388,715,000"
 18,60,Centerville,"$47,563","2,533",5289003,DW231489 03,"Source, Treatment, Storage, and Distribution 
-Improvements + Lead Service Line Replacement","$3,120,000",No,Yes,$0,N/A,$38.38,$90.00,"$13,289,000","$402,004,000",
-19,54,Kingman,"$25,938",510,5223004,DW233823 01,"Treatment, Storage, and Distribution Improvements",$0,Yes - Mn,Yes,N/A,N/A,$42.79,$124.19,"$3,636,000","$405,640,000",
+Improvements + Lead Service Line Replacement","$3,120,000",No,Yes,$0,N/A,$38.38,$90.00,"$13,289,000","$402,004,000"
+19,54,Kingman,"$25,938",510,5223004,DW233823 01,"Treatment, Storage, and Distribution Improvements",$0,Yes - Mn,Yes,N/A,N/A,$42.79,$124.19,"$3,636,000","$405,640,000"
 20,53,Salem,"$43,021","8,200",5288005,DW233988 01,"Distribution Improvements (Phase 1) + Lead Service Line 
-Replacement","$643,000",No,Yes,N/A,N/A,$34.92,TBD,"$2,298,000","$407,938,000",
+Replacement","$643,000",No,Yes,N/A,N/A,$34.92,TBD,"$2,298,000","$407,938,000"
 21,49,Jonesboro,"$39,419","1,516",5227010,DW235127 02,"Source, Treatment, Storage, and Distribution 
-Improvements",$0,Yes - Mn,Yes,TBD,"WE, EE",$50.79,TBD,"$8,250,000","$416,188,000",
-22,49,Valparaiso,"$48,853","29,500",5264029,DW234964 01,Source and Treatment Improvements (Phase 3),$0,Yes - Mn,Yes,N/A,N/A,$29.81,$36.95,"$15,002,000","$431,190,000",
+Improvements",$0,Yes - Mn,Yes,TBD,"WE, EE",$50.79,TBD,"$8,250,000","$416,188,000"
+22,49,Valparaiso,"$48,853","29,500",5264029,DW234964 01,Source and Treatment Improvements (Phase 3),$0,Yes - Mn,Yes,N/A,N/A,$29.81,$36.95,"$15,002,000","$431,190,000"
 23,48,Cayuga,"$44,688","1,162",5283002,DW232983 02,"Regionalization with Lodi and Source, Treatment, and 
-Distribution System Improvements",$0,TBD,Yes,0,N/A,$23.95,TBD,"$11,839,000","$443,029,000",
+Distribution System Improvements",$0,TBD,Yes,0,N/A,$23.95,TBD,"$11,839,000","$443,029,000"
 24,48,Marion,"$50,829","28,177",5227014,DW233127 02,"Storage and Distribution Improvements + Lead Service 
-Line Replacement (Phase 1)","$1,505,000",No,Yes,TBD,TBD,$20.87,$25.54,"$10,740,000","$453,769,000",
-25,46,Wakarusa,"$73,026","1,800",5220029,DW223120 01,Source and Treatment Improvements,$0,Yes - Mn,No,TBD,TBD,$25.00,$60.55,"$3,330,000","$457,099,000",
-26,45,New Richmond,"$70,536",333,5254009,DW221754 01,"Supply, Treatment, and Distribution Improvements",$0,Yes - Mn,No,$0,N/A,$31.80,$86.43,"$1,500,000","$458,599,000",
-27,44,East Chicago,"$38,227","27,457",5245012,DW224345 07,"Storage, Treatment, and Distribution Improvements",$0,TBD,Yes,TBD,TBD,$7.36,$35.00,"$12,850,000","$471,449,000",
-28,42,Kouts,"$65,987","2,028",5264013,DW233664 02,"Storage, Supply, and Treatment Improvements",$0,Yes - Mn,No,TBD,"EE, EI",$31.47,TBD,"$9,400,000","$480,849,000",
+Line Replacement (Phase 1)","$1,505,000",No,Yes,TBD,TBD,$20.87,$25.54,"$10,740,000","$453,769,000"
+25,46,Wakarusa,"$73,026","1,800",5220029,DW223120 01,Source and Treatment Improvements,$0,Yes - Mn,No,TBD,TBD,$25.00,$60.55,"$3,330,000","$457,099,000"
+26,45,New Richmond,"$70,536",333,5254009,DW221754 01,"Supply, Treatment, and Distribution Improvements",$0,Yes - Mn,No,$0,N/A,$31.80,$86.43,"$1,500,000","$458,599,000"
+27,44,East Chicago,"$38,227","27,457",5245012,DW224345 07,"Storage, Treatment, and Distribution Improvements",$0,TBD,Yes,TBD,TBD,$7.36,$35.00,"$12,850,000","$471,449,000"
+28,42,Kouts,"$65,987","2,028",5264013,DW233664 02,"Storage, Supply, and Treatment Improvements",$0,Yes - Mn,No,TBD,"EE, EI",$31.47,TBD,"$9,400,000","$480,849,000"
 29,40,Loogootee,"$42,279","3,915",5251005,DW210251 01,"Storage, Distribution System, and Treatment Improvements 
-+ Lead Service Line Replacement",TBD,No,Yes,N/A,N/A,$31.54,$46.35,"$2,705,000","$483,554,000",
-30,38,Milan,"$56,250","1,899",5269003,DW221569 01,Storage and Distribution Improvements,$0,No,No,TBD,TBD,$37.20,$68.45,"$3,714,000","$487,268,000",
-31,38,Lakeville,"$41,739",750,5271008,DW222571 01,Storage and Distribution System Improvements,$0,No,Yes,TBD,TBD,$31.40,$99.53,"$7,618,000","$494,886,000",
++ Lead Service Line Replacement",TBD,No,Yes,N/A,N/A,$31.54,$46.35,"$2,705,000","$483,554,000"
+30,38,Milan,"$56,250","1,899",5269003,DW221569 01,Storage and Distribution Improvements,$0,No,No,TBD,TBD,$37.20,$68.45,"$3,714,000","$487,268,000"
+31,38,Lakeville,"$41,739",750,5271008,DW222571 01,Storage and Distribution System Improvements,$0,No,Yes,TBD,TBD,$31.40,$99.53,"$7,618,000","$494,886,000"
 32,37,Mount Ayr,"$46,250",117,TBD,DW234456 01,"Regionalization with Newton County RWSD and Storage 
-and Distribution Improvements",$0,No,Yes,N/A,N/A,N/A,TBD,"$6,600,000","$501,486,000",
-33,37,Holton Community Water Corporation,"$60,893","2,363",5269008,DW223569 01,Storage and Distribution Improvements,$0,No,No,$0,N/A,$54.18,$77.50,"$3,307,000","$504,793,000",
-34,36,Nashville,"$50,972","3,315",5207002,DW233207 02,Distribution Improvements (Phase 1),$0,No,No,TBD,TBD,$51.76,$105.00,"$16,800,000","$521,593,000",
-35,36,Ingalls,"$56,797","7,600",5248012,DW221148 02,Storage and Distribution Improvements,$0,No,No,TBD,TBD,$38.96,$45.00,"$2,093,000","$523,686,000",
-36,35,Hymera,"$40,526",800,5277004,DW231977 01,Storage Improvements,$0,No,Yes,N/A,N/A,$48.56,$55.36,"$1,478,000","$525,164,000",
-37,34,Washington,"$44,622","13,690",5214007,DW190414 01,Distribution Improvements,$0,No,Yes,$0,N/A,$33.79,$38.86,"$3,300,000","$528,464,000",
-38,32,Laurel,"$22,097",560,5224004,DW222724 01,"Source, Treatment, and Storage Improvements",$0,No,Yes,$0,N/A,$26.00,$70.25,"$1,745,000","$530,209,000",
+and Distribution Improvements",$0,No,Yes,N/A,N/A,N/A,TBD,"$6,600,000","$501,486,000"
+33,37,Holton Community Water Corporation,"$60,893","2,363",5269008,DW223569 01,Storage and Distribution Improvements,$0,No,No,$0,N/A,$54.18,$77.50,"$3,307,000","$504,793,000"
+34,36,Nashville,"$50,972","3,315",5207002,DW233207 02,Distribution Improvements (Phase 1),$0,No,No,TBD,TBD,$51.76,$105.00,"$16,800,000","$521,593,000"
+35,36,Ingalls,"$56,797","7,600",5248012,DW221148 02,Storage and Distribution Improvements,$0,No,No,TBD,TBD,$38.96,$45.00,"$2,093,000","$523,686,000"
+36,35,Hymera,"$40,526",800,5277004,DW231977 01,Storage Improvements,$0,No,Yes,N/A,N/A,$48.56,$55.36,"$1,478,000","$525,164,000"
+37,34,Washington,"$44,622","13,690",5214007,DW190414 01,Distribution Improvements,$0,No,Yes,$0,N/A,$33.79,$38.86,"$3,300,000","$528,464,000"
+38,32,Laurel,"$22,097",560,5224004,DW222724 01,"Source, Treatment, and Storage Improvements",$0,No,Yes,$0,N/A,$26.00,$70.25,"$1,745,000","$530,209,000"
 39,32,North Liberty,"$65,625","1,896",5271010,DW224571 01,"Regionalization with Potato Creek State Park + Lead 
-Service Line Replacement",$0,No,No,$0,N/A,$42.41,$42.41,"$6,473,000","$536,682,000",
-40,32,Brown County Water Utility,"$67,737","11,300",5207001,DW201407 03,Source and Distribution Improvements,$0,No,No,$0,N/A,$51.08,$55.64,"$4,300,000","$540,982,000",
-41,30,Greenfield,"$63,952","21,000",5230004,DW221230 01,Storage and Distribution Improvements,"$445,000",No,No,TBD,TBD,$30.00,$36.00,"$18,140,000","$559,122,000",
+Service Line Replacement",$0,No,No,$0,N/A,$42.41,$42.41,"$6,473,000","$536,682,000"
+40,32,Brown County Water Utility,"$67,737","11,300",5207001,DW201407 03,Source and Distribution Improvements,$0,No,No,$0,N/A,$51.08,$55.64,"$4,300,000","$540,982,000"
+41,30,Greenfield,"$63,952","21,000",5230004,DW221230 01,Storage and Distribution Improvements,"$445,000",No,No,TBD,TBD,$30.00,$36.00,"$18,140,000","$559,122,000"
 42,29,Eaton,"$41,845","1,500",5218006,DW23261801,"Source, Treatment, and Distribution Improvements (Phase 
-2) + Lead Service Line Replacement","$2,200,000",No,Yes,N/A,N/A,$43.65,$78.27,"$14,526,000","$573,648,000",
+2) + Lead Service Line Replacement","$2,200,000",No,Yes,N/A,N/A,$43.65,$78.27,"$14,526,000","$573,648,000"
 43,29,Logansport,"$41,905","18,310",5209012,DW234209 02,"Source, Treatment, and Distribution Improvements + Lead 
-Service Line Replacement",$0,No,Yes,N/A,N/A,$23.67,$35.75,"$19,631,000","$593,279,000",
-44,29,Spiceland,"$56,528",940,5233016,DW222633 03,Source and Treatment Improvements,$0,Yes - Mn,No,$0,N/A,$52.20,$101.40,"$6,541,000","$599,820,000",
-45,28,Reelsville,"$66,042","2,800",5267006,DW221167 03,Distribution Improvements,$0,No,No,$0,N/A,$47.54,$66.19,"$3,500,000","$603,320,000",
-46,27,Lewisville,"$47,083",337,5233006,DW233733 03,"Source, Treatment, and Distribution Improvements",$0,No,Yes,N/A,N/A,$53.18,$65.00,"$1,622,000","$604,942,000",
-47,26,Cloverdale,"$45,795","2,060",5267003,DW223267 01,Distribution Improvements,$0,No,Yes,$0,N/A,$38.86,$53.38,"$4,970,000","$609,912,000",
+Service Line Replacement",$0,No,Yes,N/A,N/A,$23.67,$35.75,"$19,631,000","$593,279,000"
+44,29,Spiceland,"$56,528",940,5233016,DW222633 03,Source and Treatment Improvements,$0,Yes - Mn,No,$0,N/A,$52.20,$101.40,"$6,541,000","$599,820,000"
+45,28,Reelsville,"$66,042","2,800",5267006,DW221167 03,Distribution Improvements,$0,No,No,$0,N/A,$47.54,$66.19,"$3,500,000","$603,320,000"
+46,27,Lewisville,"$47,083",337,5233006,DW233733 03,"Source, Treatment, and Distribution Improvements",$0,No,Yes,N/A,N/A,$53.18,$65.00,"$1,622,000","$604,942,000"
+47,26,Cloverdale,"$45,795","2,060",5267003,DW223267 01,Distribution Improvements,$0,No,Yes,$0,N/A,$38.86,$53.38,"$4,970,000","$609,912,000"
 48,26,Camden,"$50,445",593,5208001,DW234808 02,"Treatment and Distribution Improvements + Lead Service 
-Line Replacement",TBD,No,No,TBD,WE,$32.92,$65.50,"$2,280,000","$612,192,000",
+Line Replacement",TBD,No,No,TBD,WE,$32.92,$65.50,"$2,280,000","$612,192,000"
 49,26,Williamsport,"$53,917","1,800",5286004,DW223386 02,"Storage and Distribution Improvements + Lead Service 
-Line Replacement",TBD,No,No,$0,N/A,$37.15,$47.08,"$767,000","$612,959,000",
-50,25,Chandler,"$59,189","19,295",5287002,DW181987 03,Distribution Improvements (Phase 3),$0,No,No,$0,N/A,$35.21,$35.21,"$20,000,000","$632,959,000",
-51,23,Middlebury,"$73,813","3,572",5220014,DW231120 02,Treatment and Storage Improvements,$0,No,No,$0,N/A,$36.66,$76.43,"$18,238,000","$651,197,000",
+Line Replacement",TBD,No,No,$0,N/A,$37.15,$47.08,"$767,000","$612,959,000"
+50,25,Chandler,"$59,189","19,295",5287002,DW181987 03,Distribution Improvements (Phase 3),$0,No,No,$0,N/A,$35.21,$35.21,"$20,000,000","$632,959,000"
+51,23,Middlebury,"$73,813","3,572",5220014,DW231120 02,Treatment and Storage Improvements,$0,No,No,$0,N/A,$36.66,$76.43,"$18,238,000","$651,197,000"
 52,22,Bristol,"$56,635","1,675",5220003,DW222820 01,"Source, Storage, and Distribution Improvements + Lead 
-Service Line Replacement",TBD,No,No,$0,N/A,$16.22,$47.50,"$14,360,000","$665,557,000",
-53,22,Bourbon,"$58,409","1,767",5250002,DW221350 01,Source and Treatment Improvements,$0,No,No,TBD,TBD,$31.03,$66.94,"$4,714,000","$670,271,000",
-54,8,Carmel,"$119,772","90,173",5229004,DW181129 01,"Treatment, Storage, and Distribution Improvements",$0,No,No,TBD,TBD,$25.31,$29.87,"$51,000,000","$721,271,000",
+Service Line Replacement",TBD,No,No,$0,N/A,$16.22,$47.50,"$14,360,000","$665,557,000"
+53,22,Bourbon,"$58,409","1,767",5250002,DW221350 01,Source and Treatment Improvements,$0,No,No,TBD,TBD,$31.03,$66.94,"$4,714,000","$670,271,000"
+54,8,Carmel,"$119,772","90,173",5229004,DW181129 01,"Treatment, Storage, and Distribution Improvements",$0,No,No,TBD,TBD,$25.31,$29.87,"$51,000,000","$721,271,000"
 -,58,Oxford,"$43,487","1,200",5204005,DW223404 01,"Source, Storage, and Distribution Improvements + Lead 
-Service Line Replacement (Phase 1)","$3,400,000",No,Yes,$0,N/A,$29.18,$113.97,"$13,200,000","$734,471,000",
--,47,Valley Rural Utility Company,"$86,410","5,529",5215004,DW224615 01,Distribution Improvements,$0,No,No,$0,N/A,$36.68,$200.37,"$8,100,000","$742,571,000",
+Service Line Replacement (Phase 1)","$3,400,000",No,Yes,$0,N/A,$29.18,$113.97,"$13,200,000","$734,471,000"
+-,47,Valley Rural Utility Company,"$86,410","5,529",5215004,DW224615 01,Distribution Improvements,$0,No,No,$0,N/A,$36.68,$200.37,"$8,100,000","$742,571,000"
 -,41,Winamac,"$41,139","2,400",5266005,DW221466 01,"Regionalization with Tippecanoe River State Park and 
-Storage and Distribution Improvements",$0,No,Yes,TBD,TBD,$37.14,$37.14,"$10,113,000","$752,684,000",
--,40,Odon,"$34,792","1,379",5214005,DW223714 02,"Treatment, Storage, and Supply Improvements",$0,No,Yes,$0,N/A,$36.24,$70.71,"$4,764,000","$757,448,000",
--,33,Daviess County Rural Water,"$57,083","7,969",5214002,DW230414 01,Storage Improvements,$0,No,No,$0,N/A,$45.16,$53.16,"$4,667,000","$762,115,000",
--,32,Hoosier Hills Regional Water District,"$64,367","8,642",5269002,DW210469 01,Storage and Distribution System Improvements,$0,No,Yes,TBD,TBD,$34.82,$38.95,"$2,642,000","$764,757,000",
+Storage and Distribution Improvements",$0,No,Yes,TBD,TBD,$37.14,$37.14,"$10,113,000","$752,684,000"
+-,40,Odon,"$34,792","1,379",5214005,DW223714 02,"Treatment, Storage, and Supply Improvements",$0,No,Yes,$0,N/A,$36.24,$70.71,"$4,764,000","$757,448,000"
+-,33,Daviess County Rural Water,"$57,083","7,969",5214002,DW230414 01,Storage Improvements,$0,No,No,$0,N/A,$45.16,$53.16,"$4,667,000","$762,115,000"
+-,32,Hoosier Hills Regional Water District,"$64,367","8,642",5269002,DW210469 01,Storage and Distribution System Improvements,$0,No,Yes,TBD,TBD,$34.82,$38.95,"$2,642,000","$764,757,000"
 -,31,Angola,"$62,677","8,612",5276001,DW231376 01,"Regionalization with Pokagon State Park and Trine State 
-Recreational Area",$0,No,Yes,$0,TBD,$26.11,$26.11,"$7,359,000","$772,116,000",
--,30,Lynn,"$49,808","1,149",5268004,DW222468 01,Storage and Distribution Improvements,$0,No,No,$0,N/A,$36.26,$72.21,"$2,123,000","$774,239,000",
--,29,Peru,"$68,750","11,037",5252016,DW210251 01,Regionalize with Mississinewa Lake Recreation Area,$0,No,No,N/A,N/A,$31.23,$31.23,"$31,413,000","$805,652,000",
+Recreational Area",$0,No,Yes,$0,TBD,$26.11,$26.11,"$7,359,000","$772,116,000"
+-,30,Lynn,"$49,808","1,149",5268004,DW222468 01,Storage and Distribution Improvements,$0,No,No,$0,N/A,$36.26,$72.21,"$2,123,000","$774,239,000"
+-,29,Peru,"$68,750","11,037",5252016,DW210251 01,Regionalize with Mississinewa Lake Recreation Area,$0,No,No,N/A,N/A,$31.23,$31.23,"$31,413,000","$805,652,000"
 -,28,LaFontaine,"$48,438",906,5285004,DW223085 02,"Source, Treatment, and Distribution System Improvements 
-+ Lead Service Line Replacement",TBD,No,Yes,$0,N/A,$41.95,$82.15,"$4,300,000","$809,952,000",
--,28,Swayzee,"$58,403",918,5227020,DW222227 02,Treatment and Distribution Improvements,TBD,No,No,TBD,TBD,$34.13,$67.16,"$2,382,000","$812,334,000",
--,26,Tipton,"$57,176","5,200",528004,DW230380 01,Treatment and Storage Improvements,$0,No,No,$0,N/A,$37.15,$37.15,"$2,541,000","$814,875,000",
--,24,Shirley,"$55,104",960,5233013,DW223930 01,Source and Treatment Improvements,$0,No,No,TBD,TBD,$50.67,$93.15,"$3,384,000","$818,259,000",
--,18,Elkhart County Regional Sewer District,"$86,066","3,849",TBD,DW230720 01,New Water Utility,$0,No,No,$0,N/A,N/A,$56.33,"$13,120,000","$831,379,000",
-,,Crothersville,"$44,900","1,524",5236001,DW231736 01,"Storage and Distribution Improvements + Lead Service 
-Line Replacements",TBD,TBD,Yes,TBD,TBD,$57.30,$60.00,"$10,647,000","$10,647,000",Application Only
-,,Knightstown,"$55,000","2,223",5236001,DW231833 01,Storage and Distribution Improvements,TBD,TBD,No,TBD,TBD,$35.86,$43.00,"$15,608,000","$26,255,000",Application Only
-,,New Carlisle,"$61,410","1,861",5271011,DW232171 01,"Source, Treatment, and Distribution Improvements",TBD,TBD,No,TBD,TBD,$21.62,$31.20,"$20,804,000","$47,059,000",Application Only
-,,Palmyra,"$33,077","4,425",5231004,DW232331 02,Treatment and Distribution Improvements,TBD,TBD,Yes,TBD,TBD,$73.85,$73.85,"$4,528,000","$51,587,000",Application Only
-,,Valparaiso Lakes Area Cons. District,"$67,273","2,565",5264033,DW222064 01,Distribution Improvements,TBD,TBD,No,TBD,TBD,$41.00,$43.24,"$340,000","$51,927,000",Application Only
++ Lead Service Line Replacement",TBD,No,Yes,$0,N/A,$41.95,$82.15,"$4,300,000","$809,952,000"
+-,28,Swayzee,"$58,403",918,5227020,DW222227 02,Treatment and Distribution Improvements,TBD,No,No,TBD,TBD,$34.13,$67.16,"$2,382,000","$812,334,000"
+-,26,Tipton,"$57,176","5,200",528004,DW230380 01,Treatment and Storage Improvements,$0,No,No,$0,N/A,$37.15,$37.15,"$2,541,000","$814,875,000"
+-,24,Shirley,"$55,104",960,5233013,DW223930 01,Source and Treatment Improvements,$0,No,No,TBD,TBD,$50.67,$93.15,"$3,384,000","$818,259,000"
+-,18,Elkhart County Regional Sewer District,"$86,066","3,849",TBD,DW230720 01,New Water Utility,$0,No,No,$0,N/A,N/A,$56.33,"$13,120,000","$831,379,000"
+Application Only,,Crothersville,"$44,900","1,524",5236001,DW231736 01,"Storage and Distribution Improvements + Lead Service 
+Line Replacements",TBD,TBD,Yes,TBD,TBD,$57.30,$60.00,"$10,647,000","$10,647,000"
+Application Only,,Knightstown,"$55,000","2,223",5236001,DW231833 01,Storage and Distribution Improvements,TBD,TBD,No,TBD,TBD,$35.86,$43.00,"$15,608,000","$26,255,000"
+Application Only,,New Carlisle,"$61,410","1,861",5271011,DW232171 01,"Source, Treatment, and Distribution Improvements",TBD,TBD,No,TBD,TBD,$21.62,$31.20,"$20,804,000","$47,059,000"
+Application Only,,Palmyra,"$33,077","4,425",5231004,DW232331 02,Treatment and Distribution Improvements,TBD,TBD,Yes,TBD,TBD,$73.85,$73.85,"$4,528,000","$51,587,000"
+Application Only,,Valparaiso Lakes Area Cons. District,"$67,273","2,565",5264033,DW222064 01,Distribution Improvements,TBD,TBD,No,TBD,TBD,$41.00,$43.24,"$340,000","$51,927,000"

@@ -63,7 +63,7 @@ library(googledrive)
 
 New Columns: 
 - No mention of *Interest Rates or Loan Terms*
-- Applicant data includes `applied for project amount` which can be interpretted as requested amount
+- Applicant data includes `applied for project amount` which can be interpreted as requested amount
 
 ```{r}
 
@@ -153,6 +153,14 @@ al_clean <- al_comb %>%
          #requested_amount, 
          population, cities_served, disadvantaged, project_type, fundable, state)
   
+```
+
+
+## Alaska (NS)
+- Waiting on final data
+
+```{r}
+
 ```
 
 
@@ -253,6 +261,14 @@ ar_fund <- ar_merge %>%
 
 # expect (760,12)
 ar_clean <- bind_rows(ar_app, ar_fund)
+
+```
+
+
+## Arizona (NS)
+- Waiting on final data
+
+```{r}
 
 ```
 
@@ -533,6 +549,15 @@ co_clean <- bind_rows(co_b_clean, co_b1_clean, co_b2_clean)
 ```
 
 
+
+## Connecticut (NS)
+- To be turned into a data dictionary by Water Team
+
+```{r}
+
+```
+
+
 ## Delaware
 
 - Applicant data is processed and ready to add
@@ -651,9 +676,9 @@ dc_clean <- dc_ppl %>%
 ```
 
 
-## Florida (Q in SS) (A)
+## Florida (DD - A)
 
-- TODO: Applicant data - waiting for Q to be answered before addressing
+- TODO: Applicant data - awaiting answer on whether it is the "waiting" list within the iup or not.
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
@@ -1118,16 +1143,14 @@ il_clean <- il_merge %>%
 ```
 
 
-## Indiana (DD)
+  ## Indiana (DD)
 
-- IUP only includes Q1 2023, need to determine how to handle this in dashboard
-- Can fundable range depict "fundable" or are they all applicant projects anyways?
 - Assumes `requested_amount` to be included
 
 ```{r}
 
 ## PPL
-# (73,18)
+# (73,17)
 in_ppl <- fread("data/year1/csv/14-Indiana_Q4Final_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
@@ -1138,11 +1161,11 @@ in_lead_ppl <- fread("data/year1/csv/14-Indiana_Q4Final_LeadPPL.csv",
                  colClasses = "character", na.strings = "") %>%
   clean_names()
 
-# -> (82,18)
+# -> (82,17)
 in_comb <- bind_rows(in_ppl, in_lead_ppl)
 
 
-# -> (82,11)  
+# -> (82,12)  
 in_clean <- in_comb %>%  
   # drop non-project rows
   filter(participant != "NA") %>%
@@ -1169,9 +1192,10 @@ in_clean <- in_comb %>%
       TRUE ~ "Other"
     ),
     state = "Indiana",
+    fundable = as.character(NA),
   ) %>%
   select(borrower, pwsid, state_rank, state_score, project_name, project_description,
-         project_type, requested_amount, population, disadvantaged, project_type, state)
+         project_type, requested_amount, population, disadvantaged, project_type, state, fundable)
 
 
 ```
@@ -1259,6 +1283,13 @@ ks_clean <- ks_comb %>%
   
 ```
 
+
+## Kentucky (NS)
+- To be transformed into a data dictionary by Water Team
+
+```{r}
+
+```
 
 
 ## Louisiana
@@ -1434,10 +1465,15 @@ md_clean <- md_raw %>%
   ) %>%
   select(state_rank, state_score, borrower, pwsid, project_name, project_description, funding_amount,
          principal_forgiveness_amount, cities_served, population, disadvantaged, fundable, project_type, state)
+
+## APPLICANT
+# this dataset is 42 projects, the first 24 of which appear to be on the fundable list above. Others will be listed as Not Funded.
+
+
 ```
 
 
-## Massachusetts
+## Massachusetts (WIP)
 
 - Applicant data is processed
 - Mentions `project_cost`, included
@@ -1697,13 +1733,66 @@ ms_clean <- ms_raw %>%
 ```{r}
 # this is the initially scraped IUP from 10/11/22,
 # however, it is structurally the same as the list in the amended IUP dated 7/11/23, so we keep it and amend individual values below
-# (43,12)
+# (43,12) -> (43,13)
 mo_ppl <- fread("data/year1/csv/25-Missouri_PPL_Cleaned.csv",
                       colClasses = "character", na.strings = "") %>% 
-  clean_names()
+  clean_names() %>%
+  mutate(
+    # Projects included on the General Funding List are considered Funded. Projects included on the General Contingency List, General Planning List are considered Not Funded.
+    fundable = case_when(
+      # list projects in planning list
+      project_number %in% c("DW291386-01", "DW291170-02", "DW291387-01", "DW291393-01", "DW291388-01", 
+                            "DW291389-01", "DW291390-01", "DW291391-01", "DW291392-01", "DW291314-04") ~ "Applicant",
+      TRUE ~ "Fundable")
+    )
 
-# -> (43,9)
-mo_clean <- mo_ppl %>%
+# read in lead tables from the amended IUP dated 7/11/23
+mo_lead_fundable <- fread("data/year1/csv/25-Missouri_LSLFundable.csv",
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  mutate(
+    fundable = "Fundable",
+  )
+
+mo_lead_contingency <- fread("data/year1/csv/25-Missouri_LSLContingency.csv",
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  mutate(
+    fundable = "Applicant",
+  )
+
+# (272,14)
+mo_comb <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contigency)
+
+
+### Amendments
+# The following changes bring the document in line with the most recent figures in the 7/11/23 IUPP
+# We also need to decide what to do with projects that are not on this amended list that were previously included.
+# mo_amended <- mo_ppl %>%
+#   mutate(
+#     iup_amount_requested = case_when(
+#       project_number == "DW291142-03" ~ "$951,500",
+#       project_number == "DW291384-01" ~ "$628,400",
+#       TRUE ~ iup_amount_requested),
+#     loan_amount = case_when(
+#       project_number == "DW291370-01" ~ "$1,640,505",
+#       project_number == "DW291142-02" ~ "$593,700",
+#       project_number == "DW291363-02" ~ "$892,238",
+#       project_number == "DW291142-03" ~ "$951,500",
+#       project_number == "DW291384-01" ~ "$628,400",
+#       project_number == "DW291301-02" ~ "$1,164,940",
+#       TRUE ~ loan_amount),
+#     additional_subsidization_amount = case_when(
+#       project_number == "DW291370-01" ~ "$3,000,000",
+#       project_number == "DW291142-02" ~ "$1,781,100",
+#       project_number == "DW291363-02" ~ "$2,676,712",
+#       project_number == "DW291378-01" ~ "$1,954,995",
+#       project_number == "DW291301-02" ~ "$5,361,000",
+#       TRUE ~ additional_subsidization_amount)
+#   )
+
+# -> (272,10)
+mo_clean <- mo_comb %>%
   # drop columns
   select(-carryover) %>%
   # process numeric columns
@@ -1723,24 +1812,19 @@ mo_clean <- mo_ppl %>%
          project_name = str_squish(project_number),
          state_score = str_replace_all(priority_points,"[^0-9.]",""),
          project_description = str_squish(description_needs_category),
-         fundable = case_when(
-           is.na(est_financing_schedule_fy_quarter) ~ "Applicant",
-           TRUE ~ "Fundable"),
          disadvantaged = case_when(
            disadvantaged == "D" ~ "Yes",
            TRUE ~ "No"),
-         project_type = "Other",
+         project_type = case_when(
+           grepl("EC",additional_subsidization_funding_source) ~ "Emerging Contaminants",
+           grepl("LSLI", description_needs_category) ~ "Lead",
+           TRUE ~ "Other"
+         ),
          state = "Missouri"
   ) %>%
   rename(principal_forgiveness_amount = additional_subsidization_amount) %>%
   select(state_score, borrower, project_description, population, funding_amount,
          principal_forgiveness_amount, disadvantaged, fundable, state, project_type)
-
-
-### Amendments
-# The following changes bring the document in line with the most recent figures in the 7/11/23 IUPP
-
-mo_amended <- mo_clean %>%
   
   
 ```
@@ -1748,12 +1832,16 @@ mo_amended <- mo_clean %>%
 
 ## Montana (A)
 
-- TODO: Applicant data needs to be scraped from Appendix 2 of this doc - https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf
+- TODO: Applicant data needs to be scraped from Appendix 2 of this doc - https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf -- Data can't be scraped because it is a non-machine readable screenshot. Will need to manually create spreadsheet.
 - No mention of `requested_amount` or `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
+
+## FUNDABLE
 # (37,4)
+# Table 1. DWSRF Projects Anticipated to Receive Funding SFY 2023 from 
+# https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf
 mt_raw <- fread("data/year1/csv/26-Montana_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() 
@@ -1796,6 +1884,11 @@ mt_clean <- mt_raw %>%
          state = "Montana") %>%
   select(state_rank, borrower, project_description, funding_amount, 
          principal_forgiveness_amount, population, project_type, fundable, state)
+
+## APPLICANT
+# Appendix 2: DWSRF COMPREHENSIVE PROJECT LIST—SFY 2023 from
+# https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf
+
   
 ```
 
@@ -1834,6 +1927,9 @@ ne_lsl <- fread("data/year1/csv/27-Nebraska_lslr.csv",
 
 # merge data, (53,9)
 ne_merged <- bind_rows(ne_base, ne_bil, ne_ec, ne_lsl)
+
+## APPLICANT
+# Appendix B2 
 
 # -> (53,9)
 ne_clean <- ne_merged %>%
@@ -1990,7 +2086,7 @@ nj_clean <- nj_raw %>%
       grepl("LSL", bil_eligibility) ~ "Lead",
       TRUE ~ "Other"),
     state = "New Jersey",
-    fundable = "Applicant"
+    fundable = "No Information"
   ) %>%
   select(borrower, pwsid, state_rank, state_score, project_name, project_description, project_cost, 
          population, state, fundable)
@@ -2153,7 +2249,7 @@ ny_base <- fread("data/year1/csv/32-NewYork_base_ppl.csv",
   mutate(project_type = "Other",
          disadvantaged = case_when(
            score == "H" ~ "Yes",
-           TRUE ~ "No Information"))
+           TRUE ~ "No"))
 
 ## BIL
 # (120,10) -> (120,11)
@@ -2162,9 +2258,9 @@ ny_bil <- fread("data/year1/csv/32-NewYork_bil_ppl.csv",
   clean_names() %>%
   select(-v1) %>%
   mutate(project_type = "Other",
-         dac = "No Information")
+         disadvantaged = "Yes")
 
-## Lead
+## Lead - Amendment 4
 # (109,11) -> (109,12)
 ny_lead <- fread("data/year1/csv/32-NewYork_lead.csv",
                 colClass="character", na.strings="") %>%
@@ -2176,7 +2272,7 @@ ny_lead <- fread("data/year1/csv/32-NewYork_lead.csv",
            TRUE ~ "No"
          ))
 
-## Emerging Contaminants
+## Emerging Contaminants - Amendment 2
 # (37,10) -> (37,11)
 ny_ec <- fread("data/year1/csv/32-NewYork_ec.csv",
                 colClass="character", na.strings="") %>%
@@ -2455,39 +2551,64 @@ oh_clean_2 <- oh_comb %>%
 ```
 
 
-## Oklahoma (DD)
+## Oklahoma
 
 - Applicant data processed
-- Similar to OH, how to handle `loan_amount` for projects we don't expect to be fundable? Currently assumes `requested_amount`
+- Includes `requested_amount`, does not include `project_cost`
 - No mention of *Interest Rates or Loan Terms*
 
 ```{r}
 
 
 ## base / bil
-# (69,12)
+# (69,12) -> (69,14)
 ok_b <- fread("data/year1/csv/36-Oklahoma_PPL-AppB.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type = "Other") %>%
   rename(disadvantaged = severly_disadvantged_disadvantged_or_no)
 
+ok_b$fundable <- ""
+ok_b$fundable[1:46] <- "Fundable"
+ok_b$fundable[47:69] <- "Applicant"
+
+# for fundable projects, loan amount is funding amount
+ok_b <- ok_b %>%
+  mutate(funding_amount = case_when(
+    fundable == "Fundable" ~ as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),
+    TRUE ~ 0
+  ))
 
 ## lead
-# (42,11)
+# (42,11) -> (42,13)
 ok_e <- fread("data/year1/csv/36-Oklahoma_PPL-AppE.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(project_type = "Lead") %>%
   rename(disadvantaged = disadvantaged_y_or_n)
 
+# only first 24 projects are fundable 
+ok_e$fundable <- ""
+ok_e$fundable[1:24] <- "Fundable"
+ok_e$fundable[25:42] <- "Applicant"
+
+# for fundable projects, loan amount is funding amount
+ok_e <- ok_e %>%
+  mutate(funding_amount = case_when(
+    fundable == "Fundable" ~ as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),
+    TRUE ~ 0
+  ))
+
 
 ## emerging contaminants
-# (42,11)
+# (3,11) -> (3,13)
 ok_f <- fread("data/year1/csv/36-Oklahoma_PPL-AppF.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
-  mutate(project_type = "Emerging Contaminants") %>%
+  mutate(project_type = "Emerging Contaminants",
+         fundable = "Fundable",
+         # all projects on EC list are funded
+         funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]",""))) %>%
   rename(disadvantaged = disadvantaged_y_or_n)
 
 
@@ -2500,6 +2621,7 @@ ok_clean <- ok_comb %>%
   select(-base, -cumulative_amount, -anticipated_binding_commitment_date, -anticipated_construction_date) %>%
   # process numeric columns
   mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+         # for all projects on all lists, loan amount is requested amount, even if it is also funding_amount for funded projects
          requested_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),) %>%
   # process text columns
   mutate(state_score = case_when(
@@ -2513,10 +2635,9 @@ ok_clean <- ok_comb %>%
       disadvantaged == "N" ~ "No",
       TRUE ~ "Yes"),
     state = "Oklahoma",
-    fundable = "Applicant"
          ) %>%
-  select(borrower, state_score, project_name, project_description, requested_amount, disadvantaged, 
-         population, project_type, state, fundable)
+  select(borrower, state_score, project_name, project_description, requested_amount, funding_amount,
+         disadvantaged, population, project_type, state, fundable)
 
 
 ```
@@ -2654,7 +2775,7 @@ ri_fund <- fread("data/year1/csv/39-RhodeIsland_PPL_Fundable_Manual.csv",
 ```
 
 
-## South Carolina (DD) (A)
+## South Carolina (WIP) (A)
 
 - TODO: Applicant data needs to be processed - may not be available
 - TODO: Add in supplemental, EC, and lead tables (to be scraped) - see data dictionary
@@ -2759,6 +2880,14 @@ sd_clean <- sd_merged %>%
   # keep relevant columns
   select(borrower, project_description, project_type, state_score, funding_amount, 
          principal_forgiveness_amount, population, disadvantaged, fundable, state) 
+```
+
+
+## Tennessee (NS)
+- Waiting on final data
+
+```{r}
+
 ```
 
 
@@ -2872,6 +3001,13 @@ ut_clean <- ut_ppl %>%
   select(state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness,
          project_type, cities_served, disadvantaged, population, state)
   
+
+```
+
+
+## Virginia (NS)
+
+```{r}
 
 ```
 
@@ -3204,6 +3340,14 @@ wi_clean <- wi_fund_raw %>%
 ```
 
 
+## Wyoming (NS)
+- Waiting on final data
+
+```{r}
+
+```
+
+
 # Post-Process
 
 ## Combine States
@@ -3211,10 +3355,11 @@ wi_clean <- wi_fund_raw %>%
 ```{r}
 combined_clean <- bind_rows(
            al_clean, 
-           ar_clean, 
+           ar_clean,
+           dc_clean,
            de_clean, 
            ga_clean, 
-           # hi_clean, 
+           hi_clean, 
            id_clean,
            il_clean, 
            la_clean, 
@@ -3225,10 +3370,11 @@ combined_clean <- bind_rows(
            mn_clean, 
            #mo_clean,
            #mt_clean,
-           #nd_clean, 
+           nd_clean, 
            ne_clean, 
            #nh_clean,
            nm_clean,
+           nv_clean,
            pa_clean, 
            sd_clean, 
            tx_clean, 
@@ -3239,85 +3385,6 @@ combined_clean <- bind_rows(
 
 ```
 
-
-```{r}
-
-# use this as a simple on/off switch for sending test data to AWS,
-adding_test_data <- TRUE
-
-if (adding_test_data == TRUE) { 
-
-# create sample data for Gabe to test 1.1
-# this data should include
-# - states with funded AND applicant data (multiple)
-# - states with only applicant data (DC)
-# - states with new columns, project_cost (NJ) and requested_amount (OK)
-combined_test <- combined_clean %>%
-  # TODO: standardize all states so rank is CHAR, it was originally NUM but there are some states that use non-numeric symbols for ranking implying
-  # projects are being bypassed or ranked based soley on DAC status or some other feature.
-  mutate(state_rank = as.character(state_rank)) %>%
-  bind_rows(dc_clean, nj_clean, ok_clean)
-
-## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
-web_combined_clean_test <- combined_test %>%
-                          mutate(across(everything(), as.character)) %>%
-                          select(state, cities_served, borrower,
-                                 pwsid, project_name, project_description,
-                                 project_type, funding_amount, principal_forgiveness_amount, 
-                                 population, disadvantaged, state_rank, state_score,
-                                 project_cost, requested_amount, fundable) %>%
-                          rename(State = state,
-                                Borrower = borrower, 
-                                `City Served` = cities_served, 
-                                `Project Description` = project_description,
-                                `Project Type` = project_type,
-                                `State Rank` = state_rank,
-                                `State Score` = state_score,
-                                `Funding Amount` = funding_amount, 
-                                `Principal Forgiveness` = principal_forgiveness_amount,
-                                `Meets State Disadvantaged Criteria` = disadvantaged,
-                                 Population = population,
-                                 PWSID = pwsid, 
-                                `Project Name` = project_name,
-                                `Project Cost` = project_cost,
-                                `Requested Amount` = requested_amount,
-                                `Fundable` = fundable)
-
-data <- web_combined_clean_test
-filename <- "web_ppl_combined_clean_v4.csv"
-aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v4.csv"
-
-### To put in an AWS bucket, you need these credentials
-## Contact gabe@policyinnovation.org for questions/access
-## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
-
-# Sys.setenv("AWS_ACCESS_KEY_ID" = "YOUR ACCESS KEY",
-#            "AWS_SECRET_ACCESS_KEY" = "YOUR SECRET KEY",
-#            "AWS_DEFAULT_REGION" = "us-east-1")
-
-# Writing to temp 
-fwrite(data, file.path(tempdir(), filename))
-
-#Putting in Bucket
-put_object(
-  file = file.path(tempdir(), filename),
-  object = aws_filepath,
-  bucket = "water-team-data",
-  acl = "public-read"
-)
-
-}
-```
-
-```{r}
-
-# remove Applicant data until Dashboard 1.1 ready
-combined_clean <- combined_clean %>%
-  filter(fundable == "Fundable")
-
-```
-
-
 ## Process Combined States
 
 This format is then pre-processed by the Dashboard cleaning script for it's final format as it appears in the application.
@@ -3326,11 +3393,18 @@ This format is then pre-processed by the Dashboard cleaning script for it's fina
 
 ## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
 web_combined_clean <- combined_clean %>%
-                          mutate(across(everything(), as.character)) %>%
+                          mutate(across(everything(), as.character),
+                                 # TEMPORARY: fix all fundable nomenclature at once at the end.
+                                 # TODO for 1.1.1 - change throughout code for consistency
+                                 fundable = case_when(
+                                   fundable == "Fundable" ~ "Funded",
+                                   fundable == "Applicant" ~ "Not Funded",
+                                   TRUE ~ as.character(NA)
+                                 )) %>%
                           select(state, cities_served, borrower,
                                  pwsid, project_name, project_description,
-                                 project_type, funding_amount, principal_forgiveness_amount, 
-                                 population, disadvantaged, state_rank, state_score) %>%
+                                 project_type, funding_amount, principal_forgiveness_amount, project_cost, requested_amount,
+                                 population, disadvantaged, state_rank, state_score, fundable) %>%
                           rename(State = state,
                                 Borrower = borrower, 
                                 `City Served` = cities_served, 
@@ -3338,12 +3412,15 @@ web_combined_clean <- combined_clean %>%
                                 `Project Type` = project_type,
                                 `State Rank` = state_rank,
                                 `State Score` = state_score,
+                                `Project Cost` = project_cost,
+                                `Requested Amount` = requested_amount,
                                 `Funding Amount` = funding_amount, 
                                 `Principal Forgiveness` = principal_forgiveness_amount,
                                 `Meets State Disadvantaged Criteria` = disadvantaged,
                                  Population = population,
                                  PWSID = pwsid, 
-                                `Project Name` = project_name)
+                                `Project Name` = project_name,
+                                `Funding Status` = fundable)
 
 ```
 
@@ -3355,7 +3432,7 @@ web_combined_clean <- combined_clean %>%
 
 data <- web_combined_clean
 filename <- "web_ppl_combined_clean.csv"
-aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv"
+aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv"
 
 ### To put in an AWS bucket, you need these credentials
 ## Contact gabe@policyinnovation.org for questions/access

@@ -13,13 +13,13 @@ library(googlesheets4)
 
 ## Data Import ## 
 ## PPL Data ### 
-PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
+PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv", bucket = "water-team-data"))%>%
   mutate(across('Project Type', str_replace, 'Other', 'General')) 
 
 ## Filtering down to states approved based on this document: https://docs.google.com/document/d/1sapr_7U6mLciUpS7u-Yj3g44G3S-WchaukyiA2N8e-M/edit
 PPL_Data <- PPL_Data %>%
-            filter(State %in% c("Alabama", "Arkansas", "Delaware", "Idaho", "Illinois", "Louisiana", "Maryland",
-                                "Maine", "Michigan", "Minnesota", "Nebraska", "New Mexico", "Pennsylvania", "South Dakota", "Texas", "Vermont", "West Virginia", "Wisconsin"))
+            filter(State %in% c("Alabama", "Arkansas", "Delaware", "District of Columbia", "Idaho", "Georgia" ,"Illinois", "Louisiana", "Maryland",
+                                "Maine", "Michigan", "Hawaii", "Minnesota", "Massachusetts", "Nebraska", "New Mexico", "Nevada", "Pennsylvania", "South Dakota", "North Dakota", "Texas", "Vermont", "West Virginia", "Wisconsin"))
 
 ## SABs Data ### 
 Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
@@ -39,9 +39,9 @@ URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYM
 
 AdditionalData <- read_sheet(URL, sheet = "AdditionalData")
  # rename(`Emerging Contaminants` = "Emerging.Contaminants")
-
-## Data For Application ## 
+## Summary Data For Application ## 
 PPL_State_Data_Geo <- PPL_Data %>%
+  filter(`Funding Status` == "Funded")%>%
   mutate(Count = 1)%>%
  # left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
   mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
@@ -61,17 +61,18 @@ PPL_State_Data_Geo <- PPL_Data %>%
 ## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
 
  # Sys.setenv("AWS_ACCESS_KEY_ID" = "",
- #            "AWS_SECRET_ACCESS_KEY" = "",
- #            "AWS_DEFAULT_REGION" = "us-east-1")
+ #             "AWS_SECRET_ACCESS_KEY" = "",
+ #             "AWS_DEFAULT_REGION" = "us-east-1")
 
 # Writing to temp 
 
-write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data.csv"), row.names = FALSE)
+write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data_v1-1.csv"), row.names = FALSE)
 
 #Putting in Bucket
+## Updating to dw_dashboard_data_v2 to include just fundable data for summary based on design.
 put_object(
-  file = file.path(tempdir(), "dw-dashboard-data.csv"),
-  object = "apps/dw-dashboard/dw-dashboard-data.csv",
+  file = file.path(tempdir(), "dw-dashboard-data_v1-1.csv"),
+  object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv",
   bucket = "water-team-data",
   acl = "public-read"
 )

@@ -57,7 +57,11 @@ ui <- fluidPage(
            uiOutput("StateName", style = "font-size: 40px; margin-top: -20px;"), 
            uiOutput("StateCategory", style = "font-size: 25px; margin-top: -10px; font-style: italic;"), 
            uiOutput("StateDescription", style = "height: 165px; max-width: 400px; overflow-y: scroll; margin-right: -15px; margin-bottom: 10px; "), 
-           actionButton("Context", "Toggle National Map or State Data Table",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
+           actionButton("Context", "National Map or State Data Table",icon(name = "arrows-left-right", lib = "font-awesome"),style = "margin-bottom: 10px; color: #a82b4d; border-color: #a82b4d;"), 
+           actionButton("Chart_Summary", "Visualization",icon(name = "arrows-up-down", lib = "font-awesome"),style = "margin-bottom: 10px; color: #ffb448; border-color: #ffb448;"),
+           shinyjs::hidden(uiOutput("ChartSelect")),
+           shinyjs::hidden(uiOutput("ChartText", style = "font-style: italic; margin-bottom: 10px")),
+           shinyjs::hidden(plotOutput("ChartOne")),
            bsCollapse(id = "CollapsePanel", open = c("Drinking Water Needs and Funding", "All Projects"), multiple = TRUE,
                       bsCollapsePanel("Drinking Water Needs and Funding",uiOutput("NeedsFunds", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "primary"),
                       bsCollapsePanel("All Projects",uiOutput("AllProjects", style = "line-height: 20px; margin-top: -10px; margin-bottom: -10px;"),  style = "info"),
@@ -97,17 +101,15 @@ server <- function(input, output,session) {
   
   
   waitress$inc(20) # increase by 10
-  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
-
-  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v3.csv", bucket = "water-team-data"))%>%
-    mutate(across('Project Type', str_replace, 'Other', 'General'))
-
+  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv", bucket = "water-team-data"))
+  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv", bucket = "water-team-data"))%>%
+                mutate(across('Project Type', str_replace, 'Other', 'General'))
 
   waitress$inc(20) # increase by 10
   
   
   ## Importing Geo Data 
-  Geo_Data <- geojson_sf("www/states_ak_hi_v3.geojson")
+  Geo_Data <- geojson_sf("www/states_ak_hi_v4.geojson")
 
   waitress$inc(20) # increase by 10
   
@@ -123,6 +125,7 @@ server <- function(input, output,session) {
   ColumnToolTip <- read_sheet(URL, sheet = "ColumnToolTip")
   
   DataDictionaryIndex <- read_sheet(URL, sheet = "DataDictionaryIndex")
+  
   glossary_link <- DataDictionaryIndex %>%
     filter(State == "Glossary")%>%
     pull(Link)
@@ -139,13 +142,17 @@ server <- function(input, output,session) {
     mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
   
+  print(PPL_State_Data_Geo %>% filter(NAME == "District of Columbia"))
   
   waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)
   
   ## Var Decleration ## 
+  
+
   SelectedDataReactive <- reactiveValues(df = PPL_Data %>% filter(State == "Alabama"))
   SummaryData <- reactiveValues(df = PPL_Data %>%
+                                  filter(`Funding Status` == "Funded")%>%
                                   filter(State == "Alabama")%>%
                                   mutate(Count = 1)%>%
                                   mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%  
@@ -191,6 +198,7 @@ server <- function(input, output,session) {
 
       
       SummaryData$df <- SelectedDataReactive$df %>%
+      #  filter(Fundable == "Fundable")%>%
         mutate(Count = 1)%>%
         mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%  
         mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
@@ -217,8 +225,10 @@ server <- function(input, output,session) {
     TableData <- SelectedDataReactive$df %>%
       mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
       mutate(Population = as.numeric(Population))%>%
-      select(2,3,4,5,7,8,9,10,6,11,12)
- 
+      
+      ## Note this filters down to the right columns and selects the order in which they are seen! 
+      select(2,3,4,5,7,6,16,14,15,8,9,10,11,12)
+    
     renderReactable({
       with_tooltip <- function(value, tooltip, ...) {
         div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: info; text-color: #2362d0",
@@ -233,11 +243,13 @@ server <- function(input, output,session) {
                   `PWSID`= colDef(na = "No Information",header = with_tooltip("PWSID",ColumnToolTip[3,2]),width = 80),
                   `Project Name` = colDef(na = "No Information",header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
                   `Project Type` = colDef(na = "No Information",header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
-                 `Funding Amount` = colDef(na = "No Information",header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  # Add tooltip for fundable
+                   `Funding Status` = colDef(name = "Funding Status", minWidth = 80, header = with_tooltip("Funding Status",ColumnToolTip[12,2])),
+                  `Requested Amount` = colDef(na = "No Information",minWidth = 150,header = with_tooltip("Requested Amount",ColumnToolTip[14,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Project Cost` = colDef(na = "No Information",minWidth = 120, header = with_tooltip("Project Cost",ColumnToolTip[13,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Funding Amount` = colDef(na = "No Information", header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
                   `Principal Forgiveness` = colDef(na = "No Information", header = with_tooltip("Principal Forgiveness",ColumnToolTip[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  
                    Population = colDef(na = "No Information",header = with_tooltip("Population",ColumnToolTip[8,2]),format = colFormat(separators = TRUE, digits = 0)),
-            
                   `Project Description` = colDef(na = "No Information",header = with_tooltip("Project Description",ColumnToolTip[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
                     div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: help; font-size: 14px;",tippy(value, value))
                   }),
@@ -264,6 +276,14 @@ server <- function(input, output,session) {
     toggle("Table", anim = FALSE,animType = "slide")
     toggle("StateNameTwo", anim = FALSE,animType = "slide")
     toggle("ColumnMouseover", anim = FALSE,animType = "slide")
+  })
+  
+  observeEvent(input$Chart_Summary, {
+    toggle("CollapsePanel", anim = FALSE,animType = "slide")
+    toggle("ChartOne", anim = FALSE,animType = "slide")
+    toggle("ChartSelect", anim = FALSE,animType = "slide")
+    toggle("ChartText", anim = FALSE, animType = "slide")
+    
   })
   #### End Table 
   
@@ -419,7 +439,6 @@ server <- function(input, output,session) {
   
   output$ECProjects <- renderUI({
     req(SummaryData$df)
-    
     CategoryData <- SummaryData$df %>%
       filter(`Project Type` == ("Emerging Contaminants"))
     
@@ -454,8 +473,69 @@ server <- function(input, output,session) {
     )
   })
   
+  ## Chart Select
+  output$ChartSelect <- renderUI({
+    req(SelectedDataReactive$df)
+    
+    ## This selects charting options based on data availablity - set to 75%
+    ChartOptions <- SelectedDataReactive$df %>%
+                    select("Population","Project Cost","Meets State Disadvantaged Criteria")%>%
+                    select(where(function(x) sum(is.na(x)) / length(x) < 0.75))%>%
+                    colnames()
+  
+    selectInput("ChartSelect", "Select a Variable: ", c("Count",ChartOptions))
+  })
+  
+
+  output$ChartText <- renderText({
+    req(input$ChartSelect)
+    Text <- ToolTip %>%
+           filter(Name == as.character(input$ChartSelect))%>%
+           pull(Text)
+    
+  })
+  
+  ## Chart ## 
+  output$ChartOne <- renderPlot({
+  req(SelectedDataReactive$df)
+  req(input$ChartSelect)
+  
+  ## Note that sumarization is needed and the correct variables need to align with options in ChartSelect - down to the correct name/spelling!
+  Counts <- SelectedDataReactive$df %>%
+            group_by(`Funding Status`, `Project Type`)%>%
+            tally()
+    
+   ChartData <- SelectedDataReactive$df %>%
+               group_by(`Funding Status`, `Project Type`)%>%
+               select(c("Project Cost","Population","Meets State Disadvantaged Criteria"))%>%
+               mutate(`Meets State Disadvantaged Criteria` = ifelse(`Meets State Disadvantaged Criteria` == "Yes",1, 0))%>%
+               summarise_if(is.numeric,sum ,na.rm = TRUE)%>%
+               ## remove this 
+               left_join(.,Counts)%>%
+               rename(Count = n)%>%
+               mutate(`Project Type` = str_replace(`Project Type`,"Emerging Contaminants", "Emerg Contam"))
+            #   mutate(`Meets State Disadvantaged Criteria` = `Meets State Disadvantaged Criteria`/Count * 100)
+            
+
+    ggplot(data = ChartData, aes(x = `Project Type`, y = !!sym(input$ChartSelect), fill = `Funding Status`))+
+      geom_bar(stat="identity", position = "dodge")+
+      scale_fill_manual(values=c("Not Funded" = "#326138", "Funded" ="#f45d00"), name = "")+
+      ylab(as.character(input$ChartSelect))+
+      xlab("")+
+      theme_classic()+
+      theme(axis.text = element_text(size = 14, color = "black", face = "bold"))+
+      theme(axis.title = element_text(size = 14, color = "black", face = "bold"))+
+      theme(legend.text = element_text(size = 14, color = "black", face = "bold"))+
+ #   theme(plot.margin = margin(0,0,0,0, "cm"))+
+      theme(plot.background = element_rect(fill = "#f5f5f5"))+
+      theme(panel.background = element_rect(fill = "#f5f5f5"))+
+      theme(legend.background = element_rect(fill = "#f5f5f5"))
+     # theme(panel.border = element_rect(fill = "#f5f5f5"))
+  })
+  
+
   InfoModal <- modalDialog(
-    title = HTML("<b> EPIC’s Drinking Water Funding Dashboard </b>"),
+    title = HTML("<b> EPIC’s Drinking Water Funding Dashboard v1.1 </b>"),
     HTML("<b> About this dashboard: </b>"),
     HTML("<br>"),
     HTML("This dashboard attempts to track Drinking Water State Revolving Funds (DWSRFs) from Federal Fiscal Year (FFY) 2022 appropriations, based on data presented in Project Priority Lists (PPLs) published by states for State Fiscal Year (SFY) 2023. 
@@ -472,7 +552,7 @@ server <- function(input, output,session) {
     HTML("<b> How to use this dashboard: </b>"),
     HTML("<li> Centered, you’ll find a national map of where EPIC has data for DWSRF PPLs.  </li>"),
     HTML("<li> Click a state to activate the sidebar and explore the funding and project category summary.  </li>"),
-    HTML("<li> Click ‘Toggle National Map or State Data Table’ to switch between the map and the selected states available PPL data. </li> "),
+    HTML("<li> Click ‘National Map or State Data Table’ to switch between the map and the selected states available PPL data. </li> "),
     HTML("<li> Mousing over the ‘i’ icons will reveal additional information about the metrics. </li>"),
     HTML("<li> Click ‘Download State Data’ to download the state specific data, accompanying data dictionary, and "),
     tags$a(href=paste(glossary_link), "glossary of key terms.",  target="_blank"),

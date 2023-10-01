@@ -1173,7 +1173,7 @@ in_clean <- in_comb %>%
   mutate(
     population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
     requested_amount = as.numeric(str_replace_all(requested_funds, "[^0-9.]", "")),
-  
+    state_rank = as.numeric(str_replace_all(ppl_rank, "[^0-9.]", "")),
   ) %>%
   # process text column
   mutate(
@@ -1184,7 +1184,6 @@ in_clean <- in_comb %>%
     project_name = str_squish(srf_project_no),
     project_description = str_squish(project_description),
     state_score = str_replace_all(ppl_score, "[^0-9.]", ""),
-    state_rank = str_replace_all(ppl_rank, "[^0-9.]", ""),
     disadvantaged = str_squish(disadvantaged_community),
     project_type = case_when(
       emerging_contaminants == "Yes" ~ "Emerging Contaminants",
@@ -1212,13 +1211,9 @@ in_clean <- in_comb %>%
 ```
 
 
-## Kansas (Q in DD)
+## Kansas (DD)
 
-- assumes `requested_amount` should be included
-- need to untangle the variations of loan_forgiveness variables
-- can disadvantaged be assumed from the `loan_forgiveness_disadvantaged_community` in base and lead?
-- should PF be defined as sum of the `loan_forigveness` variables?
-- is receiving `loan_forgiveness` indicative of being a fundable project?
+
 
 ```{r}
 
@@ -1273,6 +1268,9 @@ ks_clean <- ks_comb %>%
     project_name = str_squish(project_number),
     state_score = str_squish(rating),
     project_description = str_squish(project_description),
+    disadvantaged = case_when(
+      requested_amount > 0 ~ "Yes",
+      TRUE ~ "No"),
     state = "Kansas",
     # assume all applicant until confirmed otherwise
     fundable = "Applicant"
@@ -1762,7 +1760,7 @@ mo_lead_contingency <- fread("data/year1/csv/25-Missouri_LSLContingency.csv",
   )
 
 # (272,14)
-mo_comb <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contigency)
+mo_comb <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contingency)
 
 
 ### Amendments
@@ -2072,6 +2070,7 @@ nj_clean <- nj_raw %>%
   mutate(
     population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
     project_cost = as.numeric(str_replace_all(estimated_cost, "[^0-9.]", "")),
+    state_rank = as.numeric(str_replace_all(rank, "[^0-9.]", ""))
   ) %>%
   # process text columns
   mutate(
@@ -2079,7 +2078,6 @@ nj_clean <- nj_raw %>%
     project_name = str_squish(project_number),
     pwsid = str_squish(pwsid),
     project_description = str_squish(project_name),
-    state_rank = str_squish(rank),
     state_score = str_squish(rank_points),
     project_type = case_when(
       grepl("EC", bil_eligibility) ~ "Emerging Contaminants",
@@ -3362,24 +3360,26 @@ combined_clean <- bind_rows(
            hi_clean, 
            id_clean,
            il_clean, 
-           la_clean, 
+           in_clean,
+           la_clean,
+           ks_clean,
            ma_clean, 
            md_clean,
            me_clean,
            mi_clean, 
            mn_clean, 
-           #mo_clean,
-           #mt_clean,
+           mo_clean,
            nd_clean, 
            ne_clean, 
-           #nh_clean,
+           nj_clean,
            nm_clean,
            nv_clean,
+           ny_clean,
+           ok_clean,
            pa_clean, 
            sd_clean, 
            tx_clean, 
            vt_clean,
-           #wa_clean, 
            wi_clean, 
            wv_clean)
 

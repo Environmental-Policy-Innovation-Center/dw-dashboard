@@ -54,6 +54,22 @@ PPL_State_Data_Geo <- PPL_Data %>%
   left_join(.,AdditionalData, by = c("State"= "State"))%>%
   mutate(FundPer100k = (`Funding Amount`/ Population))
 
+## Note manually addition of states which have only applicant date - TODO please switch to a smart filter/group by in next update! 
+OnlyApplicant <- PPL_Data %>%
+  filter(State %in% c("New York", "New Jersey", "Indiana", "Kansas"))%>%
+  mutate(Count = 1)%>%
+  # left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
+  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
+  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
+  select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count)%>%
+  group_by(State)%>%
+  summarize_if(is.numeric,sum,na.rm = TRUE)%>%
+  left_join(.,Sabs_cleaned)%>%
+  left_join(.,AdditionalData, by = c("State"= "State"))%>%
+  mutate(FundPer100k = (`Funding Amount`/ Population))
+
+PPL_State_Data_Geo <- rbind(PPL_State_Data_Geo,OnlyApplicant)
+
 ## Pushing to AWS For Application ##
 
 

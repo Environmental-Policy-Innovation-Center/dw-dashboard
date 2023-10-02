@@ -164,7 +164,7 @@ al_clean <- al_comb %>%
 ```
 
 
-## Arkansas (Q)
+## Arkansas (Q in DD)
 
 - Applicant data is preprocessed and ready to be merged in at next update.
 - TODO: Confirm `project_cost` should be used for `funding_amount` in both Applicant and Fundable.
@@ -1211,7 +1211,7 @@ in_clean <- in_comb %>%
 ```
 
 
-## Kansas (DD)
+## Kansas
 
 
 
@@ -1471,7 +1471,7 @@ md_clean <- md_raw %>%
 ```
 
 
-## Massachusetts (WIP)
+## Massachusetts
 
 - Applicant data is processed
 - Mentions `project_cost`, included
@@ -2232,9 +2232,9 @@ nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="state_rank") %>%
 ```
 
 
-## New York (DD)
+## New York (A)
 
-- Walker's notes say that when Score == H, it denotes disadvantaged in the base PPL. Should projects with a numeric Score be marked as not disadvantaged or "No Information"? Below assumes No Info since that is the more conservative interpretation.
+- Need to add the multi-year list, see Data Dictionary for details
 
 ```{r}
 

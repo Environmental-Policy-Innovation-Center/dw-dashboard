@@ -6,7 +6,7 @@ on:
     # paths:
     #  - "**"
 
-  # workflow is also triggered via github REST API (gf_cmonkeyd)
+
   workflow_dispatch:
   
 #----------------------------
@@ -17,7 +17,7 @@ env:
   SERVICE_PORT: 2000
 
   # ECR
-  ECR_REGISTRY: 833394423843.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REGISTRY: 516937823875.dkr.ecr.us-east-1.amazonaws.com
   ECR_REPOSITORY: ep_app_service_dw_dashboard
 
   # ECS

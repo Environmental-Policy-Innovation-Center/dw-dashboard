@@ -2,7 +2,7 @@ name: rshiny_dev
 
 on:
   push:
-    branches: [infra-pipeline]
+    branches: [infra-pipeline,main]
     # paths:
     #  - "**"
 

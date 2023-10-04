@@ -31,6 +31,7 @@ library(tippy)
 library(shinycssloaders)
 library(zip)
 library(googledrive)
+library(ggplot2)
 #library(pdftools)
 ## Major Components
 ## Data prep 

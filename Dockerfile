@@ -17,6 +17,7 @@ RUN cd /home/epic
 
 
 RUN install2.r --error shiny \
+ggplot2 \
 leaflet \
 googlesheets4 \
 rgdal \

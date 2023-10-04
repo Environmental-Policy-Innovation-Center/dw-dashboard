@@ -1,0 +1,148 @@
+name: rshiny_dev
+
+on:
+  push:
+    branches: [infra-pipeline,main]
+    # paths:
+    #  - "**"
+
+
+  workflow_dispatch:
+  
+#----------------------------
+env:
+  ENV: dev
+  AWS_REGION: us-east-1
+  AWS_DEFAULT_REGION: us-east-1
+  SERVICE_PORT: 2000
+
+  # ECR
+  ECR_REGISTRY: 516937823875.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPOSITORY: ep_app_service_dw_dashboard
+
+  # ECS
+  ECS_CLUSTER_NAME: ep_core__dev_us-east-1
+  ECS_FAMILY: dw_dashboard
+  ECS_SERVICE_NAME: ep_app__dw_dashboard__dev_us-east-1
+
+#----------------------------
+jobs:
+  build_container:  
+
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+
+    #-------------------------------
+    # GIT_CHECKOUT
+    - name: checkout main repo
+      uses: actions/checkout@v3
+      with:
+        path: main
+    
+    #-------------------------------
+    # INITIALIZE_PYTHON
+    - name: initialize python3
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    #-------------------------------
+    # INITIALIZE_AWS_CREDS
+    # creds needed for init_ops and subsequent stages that use aws CLI tool
+    - name: initialize AWS creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    #-------------------------------
+    # INIT_OPS
+    - name: initialize ops
+      run: |
+        pip3 install -r ./main/ops/requirements.txt
+        python3 ./main/ops/main.py
+
+    #-------------------------------
+    # CONTAINER_BUILD
+    - name: build container
+      run: |
+        docker -v
+        DOCKER_BUILDKIT=1 docker build --file ./main/Dockerfile --tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ./main
+
+        # add second "latest" tag to this image
+        docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+    #-------------------------------
+    # AWS_ECR_LOGIN
+    - name: login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    #-------------------------------
+    # CONTAINER_PUBLISH
+    - name: container publish to AWS ECR
+      id: push-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$COMMIT_SHA"
+    
+    #-------------------------------    
+    
+
+  deploy_container:
+    needs: build_container
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+    
+    #-------------------------------
+    # INITIALIZE_AWS_CREDS
+    # creds needed for init_ops and subsequent stages that use aws CLI tool
+    - name: initialize AWS creds
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    #-------------------------------
+    # ECS_SERVICE_UPDATE
+    - name: update ECS service with new image
+      env:
+        ECS_IMAGE: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}
+      run: |
+
+        sudo apt-get install -y awscli jq
+
+        #-----------------------
+        # 1. Describe the task definition
+
+        task_def_json=$(aws ecs describe-task-definition --task-definition ${{ env.ECS_FAMILY }})
+
+        #-----------------------
+        # 2. Modify the JSON to use a new image and exclude unwanted properties
+
+        new_task_def_json=$(echo $task_def_json | jq '.taskDefinition | .containerDefinitions[0].image = "${{ env.ECS_IMAGE }}" | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+
+        #-----------------------
+        # 3. Register a new task definition
+
+        task_def_arn=$(aws ecs register-task-definition --cli-input-json "$new_task_def_json" | jq -r '.taskDefinition.taskDefinitionArn')
+
+        #-----------------------
+        # UPDATE_SERVICE
+        
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_NAME }} --task-definition $task_def_arn
+
+        #-----------------------
+
+    #-------------------------------

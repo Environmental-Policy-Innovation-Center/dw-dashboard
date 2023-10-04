@@ -6,7 +6,8 @@
 library(shiny)
 library(leaflet)
 library(googlesheets4)
-library(tidyverse)
+library(dplyr)
+library(readr)
 library(rgdal)
 library(geojsonsf)
 library(jsonlite)
@@ -30,7 +31,7 @@ library(tippy)
 library(shinycssloaders)
 library(zip)
 library(googledrive)
-library(pdftools)
+#library(pdftools)
 ## Major Components
 ## Data prep 
 ## Map 
@@ -92,8 +93,8 @@ ui <- fluidPage(
 
 
 
-server <- function(input, output,session) {
-  
+server <- function(input, output, session) {
+
   # call the waitress
   waitress <- Waitress$
     new(theme = "overlay-percent")$

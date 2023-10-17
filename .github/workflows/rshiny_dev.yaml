@@ -60,13 +60,6 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     #-------------------------------
-    # INIT_OPS
-    - name: initialize ops
-      run: |
-        pip3 install -r ./main/ops/requirements.txt
-        python3 ./main/ops/main.py
-
-    #-------------------------------
     # CONTAINER_BUILD
     - name: build container
       run: |

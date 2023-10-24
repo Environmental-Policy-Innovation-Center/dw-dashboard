@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
+# Introduction
 
 This notebook transforms raw data scraped from state PPLs and IUPs and provides a single, harmonized output. 
 
@@ -42,8 +42,7 @@ Within this documents outline, parenthetical codes denote where in process each 
 - WIP: Work in progress
 
 
-
-## Process States
+## Settings & Imports
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -55,9 +54,11 @@ library(data.table)
 library(janitor)
 library(aws.s3)
 library(googledrive)
+library(googlesheets4)
 
 ```
 
+# Process States
 
 ## Alabama (Q in SS) (A) 
 
@@ -140,15 +141,16 @@ al_clean <- al_comb %>%
          # Lead projects when LEAD funds specified
          project_type = case_when(
            grepl("LEAD", appropriation_fund_being_used, ignore.case=TRUE) ~ "Lead",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          # ALL IUP projects fundable
          funding_status = "Funded",
-         state = "Alabama"
+         state = "Alabama",
+         category = "1"
   ) %>%
   select(state_score, borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
          # add requested amount in once the applicant data is added to al_comb
          #requested_amount, 
-         population, cities_served, disadvantaged, project_type, funding_status, state)
+         population, cities_served, disadvantaged, project_type, funding_status, state, category)
   
 ```
 
@@ -202,7 +204,7 @@ ar_app <- ar_comp %>%
          project_type = case_when(
            lsl == "X" ~ "Lead",
            ec == "X" ~ "Emerging Contaminants",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
         # disadv column is either YES, NO, or NA by default
          disadvantaged = case_when(
            disadv_antaged_y_n == "YES" ~ "Yes",
@@ -212,12 +214,11 @@ ar_app <- ar_comp %>%
          state_score = gsub(",", "", total_points),
          # all projects in ppl are applicants, see Merged for fundable projects
          funding_status = "Not Funded",
-         state = "Arkansas"
          ) %>%
   ## keep relevant columns
   select(borrower, pwsid, project_description, project_type,
          state_rank, state_score, funding_amount, 
-         disadvantaged, population, funding_status, state)
+         disadvantaged, population, funding_status)
 
 
 ## Process Fundable
@@ -242,17 +243,18 @@ ar_fund <- ar_merge %>%
          state_score = str_replace_all(total_points,"[^0-9.]", ""),
          project_type = case_when(lsl == "X" ~ "Lead",
                                   ec == "X" ~ "Emerging Contaminants",
-                                  TRUE ~ "Other"),
+                                  TRUE ~ "General"),
          disadvantaged = str_to_sentence(disadvantaged_community),
          # all projects in ppl are applicants, see Merged for fundable projects
          funding_status = "Funded",
-         state = "Arkansas",
          ) %>%
   select(state_rank, state_score, borrower, pwsid, project_description, 
-         funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, funding_status, state)
+         funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, funding_status)
 
-# expect (760,12)
-ar_clean <- bind_rows(ar_app, ar_fund)
+# expect (760,11) -> (760,13)
+ar_clean <- bind_rows(ar_app, ar_fund) %>%
+  mutate(state = "Arkansas",
+         category = "1")
 
 ```
 
@@ -273,7 +275,7 @@ ar_clean <- bind_rows(ar_app, ar_fund)
 
 ### FUNDABLE ###
 
-# (16,12) -> (15,9)
+# (16,12) -> (15,8)
 # intended to be funded projects that are not EC
 ca_fund <- fread("data/year1/csv/5-California_Fundable_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
@@ -294,17 +296,16 @@ ca_fund <- fread("data/year1/csv/5-California_Fundable_PPL.csv",
          borrower = str_squish(applicant),
          project_name = str_squish(project_number),
          project_description = str_squish(project_title_description),
-         project_type = "Other",
+         project_type = "General",
          # it is possible disadvantaged is denoted in the Class column, but the IUP does not define it explicitly
          # disadvantaged = ,
-         state = "California",
-         funding_status = "Funded"
+         funding_status = "Funded",
          ) %>%
   select(borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
-         project_type, project_cost, population, state, funding_status)
+         project_type, project_cost, population, funding_status)
 
 
-# (11,9) -> (11,10)
+# (11,9) -> (11,19)
 # EC projects that have funding data
 ca_ec <- fread("data/year1/csv/5-California_EC.csv",
                       colClasses = "character", na.strings = "") %>%
@@ -324,18 +325,17 @@ ca_ec <- fread("data/year1/csv/5-California_EC.csv",
            grepl("Not", degree_of_disadvantaged) ~ "No",
            TRUE ~ "Yes"
          ),
-         state = "California",
          funding_status = "Funded") %>%
   select(borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
-         project_type, population, disadvantaged, state, funding_status)
+         project_type, population, disadvantaged, funding_status)
 
 
-# -> (26,11)
+# -> (26,10)
 ca_merge <- bind_rows(ca_fund, ca_ec)
 
 ### APPLICANT ### 
 
-# (345, 11) -> (313, 8) when dropping non-project rows and likely to be funded projects and consolidating columns
+# (345, 11) -> (313, 7) when dropping non-project rows and likely to be funded projects and consolidating columns
 ca_app <- fread("data/year1/csv/5-California_Comprehensive_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
@@ -363,17 +363,17 @@ ca_app <- fread("data/year1/csv/5-California_Comprehensive_PPL.csv",
     ),
     project_type = case_when(
       grepl("Lead", project_title_description, ignore.case=TRUE) ~ "Lead",
-      TRUE ~ "Other"
+      TRUE ~ "General"
     ),
     funding_status = "Not Funded",
-    state = "California"
   ) %>%
   select(borrower, project_name, project_description, project_type, project_cost, population, 
-         disadvantaged, state, funding_status)
+         disadvantaged, funding_status)
 
-
-# (339, 12)
-ca_clean <- bind_rows(ca_merge, ca_app)
+# (339, 11) -> # (339, 13)
+ca_clean <- bind_rows(ca_merge, ca_app) %>%
+  mutate(state = "California",
+         category = "1")
 
 ```
 
@@ -416,14 +416,13 @@ co_b_clean <- co_b %>%
            dac == "Y" ~ "Yes",
            TRUE ~ "No"
          ),
-         project_type = "Other",
+         project_type = "General",
          project_description = str_squish(project_description),
-         state = "Colorado",
          funding_status = case_when(
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded")) %>%
   select(borrower, pwsid, project_name, project_description, state_score, project_cost,
-         funding_amount, population, cities_served, disadvantaged, project_type, state, funding_status) %>%
+         funding_amount, population, cities_served, disadvantaged, project_type, funding_status) %>%
   distinct()
 
   
@@ -482,11 +481,10 @@ co_b1_clean <- co_b1 %>%
          # Assumes 'BIL' in 'dac' means they are disadvantaged, see p36 of the IUP
          disadvantaged = "Yes",
          funding_status = "Funded",
-         state = "Colorado",
          project_type = "Lead") %>%
   # select relevant states
   select(state_score, borrower, pwsid, project_name, project_description, project_cost,
-         funding_amount, project_type, cities_served, population, disadvantaged, state, funding_status)
+         funding_amount, project_type, cities_served, population, disadvantaged, funding_status)
 
 ## Appendix B.2
 
@@ -517,15 +515,16 @@ co_b2_clean <- co_b2 %>%
          # Assumes 'BIL' in 'dac' means they are disadvantaged, see p36 of the IUP
          disadvantaged = "Yes",
          funding_status = "Funded",
-         state = "Colorado",
          project_type = "Emerging Contaminants") %>%
   # select relevant states
   select(state_score, borrower, pwsid, project_name, project_description, project_cost,
-         funding_amount, project_type, cities_served, population, disadvantaged, state, funding_status)
+         funding_amount, project_type, cities_served, population, disadvantaged, funding_status)
   
 
-# -> (264,13)
-co_clean <- bind_rows(co_b_clean, co_b1_clean, co_b2_clean)
+# -> (264,15)
+co_clean <- bind_rows(co_b_clean, co_b1_clean, co_b2_clean) %>%
+  mutate(state = "Colorado",
+         category = "1")
 
 
 ```
@@ -609,7 +608,7 @@ de_clean <- de_all %>%
                                     "Lead",
                                   grepl("pfas", project_name, ignore.case = T) ~
                                     "Emerging Contaminants",
-                                  TRUE ~ "Other"),
+                                  TRUE ~ "General"),
          state_score = str_replace_all(total_points,"[^0-9.]",""),
          funding_status = "Funded",
          disadvantaged = case_when(!is.na(dac_a_e_w_u) ~ "Yes",
@@ -619,12 +618,13 @@ de_clean <- de_all %>%
          pwsid = str_squish(pwsid_number),
          project_name = str_squish(project_name),
          project_description = str_squish(project_description),
-         state = "Delaware"
+         state = "Delaware",
+         category = "1"
          ) %>%
   ## keep relevant columns
   select(borrower, pwsid, project_name, project_description, project_type,
          state_rank, state_score, funding_amount, principal_forgiveness_amount,
-         disadvantaged, population, funding_status, state)
+         disadvantaged, population, funding_status, state, category)
 ```
 
 
@@ -645,10 +645,11 @@ dc_clean <- dc_ppl %>%
   project_description = str_squish(project),
   funding_amount = as.numeric(str_replace_all(grant_funding,"[^0-9.]","")),
   state = "District of Columbia",
-  project_type = "Other",
-  funding_status = "Funded"
+  project_type = "General",
+  funding_status = "Funded",
+  category = "1"
   ) %>%
-  select(project_description, funding_amount, project_type, state, funding_status)
+  select(project_description, funding_amount, project_type, state, funding_status, category)
 
 ```
 
@@ -669,11 +670,12 @@ fl_fund <- fread("data/year1/csv/9-Florida_ppl_fundable.csv",
          project_name = str_squish(project_number),
          project_description = str_squish(project_description),
          state_score = str_replace_all(priority_score,"[^0-9.]",""),
-         project_type = "Other",
+         project_type = "General",
          state = "Florida",
+         category = "",
          funding_status = "Funded") %>%
   select(borrower, project_name, project_description, state_score, funding_amount, 
-         principal_forgiveness_amount, project_type, state, funding_status)
+         principal_forgiveness_amount, project_type, state, funding_status, category)
   
 
 ```
@@ -707,7 +709,7 @@ ga_base <- ga_raw %>%
          project_type = case_when(
            grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
          disadvantaged = case_when(
           affordability_score >= 29 ~ "Yes",
@@ -717,10 +719,9 @@ ga_base <- ga_raw %>%
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
          ),
-         state = "Georgia"
   ) %>% 
   select(state_score, borrower, project_description, funding_amount, project_cost,
-         population, disadvantaged, funding_status, project_type, state)
+         population, disadvantaged, funding_status, project_type)
 
 
 
@@ -757,7 +758,7 @@ ga_supp <- ga_supp_1 %>%
          project_type = case_when(
            grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
          disadvantaged = case_when(
           affordability_score >= 29 ~ "Yes",
@@ -766,11 +767,10 @@ ga_supp <- ga_supp_1 %>%
          funding_status = case_when(
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
-         ),
-         state = "Georgia"
+         )
   ) %>% 
   select(state_score, borrower, project_description, funding_amount, project_cost,
-         population, disadvantaged, funding_status, project_type, state)
+         population, disadvantaged, funding_status, project_type)
   
 
 
@@ -817,10 +817,9 @@ ga_lead <- ga_lead_1 %>%
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
          ),
-         state = "Georgia"
   ) %>% 
   select(state_score, borrower, project_description, funding_amount, project_cost,
-         population, disadvantaged, funding_status, project_type, state)
+         population, disadvantaged, funding_status, project_type)
 
 
 ## EC IUP
@@ -860,17 +859,18 @@ ga_ec <- ga_ec_1 %>%
          funding_status = case_when(
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
-         ),
-         state = "Georgia"
+         )
   )%>%
   select(state_score, borrower, project_description, funding_amount, project_cost,
-         population, disadvantaged, funding_status, project_type, state)
+         population, disadvantaged, funding_status, project_type)
 
 
 # join four tables together
 # NOTE: for funding_amount we would sum together values from base and supplemental, but there are no projects in common on both lists, so summing is not necessary, we can just bind the rows together.
 # -> (323,10)
-ga_clean <- bind_rows(ga_base, ga_supp, ga_lead, ga_ec)
+ga_clean <- bind_rows(ga_base, ga_supp, ga_lead, ga_ec) %>%
+  mutate(state = "Georgia",
+         category = "3")
 
 ```
 
@@ -908,13 +908,14 @@ hi_clean <- hi_fund %>%
           # manually mark projects as funded from amended IUP
           funding_status = case_when(funding_amount > 0 ~ "Funded",
                                TRUE ~ "Not Funded"),
-          project_type = "Other",
-          state = "Hawaii"
+          project_type = "General",
+          state = "Hawaii",
+          category = "1"
          ) %>%
   ## keep relevant columns
   select(borrower, project_name,
          state_rank, requested_amount, funding_amount, project_type,
-         disadvantaged, population, funding_status, state)
+         disadvantaged, population, funding_status, state, category)
 
 # amendments - in the march 2023 IUP, a number of changes are highlighted in yellow
 hi_clean <- hi_clean %>%
@@ -999,17 +1000,18 @@ id_clean <- id_merged %>%
          funding_status = case_when(
            !is.na(funding_amount) ~ "Funded",
            TRUE ~ "Not Funded"),
-         state="Idaho",
+         state = "Idaho",
+         category = "3",
          # only project with Lead is the "All System fund"
          project_type = case_when(
            grepl("Lead", project) ~ "Lead",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          pwsid = str_replace(system_number, "Unknown", as.character(NA)),
          pwsid = str_replace(pwsid, "All", as.character(NA))
          ) %>%
   rename(borrower = project) %>%
   select(state_rank, state_score, borrower, pwsid, project_description, population, project_cost,
-         disadvantaged, funding_amount, funding_status, principal_forgiveness_amount, project_type, state)
+         disadvantaged, funding_amount, funding_status, principal_forgiveness_amount, project_type, state, category)
 
 ```
 
@@ -1025,7 +1027,7 @@ il_ppl_f <- fread("data/year1/csv/13-Illinois_PPL_Fundable.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(funding_status = "Funded",
-         project_type = "Other",
+         project_type = "General",
          # replace "N/E" with 0 for principal forgiveness since N/E is different from the NAs in other docs
          disadvantaged_community_principal_forgiveness = str_replace(disadvantaged_community_principal_forgiveness, "N/E", "0")
            )
@@ -1035,7 +1037,7 @@ il_ppl_a <- fread("data/year1/csv/13-Illinois_PPL_Applicant.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
   mutate(funding_status = "Not Funded",
-         project_type="Other")
+         project_type="General")
 
 # concat files of the same structure
 # determine disadvantaged based on defined PF column, to use in merging with lead below
@@ -1092,12 +1094,13 @@ il_clean <- il_merge %>%
          state_score = str_replace_all(loan_priority_score, "[^0-9.]", ""),
          project_description = str_squish(project_description),
          project_description = str_to_sentence(project_description),
-         state = "Illinois"
+         state = "Illinois",
+         category = "3"
   ) %>%
   # rename columns
   rename(pwsid = facility_no) %>%
   # keep relevant columns
-  select(state_score, borrower, pwsid, project_description, population, disadvantaged, funding_amount, principal_forgiveness_amount, project_type, funding_status, state)
+  select(state_score, borrower, pwsid, project_description, population, disadvantaged, funding_amount, principal_forgiveness_amount, project_type, funding_status, state, category)
 
 ```
 
@@ -1145,13 +1148,14 @@ in_clean <- in_comb %>%
     project_type = case_when(
       emerging_contaminants == "Yes" ~ "Emerging Contaminants",
       as.numeric(str_replace_all(lead_service_line_replacement_cost, "[^0-9.]", "")) > 0 ~ "Lead",
-      TRUE ~ "Other"
+      TRUE ~ "General"
     ),
     state = "Indiana",
+    category = "2",
     funding_status = as.character(NA),
   ) %>%
   select(borrower, pwsid, state_rank, state_score, project_name, project_description,
-         project_type, requested_amount, population, disadvantaged, project_type, state, funding_status)
+         project_type, requested_amount, population, disadvantaged, project_type, state, category, funding_status)
 
 
 ```
@@ -1179,7 +1183,7 @@ ks_base <- fread("data/year1/csv/16-Kansas_PPL-base.csv",
   clean_names() %>%
   select(-v3, -v5, -v9, -v10, -v12, -v14, -v15, -v17) %>%
   mutate(
-    project_type = "Other"
+    project_type = "General"
   )
 
 ## Lead
@@ -1227,11 +1231,12 @@ ks_clean <- ks_comb %>%
       requested_amount > 0 ~ "Yes",
       TRUE ~ "No"),
     state = "Kansas",
+    category = "2",
     # assume all applicant until confirmed otherwise
     funding_status = "Not Funded"
   ) %>%
   select(borrower, state_score, project_name, project_description, requested_amount,
-         population, project_type, state, funding_status)
+         population, project_type, state, category, funding_status)
 
   
 ```
@@ -1288,14 +1293,15 @@ la_clean <- la_comb %>%
            disadvantaged_subsidy > 0 ~ "Yes",
            TRUE ~ "No"),
          state = "Louisiana",
-         project_type = "Other"
+         category = "3",
+         project_type = "General"
   ) %>%
-  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, funding_status, state)
+  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, funding_status, state, category)
   
 ```
 
 
-## Maine (Q in DD) (A)
+## Maine (A)
 
 ```{r}
 
@@ -1313,11 +1319,10 @@ me_ec <- fread("data/year1/csv/19-Maine_PL_EC.csv",
            ) %>%
   # process text columns
   mutate(project_type = "Emerging Contaminants",
-         state = "Maine", 
          funding_status = "Funded"
          ) %>%
   select(borrower, project_name, project_description, state_score, funding_amount, 
-         principal_forgiveness_amount, project_type, state, funding_status)
+         principal_forgiveness_amount, project_type, funding_status)
   
 
 # process comprehensive list
@@ -1349,13 +1354,15 @@ me_comp <- fread("data/year1/csv/19-Maine_PPL_Comprehensive.csv",
            TRUE ~ "No"),
          funding_status = "Funded",
          state = "Maine",
-         project_type = "Other",
+         project_type = "General",
          ) %>%
   select(borrower, pwsid, state_score, project_name,  project_description, funding_amount, 
-         principal_forgiveness_amount,  disadvantaged, project_type, population, state, funding_status)
+         principal_forgiveness_amount,  disadvantaged, project_type, population, funding_status)
 
 ##TODO: row bind EC and clean
-me_clean <- bind_rows(me_comp, me_ec)
+me_clean <- bind_rows(me_comp, me_ec) %>%
+  mutate(state = "Maine",
+         category = "3")
 ```
 
 
@@ -1403,11 +1410,12 @@ md_clean <- md_raw %>%
          pwsid = str_replace(pwsid, "MD023006", "MD0230006"),
          pwsid = str_replace(pwsid, "MD210010", "MD0210010"),
          funding_status = "Funded",
-         project_type = "Other",
-         state = "Maryland"
+         project_type = "General",
+         state = "Maryland",
+         category = "3"
   ) %>%
   select(state_rank, state_score, borrower, pwsid, project_name, project_description, funding_amount,
-         principal_forgiveness_amount, cities_served, population, disadvantaged, funding_status, project_type, state)
+         principal_forgiveness_amount, cities_served, population, disadvantaged, funding_status, project_type, state, category)
 
 ## APPLICANT
 # this dataset is 42 projects, the first 24 of which appear to be on the fundable list above. Others will be listed as Not Funded.
@@ -1421,7 +1429,7 @@ md_clean <- md_raw %>%
 ```{r}
 
 ## ALL PROJECTS
-# (120,7) -> (113,7)
+# (120,7) -> (113,8)
 ma_comp_raw <- fread("data/year1/csv/21-Massachusetts_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
@@ -1443,16 +1451,17 @@ ma_comp <- ma_comp_raw %>%
          borrower = str_squish(borrower),
          project_type = case_when(grepl("(lr)", applicant, ignore.case = T) ~ "Lead",
                                   grepl("(ec)", applicant, ignore.case = T) ~ "Emerging Contaminants",
-                                  TRUE ~ "Other"),
+                                  TRUE ~ "General"),
          project_description = str_squish(project),
          # DAC defined by receiving PF as denoted in the applicant column
          disadvantaged = case_when(grepl("(pf)", applicant, ignore.case = T) ~ "Yes",
                          TRUE ~ "No"),
-         state = "Massachusetts"
+         state = "Massachusetts",
+         category = "1",
          ) %>%
   # select columns
   select(borrower, pwsid, project_name, project_type, project_cost, project_description,
-         population, state_score, disadvantaged, state, srf_id)
+         population, state_score, disadvantaged, state, category, srf_id)
 
 
 ## FUNDED PROJECTS
@@ -1534,17 +1543,18 @@ mi_clean <- mi_raw %>%
   ## create project type column
   mutate(project_type = case_when(lslr_costs != "" ~ "Lead",
                                   pfas_costs != "" ~ "Emerging Contaminants"),
-         project_type = replace_na(project_type, "Other"),
+         project_type = replace_na(project_type, "General"),
          ## fundable column
          funding_status = case_when(state_rank <= 70 ~ "Funded",
                                      state_rank > 70 ~ "Not Funded"),
          disadvantaged = replace_na(disadvantaged, "No"),
-         state = "Michigan"
+         state = "Michigan",
+         category = "1",
          ) %>%
   ## keep relevant columns
   select(borrower, cities_served, project_description, project_type,
          state_rank, state_score, funding_amount, principal_forgiveness_amount,
-         disadvantaged, population, funding_status, state)
+         disadvantaged, population, funding_status, state, category)
 ```
 
 
@@ -1589,7 +1599,7 @@ mn_clean <- mn_raw %>%
       status == "Part A5,LSL" ~ "Lead",
       status == "Carryover,LSL" ~ "Lead",
       status == "Part A6,EC" ~ "Emerging Contaminants",
-      TRUE ~ "Other"),
+      TRUE ~ "General"),
     # Only projects with a dollar amount indicated for “Estimated DWRF Loan” and/or “Estimated Principal Forgiveness” are expected to receive SRF awards at this time and only these projects are included in the dashboard analysis.
     funding_status = case_when(
       !is.na(funding_amount) | principal_forgiveness_amount > 0 ~ "Funded",
@@ -1603,11 +1613,12 @@ mn_clean <- mn_raw %>%
       !is.na(estimated_wif_grant_not_final_4) & nchar(estimated_wif_grant_not_final_4) > 2 ~ "Yes",
       TRUE ~ "No"
     ),
-    state = "Minnesota"
+    state = "Minnesota",
+    category = "3",
   ) %>%
   # subset columns
   select(state_rank, state_score, borrower, pwsid, project_description, population, disadvantaged,
-         funding_amount, principal_forgiveness_amount, funding_status, project_type, state)
+         funding_amount, principal_forgiveness_amount, funding_status, project_type, state, category)
 
 
 ```
@@ -1638,13 +1649,14 @@ ms_clean <- ms_raw %>%
          project_description = str_squish(project_description),
          state_score = str_replace_all(priority_points,"[^0-9.]",""),
          state = "Mississippi",
-         project_type = "Other",
+         category = "",
+         project_type = "General",
          funding_status = case_when(
            # funding line set at 42,500,000 in PPL
            state_cumulative < 42500000 ~ "Funded",
            TRUE ~ "Not Funded")) %>%
   select(borrower, project_description, state_score, funding_amount, principal_forgiveness_amount,
-         state, project_type, funding_status)
+         state, project_type, funding_status, category)
   
 
 
@@ -1741,19 +1753,20 @@ mo_clean <- mo_comb %>%
          project_type = case_when(
            grepl("EC",additional_subsidization_funding_source) ~ "Emerging Contaminants",
            grepl("LSLI", description_needs_category) ~ "Lead",
-           TRUE ~ "Other"
+           TRUE ~ "General"
          ),
-         state = "Missouri"
+         state = "Missouri",
+         category = "1"
   ) %>%
   rename(principal_forgiveness_amount = additional_subsidization_amount) %>%
   select(state_score, borrower, project_description, population, funding_amount,
-         principal_forgiveness_amount, disadvantaged, funding_status, state, project_type)
+         principal_forgiveness_amount, disadvantaged, funding_status, state, category, project_type)
   
   
 ```
 
 
-## Montana (A)
+## Montana (DD) (A)
 
 - TODO: Applicant data needs to be scraped from Appendix 2 of this doc - https://deq.mt.gov/files/Water/TFAB/DWSRF/IUP-PPL/2023_DWSRF_%20IUP_FINAL.pdf -- Data can't be scraped because it is a non-machine readable screenshot. Will need to manually create spreadsheet.
 
@@ -1801,10 +1814,12 @@ mt_clean <- mt_raw %>%
          # all projects are fundable based on title name
          funding_status = "Funded",
          # No Lead or EC projects found
-         project_type = "Other",
-         state = "Montana") %>%
+         project_type = "General",
+         state = "Montana",
+         category = ""
+         ) %>%
   select(state_rank, borrower, project_description, funding_amount, 
-         principal_forgiveness_amount, population, project_type, funding_status, state)
+         principal_forgiveness_amount, population, project_type, funding_status, state, category)
 
 ## APPLICANT
 # Appendix 2: DWSRF COMPREHENSIVE PROJECT LIST—SFY 2023 from
@@ -1824,13 +1839,13 @@ mt_clean <- mt_raw %>%
 ne_base <- fread("data/year1/csv/27-Nebraska_ppl_base.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
-  mutate(project_type="Other")
+  mutate(project_type="General")
 
 # read in bil, all non-lead or ec projects, (13,9)
 ne_bil <- fread("data/year1/csv/27-Nebraska_ppl_bil.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
-  mutate(project_type="Other")
+  mutate(project_type="General")
 
 # read in ec projects, (7,9)
 ne_ec <- fread("data/year1/csv/27-Nebraska_ec.csv",
@@ -1863,6 +1878,7 @@ ne_clean <- ne_merged %>%
   # format text columns
   mutate(funding_status = "Funded",
          state = "Nebraska",
+         category = "1",
          state_score = str_squish(priority_points),
          disadvantaged = case_when(
            principal_forgiveness_amount > 0 ~ "Yes",
@@ -1871,7 +1887,7 @@ ne_clean <- ne_merged %>%
   rename(borrower = community,
          pwsid = pws_number) %>%
   select(borrower, pwsid, state_score, project_description, funding_amount, principal_forgiveness_amount, project_type,
-         disadvantaged, funding_status, state)
+         disadvantaged, funding_status, state, category)
 
 ```
 
@@ -1956,11 +1972,12 @@ nh_clean <- nh_raw %>%
          project_type = case_when(
            emerging_contaminants > 0 ~ "Emerging Contaminants",
            lead_service_line_lsl_loan_amount > 0 ~ "Lead",
-           TRUE ~ "Other"),
-         state = "New Hampshire"
+           TRUE ~ "General"),
+         state = "New Hampshire",
+         category = "1"
          ) %>%
   select(borrower, pwsid, cities_served, project_name, project_type, state_rank, state_score,
-         funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state)
+         funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state, category)
   
   
   
@@ -1995,12 +2012,13 @@ nj_clean <- nj_raw %>%
     project_type = case_when(
       grepl("EC", bil_eligibility) ~ "Emerging Contaminants",
       grepl("LSL", bil_eligibility) ~ "Lead",
-      TRUE ~ "Other"),
+      TRUE ~ "General"),
     state = "New Jersey",
+    category = "2",
     funding_status = "No Information"
   ) %>%
   select(borrower, pwsid, state_rank, state_score, project_name, project_description, project_cost, 
-         population, state, funding_status)
+         population, state, category, funding_status)
 
 ```
 
@@ -2015,7 +2033,7 @@ nm_raw <- fread("data/year1/csv/31-NewMexico_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
-# -> (6,12)
+# -> (6,13)
 nm_clean <- nm_raw %>%
   # drop columns
   select(-mandatory_cap_grant_subsidy, -interest_rate, -designation) %>%
@@ -2037,8 +2055,9 @@ nm_clean <- nm_raw %>%
            grepl("Disadvantaged", disadvantaged_status, ignore.case=TRUE) ~ "Yes",
            TRUE ~ "No"),
          funding_status = "Funded",
-         project_type = "Other",
-         state = "New Mexico"
+         project_type = "General",
+         state = "New Mexico",
+         category = "3"
          ) %>%
   select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, disadvantaged, population, cities_served, project_type, funding_status, state)
 
@@ -2120,7 +2139,8 @@ nv_fund <- fread("data/year1/csv/28-Nevada_Fundinglist.csv",
 nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="state_rank") %>%
   # assign variables consistent across both
   mutate(state = "Nevada",
-         project_type = "Other",
+         category = "1",
+         project_type = "General",
          # manually update the two projects that are funded in project ranked 95, fill rest in as applicant
          funding_status = case_when(
            state_rank == 93 ~ "Funded",
@@ -2151,7 +2171,7 @@ nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="state_rank") %>%
 ny_base <- fread("data/year1/csv/32-NewYork_base_ppl.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
-  mutate(project_type = "Other",
+  mutate(project_type = "General",
          disadvantaged = case_when(
            score == "H" ~ "Yes",
            TRUE ~ "No"))
@@ -2162,7 +2182,7 @@ ny_bil <- fread("data/year1/csv/32-NewYork_bil_ppl.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
   select(-v1) %>%
-  mutate(project_type = "Other",
+  mutate(project_type = "General",
          disadvantaged = "Yes")
 
 ## Lead - Amendment 4
@@ -2193,7 +2213,7 @@ ny_ec <- fread("data/year1/csv/32-NewYork_ec.csv",
 # -> (824, 13)
 ny_comb <- bind_rows(ny_base, ny_bil, ny_lead, ny_ec)
 
-# -> (824,11)
+# -> (824,12)
 ny_clean <- ny_comb %>%
   select(-dac, -cumulative_total, -code) %>%
   # process numeric columns
@@ -2207,9 +2227,10 @@ ny_clean <- ny_comb %>%
          state_score = str_squish(score),
          project_description = str_squish(description),
          state = "New York",
+         category = "2",
          funding_status = "Not Funded") %>%
   select(borrower, state_score, project_name, project_description, project_cost,
-         population, cities_served, disadvantaged, project_type, state, funding_status)
+         population, cities_served, disadvantaged, project_type, state, category, funding_status)
 
 
 ```
@@ -2249,13 +2270,15 @@ nc_clean <- nc_raw %>%
            pwsid == 'x' ~ as.character(NA),
            TRUE ~ pwsid),
          cities_served = str_squish(county),
-         project_type = "Other",
-         state = "North Carolina") %>%
+         project_type = "General",
+         state = "North Carolina",
+         category = "",
+         ) %>%
   mutate(funding_status = case_when(
     !is.na(funding_amount) ~ "Funded",
     TRUE ~ "Not Funded")) %>%
   select(borrower, pwsid, project_name, state_score, funding_amount, principal_forgiveness_amount,
-         cities_served, project_type, population, state, funding_status)
+         cities_served, project_type, population, state, category, funding_status)
 
 ```
 
@@ -2270,7 +2293,7 @@ nc_clean <- nc_raw %>%
 nd_gen <- fread("data/year1/csv/34-NorthDakota_GeneralSupplementalFunding.csv",
                 colClass="character", na.strings="") %>%
   clean_names() %>%
-  mutate(project_type = "Other")
+  mutate(project_type = "General")
 
 # (2,6) -> (2,7)
 nd_ec <- fread("data/year1/csv/34-NorthDakota_EmergingContaminantsFunding.csv",
@@ -2336,8 +2359,9 @@ nd_clean <- nd_ppl %>%
          project_type = case_when(
            project_cost_emerging_contaminants_1_000 != "-" ~ "Emerging Contaminants",
            project_cost_lead_1_000 != "-" ~ "Lead",
-           TRUE ~ "Other"),
-         state = "North Dakota"
+           TRUE ~ "General"),
+         state = "North Dakota",
+         category = "1"
          ) %>%
   # rename columns
   rename(disadvantaged = disadvantaged_community,
@@ -2347,7 +2371,7 @@ nd_clean <- nd_ppl %>%
   mutate(principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)) %>%
   # keep columns for analysis
   select(borrower, project_name, pwsid, project_type, project_description,
-         state_rank, funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state)
+         state_rank, funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state, category)
 
 
 
@@ -2431,19 +2455,20 @@ oh_clean_2 <- oh_comb %>%
          pwsid = str_squish(pwsid),
          cities_served = str_squish(county),
          state = "Ohio",
+         category = "",
          funding_status = "Not Funded",
          project_type = case_when(
            # fill in a few gaps from the joins
            is.na(project_type) & grepl("HAB", rate) ~ "Emerging Contaminants",
            grepl("Lead", project_description) | grepl("LSL", project_description) | grepl("LSL", rate) ~ "Lead",
-           is.na(project_type) ~ "Other",
+           is.na(project_type) ~ "General",
            TRUE ~ project_type),
          disadvantaged = case_when(
            grepl("DIS", rate) ~ "Yes",
            TRUE ~ "No")
          ) %>%
   select(borrower, pwsid, project_description, project_cost,
-         cities_served, population, disadvantaged, state, project_type, funding_status) %>%
+         cities_served, population, disadvantaged, state, project_type, funding_status, category) %>%
   # remove duplicates from potential one:many relationship from the left_join for project_type
   distinct()
 
@@ -2460,7 +2485,7 @@ oh_clean_2 <- oh_comb %>%
 ok_b <- fread("data/year1/csv/36-Oklahoma_PPL-AppB.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names() %>%
-  mutate(project_type = "Other") %>%
+  mutate(project_type = "General") %>%
   rename(disadvantaged = severly_disadvantged_disadvantged_or_no)
 
 ok_b$funding_status <- ""
@@ -2530,9 +2555,10 @@ ok_clean <- ok_comb %>%
       disadvantaged == "N" ~ "No",
       TRUE ~ "Yes"),
     state = "Oklahoma",
+    category = "1",
          ) %>%
   select(borrower, state_score, project_name, project_description, requested_amount, funding_amount,
-         disadvantaged, population, project_type, state, funding_status)
+         disadvantaged, population, project_type, state, category, funding_status)
 
 
 ```
@@ -2587,7 +2613,7 @@ pa_clean <- pa_raw %>%
                                   grepl("lsl", project_type, ignore.case = T) &
                                     grepl("pfas", proj_description, ignore.case = T) ~ "Lead,
                                                                                         Emerging Contaminants",
-                                  TRUE ~ "Other"),
+                                  TRUE ~ "General"),
          project_description = str_squish(proj_description),
          ## fundable column may need to be done manually because no column to join on
          funding_status = case_when(fundable == "yes" ~ "Funded",
@@ -2600,12 +2626,13 @@ pa_clean <- pa_raw %>%
            project_name == "Saegertown Borough" ~ "No",
            TRUE ~ as.character(NA)
          ),
-         state = "Pennsylvania"
+         state = "Pennsylvania",
+         category = "1"
          ) %>%
   ## standardize names
   ## keep relevant columns
   select(borrower, pwsid, cities_served, project_name, project_description, project_type,
-         state_rank, state_score, funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state)
+         state_rank, state_score, funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state, category)
 ```
 
 
@@ -2651,7 +2678,8 @@ ri_comp <- fread("data/year1/csv/39-RhodeIsland_PPL_Comprehensive.csv",
          state_score = str_replace_all(scores_total,"[^0-9.]", ""),
          pwsid = paste0("RI", pws_id),
          project_description = str_squish(project_description),
-         state = "Rhode Island"
+         state = "Rhode Island",
+         category = ""
          )
 
 ri_fund <- fread("data/year1/csv/39-RhodeIsland_PPL_Fundable_Manual.csv",
@@ -2699,14 +2727,15 @@ sc_clean <- sc_raw %>%
          project_name = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 2))),
          state_score = str_replace_all(total_points,"[^0-9.]",""),
          state = "South Carolina",
+         category = "",
          project_type = case_when(
            grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          funding_status = "Funded"
          ) %>%
   select(borrower, pwsid, state_score, project_name, project_description, funding_amount, principal_forgiveness_amount,
-         population, project_type, state, funding_status)
+         population, project_type, state, category, funding_status)
 
 
 ```
@@ -2754,17 +2783,18 @@ sd_clean <- sd_merged %>%
          project_type = case_when(
            grepl("4", fund_project_eligibility) ~ "Lead",
            grepl("5", fund_project_eligibility) ~ "Emerging Contaminants",
-           TRUE ~ "Other"
+           TRUE ~ "General"
          ),
          funding_status = case_when(
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
          ),
-         state = "South Dakota"
+         state = "South Dakota",
+         category = "1"
         ) %>% 
   # keep relevant columns
   select(borrower, project_description, project_type, state_score, funding_amount, 
-         principal_forgiveness_amount, population, disadvantaged, funding_status, state) 
+         principal_forgiveness_amount, population, disadvantaged, funding_status, state, category) 
 ```
 
 
@@ -2830,13 +2860,15 @@ tx_clean <- tx_merge %>%
          project_type = case_when(
            grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("emerging contaminant", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          funding_status = case_when(
            funding_status == "Funded" ~ "Funded",
            TRUE ~ "Not Funded"),
-         state = "Texas"
+         state = "Texas",
+         category = "3"
   ) %>%
-  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, population, disadvantaged, funding_status, project_type, state)
+  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, 
+         population, disadvantaged, funding_status, project_type, state, category)
 ```
 
 
@@ -2873,12 +2905,13 @@ ut_clean <- ut_ppl %>%
                               TRUE ~ "No"),
     project_type = case_when(
       grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
-      TRUE ~ "Other"),
+      TRUE ~ "General"),
     state = "Utah",
-    # TODO: Add fundable / applicant depending on interpretation
+    category = ""
+    # TODO: Add funding_status depending on interpretation
   ) %>%
   select(state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness,
-         project_type, cities_served, disadvantaged, population, state)
+         project_type, cities_served, disadvantaged, population, state, category)
   
 
 ```
@@ -2910,7 +2943,7 @@ vt_ppl$funding_status <- ""
 vt_ppl$funding_status[1:46] <- "Funded"
 vt_ppl$funding_status[47:96] <- "Not Funded"
 
-# (96,13) -> (93,11)
+# (96,13) -> (93,10)
 vt_ppl <- vt_ppl %>%
   # drop rows if WSID is empty (sub-heading columns)
   filter(!is.na(wsid)) %>%
@@ -2936,15 +2969,14 @@ vt_ppl <- vt_ppl %>%
            nchar(wsid) == 4 ~ paste0("VT000", wsid),
            nchar(wsid) == 5 ~ paste0("VT00", wsid)),
          # all ppl projects are non ec and non lead
-         project_type = "Other",
+         project_type = "General",
          # for fundable projects, if PF > 0, Disadvantaged 
          # because it is just the sum of GB_disadv_subsidy and gs_disadv_subsidy
          # Applicants assume unknown since PF will be 0 by default of not receiving subsidy
-         state="Vermont"
   ) %>%
   # subset columns
   select(state_score, borrower, pwsid, project_description, population,
-         funding_amount, principal_forgiveness_amount, project_type, funding_status, project_type, state)
+         funding_amount, principal_forgiveness_amount, project_type, funding_status, project_type)
 
 
 ## Import Lead tables independently to reconcile column head differences
@@ -2966,7 +2998,7 @@ vt_lead_t2 <- fread("data/year1/csv/45-Vermont_Lead_Table2.csv",
 # (73, 7)
 vt_lead <- bind_rows(vt_lead_t1, vt_lead_t2) 
 
-# -> (73,10)
+# -> (73,9)
 vt_lead <- vt_lead %>%
   select(-lsi_score3, -loan_portion_to_be_repaid) %>%
   # process numeric columns
@@ -2985,11 +3017,10 @@ vt_lead <- vt_lead %>%
          disadvantaged = case_when(
            principal_forgiveness_amount > 0 ~ "Yes",
            TRUE ~ "No"
-         ),
-         state = "Vermont"
+         )
   ) %>%
   select(state_score, borrower, pwsid, funding_amount, principal_forgiveness_amount, population,
-         disadvantaged, project_type, funding_status, state)
+         disadvantaged, project_type, funding_status)
 
 
 # Emerging Contaminants
@@ -3000,7 +3031,7 @@ vt_ec <- fread("data/year1/csv/45-Vermont_EC.csv",
 # keep only the top section of the table that are not internal account transfers
 vt_ec <- vt_ec[2:9,]
 
-# -> (8,10)
+# -> (8,9)
 vt_ec <- vt_ec %>%
   select(-subtotals) %>%
   mutate(population = as.numeric(str_replace_all(user_popln,"[^0-9.]","")),
@@ -3018,14 +3049,15 @@ vt_ec <- vt_ec %>%
          disadvantaged = case_when(
             principal_forgiveness_amount > 0 ~ "Yes",
             TRUE ~ "No"
-         ),
-         state = "Vermont") %>%
+         )) %>%
   select(state_score, borrower, pwsid, funding_amount, principal_forgiveness_amount,
-         project_description, disadvantaged, population, project_type, funding_status, state)
+         project_description, disadvantaged, population, project_type, funding_status)
 
 
-# combine (174,11)
-vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec)
+# combine (174,13)
+vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec) %>%
+  mutate(state="Vermont",
+         category = "1")
 
 
 ```
@@ -3063,14 +3095,15 @@ wa_clean <- wa_merged %>%
          project_type = case_when(
            grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-           TRUE ~ "Other"),
+           TRUE ~ "General"),
          disadvantaged = case_when(
            principal_forgiveness_amount > 0 ~ "Yes",
            principal_forgiveness_amount == 0 ~ "No"),
-         state = "Washington"
+         state = "Washington",
+         category = ""
   ) %>%
   select(state_score, borrower, pwsid, project_name, project_description, cities_served, population, 
-         funding_amount, principal_forgiveness_amount, funding_status, disadvantaged, project_type, state)
+         funding_amount, principal_forgiveness_amount, funding_status, disadvantaged, project_type, state, category)
   
 ```
 
@@ -3127,7 +3160,7 @@ wv_clean <- wv_raw %>%
                                     "Lead",
                                   grepl("pfas", dwtrf_eligible_funding_type, ignore.case = T) ~
                                     "Emerging Contaminants",
-                                  TRUE ~ "Other"),
+                                  TRUE ~ "General"),
          funding_status = case_when(
            funding_amount > 0 | principal_forgiveness_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"),
@@ -3137,13 +3170,14 @@ wv_clean <- wv_raw %>%
          borrower = str_squish(system),
          disadvantaged = str_squish(disadvan_taged),
          cities_served = str_squish(county),
-         state = "West Virginia"
+         state = "West Virginia",
+         category = "1"
          ) %>%
   ## keep relevant columns
   select(borrower, project_name, project_description, project_type,
          state_rank, state_score, funding_amount, principal_forgiveness_amount,
          project_cost, requested_amount,
-         disadvantaged, population, cities_served, funding_status, state)
+         disadvantaged, population, cities_served, funding_status, state, category)
 ```
 
 
@@ -3163,7 +3197,7 @@ wi_fund_raw <- fread("data/year1/csv/49-Wisconsin_PPL.csv",
          # determine project type by keyword search for non-EC projects
          project_type = case_when(grepl("lsl", project_description, ignore.case = T) ~ "Lead",
                                   grepl("pfas", project_description, ignore.case=T) ~ "Emerging Contaminants",
-                                  TRUE ~ "Other"),)
+                                  TRUE ~ "General"),)
 
 # (4,17) -> (4,19)
 wi_ec_fund <- fread("data/year1/csv/49-Wisconsin_EC_Funding_List.csv",
@@ -3195,12 +3229,13 @@ wi_clean <- wi_fund_raw %>%
          borrower = str_to_title(str_replace_all(municipality, "[0-9.\\#]", "")),
          state_score = str_replace_all(priority_score,"[^0-9.]",""),
          cities_served = borrower,
-         state = "Wisconsin"
+         state = "Wisconsin",
+         category = "3"
          ) %>%
   ## keep relevant columns
   select(borrower, cities_served, project_description, project_type,
          state_score, funding_amount, principal_forgiveness_amount,
-         disadvantaged, population, funding_status, state)
+         disadvantaged, population, funding_status, state, category)
 ```
 
 
@@ -3214,7 +3249,7 @@ wi_clean <- wi_fund_raw %>%
 
 # Post-Process
 
-## Combine States
+## Combine & Format States
 
 ```{r}
 combined_clean <- bind_rows(
@@ -3249,14 +3284,6 @@ combined_clean <- bind_rows(
            wi_clean, 
            wv_clean)
 
-```
-
-## Process Combined States
-
-This format is then pre-processed by the Dashboard cleaning script for it's final format as it appears in the application.
-
-```{r}
-
 ## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
 web_combined_clean <- combined_clean %>%
                           mutate(across(everything(), as.character),
@@ -3264,7 +3291,7 @@ web_combined_clean <- combined_clean %>%
                           select(state, cities_served, borrower,
                                  pwsid, project_name, project_description,
                                  project_type, funding_amount, principal_forgiveness_amount, project_cost, requested_amount,
-                                 population, disadvantaged, state_rank, state_score, funding_status) %>%
+                                 population, disadvantaged, state_rank, state_score, funding_status, category) %>%
                           rename(State = state,
                                 Borrower = borrower, 
                                 `City Served` = cities_served, 
@@ -3280,35 +3307,103 @@ web_combined_clean <- combined_clean %>%
                                  Population = population,
                                  PWSID = pwsid, 
                                 `Project Name` = project_name,
-                                `Funding Status` = funding_status)
+                                `Funding Status` = funding_status,
+                                `Category` = category)
 
 ```
 
-## Writing Data
+## Add Data for Dashboard
+
+```{r}
+
+## External Data Import ## 
+
+## SABs Data ### 
+Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
+
+Sabs_cleaned <- Sabs_raw %>%
+  mutate(Population = pop_tier1 + pop_tier2 + pop_tier3) %>%
+  mutate(Systems = num_sys_tier1 + num_sys_tier2 + num_sys_tier3) %>%
+  rename(State = State_Name) %>%
+  select(State,Population,Systems)
+
+## Additional Data 
+## TO DO: Put this on AWS ## 
+## Sourced from Attachment A DWISNA Allotments and Pipe Estimates: https://www.epa.gov/system/files/documents/2023-04/Final_FY23%20DWSRF%20Allotment%20Memo%20and%20Attachments_April%202023.pdf
+## Sourced from the 20-year need (page 9 + 10): https://www.epa.gov/system/files/documents/2023-04/Final_DWINSA%20Public%20Factsheet%204.4.23.pdf
+
+URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
+
+AdditionalData <- read_sheet(URL, sheet = "AdditionalData")
+## Summary Data For Application ## 
+PPL_State_Data_Geo <- web_combined_clean %>%
+  filter(`Funding Status` == "Funded") %>%
+  mutate(Count = 1) %>%
+  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")) )%>%
+  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%
+  select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count) %>%
+  group_by(State) %>%
+  summarize_if(is.numeric,sum,na.rm = TRUE) %>%
+  left_join(.,Sabs_cleaned) %>%
+  left_join(.,AdditionalData, by = c("State"= "State")) %>%
+  mutate(FundPer100k = (`Funding Amount`/ Population))
+
+## Note manually addition of states which have only applicant date
+OnlyApplicant <- PPL_Data %>%
+  filter(category == "2") %>%
+  mutate(Count = 1) %>%
+  # left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
+  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0"))) %>%
+  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%
+  select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count) %>%
+  group_by(State ) %>%
+  summarize_if(is.numeric,sum,na.rm = TRUE) %>%
+  left_join(.,Sabs_cleaned) %>%
+  left_join(.,AdditionalData, by = c("State"= "State") )%>%
+  mutate(FundPer100k = (`Funding Amount`/ Population))
+
+PPL_State_Data_Geo <- rbind(PPL_State_Data_Geo, OnlyApplicant)
+
+### PPL Parsing ###
+## TO DO ## 
+## Pull in data dictionaries from Google Drive 
+## Link:..
+## Split into 50 pdfs
+## Run through loop of all states and put in AWS Folder 
+## Aws folder: s3://water-team-data/apps/dw-dashboard/state-data-dict/
+
+# GET FROM DRIVE
+# SPLIT INTO 50 
+# For Each State 
+# Post to AWS folder-root-name/state-name-data-dict.pdf 
+
+```
+
 
 ## Write to AWS
 
 ```{r}
 
-data <- web_combined_clean
-filename <- "web_ppl_combined_clean.csv"
-aws_filepath <- "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv"
+## Pushing to AWS For Application ##
+
 
 ### To put in an AWS bucket, you need these credentials
 ## Contact gabe@policyinnovation.org for questions/access
 ## !!! NOTE !!! NEVER WRITE CREDENTIALS IN CODE, ENTER IN CONSOLE AS ENVIRONMENT VARIABLES !!!! NOTE !!!! #### 
 
-# Sys.setenv("AWS_ACCESS_KEY_ID" = "YOUR ACCESS KEY",
-#            "AWS_SECRET_ACCESS_KEY" = "YOUR SECRET KEY",
-#            "AWS_DEFAULT_REGION" = "us-east-1")
+ # Sys.setenv("AWS_ACCESS_KEY_ID" = "",
+ #             "AWS_SECRET_ACCESS_KEY" = "",
+ #             "AWS_DEFAULT_REGION" = "us-east-1")
 
 # Writing to temp 
-fwrite(data, file.path(tempdir(), filename))
+
+write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data_v1-1.csv"), row.names = FALSE)
 
 #Putting in Bucket
+## Updating to dw_dashboard_data_v2 to include just fundable data for summary based on design.
 put_object(
-  file = file.path(tempdir(), filename),
-  object = aws_filepath,
+  file = file.path(tempdir(), "dw-dashboard-data_v1-1.csv"),
+  object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv",
   bucket = "water-team-data",
   acl = "public-read"
 )

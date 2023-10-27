@@ -30,6 +30,24 @@ Once this process is done for each state, the cleaned dataframes are combined an
 which prepares the data for external presentation in the SRF Dashboard.
 
 
+#### Category Key
+
+1 = Award Data
+2 = Applicant Data Only
+3 = Partial Award
+4 = No Data
+
+
+#### Definitions
+
+Review the data dictionary for a given state for both the general definitions of categories and the specific interpretation for each state document.
+
+In previous iterations of the dashboard, "Applicant/Fundable" were used in place of "Funded/Not Funded." This language has been updated to be consistent with how the dashboard presents data to users. "Applicant" and "Fundable" are now used exclusively to distinguish the types of tables or documents that are being standardized.
+
+- Applicant: Applicant refers to ALL projects that have applied, typically a Project Priority List. We may know whether they are expected to be Funded or Not Funded.
+- Fundable: Fundable typically refers to a list of projects that has some determination of being Funded or Not Funded, typically a Funding List. Sometimes it can be only Funded projects, sometimes it may include both with some determining characteristic such as state_score threshold or a "funding line" drawn on the original table. 
+
+
 #### Outline Key
 
 Within this documents outline, parenthetical codes denote where in process each state is:
@@ -173,6 +191,9 @@ ar_merge <- fread("data/year1/csv/4-Arkansas_Merged.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
+
+### APPLICANT ### 
+
 # the comprehensive PPL includes applicant projects, (747,13)
 ar_comp <- fread("data/year1/csv/4-Arkansas.csv",
                       colClasses = "character", na.strings = "") %>%
@@ -221,7 +242,8 @@ ar_app <- ar_comp %>%
          disadvantaged, population, funding_status)
 
 
-## Process Fundable
+### FUNDABLE ### 
+
 ar_fund <- ar_merge %>% 
   clean_names() %>%
   select(-b_c_date_actual_estimated, -term_in_years, -interest_rate,
@@ -332,6 +354,7 @@ ca_ec <- fread("data/year1/csv/5-California_EC.csv",
 
 # -> (26,10)
 ca_merge <- bind_rows(ca_fund, ca_ec)
+
 
 ### APPLICANT ### 
 
@@ -564,7 +587,7 @@ co_clean <- bind_rows(co_b_clean, co_b1_clean, co_b2_clean) %>%
 # de_test <- merge(de_fund_test, de_ppl_test, all=TRUE)
 
 
-## APPLICANT LIST
+### APPLICANT ###
 # only three projects on this list aren't already on the fundable list, so 
 # we just need to identify those projects and then subset to them
 de_ppl <- fread("data/year1/csv/8-Delaware_PPL.csv",
@@ -1301,7 +1324,9 @@ la_clean <- la_comb %>%
 ```
 
 
-## Maine (A)
+## Maine (A - Q in DD)
+
+- TODO: Add Applicant data. Possibly backup list in IUP. Awaiting confirmation, question in data dictionary. 
 
 ```{r}
 
@@ -1391,7 +1416,6 @@ md_clean <- md_raw %>%
          bil_loan_forgive = as.numeric(str_replace_all(bil_loan_forgive,"[^0-9.]","")),
          bil_loan_forgive = replace_na(bil_loan_forgive, 0),
          principal_forgiveness_amount = bil_loan_forgive + dwsrf_base_loan_forgive,
-         state_rank = as.numeric(str_replace_all(priority_rank,"[^0-9.]","")),
          population = as.numeric(str_replace_all(population,"[^0-9.]",""))
   ) %>%
   # process text columns
@@ -1401,6 +1425,7 @@ md_clean <- md_raw %>%
          project_description = str_squish(project_description),
          project_description = str_to_sentence(project_description),
          cities_served = str_to_title(county),
+         state_rank = str_replace_all(priority_rank,"[^0-9.]",""),
          state_score = str_replace_all(scoring_points,"[^0-9.]",""),
          borrower = str_to_title(applicant),
          disadvantaged = str_to_sentence(dac_community),
@@ -1409,16 +1434,59 @@ md_clean <- md_raw %>%
          pwsid = str_replace(pwsid, "MD006002", "MD0060002"),
          pwsid = str_replace(pwsid, "MD023006", "MD0230006"),
          pwsid = str_replace(pwsid, "MD210010", "MD0210010"),
-         funding_status = "Funded",
-         project_type = "General",
-         state = "Maryland",
-         category = "3"
+         funding_status = "Funded"
   ) %>%
   select(state_rank, state_score, borrower, pwsid, project_name, project_description, funding_amount,
-         principal_forgiveness_amount, cities_served, population, disadvantaged, funding_status, project_type, state, category)
+         principal_forgiveness_amount, cities_served, population, disadvantaged, funding_status)
 
-## APPLICANT
+### APPLICANT ###
 # this dataset is 42 projects, the first 24 of which appear to be on the fundable list above. Others will be listed as Not Funded.
+
+
+
+# (43,13) -> ()
+md_comp <- fread("data/year1/csv/20-Maryland_ComprehensivePPL.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+         project_cost = as.numeric(str_replace_all(total_cost,"[^0-9.]","")),
+         requested_amount = as.numeric(str_replace_all(requested_funding,"[^0-9.]",""))) %>%
+  # process text columns
+  mutate(state_rank = str_squish(rank),
+         state_score = str_squish(points),
+         project_name = str_squish(project_title),
+         project_description = str_to_sentence(project_description),
+         borrower = str_to_title(borrower),
+         cities_served = str_squish(county),
+         disadvantaged = str_squish(disadvantaged),
+         pwsid = str_squish(pwsid),
+         funding_status = case_when(
+           as.numeric(rank) <= 24 ~ "Funded",
+           TRUE ~ "Not Funded")
+         ) %>%
+  select(state_rank, state_score, borrower, pwsid, project_name, project_description, requested_amount, project_cost,
+         cities_served, population, disadvantaged, funding_status)
+
+
+# Combine Fundable and Applicant
+
+# for projects on the fundable list, take the requested amount and project cost from the applicant list and merge on only those additional features
+md_comp_funded <- md_comp %>%
+  filter(funding_status == "Funded") %>%
+  select(state_rank, requested_amount, project_cost)
+
+md_comp_not_funded <- md_comp %>%
+  filter(funding_status == "Not Funded")
+
+md_clean <- md_clean %>%
+  left_join(md_comp_funded, by="state_rank")
+
+
+md_clean <- bind_rows(md_clean, md_comp_not_funded) %>%
+  mutate(project_type = "General",
+         state = "Maryland",
+         category = "3")
 
 
 ```
@@ -1862,9 +1930,6 @@ ne_lsl <- fread("data/year1/csv/27-Nebraska_lslr.csv",
 # merge data, (53,9)
 ne_merged <- bind_rows(ne_base, ne_bil, ne_ec, ne_lsl)
 
-## APPLICANT
-# Appendix B2 
-
 # -> (53,9)
 ne_clean <- ne_merged %>%
   # drop columns
@@ -1888,6 +1953,9 @@ ne_clean <- ne_merged %>%
          pwsid = pws_number) %>%
   select(borrower, pwsid, state_score, project_description, funding_amount, principal_forgiveness_amount, project_type,
          disadvantaged, funding_status, state, category)
+
+## APPLICANT
+# Appendix B2 
 
 ```
 
@@ -2918,6 +2986,7 @@ ut_clean <- ut_ppl %>%
 
 
 ## Virginia (NS)
+- Waiting on final data
 
 ```{r}
 
@@ -3065,7 +3134,7 @@ vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec) %>%
 
 ## Washington (A)
 
-- TODO: Applicant data needs to be processed - may not be published/available unless we count the "rejected/declined" projects in Appendix C, but this doesn't seem to fit the other definitions of Applicant projects in other states
+- TODO: Applicant data needs to be processed - may not be published/available.
 
 ```{r}
 # import manually merged file (31,12)
@@ -3335,6 +3404,7 @@ Sabs_cleaned <- Sabs_raw %>%
 URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
 
 AdditionalData <- read_sheet(URL, sheet = "AdditionalData")
+
 ## Summary Data For Application ## 
 PPL_State_Data_Geo <- web_combined_clean %>%
   filter(`Funding Status` == "Funded") %>%
@@ -3407,5 +3477,7 @@ put_object(
   bucket = "water-team-data",
   acl = "public-read"
 )
+
+## TODO: Push v[n] to srf_dashboard_data_public and update meta-data about when it was last updated
 
 ```

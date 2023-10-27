@@ -1391,9 +1391,7 @@ me_clean <- bind_rows(me_comp, me_ec) %>%
 ```
 
 
-## Maryland (A)
-
-- TODO: Applicant data - https://mde.maryland.gov/programs/water/WQFA/Documents/FFY22%20SFY24%20Final%20DW%20PPL.pdf
+## Maryland
 
 ```{r}
 # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
@@ -1899,8 +1897,6 @@ mt_clean <- mt_raw %>%
 
 ## Nebraska (A)
 
-- TODO: Applicant data needs to be processed - scrape appendix B2 https://drive.google.com/file/d/19Pb8cJRKm-fO2s_Zt2iKilELdTDhmpIX/view
-
 ```{r}
 
 # read in base, all non-lead or ec projects, (14,9)
@@ -1956,6 +1952,34 @@ ne_clean <- ne_merged %>%
 
 ## APPLICANT
 # Appendix B2 
+
+ne_app <- fread("data/year1/csv/27-Nebraska_AppB2.csv",
+                      colClasses = "character", na.strings = "") %>%
+  clean_names() %>%
+  # process numeric columns
+  mutate(population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
+         project_cost = as.numeric(str_replace_all(estimated_total_cost, "[^0-9.]", "")),
+           ) %>%
+  # process text columns
+  mutate(state_score = str_squish(priority_points),
+         borrower = str_squish(community),
+         pwsid = str_squish(pws_number),
+         project_description = str_squish(project_description)
+  ) %>%
+  select(state_score, borrower, pwsid, project_description, population, project_cost)
+
+### Merge Fundable & Applicant ###
+
+ne_clean_sub <- ne_clean %>%
+  select(pwsid, state_score, funding_status)
+
+ne_app <- ne_app %>%
+  left_join(ne_clean_sub, by=c("pwsid", "state_score")) %>%
+  filter(is.na(funding_status)) %>%
+  mutate(funding_status = "Not Funded")
+
+## TODO: This currently misses population for Funded projects, figure out how to keep that column, but not the split project_cost (see data dictionary for details on this issue)
+ne_clean <- bind_rows(ne_clean, ne_app)
 
 ```
 

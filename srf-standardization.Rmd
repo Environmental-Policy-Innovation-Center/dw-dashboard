@@ -12,22 +12,21 @@ editor_options:
 
 This notebook transforms raw data scraped from state PPLs and IUPs and provides a single, harmonized output. 
 
-Details for necessary transformations, crucial context, and discussion on decisions and assumptions can be found in each state's Background Information PDFs, available as a data download through the SRF Dashboard or on Google Drive.
+Details for necessary transformations, crucial context, and discussion on decisions and assumptions can be found in each state's Data Dictionary PDFs, available as a download through the SRF Dashboard or on EPIC's Google Drive.
 
 
 #### Process Overview
 
-The overall process flow for each state is:
-1. clean names
+The overall process for each state is:
+1. clean column names
 2. remove rows and columns that don't include project data
 3. process numeric columns
 4. process text columns
-5. add state name
-6. standardize column names
-7. keep only cleaned and standardized column names
+5. add state name, category, and other high-level features
+6. standardize column names to fit the dashboard's structure
+7. keep only cleaned and standardized columns
 
-Once this process is done for each state, the cleaned dataframes are combined and formatted as input for `dw-dashboard-data-cleaner.R`
-which prepares the data for external presentation in the SRF Dashboard.
+Once this process is done for each state, the cleaned dataframes are combined and formatted for external presentation in the SRF Dashboard.
 
 
 #### Category Key
@@ -50,14 +49,15 @@ In previous iterations of the dashboard, "Applicant/Fundable" were used in place
 
 #### Outline Key
 
-Within this documents outline, parenthetical codes denote where in process each state is:
+Within this documents outline, parenthetical codes denote where in process each state currently sits. See Airtable for more details.
+
 - None: Not currently in need of updates
-- A: Applicant data needs to be added
-- ADD: Add to Data Dictionary, awaiting adding documentation page
-- DD: Added to Data Dictionary, awaiting review from policy team
-- NS: Not Started
-- Q: Question currently blocking progress, awaiting resolution from policy team
-- WIP: Work in progress
+- (A): Applicant data needs to be added. See state for details.
+- (ADD): Add to Data Dictionary, need to add documentation page
+- (DD): Added to Data Dictionary, awaiting review from policy team
+- (NS): Not Started
+- (Q): Question currently blocking progress, awaiting resolution from policy team
+- (WIP): Work in progress - currently being standardized
 
 
 ## Settings & Imports
@@ -107,10 +107,9 @@ al_app_clean <- al_applicant %>%
     funding_status = case_when(
       project_approved_yes_or_no == "Yes" ~ "Funded",
       TRUE ~ "Not Funded"),
-    state = "Alabama"
   ) %>%
   select(borrower, cities_served, project_description, requested_amount, funding_amount,
-         principal_forgiveness_amount, state, funding_status)
+         principal_forgiveness_amount, funding_status)
 
 
 ### FUNDABLE ### 
@@ -130,11 +129,11 @@ al_lead <- fread("data/year1/csv/1-Alabama_Lead-PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
-## Combined all Funded projects into one file
+## Combined all fundable projects into one file
 # -> (29,14)
-al_comb <- bind_rows(al_base, al_bil, al_lead) 
+al_combined <- bind_rows(al_base, al_bil, al_lead) 
 
-al_clean <- al_comb %>%
+al_combined_clean <- al_combined %>%
   # remove columns
   select(-gpr_component_cost, -gpr_type, -gpr_project, -estimated_construction_start_date) %>%
   # process numeric columns
@@ -145,8 +144,7 @@ al_clean <- al_comb %>%
          ) %>%
   # process text columns
   mutate(cities_served = str_squish(county_served),
-         borrower = str_replace_all(applicant_name, "\\*", ""),
-         borrower = str_squish(borrower),
+         borrower = str_squish(str_replace_all(applicant_name, "\\*", "")),
          state_score = str_replace_all(priority_point_rank,"[^0-9.]", ""),
          disadvantaged = case_when(
            disadvantaged_criteria == "Y" ~ "Yes",
@@ -160,15 +158,21 @@ al_clean <- al_comb %>%
          project_type = case_when(
            grepl("LEAD", appropriation_fund_being_used, ignore.case=TRUE) ~ "Lead",
            TRUE ~ "General"),
-         # ALL IUP projects fundable
-         funding_status = "Funded",
-         state = "Alabama",
-         category = "1"
+         # ALL IUP projects are expected to be funded
+         funding_status = "Funded"
   ) %>%
   select(state_score, borrower, pwsid, project_name, project_description, funding_amount, principal_forgiveness_amount, 
-         # add requested amount in once the applicant data is added to al_comb
+         # add requested amount in once the applicant data is added to al_combined
          #requested_amount, 
-         population, cities_served, disadvantaged, project_type, funding_status, state, category)
+         population, cities_served, disadvantaged, project_type, funding_status)
+
+al_clean <- al_combined_clean %>%
+  mutate(state = "Alabama",
+         category = "1")
+## Temporary: Recombine when ARPA question answered
+# al_clean <- bind_rows(al_app_clean, al_combined_clean) %>%
+#  mutate(state = "Alabama",
+#         category = "1")
   
 ```
 
@@ -233,6 +237,7 @@ ar_app <- ar_comp %>%
            TRUE ~ as.character(NA)),
          borrower = str_squish(pws),
          state_score = gsub(",", "", total_points),
+        state_rank = as.character(state_rank),
          # all projects in ppl are applicants, see Merged for fundable projects
          funding_status = "Not Funded",
          ) %>%
@@ -250,8 +255,7 @@ ar_fund <- ar_merge %>%
          -green_project_reserve_amt_estimate, -gpr_category_estimate,
          -mhi, -small_system_y_n) %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(no,"[^0-9.]", "")),
-         population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
          funding_amount = as.numeric(str_replace_all(project_cost,"[^0-9.]", "")),
          principal_forgiveness_amount = as.numeric(str_replace_all(additional_subsidy,"[^0-9.]", ""))
   ) %>%
@@ -263,11 +267,11 @@ ar_fund <- ar_merge %>%
            nchar(pws_id) == 4 ~ paste0("AR000", pws_id)),
          project_description = str_squish(project_description),
          state_score = str_replace_all(total_points,"[^0-9.]", ""),
+         state_rank = str_replace_all(no,"[^0-9.]", ""),
          project_type = case_when(lsl == "X" ~ "Lead",
                                   ec == "X" ~ "Emerging Contaminants",
                                   TRUE ~ "General"),
          disadvantaged = str_to_sentence(disadvantaged_community),
-         # all projects in ppl are applicants, see Merged for fundable projects
          funding_status = "Funded",
          ) %>%
   select(state_rank, state_score, borrower, pwsid, project_description, 
@@ -615,8 +619,7 @@ de_clean <- de_all %>%
   ## rowwise operations for sums
   rowwise() %>%
   ## make relevant columns numbers
-  mutate(state_rank = as.numeric(str_replace_all(rank,"[^0-9.]","")),
-         population = as.numeric(str_replace_all(population_served,"[^0-9.]","")),
+  mutate(population = as.numeric(str_replace_all(population_served,"[^0-9.]","")),
          ## sum of columns, getting rid of everything besides numbers and periods
          ## replace NA with 0 by using sum even if only summing one number
          funding_amount = sum(as.numeric(str_replace_all(amount,"[^0-9.]", "")),
@@ -633,6 +636,7 @@ de_clean <- de_all %>%
                                     "Emerging Contaminants",
                                   TRUE ~ "General"),
          state_score = str_replace_all(total_points,"[^0-9.]",""),
+         state_rank = str_replace_all(rank,"[^0-9.]",""),
          funding_status = "Funded",
          disadvantaged = case_when(!is.na(dac_a_e_w_u) ~ "Yes",
                                    TRUE ~ "No"),
@@ -883,7 +887,7 @@ ga_ec <- ga_ec_1 %>%
            funding_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"
          )
-  )%>%
+  ) %>%
   select(state_score, borrower, project_description, funding_amount, project_cost,
          population, disadvantaged, funding_status, project_type)
 
@@ -911,23 +915,23 @@ hi_fund <- fread("data/year1/csv/11-Hawaii_PPL.csv",
 # -> (33,10)
 hi_clean <- hi_fund %>%
   ## process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(priority_ranking,"[^0-9.]","")),
-         population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
          requested_amount = as.numeric(str_replace_all(estimated_eligible_amount,"[^0-9.]", "")),
          # when project is in funded list, treat estimated_eliglbe_amount as funding_amount as well as requested_amount
          funding_amount = case_when(
-           state_rank %in% c(1,2,6,11,13,16,20,21,29,33) ~ requested_amount,
+           priority_ranking %in% c("1","2","6","11","13","16","20","21","29","33") ~ requested_amount,
            TRUE ~ 0
          ),
   ## process text columns       
          # manually add disadvantaged based on subscript from IUP that couldn't be scraped
          # denoted by "E" footnote subscript in fundable list, table 7 in IUP
          # projects that are listed are either DAC or not, but full applicant list is No Information because they don't denote disadvantaged in the full table in Appendix A
-          disadvantaged = case_when(state_rank %in% c(1,2,11,13,20,21) ~ "Yes",
-                                    state_rank %in% c(6, 16, 29, 33) ~ "No",
+          disadvantaged = case_when(priority_ranking %in% c("1","2","11","13","20","21") ~ "Yes",
+                                    priority_ranking %in% c("6", "16", "29", "33") ~ "No",
                                     TRUE ~ as.character(NA)),
           project_name = str_squish(project_name),
           borrower = str_squish(borrower),
+          state_rank = str_squish(priority_ranking),
           # manually mark projects as funded from amended IUP
           funding_status = case_when(funding_amount > 0 ~ "Funded",
                                TRUE ~ "Not Funded"),
@@ -945,22 +949,22 @@ hi_clean <- hi_clean %>%
   mutate(
     # manually modify funding amounts that are highlighted yellow in amendment table
     funding_amount = case_when(
-      state_rank == 1 ~ 10000000,
-      state_rank == 11 ~ 1572484.20,
-      state_rank == 12 ~ 225964,
-      state_rank == 20 ~ 1770889.20,
-      state_rank == 21 ~ 165867.30,
-      state_rank == 29 ~ 459731.84,
+      state_rank == "1"  ~ 10000000,
+      state_rank == "11" ~ 1572484.20,
+      state_rank == "12" ~ 225964,
+      state_rank == "20" ~ 1770889.20,
+      state_rank == "21" ~ 165867.30,
+      state_rank == "29" ~ 459731.84,
       # remove three projects scratched through
-      state_rank %in% c(2, 6, 33) ~ 0,
+      state_rank %in% c("2", "6", "33") ~ 0,
       TRUE ~ funding_amount),
     # manually modifying yellow highlighted project descriptions
     project_name = case_when(
-      state_rank == 21 | state_rank == 29 ~ "Backup Generator and SCADA Upgrades",
+      state_rank == "21" | state_rank == "29" ~ "Backup Generator and SCADA Upgrades",
       TRUE ~ project_name),
     funding_status = case_when(
       # set three scratched through projects as not funded
-      state_rank %in% c(2, 6, 33) ~ "Not Funded",
+      state_rank %in% c("2", "6", "33") ~ "Not Funded",
       TRUE ~ funding_status)
     )
 ```
@@ -1003,19 +1007,16 @@ id_merged <- merge(id_ppl, id_fnd, by=c("rank"), all.x=TRUE)
 # -> (81,13)
 id_clean <- id_merged %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(rank),
-         population = as.numeric(str_replace_all(pop_served, "[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(pop_served, "[^0-9.]", "")),
          project_cost = as.numeric(str_replace_all(project_cost, "[^0-9.]", "")),
          funding_amount = as.numeric(str_replace_all(loan_amt, "[^0-9.]", "")),
-         # ASSUMPTION: 0 different from NA, removing these steps until suggested otherwise
-         # funding_amount = replace_na(funding_amount, 0),
-         # principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
   ) %>%
   # process text columns
   mutate(project = str_squish(project),
          # remove excess spaces from scrape
          regional_office = str_squish(regional_office),
          state_score = str_replace_all(rating_points, "[^0-9.]", ""),
+         state_rank = str_replace_all(rank, "[^0-9.]", ""),
          project_description = str_squish(project_description),
          # custom touch-up squishing doesn't fix
          project_description = str_replace(project_description, "C onstruction", "Construction"),
@@ -1145,18 +1146,17 @@ in_lead_ppl <- fread("data/year1/csv/14-Indiana_Q4Final_LeadPPL.csv",
   clean_names()
 
 # -> (82,17)
-in_comb <- bind_rows(in_ppl, in_lead_ppl)
+in_combined <- bind_rows(in_ppl, in_lead_ppl)
 
 
 # -> (82,12)  
-in_clean <- in_comb %>%  
+in_clean <- in_combined %>%  
   # drop non-project rows
   filter(participant != "NA") %>%
   # process numeric columns
   mutate(
     population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
     requested_amount = as.numeric(str_replace_all(requested_funds, "[^0-9.]", "")),
-    state_rank = as.numeric(str_replace_all(ppl_rank, "[^0-9.]", "")),
   ) %>%
   # process text column
   mutate(
@@ -1167,6 +1167,7 @@ in_clean <- in_comb %>%
     project_name = str_squish(srf_project_no),
     project_description = str_squish(project_description),
     state_score = str_replace_all(ppl_score, "[^0-9.]", ""),
+    state_rank = str_replace_all(ppl_rank, "[^0-9.]", ""),
     disadvantaged = str_squish(disadvantaged_community),
     project_type = case_when(
       emerging_contaminants == "Yes" ~ "Emerging Contaminants",
@@ -1234,11 +1235,11 @@ ks_ec <- fread("data/year1/csv/16-Kansas_PPL-ec.csv",
 
 ## Combine
 # -> (123,12)
-ks_comb <- bind_rows(ks_base, ks_lead, ks_ec)
+ks_combined <- bind_rows(ks_base, ks_lead, ks_ec)
 
 
 ## Clean
-ks_clean <- ks_comb %>%
+ks_clean <- ks_combined %>%
   # process numeric columns
   mutate(
     requested_amount = as.numeric(str_replace_all(loan_request, "[^0-9.]", "")),
@@ -1289,16 +1290,15 @@ la_fnd <- fread("data/year1/csv/18-Lousiana_Fundable_PPL.csv",
   mutate(funding_status = "Funded")
 
 # (48,11)
-la_comb <- bind_rows(la_ppl, la_fnd)
+la_combined <- bind_rows(la_ppl, la_fnd)
 
 # -> (46,12)
-la_clean <- la_comb %>%
+la_clean <- la_combined %>%
   # drop columns and total rows
   select(-est_date_to_close_loan) %>%
   filter(system_name !="Total") %>%
   # process numeric columns
   mutate(funding_amount = as.numeric(str_replace_all(est_loan_amount, "[^0-9.]", "")),
-         state_rank = as.numeric(str_replace_all(rank, "[^0-9.]", "")),
          population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
          disadvantaged_subsidy = as.numeric(str_replace_all(disadvantaged_subsidy, "[^0-9.]", "")),
          # replace 0s specifically for adding columns together
@@ -1311,6 +1311,7 @@ la_clean <- la_comb %>%
   mutate(borrower = str_squish(system_name),
          pwsid = paste0("LA", pwsid),
          state_score = str_replace_all(points, "[^0-9.]", ""),
+         state_rank = str_replace_all(rank, "[^0-9.]", ""),
          project_description = str_squish(project_description),
          disadvantaged = case_when(
            disadvantaged_subsidy > 0 ~ "Yes",
@@ -1586,7 +1587,6 @@ mi_clean <- mi_raw %>%
   ## make relevant columns numbers
   mutate(state_rank = as.numeric(gsub(",", "", rank)),
          population = as.numeric(gsub(",", "", population)),
-                  state_score = gsub(",", "",total_points),
          ## sum of columns, getting rid of $ and comma and replacing blanks with zero
          funding_amount = sum(as.numeric(gsub("\\$|,", "", dwsrf_loan)),
                               as.numeric(gsub("\\$|,", "", dwsrf_pf)),
@@ -1599,9 +1599,6 @@ mi_clean <- mi_raw %>%
          principal_forgiveness_amount = sum(as.numeric(str_replace_all(total_pf_grant,"[^0-9.]", "")),
                          -as.numeric(str_replace_all(arp_grant, "[^0-9.]", "")),
                          na.rm = T)) %>%
-           # sum(as.numeric(str_replace_all(total_pf_grant,"[^0-9 -]", "")),
-           #               -as.numeric(str_replace_all(arp_grant,"[^0-9 -]", "")),
-           #               na.rm = T)) %>%
   ungroup() %>%
   ## standardize names
   rename(borrower = applicant_name,
@@ -1610,9 +1607,11 @@ mi_clean <- mi_raw %>%
   mutate(project_type = case_when(lslr_costs != "" ~ "Lead",
                                   pfas_costs != "" ~ "Emerging Contaminants"),
          project_type = replace_na(project_type, "General"),
-         ## fundable column
          funding_status = case_when(state_rank <= 70 ~ "Funded",
                                      state_rank > 70 ~ "Not Funded"),
+         # with state_rank used for specifying funding, return to string
+         state_rank = as.character(state_rank),
+         state_score = str_squish(total_points),
          disadvantaged = replace_na(disadvantaged, "No"),
          state = "Michigan",
          category = "1",
@@ -1638,7 +1637,6 @@ mn_clean <- mn_raw %>%
   select(-est_const_start, v16) %>%
   # process numeric columns
   mutate(
-    state_rank = as.numeric(str_replace_all(mdh_2023_ppl_rank,"[^0-9.]","")),
     population = as.numeric(str_replace_all(population,"[^0-9.]","")),
     # transform string to numeric and replace NAs specifically for adding columns
     est_lslr_pf = as.numeric(str_replace_all(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1,"[^0-9.]","")),
@@ -1659,6 +1657,7 @@ mn_clean <- mn_raw %>%
   mutate(
     borrower = str_squish(system_name),
     project_description = str_squish(project_description),
+    state_rank = str_replace_all(mdh_2023_ppl_rank,"[^0-9.]",""),
     state_score = str_replace_all(mdh_2023_ppl_points,"[^0-9.]",""),
     pwsid = paste0("MN", as.character(map(strsplit(project_number, split = "-"), 1))),
     project_type = case_when(
@@ -1763,7 +1762,7 @@ mo_lead_contingency <- fread("data/year1/csv/25-Missouri_LSLContingency.csv",
   )
 
 # (272,14)
-mo_comb <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contingency)
+mo_combined <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contingency)
 
 
 ### Amendments
@@ -1793,7 +1792,7 @@ mo_comb <- bind_rows(mo_ppl, mo_lead_fundable, mo_lead_contingency)
 #   )
 
 # -> (272,10)
-mo_clean <- mo_comb %>%
+mo_clean <- mo_combined %>%
   # drop columns
   select(-carryover) %>%
   # process numeric columns
@@ -1851,8 +1850,7 @@ mt_clean <- mt_raw %>%
   # drop rows
   filter(!is.na(priority_rank)) %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(priority_rank,"[^0-9.]","")),
-         # split project_information and transform to numbers
+  mutate(# split project_information and transform to numbers
          population = as.character(map(strsplit(project_information, split = "\\."), 1)),
          population = as.numeric(str_replace_all(population,"[^0-9.]","")),
          funding_amount = as.character(map(strsplit(srf_cost, split = " "), 1)),
@@ -1873,6 +1871,7 @@ mt_clean <- mt_raw %>%
   # process text columns
   mutate(project_description = as.character(map(strsplit(project_information, split = "\\."), 2)),
          project_description = str_squish(project_description),
+         state_rank = str_replace_all(priority_rank,"[^0-9.]",""),
          borrower = str_squish(project),
          disadvantaged = case_when(
            funding_P == "P" ~ "Yes",
@@ -1938,8 +1937,6 @@ ne_clean <- ne_merged %>%
   ) %>%
   # format text columns
   mutate(funding_status = "Funded",
-         state = "Nebraska",
-         category = "1",
          state_score = str_squish(priority_points),
          disadvantaged = case_when(
            principal_forgiveness_amount > 0 ~ "Yes",
@@ -1948,7 +1945,7 @@ ne_clean <- ne_merged %>%
   rename(borrower = community,
          pwsid = pws_number) %>%
   select(borrower, pwsid, state_score, project_description, funding_amount, principal_forgiveness_amount, project_type,
-         disadvantaged, funding_status, state, category)
+         disadvantaged, funding_status)
 
 ## APPLICANT
 # Appendix B2 
@@ -1964,11 +1961,21 @@ ne_app <- fread("data/year1/csv/27-Nebraska_AppB2.csv",
   mutate(state_score = str_squish(priority_points),
          borrower = str_squish(community),
          pwsid = str_squish(pws_number),
-         project_description = str_squish(project_description)
+         project_description = str_squish(project_description),
+         project_type = case_when(
+           grepl("LSL", project_description) ~ "Lead",
+           TRUE ~ "General"
+         )
   ) %>%
-  select(state_score, borrower, pwsid, project_description, population, project_cost)
+  select(state_score, borrower, pwsid, project_description, population, project_cost, project_type)
 
 ### Merge Fundable & Applicant ###
+
+ne_app_population <- ne_app %>%
+  select(pwsid, state_score, population)
+
+ne_clean <- ne_clean %>%
+  left_join(ne_app_population, by=c("pwsid", "state_score"))
 
 ne_clean_sub <- ne_clean %>%
   select(pwsid, state_score, funding_status)
@@ -1979,7 +1986,9 @@ ne_app <- ne_app %>%
   mutate(funding_status = "Not Funded")
 
 ## TODO: This currently misses population for Funded projects, figure out how to keep that column, but not the split project_cost (see data dictionary for details on this issue)
-ne_clean <- bind_rows(ne_clean, ne_app)
+ne_clean <- bind_rows(ne_clean, ne_app) %>%
+  mutate(state = "Nebraska",
+         category = "1")
 
 ```
 
@@ -2011,8 +2020,7 @@ nh_clean <- nh_raw %>%
   filter(rank != "n/a") %>%
   
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(rank, "[^0-9.]", "")),
-         population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
          
          # transform all funding columns for summing
          # only NAs are the "Bypass..." applicant projects,
@@ -2050,6 +2058,7 @@ nh_clean <- nh_raw %>%
          # grepl("/", pwsid) ~ as.character(map(strsplit(pwsid, split = "/"), 1)),
          # TRUE ~ pwsid),
          state_score = str_replace_all(total_score, "[^0-9.]", ""),
+         state_rank = str_replace_all(rank, "[^0-9.]", ""),
          borrower = str_to_title(str_squish(applicant)),
          cities_served = str_to_title(str_squish(system_town)),
          project_name = str_to_title(str_squish(project_name)),
@@ -2058,8 +2067,8 @@ nh_clean <- nh_raw %>%
            TRUE ~ "No"),
          # fundable indicated by highlighting in document, manually add projects by rank
          funding_status = case_when(
-           state_rank %in% c(1,2,3,4,6,7,8,9,10,11,12,15,16,17,
-                             19,20,21,22,23,24,25,26,27,28,29,30) ~ "Funded",
+           state_rank %in% c("1","2","3","4","6","7","8","9","10","11","12","15","16","17",
+                             "19","20","21","22","23","24","25","26","27","28","29","30") ~ "Funded",
            TRUE ~ "Not Funded"),
          project_type = case_when(
            emerging_contaminants > 0 ~ "Emerging Contaminants",
@@ -2092,7 +2101,6 @@ nj_clean <- nj_raw %>%
   mutate(
     population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
     project_cost = as.numeric(str_replace_all(estimated_cost, "[^0-9.]", "")),
-    state_rank = as.numeric(str_replace_all(rank, "[^0-9.]", ""))
   ) %>%
   # process text columns
   mutate(
@@ -2101,6 +2109,7 @@ nj_clean <- nj_raw %>%
     pwsid = str_squish(pwsid),
     project_description = str_squish(project_name),
     state_score = str_squish(rank_points),
+    state_rank = str_replace_all(rank, "[^0-9.]", ""),
     project_type = case_when(
       grepl("EC", bil_eligibility) ~ "Emerging Contaminants",
       grepl("LSL", bil_eligibility) ~ "Lead",
@@ -2130,8 +2139,7 @@ nm_clean <- nm_raw %>%
   # drop columns
   select(-mandatory_cap_grant_subsidy, -interest_rate, -designation) %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(ranking, "[^0-9.]", "")),
-         population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
          funding_amount = as.numeric(str_replace_all(amount_requested, "[^0-9.]", "")),
          principal_forgiveness_amount = as.numeric(str_replace_all(subsidy_amount_eligible_to_project, "[^0-9.]", "")),
   ) %>%
@@ -2139,6 +2147,7 @@ nm_clean <- nm_raw %>%
   # use the start of the pwsid to separate name and pwsid, then reappend the state abbreviation
   mutate(borrower = as.character(map(strsplit(water_system_name_and_number, split = "NM"), 1)),
          borrower = str_squish(borrower),
+         state_rank = str_replace_all(ranking, "[^0-9.]", ""),
          state_score = str_replace_all(score, "[^0-9.]", ""),
          pwsid = paste0("NM", as.character(map(strsplit(water_system_name_and_number, split =  "NM"), 2))),
          cities_served = str_to_title(county),
@@ -2171,8 +2180,7 @@ nv_ppl <- nv_ppl %>%
   # remove non project rows
   filter(!grepl("Total", priority_number)) %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(priority_number, "[^0-9.]", "")),
-         population = as.numeric(str_replace_all(project_population, "[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(project_population, "[^0-9.]", "")),
          requested_amount = as.numeric(str_replace_all(estimated_loan_amount, "[^0-9.]", ""))) %>%
   # process text columns
   mutate(disadvantaged = case_when(
@@ -2182,6 +2190,7 @@ nv_ppl <- nv_ppl %>%
          borrower = str_squish(entity),
          pwsid = str_squish(state_id),
          state_score = str_replace_all(revised_points, "[^0-9.]", ""),
+         state_rank = str_replace_all(priority_number, "[^0-9.]", ""),
          project_description = str_squish(project_description)
   ) %>%
   select(borrower, pwsid, project_description, state_rank, state_score, requested_amount, 
@@ -2195,19 +2204,6 @@ nv_fund <- fread("data/year1/csv/28-Nevada_Fundinglist.csv",
   clean_names() %>%
   # process numeric columns
   mutate(
-         state_rank = as.numeric(str_replace_all(pl_rank, "[^0-9.]", "")),
-         # replace the listing of 93,94, and 95 with only 95 to attach funding_amount to a single project
-         # then manually set all state ranks to the PPL list to force correct matches
-         state_rank = case_when(
-           state_rank == 939495 ~ 95,
-           state_rank == 57 ~ 60,
-           state_rank == 61 ~ 62,
-           state_rank == 97 ~ 100,
-           state_rank == 122 ~ 126,
-           state_rank == 129 & pws_id == "NV0000226" ~ 132,
-           state_rank == 163 ~ 165,
-           state_rank == 169 ~ 52,
-           TRUE ~ state_rank),
          funding_amount = as.numeric(str_replace_all(total_assistance, "[^0-9.]", "")),
          # transform the components of PF into numeric and replace NAs for summing
          # TODO: Confirm whether disadvantaged_subsidy should also be included here
@@ -2221,6 +2217,19 @@ nv_fund <- fread("data/year1/csv/28-Nevada_Fundinglist.csv",
          ) %>%
   # process text columns
   mutate(
+         state_rank = str_replace_all(pl_rank, "[^0-9.]", ""),
+         # replace the listing of 93,94, and 95 with only 95 to attach funding_amount to a single project
+         # then manually set all state ranks to the PPL list to force correct matches
+         state_rank = case_when(
+           state_rank == "939495" ~ "95",
+           state_rank == "57" ~ "60",
+           state_rank == "61" ~ "62",
+           state_rank == "97" ~ "100",
+           state_rank == "122" ~ "126",
+           state_rank == "129" & pws_id == "NV0000226" ~ "132",
+           state_rank == "163" ~ "165",
+           state_rank == "169" ~ "52",
+           TRUE ~ state_rank),
          funding_status = "Funded",
          ) %>%
   # keep standardized columns to match onto the PPL List
@@ -2235,8 +2244,8 @@ nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="state_rank") %>%
          project_type = "General",
          # manually update the two projects that are funded in project ranked 95, fill rest in as applicant
          funding_status = case_when(
-           state_rank == 93 ~ "Funded",
-           state_rank == 94 ~ "Funded",
+           state_rank == "93" ~ "Funded",
+           state_rank == "94" ~ "Funded",
            is.na(funding_status) ~ "Not Funded",
            TRUE ~ funding_status
          ),
@@ -2303,10 +2312,10 @@ ny_ec <- fread("data/year1/csv/32-NewYork_ec.csv",
 
 ## Combine & Clean
 # -> (824, 13)
-ny_comb <- bind_rows(ny_base, ny_bil, ny_lead, ny_ec)
+ny_combined <- bind_rows(ny_base, ny_bil, ny_lead, ny_ec)
 
 # -> (824,12)
-ny_clean <- ny_comb %>%
+ny_clean <- ny_combined %>%
   select(-dac, -cumulative_total, -code) %>%
   # process numeric columns
   mutate(population = as.numeric(str_replace_all(pop, "[^0-9.]", "")),
@@ -2353,7 +2362,7 @@ nc_clean <- nc_raw %>%
          # so they will need to be added together as well
          principal_forgiveness_amount = bil_suppl_dwsrf_principal_forgivene_ss + base_dwsrf_principal_forgivene_ss,
          funding_amount = base_dwsrf_loans + bil_suppl_dwsrf_loans + principal_forgiveness_amount
-         )%>%
+         ) %>%
   # format text columns
   mutate(borrower = str_squish(applicant_name),
          project_name = str_squish(project_name),
@@ -2427,6 +2436,7 @@ funded <- c(1,4,5,6,8,9,10,12,13,22,25,35,38,39,40,50,60,75,76,78,88,93,108,109,
 # (262,12)
 nd_clean <- nd_ppl %>%
   # transform numeric columns
+         # keep state rank numeric for filtering funded / not funded temporarily
   mutate(state_rank = as.numeric(priority_ranking_supplemental),
          population = as.numeric(str_replace_all(present_population,"[^0-9.]","")),
          # transform to numeric and multiply by 1000
@@ -2446,6 +2456,8 @@ nd_clean <- nd_ppl %>%
          funding_status = case_when(
            state_rank %in% funded ~ "Funded",
            TRUE ~ "Not Funded"),
+         # reset state rank to character after used for funding_status
+         state_rank = as.character(state_rank),
          # extract numeric portion of pwsid and append state abbreviation 
          pwsid = paste0("ND", as.character(map(strsplit(tracking_no, split = "-"), 1))),
          project_type = case_when(
@@ -2532,11 +2544,11 @@ oh_ec <- fread("data/year1/csv/35-Ohio_PPL_HAB_PFAS.csv",
 # combined lead and ec for single left join to bring in project_type
 oh_lead_ec <- bind_rows(oh_lead, oh_ec)
 
-oh_comb <- oh_base %>%
+oh_combined <- oh_base %>%
   left_join(oh_lead_ec, by=c("entity", "estimated_loan_amount"))
 
 # -> (440,9)
-oh_clean_2 <- oh_comb %>%
+oh_clean_2 <- oh_combined %>%
   # process numeric columns
   mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
          project_cost = as.numeric(str_replace_all(estimated_loan_amount,"[^0-9.]","")),
@@ -2625,10 +2637,10 @@ ok_f <- fread("data/year1/csv/36-Oklahoma_PPL-AppF.csv",
 
 
 # (114, 12)
-ok_comb <- bind_rows(ok_b, ok_e, ok_f)
+ok_combined <- bind_rows(ok_b, ok_e, ok_f)
 
 # -> (114,10)
-ok_clean <- ok_comb %>%
+ok_clean <- ok_combined %>%
   # drop columns
   select(-base, -cumulative_amount, -anticipated_binding_commitment_date, -anticipated_construction_date) %>%
   # process numeric columns
@@ -2676,12 +2688,8 @@ pa_raw <- fread("data/year1/csv/38-Pennsylvania_manual_fundable_PPL.csv",
 
 # -> (62,14)
 pa_clean <- pa_raw %>%
-  mutate(state_rank = as.numeric(gsub(",", "", projrank)),
-         state_score = gsub(",", "",pv_rating),
-         population = as.numeric(gsub(",", "", population)),
+  mutate(population = as.numeric(gsub(",", "", population)),
          funding_amount = as.numeric(str_replace_all(assistance_amount,"[^0-9.]", "")),
-         # ASSUMPTION: NA different from 0, not adding 0 unless needed for adding columns
-         # funding_amount = replace_na(funding_amount, 0),
          principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness,"[^0-9.]", "")),
          ) %>%
   ## split applicant name to borrower and project name
@@ -2711,6 +2719,8 @@ pa_clean <- pa_raw %>%
          funding_status = case_when(fundable == "yes" ~ "Funded",
                               TRUE ~ "Not Funded"),
          cities_served = str_to_title(city),
+         state_rank = gsub(",", "", projrank),
+         state_score = gsub(",", "",pv_rating),
          # only three EC projects have a disadvantaged distinction
          disadvantaged = case_when(
            borrower == "Susquehanna Area Reg. Airport Authority" ~ "No",
@@ -2786,30 +2796,63 @@ ri_fund <- fread("data/year1/csv/39-RhodeIsland_PPL_Fundable_Manual.csv",
 ```
 
 
-## South Carolina (WIP) (A)
+## South Carolina (DD) (A)
 
 - TODO: Applicant data needs to be processed - may not be available
-- TODO: Add in supplemental, EC, and lead tables (to be scraped) - see data dictionary
 
 ```{r}
 
-# (20,11)
-sc_raw <- fread("data/year1/csv/37-SouthCarolina_PPL.csv",
+# import EC project
+sc_ec <- fread("data/year1/csv/37-SouthCarolina_EC_AppA.csv",
                       colClasses = "character", na.strings = "") %>% 
-  clean_names()
+  clean_names() %>%
+  mutate(project_type = "Emerging Contaminants") %>%
+  rename(estimated_srf_loan_amount = estimated_srf_loan_amount4,
+         estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+
+# import lead
+sc_lead <- fread("data/year1/csv/37-SouthCarolina_LSLR_AppA.csv",
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  mutate(project_type = "Lead") %>%
+  rename(sponsors_service_population = sponsor_s_service_population)
+
+# import base projects
+sc_base <- fread("data/year1/csv/37-SouthCarolina_Base_AppA.csv",
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  rename(estimated_srf_loan_amount = estimated_srf_loan_amount4,
+         estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+
 
 # -> (18,11)
-sc_clean <- sc_raw %>%
-  # remove non-project rows
-  filter(sponsor_and_project_name != "") %>%
+sc_supp <- fread("data/year1/csv/37-SouthCarolina_Supplemental.csv",
+                      colClasses = "character", na.strings = "") %>% 
+  clean_names() %>%
+  rename(estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+
+# for non-EC projects, separate by Lead/General based on finding terms
+sc_combined <- bind_rows(sc_base, sc_supp) %>%
+  mutate(project_type = case_when(
+           grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
+           grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
+           TRUE ~ "General")
+  )
+
+# merge base, supp, and ec together for uniform processing other features
+sc_combined <- bind_rows(sc_combined, sc_ec, sc_lead)
+
+
+sc_clean <- sc_combined %>%
   # process numeric columns
   mutate(funding_amount = as.numeric(str_replace_all(estimated_srf_loan_amount,"[^0-9.]","")),
          funding_amount = replace_na(funding_amount, 0),
-         principal_forgiveness_amount = as.numeric(str_replace_all(estimated_principal_forgiveness_assistance2,"[^0-9.]","")),
+         principal_forgiveness_amount = as.numeric(str_replace_all(estimated_principal_forgiveness_assistance,"[^0-9.]","")),
          principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
          # funding amount should include PF
          funding_amount = funding_amount + principal_forgiveness_amount,
          population = as.numeric(str_replace_all(population_affected_by_project,"[^0-9.]","")),
+         project_cost = as.numeric(str_replace_all(estimated_total_project_cost,"[^0-9.]",""))
          ) %>%
   # process text columns
   mutate(project_description = str_squish(project_description),
@@ -2818,17 +2861,33 @@ sc_clean <- sc_raw %>%
          borrower = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 1))),
          project_name = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 2))),
          state_score = str_replace_all(total_points,"[^0-9.]",""),
+         state_rank = str_squish(v1),
          state = "South Carolina",
-         category = "",
-         project_type = case_when(
-           grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
-           grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
-           TRUE ~ "General"),
+         category = "1",
          funding_status = "Funded"
          ) %>%
-  select(borrower, pwsid, state_score, project_name, project_description, funding_amount, principal_forgiveness_amount,
+  select(borrower, pwsid, state_rank, state_score, project_name, project_description, 
+         funding_amount, principal_forgiveness_amount, project_cost,
          population, project_type, state, category, funding_status)
 
+## Manually fix projects where splitting by dash did not work
+sc_clean <- sc_clean %>%
+  mutate(project_name = case_when(
+           borrower == "McCormick Commission of Public Works - Isolation Valve Installation" ~ "Isolation Valve Installation",
+           borrower == "Marlboro County / Marlboro Water Company- New Production Well and Treatment Facility" ~ "New Production Well and Treatment Facility - Phase 1",
+           borrower == "Grand Strand Water and Sewer Authority - Conway Parallel Transmission Main3" ~ "Conway Parallel Transmission Main",
+           borrower == "Gilbert-Summit Rural Water District - Siesta Cove Water Main Extension" ~ "Siesta Cove Water Main Extension",
+           borrower == "Charleston Water System - Charleston Water System Lead Service Line Replacement" ~ "Charleston Water System Lead Service Line Replacement",
+           TRUE ~ project_name),
+    
+        borrower = case_when(
+        borrower == "McCormick Commission of Public Works - Isolation Valve Installation" ~ "McCormick Commission of Public Works",
+        borrower == "Marlboro County / Marlboro Water Company- New Production Well and Treatment Facility" ~ "Marlboro County / Marlboro Water Company",
+        borrower == "Grand Strand Water and Sewer Authority - Conway Parallel Transmission Main3" ~ "Grand Strand Water and Sewer Authority",
+        borrower == "Gilbert-Summit Rural Water District - Siesta Cove Water Main Extension" ~ "Gilbert-Summit Rural Water District",
+        borrower == "Charleston Water System - Charleston Water System Lead Service Line Replacement" ~ "Charleston Water System",
+        TRUE ~ borrower)
+    )
 
 ```
 
@@ -2937,8 +2996,7 @@ tx_clean <- tx_merge %>%
   # remove extra columns
   select(-pif_number) %>%
   # process numeric columns
-  mutate(state_rank = as.numeric(str_replace_all(rank,"[^0-9.]","")),
-         population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+  mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
          funding_amount = as.numeric(str_replace_all(project_cost,"[^0-9.]",""))
   ) %>%
   # process text columns
@@ -2946,6 +3004,7 @@ tx_clean <- tx_merge %>%
          pwsid = str_squish(pws_id),
          project_description = str_squish(project_description),
          state_score = str_replace_all(points,"[^0-9.]",""),
+         state_rank = str_replace_all(rank,"[^0-9.]",""),
          disadvantaged = case_when(
           is.na(disadv_percent) ~ "No",
           TRUE ~ "Yes"),
@@ -3214,12 +3273,10 @@ wv_raw <- fread("data/year1/csv/48-West_Virginia_Merged_Updated.csv",
 wv_clean <- wv_raw %>%
   ## get rid of rows that the rank is not a number (not a project)
   filter(!is.na(ranking) & county != "NA" & ranking !="Total") %>% 
-  mutate(state_rank = as.numeric(ranking)) %>%
   ## rowwise operations for sums
   rowwise() %>%
   ## make relevant columns numbers 
-  mutate(state_rank = as.numeric(str_replace_all(ranking,"[^0-9.]", "")),
-         population = as.numeric(str_replace_all(new_popu_lation,"[^0-9.]", "")),
+  mutate(population = as.numeric(str_replace_all(new_popu_lation,"[^0-9.]", "")),
          principal_forgiveness_amount =
            # Sum of DWTRF Principal Forgiveness from Base Grant, 
            # DWTRF Principal Forgiveness from Supplemental Grant, 
@@ -3258,6 +3315,7 @@ wv_clean <- wv_raw %>%
            funding_amount > 0 | principal_forgiveness_amount > 0 ~ "Funded",
            TRUE ~ "Not Funded"),
          state_score = str_replace_all(points,"[^0-9.]", ""),
+         state_rank = str_replace_all(ranking,"[^0-9.]", ""),
          project_description = str_squish(project_description_x),
          project_name = str_squish(project_name),
          borrower = str_squish(system),
@@ -3384,7 +3442,7 @@ web_combined_clean <- combined_clean %>%
                           select(state, cities_served, borrower,
                                  pwsid, project_name, project_description,
                                  project_type, funding_amount, principal_forgiveness_amount, project_cost, requested_amount,
-                                 population, disadvantaged, state_rank, state_score, funding_status, category) %>%
+                                 population, disadvantaged, state_rank, state_score, funding_status, category) %>% 
                           rename(State = state,
                                 Borrower = borrower, 
                                 `City Served` = cities_served, 
@@ -3405,20 +3463,19 @@ web_combined_clean <- combined_clean %>%
 
 ```
 
+
 ## Add Data for Dashboard
 
 ```{r}
 
-## External Data Import ## 
-
 ## SABs Data ### 
-Sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
+sabs_raw <- read_csv(get_object(object = "service_area_boundaries/sabs_app/Dev_Data_v1.csv", bucket = "tech-team-data"))
 
-Sabs_cleaned <- Sabs_raw %>%
-  mutate(Population = pop_tier1 + pop_tier2 + pop_tier3) %>%
-  mutate(Systems = num_sys_tier1 + num_sys_tier2 + num_sys_tier3) %>%
+sabs_cleaned <- sabs_raw %>%
+  mutate(Population = pop_tier1 + pop_tier2 + pop_tier3,
+         Systems = num_sys_tier1 + num_sys_tier2 + num_sys_tier3) %>%
   rename(State = State_Name) %>%
-  select(State,Population,Systems)
+  select(State, Population, Systems)
 
 ## Additional Data 
 ## TO DO: Put this on AWS ## 
@@ -3427,59 +3484,46 @@ Sabs_cleaned <- Sabs_raw %>%
 
 URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
 
-AdditionalData <- read_sheet(URL, sheet = "AdditionalData")
+state_needs_estimates <- read_sheet(URL, sheet = "AdditionalData")
 
 ## Summary Data For Application ## 
-PPL_State_Data_Geo <- web_combined_clean %>%
+funded_states <- web_combined_clean %>%
   filter(`Funding Status` == "Funded") %>%
-  mutate(Count = 1) %>%
-  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")) )%>%
-  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%
-  select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count) %>%
+  mutate(Count = 1,
+         DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")),
+         `Principal Forgiveness` = as.numeric(`Principal Forgiveness`),
+         `Funding Amount` = as.numeric(`Funding Amount`)) %>%
+  select(State, `Funding Amount`, `Principal Forgiveness`, DAC, Count) %>%
   group_by(State) %>%
   summarize_if(is.numeric,sum,na.rm = TRUE) %>%
-  left_join(.,Sabs_cleaned) %>%
-  left_join(.,AdditionalData, by = c("State"= "State")) %>%
-  mutate(FundPer100k = (`Funding Amount`/ Population))
+  left_join(sabs_cleaned) %>%
+  left_join(state_needs_estimates, by = c("State"= "State")) %>%
+  mutate(FundPer100k = (`Funding Amount` / Population))
 
-## Note manually addition of states which have only applicant date
-OnlyApplicant <- PPL_Data %>%
-  filter(category == "2") %>%
-  mutate(Count = 1) %>%
-  # left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
-  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0"))) %>%
-  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%
-  select(State, `Funding Amount`,`Principal Forgiveness`,DAC,Count) %>%
-  group_by(State ) %>%
+# separate states that only have applicant data to ensure they don't fall through the cracks while aggregating
+only_applicant_states <- web_combined_clean %>%
+  filter(Category == "2") %>%
+  mutate(Count = 1,
+         DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")),
+         `Principal Forgiveness` = as.numeric(`Principal Forgiveness`),
+         `Funding Amount` = as.numeric(`Funding Amount`)) %>%
+  select(State, `Funding Amount`, `Principal Forgiveness`, DAC, Count) %>%
+  group_by(State) %>%
   summarize_if(is.numeric,sum,na.rm = TRUE) %>%
-  left_join(.,Sabs_cleaned) %>%
-  left_join(.,AdditionalData, by = c("State"= "State") )%>%
-  mutate(FundPer100k = (`Funding Amount`/ Population))
+  left_join(sabs_cleaned) %>%
+  left_join(state_needs_estimates, by = c("State"= "State")) %>%
+  mutate(FundPer100k = (`Funding Amount` / Population))
 
-PPL_State_Data_Geo <- rbind(PPL_State_Data_Geo, OnlyApplicant)
 
-### PPL Parsing ###
-## TO DO ## 
-## Pull in data dictionaries from Google Drive 
-## Link:..
-## Split into 50 pdfs
-## Run through loop of all states and put in AWS Folder 
-## Aws folder: s3://water-team-data/apps/dw-dashboard/state-data-dict/
-
-# GET FROM DRIVE
-# SPLIT INTO 50 
-# For Each State 
-# Post to AWS folder-root-name/state-name-data-dict.pdf 
-
+# recombine states
+all_states <- rbind(funded_states, only_applicant_states)
+                            
 ```
 
 
 ## Write to AWS
 
 ```{r}
-
-## Pushing to AWS For Application ##
-
 
 ### To put in an AWS bucket, you need these credentials
 ## Contact gabe@policyinnovation.org for questions/access
@@ -3489,15 +3533,31 @@ PPL_State_Data_Geo <- rbind(PPL_State_Data_Geo, OnlyApplicant)
  #             "AWS_SECRET_ACCESS_KEY" = "",
  #             "AWS_DEFAULT_REGION" = "us-east-1")
 
-# Writing to temp 
 
-write.csv(PPL_State_Data_Geo, file.path(tempdir(), "dw-dashboard-data_v1-1.csv"), row.names = FALSE)
+### Write State-Level Data ### 
+
+# Writing to temp 
+write.csv(all_states, file.path(tempdir(), "dw-dashboard-data_v1-1.csv"), row.names = FALSE)
 
 #Putting in Bucket
 ## Updating to dw_dashboard_data_v2 to include just fundable data for summary based on design.
 put_object(
   file = file.path(tempdir(), "dw-dashboard-data_v1-1.csv"),
   object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv",
+  bucket = "water-team-data",
+  acl = "public-read"
+)
+
+### Write Project-Level Data ###
+
+
+# Writing to temp 
+write.csv(web_combined_clean, file.path(tempdir(), filename), row.names=FALSE)
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "web_ppl_combined_clean.csv"),
+  object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv",
   bucket = "water-team-data",
   acl = "public-read"
 )

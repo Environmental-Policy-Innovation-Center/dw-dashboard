@@ -3436,7 +3436,7 @@ combined_clean <- bind_rows(
            wv_clean)
 
 ## Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
-web_combined_clean <- combined_clean %>%
+projects_clean_web <- combined_clean %>%
                           mutate(across(everything(), as.character),
                                  ) %>%
                           select(state, cities_served, borrower,
@@ -3487,7 +3487,7 @@ URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYM
 state_needs_estimates <- read_sheet(URL, sheet = "AdditionalData")
 
 ## Summary Data For Application ## 
-funded_states <- web_combined_clean %>%
+funded_states <- projects_clean_web %>%
   filter(`Funding Status` == "Funded") %>%
   mutate(Count = 1,
          DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")),
@@ -3501,7 +3501,7 @@ funded_states <- web_combined_clean %>%
   mutate(FundPer100k = (`Funding Amount` / Population))
 
 # separate states that only have applicant data to ensure they don't fall through the cracks while aggregating
-only_applicant_states <- web_combined_clean %>%
+only_applicant_states <- projects_clean_web %>%
   filter(Category == "2") %>%
   mutate(Count = 1,
          DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")),
@@ -3552,11 +3552,11 @@ put_object(
 
 
 # Writing to temp 
-write.csv(web_combined_clean, file.path(tempdir(), filename), row.names=FALSE)
+write.csv(projects_clean_web, file.path(tempdir(), "projects_clean_web.csv"), row.names=FALSE)
 
 #Putting in Bucket
 put_object(
-  file = file.path(tempdir(), "web_ppl_combined_clean.csv"),
+  file = file.path(tempdir(), "projects_clean_web.csv"),
   object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean_v1-1.csv",
   bucket = "water-team-data",
   acl = "public-read"

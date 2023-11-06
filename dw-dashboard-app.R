@@ -144,7 +144,6 @@ server <- function(input, output, session) {
     mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
   
-  print(PPL_State_Data_Geo %>% filter(NAME == "District of Columbia"))
   
   waitress$inc(10) # increase by 10
   ProjectCats <- unique(PPL_Data$`Project Type`)

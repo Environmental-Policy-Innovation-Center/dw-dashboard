@@ -2160,7 +2160,7 @@ nm_clean <- nm_raw %>%
          state = "New Mexico",
          category = "3"
          ) %>%
-  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, disadvantaged, population, cities_served, project_type, funding_status, state)
+  select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness_amount, disadvantaged, population, cities_served, project_type, funding_status, state, category)
 
 ```
 
@@ -2985,7 +2985,7 @@ tx_k <- fread("data/year1/csv/43-Texas_Fundable_K.csv",
   mutate(project_description = str_squish(project_description),
          # fix specific typos to prevent merge issues
          pws_id = str_replace(pws_id, "1330135", "TX1330135"),
-         funding_status = "Funded")
+         )
 
 # (268,10)
 tx_merge <- merge(tx_ppl, tx_k, by=c("pif_number", "rank", "points", "entity", "pws_id", "population",
@@ -3012,11 +3012,9 @@ tx_clean <- tx_merge %>%
            grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
            grepl("emerging contaminant", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
            TRUE ~ "General"),
-         funding_status = case_when(
-           funding_status == "Funded" ~ "Funded",
-           TRUE ~ "Not Funded"),
+         funding_status = "Not Funded",
          state = "Texas",
-         category = "3"
+         category = "2"
   ) %>%
   select(state_rank, state_score, borrower, pwsid, project_description, funding_amount, 
          population, disadvantaged, funding_status, project_type, state, category)
@@ -3514,9 +3512,13 @@ only_applicant_states <- projects_clean_web %>%
   left_join(state_needs_estimates, by = c("State"= "State")) %>%
   mutate(FundPer100k = (`Funding Amount` / Population))
 
+state_category <- projects_clean_web %>%
+  select(State, Category) %>%
+  distinct()
 
 # recombine states
-all_states <- rbind(funded_states, only_applicant_states)
+all_states <- rbind(funded_states, only_applicant_states) %>%
+  left_join(state_category)
                             
 ```
 

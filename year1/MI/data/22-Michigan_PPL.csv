@@ -1,0 +1,113 @@
+Rank,Project Number,Applicant Name,Project Location,Project Description,Population,Total Points,Estimated Project Cost*,Full Estimated Project Cost Prior to 30% Limitation,Disadvantaged,MAHI,Small,LSLR Costs,PFAS Costs,ARP Grant,DWSRF Loan,DWSRF PF,BIL DWSRF Supplemental Loan,BIL DWSRF Supplemental PF,BIL DWSRF Emerging Contaminants PF,BIL DWSRF LSLR Loan,BIL DWSRF LSLR PF,Total PF/Grant**,Percent PF/Grant
+Projects With Prior Year Segments,,,,,,,,,,,,,,,,,,,,,,,
+1,7580-02,Paw Paw,Van Buren County,WM replacement,"3,534",480,"$1,270,000 ",,Yes,"$49,321 ",Yes,,,,"$317,500 ","$952,500 ",,,,,,"$952,500 ",75%
+2,7617-02,Village of Westphalia,Clinton County,WM replacement,"1,000",470,"$250,000 ",,,,Yes,,,"$62,500 ","$187,500 ",,,,,,,"$62,500 ",75%
+3,7625-02,Onsted,Lenawee County,"WM replacement, well improvements",917,445,"$4,380,400 ",,Yes,"$54,318 ",Yes,,,,"$1,095,100 ","$3,285,300 ",,,,,,"$3,285,300 ",75%
+4,7532-02,GLWA,Wayne County,96 inch trans main relocation P2,"713,777",400,"$64,230,000 ","$222,660,000 ",,,,,,"$16,057,500 ","$25,646,820 ",,"$22,525,680 ",,,,,"$16,057,500 ",75%
+Projects Without Prior Year Segments,,,,,,,,,,,,,,,,,,,,,,,
+5,7682-01,Village of Marion,Osceola County,"WM, wells, storage, meters, SCADA",795,820,"$5,730,000 ",,Yes,"$35,956 ",Yes,,,,"$1,432,500 ","$2,655,180 ",,"$1,642,320 ",,,,"$4,297,500 ",75%
+6,7538-01,Lansing Board of Water and Light,Ingham County,"WM replacement, WTP upgrade","209,000",700,"$32,220,000 ",,Yes,"$51,628 ",,,,,"$12,220,000 ",,,"$20,000,000 ",,,,"$20,000,000 ",62%
+7,7444-01,East Lansing Meridian Water & Sewer Authority,Ingham County,"New storage reservoir, wells","79,585",600,"$16,060,000 ",,,,,,,"$4,015,000 ","$12,045,000 ",,,,,,,"$4,015,000 ",25%
+8,7539-01,Charter Twp of Ann Arbor,Washtenaw County,Distribution Sys Improv,"3,300",570,"$8,385,000 ",,,,,,,"$2,096,250 ","$6,288,750 ",,,,,,,"$2,096,250 ",25%
+9,7655-01,City of Vassar,Tuscola County,"WM replacement, new wells, meters","2,542",570,"$8,910,000 ",,Yes,"$40,719 ",Yes,,,,"$2,227,500 ","$6,682,500 ",,,,,,"$6,682,500 ",75%
+10,7639-01,City of Inkster,Wayne County,"LSLR, WM replacement","25,369",565,"$7,115,625 ",,Yes,"$32,109 ",,"$125,000 ",,"$7,115,625 ",,,,,,,,"$7,115,625 ",100%
+11,7515-01,Benton Township,Berrien County,WM and filter membrane,"6,733",555,"$5,175,000 ",,Yes,"$32,401 ",Yes,,,"$5,175,000 ",,,,,,,,"$5,175,000 ",100%
+12,7666-01,City of Grand Ledge,Eaton County,"WTP, WM repl","8,855",555,"$17,200,000 ",,,,Yes,,,"$4,300,000 ","$12,900,000 ",,,,,,,"$4,300,000 ",25%
+13,7687-01,Village of Carsonville,Sanilac County,"tank, meters, WTP, wells",510,545,"$3,900,000 ",,Yes,"$45,000 ",Yes,,,"$2,469,429 ","$975,000 ","$455,571 ",,,,,,"$2,925,000 ",75%
+14,7698-01,Village of Addison,Lenawee County,"WM, meters, WTP, tower",605,545,"$3,300,000 ",,Yes,"$41,023 ",Yes,,,"$2,475,000 ","$825,000 ",,,,,,,"$2,475,000 ",75%
+15,7491-01,City of Owosso,Shiawassee County,"WM replacement, LSLR, SCADA, well","14,539",540,"$4,045,000 ",,,,,"$318,700 ",,"$1,011,250 ","$3,033,750 ",,,,,,,"$1,011,250 ",25%
+16,7670-01,Bedford Charter Township,Calhoun County,WM extension for PFAS,105,535,"$5,100,000 ",,,,Yes,,"$5,100,000 ",,,,,,"$5,100,000 ",,,"$5,100,000 ",100%
+17,7669-01,City of Reed City,Osceola County,"LSLR, WM and Well replacement","2,472",520,"$3,505,000 ",,Yes,"$33,646 ",Yes,"$1,008,000 ",,"$3,505,000 ",,,,,,,,"$3,505,000 ",100%
+18,7488-01,City of St Joseph,Berrien County,"WM replacement, LSLR, WTP imp","33,000",515,"$13,050,000 ",,,,,"$2,014,800 ",,"$3,262,500 ","$9,787,500 ",,,,,,,"$3,262,500 ",25%
+19,7721-01,Genesee County Drain Commissioner,Genesee County,WM extension,"436,000",510,"$9,305,000 ",,,,,,,"$2,326,250 ","$6,978,750 ",,,,,,,"$2,326,250 ",25%
+20,7735-01,City of Grand Ledge,Eaton County,New Wells,"8,855",505,"$4,320,000 ",,,,Yes,,,"$1,080,000 ","$3,240,000 ",,,,,,,"$1,080,000 ",25%
+21,7691-01,City of Memphis,Macomb and St Clair Counties,"WM, WTP, meter replacement, well imp,LSLR","1,107",495,"$1,420,000 ",,Yes,"$53,542 ",Yes,"$390,000 ",,"$873,900 ","$156,100 ",,,,,"$198,900 ","$191,100 ","$1,065,000 ",75%
+22,7701-01,City of Montrose,Genesee County,"WM replacement, well decommission","1,743",495,"$2,245,000 ",,Yes,"$36,458 ",Yes,,,"$1,683,750 ","$561,250 ",,,,,,,"$1,683,750 ",75%
+23,7714-01,Brownstown Charter Township,Wayne County,Elevated Storage Tanks,"33,194",490,"$7,425,000 ",,,,,,,"$1,856,250 ","$5,568,750 ",,,,,,,"$1,856,250 ",25%
+24,7552-01,City of St. Clair,St. Clair County,"WTP imp, WM replacement","6,285",480,"$10,935,000 ",,,,Yes,,,"$2,733,750 ","$2,513,230 ",,,,,,,"$2,733,750 ",25%
+25,7694-01,City of Davison,Genesee County,"WTP, storage tank, WM replacement","5,250",480,"$5,085,000 ",,Yes,"$47,277 ",Yes,,,,,,,,,,,$                 -,0%
+26,7600-01,Corunna,Shiawassee County,Water sys imp,"1,600",470,"$7,480,000 ",,Yes,"$41,905 ",Yes,,,,,,,,,,,$                 -,0%
+27,7730-01,City of West Branch,Ogemaw County,"New Well, WM, LSLR","2,139",470,"$2,610,000 ",,Yes,"$30,508 ",Yes,"$410,000 ",,"$2,610,000 ",,,,,,,,"$2,610,000 ",100%
+28,7608-01,City of Bessemer,Gogebic County,"WM replacement, LSLR, tank upgrades","1,900",470,"$2,000,000 ",,Yes,"$42,566 ",Yes,"$1,000,000 ",,"$1,000,000 ",,,,,,"$510,000 ","$490,000 ","$1,490,000 ",75%
+29,7677-01,Village of Shepherd,Isabella County,"LSLR, force main, lagoon imp","1,478",470,"$10,200,000 ",,Yes,"$56,563 ",Yes,"$3,500,000 ",,"$5,935,000 ",,,,,,"$1,785,000 ","$1,715,000 ","$7,650,000 ",75%
+30,7716-01,YCUA,Washtenaw County,PS and generator replacement,"42,805",465,"$8,035,000 ",,Yes,"$57,616 ",,,,,,,,,,,,$                 -,0%
+31,7729-01,YCUA,Washtenaw County,PS replacement,"20,468",465,"$2,920,000 ",,Yes,"$40,028 ",,,,,,,,,,,,$                 -,0%
+32,7467-01,City of Muskegon,Muskegon County,WM & LSLR,"38,401",465,"$9,205,000 ",,Yes,"$35,323 ",,"$6,286,000 ",,"$4,692,745 ",,,,,,"$2,301,250 ","$2,211,005 ","$6,903,750 ",75%
+33,7696-01,Independence Township,Oakland County,WM extension - PFAS,"36,818",465,"$5,185,000 ",,,,,,"$5,185,000 ",,,,,,"$5,185,000 ",,,"$5,185,000 ",100%
+34,7724-01,City of Omer,Arenac County,"WTP, tower, raw water storage",260,460,"$5,000,000 ",,Yes,"$41,667 ",Yes,,,,,,,,,,,$                 -,0%
+35,7643-01,City of Kingsford,Dickinson County,"WM replacement, LSLR","5,480",455,"$7,080,000 ",,Yes,"$47,313 ",Yes,"$2,380,000 ",,"$4,143,800 ",,,,,,"$1,213,800 ","$1,166,200 ","$5,310,000 ",75%
+36,7661-01,Charter Twp. of Alpena,Alpena County,"WM replacement, SL replacement, tank painting","5,839",455,"$15,800,000 ",,Yes,"$45,423 ",Yes,,,,,,,,,,,$                 -,0%
+37,7633-01,City of Highland Park,Wayne County,"WM replacement, LSLR","8,977",455,"$10,105,000 ",,Yes,"$20,666 ",Yes,"$535,000 ",,"$10,105,000 ",,,,,,,,"$10,105,000 ",100%
+38,7710-01,City of Battle Creek,Calhoun County,Well Field,"50,358",450,"$15,000,000 ",,,,,,,,,,,,,,,$                 -,0%
+39,7673-01,City of Kalamazoo,Kalamazoo County,WM and LSLR,"144,500",450,"$20,200,000 ",,Yes,"$57,710 ",,"$15,000,000 ",,"$10,298,039 ",,,,,,"$5,050,000 ","$4,851,961 ","$15,150,000 ",75%
+40,7620-01,Village of Quincy,Branch County,LSLR and WM replacement,"2,040",445,"$2,035,000 ",,Yes,"$41,544 ",Yes,"$415,000 ",,"$1,322,900 ",,,,,,"$211,650 ","$203,350 ","$1,526,250 ",75%
+41,7713-01,City of Sandusky,Sanilac County,WM and LSLR,"2,539",445,"$3,510,000 ",,Yes,"$45,602 ",Yes,"$59,400 ",,"$2,603,394 ",,,,,,"$30,294 ","$29,106 ","$2,632,500 ",75%
+42,7640-01,City of Muskegon Heights,Muskegon County,WM and LSLR,"10,800",440,"$8,400,000 ",,Yes,"$31,431 ",,"$3,700,000 ",,"$8,400,000 ",,,,,,,,"$8,400,000 ",100%
+43,7537-01,City of Jackson,Jackson County,"LSLR,WM,WTP","33,165",440,"$16,550,000 ",,Yes,"$37,192 ",,"$9,000,000 ",,"$8,437,255 ",,,,,,"$4,137,500 ","$3,975,245 ","$12,412,500 ",75%
+44,7733-01,City of Hamtramck,Wayne County,"WM replacement, LSLR","28,433",440,"$795,000 ",,Yes,"$29,230 ",,"$186,400 ",,"$795,000 ",,,,,,,,"$795,000 ",100%
+45,7704-01,City of Melvindale,Wayne County,WM and LSRL looping,"12,851",440,"$6,265,000 ",,Yes,"$37,438 ",,"$280,000 ",,"$4,561,550 ",,,,,,"$142,800 ","$137,200 ","$4,698,750 ",75%
+46,7731-01,City of Muskegon Heights,Muskegon County,WM and LSLR,"10,800",440,"$3,000,000 ",,Yes,"$31,431 ",,"$285,000 ",,"$3,000,000 ",,,,,,,,"$3,000,000 ",100%
+47,7571-01,Village of Pewamo,Ionia County,WM replacement,469,435,"$3,000,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+48,7723-01,City of Mackinac Island,Mackinac County,WTP and reservoir upgrades,492,435,"$1,705,000 ",,Yes,"$43,125 ",Yes,,,,,,,,,,,$                 -,0%
+49,7722-01,City of Flint,Genesee County,Trans Main and Reservoir rehab,"81,252",425,"$11,850,000 ",,Yes,"$30,383 ",,,,"$11,850,000 ",,,,,,,,"$11,850,000 ",100%
+50,7531-01,GLWA,Wayne County,PS improvement - Ypsilanti,"713,777",425,"$38,700,000 ",,,,,,,,,,,,,,,$                 -,0%
+51,7678-01,City of Flat Rock,Wayne County,WM,"10,541",415,"$4,775,000 ",,,,,,,,,,,,,,,$                 -,0%
+52,7647-01,City of Trenton,Wayne County,"WM replacement, LSLR","18,544",415,"$5,475,000 ",,,,,"$150,000 ",,,,,,,,,,$                 -,0%
+53,7732-01,City of Eastpointe,Macomb County,"WM replacement, LSLR","32,442",415,"$18,205,000 ",,,,,"$1,787,700 ",,,,,,,,,,$                 -,0%
+54,7719-01,City of Traverse City,Grand Traverse County,"WM replacement, WTP imp, LSLR","31,155",415,"$5,980,000 ",,,,,"$125,000 ",,,,,,,,,,$                 -,0%
+55,7659-01,Charter Twp. of Redford,Wayne County,WM replacement,"49,504",415,"$8,300,000 ",,,,,,,,,,,,,,,$                 -,0%
+56,7688-01,City of Gibraltar,Wayne County,WM replacement and Redundant WM,"4,997",405,"$2,900,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+57,7642-01,Southeastern Oakland County Water Authority,Oakland County,PS tank separation,"244,941",400,"$3,500,000 ",,,,,,,,,,,,,,,$                 -,0%
+58,7644-01,City of Saginaw,Saginaw County,Elevated storage tank,"51,508",400,"$15,000,000 ",,Yes,"$30,845 ",,,,"$15,000,000 ",,,,,,,,"$15,000,000 ",100%
+59,7718-01,City of Ovid,Clinton County,"WM replacement, LSLR, meters, WTP improvement","1,481",395,"$9,820,000 ",,Yes,"$45,000 ",Yes,"$1,860,000 ",,"$6,453,600 ",,,,,,"$948,600 ","$911,400 ","$7,365,000 ",75%
+60,7628-01,Village of Baldwin,Lake County,WM replacement,755,395,"$1,960,000 ",,Yes,"$23,389 ",Yes,,,"$1,960,000 ",,,,,,,,"$1,960,000 ",100%
+61,7699-01,City of Coleman,Midland County,"WM,LSLR,WTP, storage tank","1,243",395,"$7,055,000 ",,Yes,"$37,167 ",Yes,"$500,000 ",,"$5,046,250 ",,,,,,"$255,000 ","$245,000 ","$5,291,250 ",75%
+62,7494-01,City of Grosse Pointe Park,Wayne County,"WM replacement, LSLR","11,555",390,"$33,000,000 ",,,,,"$6,065,000 ",,,,,,,,,,$                 -,0%
+63,7550-01,Village of Beverly Hills,Oakland County,WM replacement,"10,451",390,"$6,200,000 ",,,,,,,,,,,,,,,$                 -,0%
+64,7653-01,Port Huron Charter Township,St. Clair County,"WM replacement, meters","10,654",390,"$6,505,000 ",,,,,,,,,,,,,,,$                 -,0%
+65,7619-01,City of Sturgis,St Joseph County,"LSLR, WM replacement","10,944",390,"$1,260,000 ",,,,,"$590,775 ",,,,,,,,,,$                 -,0%
+66,7470-01,City of Howell,Livingston County,"WM replacement, looping, LSLR","10,068",390,"$7,675,000 ",,Yes,"$47,255 ",,"$3,250,000 ",,"$4,163,750 ",,,,,,"$1,657,500 ","$1,592,500 ","$5,756,250 ",75%
+67,7660-01,Charter Twp. of White Lake,Oakland County,"WM extension, iron removal, well building","8,642",380,"$9,505,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+68,7445-03,GLWA,Wayne County,"Northeast Trans Main, Phase 2B","3,600,000",375,"$64,230,000 ","$92,180,000 ",,,,,,,,,,,,,,$                 -,0%
+69,7656-01,DWSD/GLWA,Wayne County,"WM replacement, LSLR - WS-732","639,111",375,"$21,140,000 ",,Yes,"$32,498 ",,"$1,612,000 ",,"$19,210,120 ",,,,,,"$822,120 ","$789,880 ","$20,000,000 ",95%
+70,7657-01,DWSD/GLWA,Wayne County,"WM replacement, LSLR - WS-733","639,111",375,"$22,130,000 ",,Yes,"$32,498 ",,"$2,002,000 ",,"$19,019,020 ",,,,,,"$1,021,020 ","$980,980 ","$20,000,000 ",90%
+71,7662-01,Bay County,Bay County,Raw water storage tanks,"93,277",375,"$11,605,000 ",,,,,,,,,,,,,,,$                 -,0%
+72,7650-01,Forsyth Township,Marquette County,"LSLR, WM replacement","2,479",370,"$7,000,000 ",,Yes,"$56,027 ",Yes,"$4,117,647 ",,,,,,,,,,$                 -,0%
+73,7645-01,City of Pleasant Ridge,Oakland County,"WM replacement, LSLR","2,600",370,"$24,525,000 ",,,,Yes,"$6,640,000 ",,,,,,,,,,$                 -,0%
+74,7648-01,County of Marquette (KI Sawyer),Marquette County,"Storage tank, WM replacement, wellhouse","3,000",370,"$7,580,000 ",,Yes,"$37,217 ",Yes,"$882,500 ",,,,,,,,,,$                 -,0%
+75,7511-01,City of Escanaba,Delta County,"LSLR, WM replacement","12,181",365,"$20,000,000 ",,Yes,"$33,102 ",,"$6,962,000 ",,"$20,000,000 ",,,,,,,,"$20,000,000 ",100%
+76,7675-01,City of Niles,Berrien and Cass Counties,LSLR,"13,833",365,"$3,000,000 ",,Yes,"$38,415 ",,"$1,320,000 ",,,,,,,,,,$                 -,0%
+77,7602-01,City of River Rouge,Wayne County,PRV,"7,380",355,"$585,000 ",,Yes,"$22,664 ",Yes,,,"$585,000 ",,,,,,,,"$585,000 ",100%
+78,7708-01,City of Ishpeming,Marquette County,"LSLR, WM","6,470",355,"$15,000,000 ",,Yes,"$46,783 ",Yes,"$6,000,000 ",,,,,,,,,,$                 -,0%
+79,7523-01,City of Ironwood,Gogebic County,LSLR,"5,387",355,"$3,000,000 ",,Yes,"$27,261 ",Yes,"$3,000,000 ",,"$3,000,000 ",,,,,,,,"$3,000,000 ",100%
+80,7512-01,Village of White Pigeon,St. Joseph County,WM and LSLR,"1,630",345,"$15,000,000 ",,,,Yes,"$1,200,000 ",,,,,,,,,,$                 -,0%
+81,7616-01,Bessemer Township,Gogebic County,LSLR,"1,176",345,"$825,000 ",,Yes,"$48,125 ",Yes,"$825,000 ",,,,,,,,,,$                 -,0%
+82,7674-01,City of Pinconning,Bay County,WM and LSLR,"1,307",345,"$10,565,000 ",,Yes,"$49,185 ",Yes,"$3,250,000 ",,,,,,,,,,$                 -,0%
+83,7518-01,City of White Cloud,Newaygo County,LSLR,"1,400",345,"$3,605,000 ",,Yes,"$37,656 ",Yes,"$3,605,000 ",,,,,,,,,,$                 -,0%
+84,7501-01,City of Wakefield,Gogebic County,LSLR,"1,851",345,"$350,000 ",,Yes,"$36,186 ",Yes,"$350,000 ",,,,,,,,,,$                 -,0%
+85,7520-01,City of Eaton Rapids,Eaton County,"LSLR, WM replacement, WTP improvements","5,340",330,"$24,300,000 ",,,,Yes,"$2,500,000 ",,,,,,,,,,$                 -,0%
+86,7700-01,City of Grand Blanc,Genesee County,WM Replacement,"8,091",330,"$5,000,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+87,7536-01,City of Dearborn,Wayne County,LSLR,"98,153",325,"$6,600,000 ",,,,,"$6,600,000 ",,,,,,,,,,$                 -,0%
+88,7454-01,City of Livonia,Wayne County,"WM, LSLR","94,060",325,"$4,815,000 ",,,,,"$175,000 ",,,,,,,,,,$                 -,0%
+89,7493-01,City of St. Clair Shores,Macomb County,LSLR,"60,922",325,"$1,000,000 ",,,,,"$1,000,000 ",,,,,,,,,,$                 -,0%
+90,7663-01,Zox Cass Lakeside Community Association,Oakland County,"WM rep, LSLR, pump station",700,320,"$5,100,000 ",,,,Yes,"$400,000 ",,,,,,,,,,$                 -,0%
+91,7680-01,City of Hart,Oceana County,WM and LSLR,900,320,"$4,515,000 ",,,,Yes,"$1,372,000 ",,,,,,,,,,$                 -,0%
+92,7629-01,City of Lincoln Park,Wayne County,"WM replacement, LSLR","38,144",315,"$8,410,000 ",,,,,"$1,742,000 ",,,,,,,,,,$                 -,0%
+93,7500-01,Charter Twp. of Bloomfield,Oakland County,WM replacement,"44,253",315,"$6,730,000 ",,,,,,,,,,,,,,,$                 -,0%
+94,7554-01,City of Southgate,Wayne County,"WM replacement, LSLR","30,047",315,"$2,085,000 ",,,,,"$409,500 ",,,,,,,,,,$                 -,0%
+95,7689-01,Handy Township,Livingston County,Raw water bypass,728,295,"$600,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+96,7544-01,City of St. Ignace,Mackinac County,"WTP improvements, WM replacement","2,452",295,"$11,250,000 ",,Yes,"$48,226 ",Yes,"$30,000 ",,,,,,,,,,$                 -,0%
+97,7649-01,Ishpeming Township,Marquette County,"WM replacement, LSLR","2,148",295,"$5,000,000 ",,,,Yes,"$964,200 ",,,,,,,,,,$                 -,0%
+98,7626-01,City of Harbor Beach,Huron County,"WTP imp, transmission main","5,209",280,"$3,855,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+99,7549-01,City of St. Louis,Gratiot County,LSLR,"7,482",255,"$4,900,000 ",,Yes,"$42,050 ",Yes,"$4,900,000 ",,,,,,,,,,$                 -,0%
+100,7618-01,City of Negaunee,Marquette County,LSLR,"4,568",255,"$2,300,000 ",,Yes,"$53,734 ",Yes,"$2,300,000 ",,,,,,,,,,$                 -,0%
+101,7533-01,City of Cheboygan,Cheboygan County,"LSLR, WM replacement","5,500",255,"$6,725,000 ",,Yes,"$34,964 ",Yes,"$2,362,500 ",,"$6,725,000 ",,,,,,,,"$6,725,000 ",100%
+102,7545-01,City of Onaway,Presque Isle County,LSLR,880,245,"$5,165,000 ",,Yes,"$27,697 ",Yes,"$5,165,000 ",,"$5,165,000 ",,,,,,,,"$5,165,000 ",100%
+103,7588-01,City of Croswell,Sanilac County,LSLR and WM replacement,"2,422",245,"$7,400,000 ",,Yes,"$44,472 ",Yes,"$1,000,000 ",,,,,,,,,,$                 -,0%
+104,7683-01,Township of Albee,Saginaw County,WM extension,"2,034",245,"$5,165,000 ",,Yes,"$52,171 ",Yes,,,,,,,,,,,$                 -,0%
+105,7646-01,Village of Newberry,Luce County,LSLR,"2,000",245,"$2,675,000 ",,Yes,"$38,611 ",Yes,"$2,675,000 ",,,,,,,,,,$                 -,0%
+106,7498-01,City of Marysville,St. Clair County,"WTP imp, WM replacement","9,959",230,"$3,050,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+107,7658-01,Marquette Township,Marquette County,Pumphouse improvement,"2,700",220,"$750,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+108,7594-01,Charter Township of Hampton,Bay County,WM replacement,"9,452",205,"$3,980,000 ",,Yes,"$38,881 ",Yes,,,,,,,,,,,$                 -,0%
+109,7702-01,Leoni Township,Jackson County,"looping, well, meters","2,922",170,"$4,720,000 ",,,,Yes,,,,,,,,,,,$                 -,0%
+110,7638-01,Bangor Charter Township,Bay County,WM Replacement,"13,946",165,"$4,705,000 ",,,,,,,,,,,,,,,$                 -,0%

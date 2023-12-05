@@ -2,10 +2,12 @@ library(tidyverse)
 library(data.table)
 library(janitor)
 
+clean_al <- function() {
+
 ### APPLICANT 
 
 # (364, 11)
-al_applicant <- fread("year1/AL/data/scraped/1-Alabama_ARPA_SRF_Combined_PPL.csv",
+al_applicant <- fread("year1/AL/data/1-Alabama_ARPA_SRF_Combined_PPL.csv",
                       colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -34,17 +36,17 @@ al_app_clean <- al_applicant %>%
 ### FUNDABLE
 
 # (7,14)
-al_base <- fread("year1/AL/data/scraped/1-Alabama_Base-PPL.csv",
+al_base <- fread("year1/AL/data/1-Alabama_Base-PPL.csv",
                  colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (19,14)
-al_bil <- fread("year1/AL/data/scraped/1-Alabama_BIL-PPL.csv",
+al_bil <- fread("year1/AL/data/1-Alabama_BIL-PPL.csv",
                 colClasses = "character", na.strings = "") %>%
   clean_names()
 
 # (3,14)
-al_lead <- fread("year1/AL/data/scraped/1-Alabama_Lead-PPL.csv",
+al_lead <- fread("year1/AL/data/1-Alabama_Lead-PPL.csv",
                  colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -91,4 +93,7 @@ al_clean <- al_combined_clean %>%
 #  mutate(state = "Alabama",
 #         category = "1")
 
-write.csv(al_clean, "year1/AL/data/AL-clean.csv", row.names=FALSE)
+rm(list=setdiff(ls(), "al_clean"))
+
+return(al_clean)
+}

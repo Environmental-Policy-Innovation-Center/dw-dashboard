@@ -3,10 +3,12 @@ library(data.table)
 library(janitor)
 
 
+clean_ar <- function() {
+
 # the manually merged data from MDI includes fundable projects with columns from the comprehensive list
 # this is a combination of charts 3 and 4 from the IUP
 # (15,21)
-ar_merge <- fread("year1/AR/data/scraped/4-Arkansas_Merged.csv",
+ar_merge <- fread("year1/AR/data/4-Arkansas_Merged.csv",
                   colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -14,7 +16,7 @@ ar_merge <- fread("year1/AR/data/scraped/4-Arkansas_Merged.csv",
 ### APPLICANT
 
 # the comprehensive PPL includes applicant projects, (747,13)
-ar_comp <- fread("year1/AR/data/scraped/4-Arkansas.csv",
+ar_comp <- fread("year1/AR/data/4-Arkansas.csv",
                  colClasses = "character", na.strings = "") %>%
   clean_names()
 
@@ -97,4 +99,7 @@ ar_clean <- bind_rows(ar_app, ar_fund) %>%
   mutate(state = "Arkansas",
          category = "1")
 
-write.csv(ar_clean, "year1/AR/data/AR-clean.csv", row.names=FALSE)
+rm(list=setdiff(ls(), "ar_clean"))
+
+return(ar_clean)
+}

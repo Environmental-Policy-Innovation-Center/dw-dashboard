@@ -60,5 +60,5 @@ clean_mt <- function() {
 
   rm(list=setdiff(ls(), "mt_clean"))
   
-  return(mt_clean)
+  return(NULL)
 }

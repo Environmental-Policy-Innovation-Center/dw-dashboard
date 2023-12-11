@@ -93,5 +93,5 @@ clean_oh <- function() {
   
   rm(list=setdiff(ls(), "oh_clean"))
   
-  return(oh_clean)
+  return(NULL)
 }

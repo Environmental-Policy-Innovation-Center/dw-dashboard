@@ -107,5 +107,5 @@ clean_ca <- function() {
   
   rm(list=setdiff(ls(), "ca_clean"))
 
-  return(ca_clean)
+  return(NULL)
 }

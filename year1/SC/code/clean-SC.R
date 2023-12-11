@@ -94,5 +94,5 @@ clean_sc <- function() {
   
   rm(list=setdiff(ls(), "sc_clean"))
   
-  return(sc_clean)
+  return(NULL)
 }

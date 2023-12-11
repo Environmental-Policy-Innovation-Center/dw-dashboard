@@ -34,9 +34,7 @@ clean_ri <- function() {
     select(-loan_amount) %>%
     left_join(ri_comp, by="borrower")
   
-  ri_clean <- NULL
-  
   rm(list=setdiff(ls(), "ri_clean"))
   
-  return(ri_clean)
+  return(NULL)
 }

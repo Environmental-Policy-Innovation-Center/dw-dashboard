@@ -43,5 +43,5 @@ clean_wa <- function() {
   
   rm(list=setdiff(ls(), "wa_clean"))
   
-  return(wa_clean)
+  return(NULL)
 }

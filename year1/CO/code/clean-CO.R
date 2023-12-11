@@ -151,6 +151,6 @@ clean_co <- function() {
   
   rm(list=setdiff(ls(), "co_clean"))
   
-  return(co_clean)
+  return(NULL)
 
 }

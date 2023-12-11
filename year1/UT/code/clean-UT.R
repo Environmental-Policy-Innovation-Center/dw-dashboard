@@ -43,5 +43,5 @@ clean_ut <- function() {
   
   rm(list=setdiff(ls(), "ut_clean"))
   
-  return(ut_clean)
+  return(NULL)
 }

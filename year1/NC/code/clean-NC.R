@@ -46,5 +46,5 @@ clean_nc <- function() {
   
   rm(list=setdiff(ls(), "nc_clean"))
   
-  return(nc_clean)
+  return(NULL)
 }

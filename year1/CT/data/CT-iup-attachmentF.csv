@@ -1,0 +1,108 @@
+Rank,Project #,PWSID,Public Water System,Town of PWS,Project Name,Points,Amount Requested,Project Serves a Disadvantaged Community,Small System,Population Served by Project,Lead Service Line,Lead Service Line Estimated Amount,Emerg. Contam,Emerg. Contam. Estimated Amount
+1,SFY 23-15,CT0320312,Town of Coventry (George Hersey  Robertson School),Coventry,CTWC - South Coventry to Nathan Hale System  Interconnection,110,"$5,000,000",No,Yes,176,No,$,Yes,"$     5,000,000"
+2,SFY 23-13,CT0720041,SCWA-Tower-Ferry View Division,Ledyard,Replacement Pump Station and Storage Facilities,95,"$1,124,000",Yes,Yes,897,No,$,No,$                      -
+3,SFY 23-70,CT0700204,Killingworth Town Hall,Killingworth,PFAS/Sodium Remediation,95,"$699,000",No,Yes,100,No,$,Yes,"$         699,000"
+4,SFY 23-25,CT0930011,Regional Water Authority,New Haven,Raynham Hill Pump Station Improvements,85,"$1,950,000",Yes,No,700,No,$,No,$                      -
+5,SFY 23-16,CT0320312,Town of Coventry (George Hersey  Robertson School),Coventry,CTWC - South Coventry to Lakeview Terrace System  Interconnection,85,"$6,400,000",No,Yes,"1,045",No,$,No,$                      -
+6,SFY 23-51,CT0340011,Danbury Water Department,Danbury,Margerie Water Treatment Plant Rehabilitation  (Planning/Design),85,"$2,337,500",No,No,"65,000",No,$,Yes,"$     2,337,500"
+7,SFY 21-46,CT0930012,Regional Water Authority,New Haven,West River WTP Improvements Project,75,"$16,300,000",Yes,No,"44,811",No,$,No,$                      -
+8,SFY 23-07,CT1040011,Norwich Public Utilities,Norwich,Bozrah Route 82 Water Supply,75,"$3,000,000",No,No,160,No,$,No,$                      -
+9,SFY 23-66,CT0760021,CTWC-Green Springs System,Madison,Water System Consolidation,75,"$4,300,000",No,No,104,No,$,No,$                      -
+10,SFY 23-62,CT1570132,Weston Schools and Municipal  Buildings,Weston,System Improvements (design & construction),75,"$1,000,000",No,Yes,"2,600",No,$,No,$                      -
+11,SFY 22-40,CT1180071,Aquarion Water Company of CT- Craigmoor,Ridgefield,Craigmoor Interconnection to address PFAS,75,"$2,344,000",No,No,61,No,$,Yes,"$     2,344,000"
+12,SFY 23-71,CT0709003,Killingworth Elementary School,Killingworth,Small Loan Program-PFAS Remediation,70,"$95,000",No,Yes,340,No,$,Yes,"$           95,000"
+13,SFY 18-15,CT0090011,Bethel Water Department,Bethel,"Bergstrom Well Field (Planning, Design, &  Construction)",65,"$10,567,000",Yes,Yes,"9,507",No,$,Yes,"$   10,567,000"
+14,SFY 22-07,CT0470021,School Hill Association,East Windsor,School Hill Association Consolidation with CT Water  Co.,65,"$1,156,250",Yes,Yes,87,No,$,No,$                      -
+15,SFY 22-38,CT1160011,Putnam WPCA,Putnam,Lead Service Lines - Inventorying  Replacement  Program (Planning) 2,60,"$170,000",Yes,Yes,"7,300",Yes,"$            170,000",No,$                      -
+16,SFY 23-80,CT0860041,Kitemaug Orchard Association,Montville,Small Loan Program-Pump House Upgrades,60,"$91,400",Yes,Yes,490,No,$,No,$                      -
+17,SFY 22-28,CT0930011,Regional Water Authority,New Haven,Lead Service Lines - Inventory (Planning) 2,60,"$5,000,000",Yes,No,"427,798",Yes,"$         5,000,000",No,$                      -
+18,SFY 22-18,CT0640011,Metropolitan District Commission,Hartford,Lead Service Lines - Inventory/Mapping/  Replacement (Planning) 2,60,"$1,750,000",Yes,No,"390,887",Yes,"$         1,750,000",No,$                      -
+19,SFY 22-47,CT1510011,Waterbury Water Department,Waterbury,Lead Service Line - Inventorying and Lead Service  Lines Replacement Program (Planning) 2,60,"$700,000",Yes,No,"109,676",Yes,"$            700,000",No,$                      -
+20,SFY 22-22,CT0890011,New Britain Water Department,New Britain,Patton Brook Well Potable Water Main (design),60,"$500,000",Yes,No,"75,000",No,$,No,$                      -
+21,SFY 22-25,CT0890011,New Britain Water Department,New Britain,Lead Service Lines - Inventorying  Replacement  Program (Planning) 2,60,"$1,000,000",Yes,No,"73,164",Yes,"$         1,000,000",No,$                      -
+22,SFY 20-31,CT0950011,New London Water Department,New London,System-wide Lead Service Lines -   Replacement  (Planning) 2,60,"$1,500,000",Yes,No,"26,000",Yes,"$         1,500,000",No,$                      -
+23,SFY 22-52,CT0950011,New London Water Department,New London,System-wide Lead Service Lines -   Replacement  (Design & Construction) Phase 1 2,60,"$7,210,000",Yes,No,"26,000",Yes,"$         7,210,000",No,$                      -
+24,SFY 22-03,CT0170011,Bristol Water Department,Bristol,Lead Service Lines - Replacement (Planning) 2,60,"$300,000",Yes,No,"17,000",Yes,"$            300,000",No,$                      -
+25,SFY 22-36,CT1040011,Norwich Public Utilities,Norwich,Lead Service Line - Inventorying  Replacement  Program (Planning) 2,60,"$150,000",Yes,No,"10,000",Yes,"$            150,000",No,$                      -
+26,SFY 23-45,CT0590011,Groton Utilities,Groton,Lead Service Lines Replacement (Planning) 2,60,"$396,000",Yes,No,"9,269",Yes,"$            396,000",No,$                      -
+27,SFY 22-01,CT0150011,Aquarion Water Company of CT -  Main System,Bridgeport,Lead Service Lines - Inventory (Planning)2,60,"$4,000,000",Yes,No,"2,600",Yes,"$         4,000,000",No,$                      -
+28,SFY 22-02,CT0150011,Aquarion Water Company of CT -  Main System,Bridgeport,Lead Service Lines - Replacement (Construction)2,60,"$1,853,000",Yes,No,306,Yes,"$         1,853,000",No,$                      -
+29,SFY 20-49,CT1570112,Weston Field Club - Well #1,Weston,Corrosion Control Treatment (Lead and Copper Rule),60,"$84,795",No,Yes,366,No,$,No,$                      -
+30,SFY 22-06,CT0340131,Aquarion Water Company of CT-Cedar  Heights,Danbury,Cedar Heights Interconnection to address PFAS,60,"$2,915,000",No,No,375,No,$,Yes,"$     2,915,000"
+31,SFY 21-41,CT1620011,Winsted Water Works,Winchester,"Water Main Replacements #3-West Wakefield, Vons",55,"$1,335,600",Yes,Yes,100,No,$,No,$                      -
+32,SFY 23-11,CT1429191,Tolland Water Department - Torry  Road,Tolland,Water Main Extension - Vineyards Subdivision,55,"$14,600,000",No,Yes,290,No,$,Yes,"$   14,600,000"
+33,SFY 18-28,CT0640011,Metropolitan District Commission,Hartford,Orchard St. Pump Station Rehabilitation -  Glastonbury,55,"$2,680,000",No,No,"4,956",No,$,No,$                      -
+34,SFY 23-03,CT0800011,Meriden Water Division,Meriden,Elmere Water Treatment Plant Upgrade  (Planning/Design),50,"$2,150,000",Yes,No,"58,441",No,$,No,$                      -
+35,SFY 21-29,CT1040011,Norwich Public Utilities,Norwich,Business Park Tank Mixing/Aeration System,50,"$800,000",Yes,No,870,No,$,No,$                      -
+36,SFY 21-30,CT1040011,Norwich Public Utilities,Norwich,Richard Brown Drive Tank Mixing/Aeration System,50,"$800,000",Yes,No,650,No,$,No,0
+37,SFY 23-81,CT0090011,Bethel Water Department,Bethel,Lead Service Lines - Inventory (Planning)2,50,"$174,680",Yes,Yes,"9,507",Yes,"$            174,680",No,$                      -
+38,SFY 23-63,CT0201021,"Woodcrest Association, Inc.",Burlington,Hydropneumatic Tank Elimination,50,"$45,000",No,Yes,60,No,$,No,$                      -
+39,SFY 23-50,CT0340011,Danbury Water Department,Danbury,Lead Service Lines - Inventory (Planning) 2,50,"$150,000",Yes,No,"65,000",Yes,"$            150,000",No,$                      -
+40,SFY 22-34,CT1030021,South Norwalk Electric & Water,Norwalk,Lead Service Lines - Inventory and Replacement  Study (Planning) 2,50,"$250,000",No,No,"42,000",Yes,"$            250,000",No,$                      -
+41,SFY 23-04,CT0830011,Middletown Water Department,Middletown,Lead Service Lines - Replacement (Planning) 2,50,"$70,000",Yes,No,"41,019",Yes,"$              70,000",No,$                      -
+42,SFY 23-82,CT0830011,Middletown Water Department,Middletown,Lead Service Lines -  Replacement (Construction) 2,50,"$4,730,000",Yes,No,"41,019",Yes,"$         4,730,000",No,$                      -
+43,SFY 23-12,CT1030011,Norwalk First Taxing District,Norwalk,Lead Service Lines - Inventory 2,50,"$500,000",No,No,"40,256",Yes,"$            500,000",No,$                      -
+44,SFY 20-33,CT1030011,Norwalk First Taxing District,Norwalk,Kellogg-Deering Wellfield Treatment - Manganese  and PFAS (Construction),50,"$5,000,000",See Footnote 4,No,"20,000",No,$,Yes,"$     5,000,000"
+45,SFY 23-64,CT0473011,CTWC-Northern Reg-Western System,East Windsor,Egypt Road Water Treatment Plant,50,"$7,100,000",No,No,"2,383",No,$,Yes,"$     7,100,000"
+46,SFY 23-22,CT1520071,Waterford WPCA,Waterford,Old Norwich Road Pump Station Chlorination Station,50,"$100,000",No,No,"1,500",No,$,No,$                      -
+47,SFY 21-33,CT1310011,Southington Water Department,Southington,Lead Service Lines (Planning) - Phase 1 2,50,"$150,000",No,No,270,Yes,"$            150,000",No,$                      -
+48,SFY 21-21,CT0330011,Cromwell Fire District Water  Department,Cromwell,Emergency Interconnections,45,"$1,500,000",No,No,"13,900",No,$,No,$                      -
+49,SFY 23-46,CT0910011 /  CT0910031,Aquarion Water Company of CT - Ball  Pond & Oakwood Acres,New Fairfield,New Fairfield PFAS Treatment,45,"$1,218,000",No,No,874,No,$,Yes,"$     1,218,000"
+50,SFY 23-26,CT0930011,Regional Water Authority,New Haven,"Headquarters Building - Resiliency and  Infrastructure Upgrades (planning, design)",40,"$4,850,000",Yes,No,"430,953",No,$,No,$                      -
+51,SFY 22-13,CT0640011,Metropolitan District Commission,Hartford,Hartford Hospital Area Water Main Replacement  Hartford,40,"$6,600,000",Yes,No,"8,000",No,$,No,$                      -
+52,SFY 23-55,CT0640011,Metropolitan District Commission,Hartford,Water Main Replacement East Hartford,40,"$8,262,450",Yes,No,"1,264",No,$,No,$                      -
+53,SFY 21-09,CT0640011,Metropolitan District Commission,Hartford,Capitol Avenue Area Water Main Replacement  Hartford,40,"$8,925,000",Yes,No,"1,100",No,$,No,$                      -
+54,SFY 23-57,CT0640011,Metropolitan District Commission,Hartford,Water Main Replacement Hubbard Rd Area Hartford,40,"$6,000,000",Yes,No,432,No,$,No,$                      -
+55,SFY 23-48,CT0710011,Carefree Homeowners Assn.,Lebanon,System Improvements,40,"$1,300,000",No,Yes,172,No,$,No,$                      -
+56,SFY 20-50,CT0450011,East Lyme Water & Sewer,East Lyme,Well 2A Treatment (Design),40,"$1,400,000",No,No,"15,000",No,$,Yes,"$     1,400,000"
+57,SFY 23-29,CT0960091,"Candlewood Trails Association, Inc.",New Milford,Infrastructure Improvements,40,"$975,000",No,Yes,350,No,$,No,$                      -
+58,SFY 23-77,CT0890011,New Britain Water Department,New Britain,Whigville Dam Rehabilitation 1,35,"$700,000",Yes,No,"75,000",No,$,No,$                      -
+59,SFY 23-73,CT0950011,New London Dept. Of Utilities,New London,Lake Konomoc Dam Rehabilitation Project 1,35,"$1,975,000",Yes,No,"45,000",No,$,No,$                      -
+60,SFY 19-09,CT0930011,Regional Water Authority,New Haven,Ansonia-Derby Atmospheric Storage Tank,35,"$3,707,000",Yes,No,"13,000",No,$,No,$                      -
+61,SFY 23-02,CT1630011,Windham Water Works,Windham,Water Meter Upgrade Project,35,"$174,983",Yes,No,"4,749",No,$,No,$                      -
+62,SFY 23-52,CT0340011,Danbury Water Department,Danbury,West Lake Water Treatment Plant Rehabilitation  (Planning/Design),35,"$5,537,500",Yes,No,"65,000",No,$,Yes,"$     5,537,500"
+63,SFY 22-27,CT0930011,Regional Water Authority,New Haven,Lake Gaillard WTP Clarifiers & Recycle Building  Improvements,30,"$7,000,000",Yes,No,"265,453",No,$,No,$                      -
+64,SFY 23-24,CT0930011,Regional Water Authority,New Haven,Rt 80 Control Valve Replacement,30,"$3,600,000",Yes,No,"110,102",No,$,No,$                      -
+65,SFY 21-28,CT1510011,Waterbury Water Department,Waterbury,Repair and Rehabilitation of the Wigwam Reservoir  Dams 1,30,"$2,200,000",Yes,No,"108,093",No,$,No,$                      -
+66,SFY 23-30,CT1510011,Waterbury Water Department,Waterbury,Advanced Metering Infrastructure (AMI) installation,30,"$5,000,000",Yes,No,"108,000",No,$,No,$                      -
+67,SFY 23-34,CT1510011,Waterbury Water Department,Waterbury,Third Water Transmission Main Rehabilitation -  Sliplining,30,"$6,000,000",Yes,No,"108,000",No,$,No,$                      -
+68,SFY 22-24,CT0890011,New Britain Water Department,New Britain,Shuttle Meadow Reservoir Canal Lining (design),30,"$75,000",Yes,No,"75,000",No,$,No,$                      -
+69,SFY 22-23,CT0890011,New Britain Water Department,New Britain,Ice Pigging of Twin Transmission Mains  (planning/design),30,"$120,000",Yes,No,"73,164",No,$,No,$                      -
+70,SFY 20-28,CT0930011,Regional Water Authority,New Haven,Lake Saltonstall WTP Electrical Improvements,30,"$1,800,000",Yes,No,"48,225",No,$,No,$                      -
+71,SFY 23-72,CT0950011,New London Dept. Of Utilities,New London,Lake Konomoc Water Treatment Filter Upgrades,30,"$4,850,000",Yes,No,"45,000",No,$,No,$                      -
+72,SFY 23-65,CT1090031,CTWC - Gallup System,Plainfield,Gallup Central Treatment,30,"$2,000,000",Yes,No,"2,538",No,$,No,$                      -
+73,SFY 21-15,CT0800011,Meriden Water Division,Meriden,Various Water Main Lining Improvements,30,"$1,000,000",Yes,No,710,No,$,No,$                      -
+74,SFY 23-01,CT1040011,Norwich Public Utilities,Norwich,Caribou Drive Water Main Replacement,30,"$2,372,600",Yes,No,130,No,$,No,$                      -
+75,SFY 23-19,CT0280011,Colchester Sewer and Water  Commission,Colchester,Cabin Road Filter Plant Upgrades,30,"$700,000",No,Yes,"4,020",No,$,Yes,"$         700,000"
+76,SFY 22-55  CT1030011,,Norwalk First Taxing District,Norwalk,Rehabilitation of Grupes Reservoir Dam 1,30,"$5,000,000",No,No,"40,000",No,$,No,$                      -
+77,SFY 23-23,CT1520071,Waterford WPCA,Waterford,Plastic Service Line Replacement Program,30,"$1,500,000",No,No,"1,500",No,$,No,$                      -
+78,SFY 22-09,CT0640011,Metropolitan District Commission,Hartford,Bishop's Corner Water Main Replacement West  Hartford,30,"$5,775,000",No,No,"1,200",No,$,No,$                      -
+79,SFY 23-32,CT1510011,Waterbury Water Department,Waterbury,Water Treatment Plant Heating and Cooling System  Replacement,25,"$1,000,000",Yes,No,"108,000",No,$,No,$                      -
+80,SFY 23-35,CT1510011,Waterbury Water Department,Waterbury,Removing and replacing all five existing Motor  Control Centers (MCC) at the Waterbury WTP,25,"$3,000,000",Yes,No,"108,000",No,$,No,$                      -
+81,SFY 23-36,CT1510011,Waterbury Water Department,Waterbury,Water Treatment Plant Raw Water influent channel  electrical valve actuators installation,25,"$100,000",Yes,No,"108,000",No,$,No,$                      -
+82,SFY 22-49,CT1630011,Windham Water Works,Windham,South Windham Water Storage Tank,25,"$600,000",Yes,No,"24,799",No,$,No,$                      -
+83,SFY 22-43,CT1510011,Waterbury Water Department,Waterbury,6 inch Ductile Iron Pipe water main pipe and  appurtenances installations,25,"$5,000,000",Yes,No,"10,000",No,$,No,$                      -
+84,SFY 23-05,CT0760014,"Camp Laurelwood, Incorporated",Madison,Water System Improvement Project,25,"$275,000",No,Yes,400,No,$,No,$                      -
+85,SFY 23-17,CT0070031,Worthington Fire District,Berlin,Webster Heights Water Main Replacement,25,"$800,000",No,Yes,250,No,$,No,$                      -
+86,SFY 21-13,CT0864011,Montville Water Supply,Montville,Cook Hill Tank Evaluation and  Rehabilitation,20,"$776,000",Yes,Yes,1300,No,$,No,$                      -
+87,SFY 23-31,CT1510011,Waterbury Water Department,Waterbury,Blackman storage tanks installation,20,"$7,000,000",Yes,No,"108,000",No,$,No,$                      -
+88,SFY 23-33,CT1510011,Waterbury Water Department,Waterbury,Water Treatment Plant Drying Bed Lagoons  Expansion,20,"$1,000,000",Yes,No,"108,000",No,$,No,$                      -
+89,SFY 23-37,CT1510011,Waterbury Water Department,Waterbury,Security Fencing - Water Department System-wide,20,"$3,000,000",Yes,No,"108,000",No,$,No,$                      -
+90,SFY 23-41,CT1510011,Waterbury Water Department,Waterbury,"Vivian Tank 8"" Water Main Extension",20,"$3,750,000",Yes,No,"108,000",No,$,No,$                      -
+91,SFY 21-36,CT0170011,Bristol Water Department,Bristol,SCADA Upgrades,20,"$3,100,000",Yes,No,"60,000",No,$,No,$                      -
+92,SFY 21-31,CT1040011,Norwich Public Utilities,Norwich,Yantic Tank Painting,20,"$510,000",Yes,No,"1,300",No,$,No,$                      -
+93,SFY 18-13,CT0090011,Bethel Water Department,Bethel,SCADA Upgrades,20,"$780,938",Yes,Yes,"9,507",No,$,No,$                      -
+94,SFY 23-54,CT1420041,Woodland Summit Community Water  Association,Tolland,Small Loan Program - Pump Replacement & Chlorine  Treatment,20,"$40,800",No,Yes,162,No,$,No,$                      -
+95,SFY 23-09,CT0120111,Cook Drive Water Association,Bolton,Emergency Power Generator Program,20,"$9,998",No,Yes,55,No,$,No,$                      -
+96,SFY 23-76,CT1030021,South Norwalk Electric and Water,Norwalk,Emergency Power Generator Program -  Replacement Generator,20,"$70,000",No,No,"42,000",No,$,No,$                      -
+97,SFY 23-78,CT0830011,Middletown Water Department,Middletown,Bartholomew Pump Station,20,"$1,400,000",Yes,No,994,No,$,No,$                      -
+98,SFY 23-10,CT1530021,Watertown Water and Sewer  Authority,Watertown,Carvel Meter Vault Relocation,20,"$175,000",No,Yes,"9,972",No,$,No,$                      -
+99,SFY 23-38,CT1510011,Waterbury Water Department,Waterbury,Waterbury Water System Pump Stations Upgrades,15,"$10,000,000",Yes,No,"108,000",No,$,No,$                      -
+100,SFY 23-39,CT1510011,Waterbury Water Department,Waterbury,SCADA Upgrade,15,"$5,000,000",Yes,No,"108,000",No,$,No,$                      -
+101,SFY 23-40,CT1510011,Waterbury Water Department,Waterbury,Waterbury Water System Security Protection,15,"$7,500,000",Yes,No,"108,000",No,$,No,$                      -
+102,SFY 22-54,CT1420021,Baxter Farm Community Water  Association,Tolland,Water Storage Tank Replacement,15,"$108,550",No,Yes,175,No,$,No,$                      -
+103,SFY 20-17,CT0770021,Manchester Water Department,Manchester,Water Main Replacement - Chestnut St. Area,15,"$1,500,000",Yes,No,440,No,$,No,$                      -
+104,SFY 20-41,CT1520071,Waterford WPCA,Waterford,Fargo Road Tank Recoating Project,10,"$1,200,000",No,No,"16,578",No,$,No,$                      -
+105,SFY 20-20,CT0770021,Manchester Water Department,Manchester,Well #6 Replacement,10,"$300,000",See Footnote 4,No,"15,000",No,$,No,$                      -
+106,SFY 22-21,CT0770021,Manchester Water Department,Manchester,Griswold Street Area Water Main Replacement,10,"$1,500,000",No,No,520,No,$,No,$                      -
+107,SFY 23-18,CT0280011,Colchester Sewer and Water  Commission,Colchester,Water Tank Recoating,5,"$350,000",No,Yes,"4,020",No,$,No,$                      -

@@ -89,7 +89,8 @@ source("year1/KS/code/clean-KS.R")
 ks_clean <- clean_ks()
 
 # Kentucky
-
+source("year1/KY/code/clean-KY.R")
+ky_clean <- clean_ky()
 
 # Louisiana
 source("year1/LA/code/clean-LA.R")

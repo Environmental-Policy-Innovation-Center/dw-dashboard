@@ -49,6 +49,8 @@ source("year1/CO/code/clean-CO.R")
 co_clean <- clean_co()
 
 # Connecticut
+source("year1/CT/code/clean-CT.R")
+ct_clean <- clean_ct()
 
 # Delaware
 source("year1/DE/code/clean-DE.R")

@@ -1,20 +1,20 @@
-
-
-#currently a dummy test folder, needs to be updated to include each state folder for each year
-folder_ids = {
-    'year1/AL':'16GVk_dJuAlg42fo7u5rcCdyr725Y6hVj'
-}
-
 import gdown
-def downloadTempDriveFolder(path):
-    gdown.download_folder(id= folder_ids.get(path), 
-                          output= path + "/temp-docs", 
+def downloadTempDriveFolder(folderID):
+    '''
+    Takes the folder ID of a publicly accessible Drive folder and 
+    downloads the files within to /temp-docs one folder up from the current directory.
+    Drive folder ID is found by copying the sharing link and removing everything 
+    except the string of characters between 'https://drive.google.com/drive/folders/' and '?usp=drive_link' 
+    '''
+    gdown.download_folder(id= folderID, 
+                          output= "../temp-docs", 
                           quiet= False, 
                           use_cookies= False)
-    print("Files stored in " + path + '/temp-docs')
+    print("Files stored in /temp-docs")
     
 
 import shutil
-def deleteTempDriveFolder(path):
-    shutil.rmtree(path + '/temp-docs')
-    print("Deleted folder and all files within " + path + '/temp-docs')
+def deleteTempDriveFolder():
+    '''Deletes the folder and files created by downloadTempDriveFolder()'''
+    shutil.rmtree('../temp-docs')
+    print("Deleted folder and all files within /temp-docs")

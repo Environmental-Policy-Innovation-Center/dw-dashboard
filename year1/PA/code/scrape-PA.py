@@ -1,3 +1,6 @@
+# NOTE: This script was provided by MDI and is kept as an example of how to use the URL / pdfReader approach
+# should there be a need to use it instead of the camelot package.
+
 import pandas as pd
 import numpy as np
 import PyPDF2 

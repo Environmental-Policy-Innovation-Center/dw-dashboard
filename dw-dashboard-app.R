@@ -42,6 +42,7 @@ library(ggplot2)
 
 
 
+
 ui <- fluidPage(
   detect(),
   useWaitress(),

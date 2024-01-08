@@ -137,7 +137,7 @@ jobs:
     - name: update ECS service with new image
       env:
         ECS_IMAGE: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}
-         ECS_SERVICE_COMPOSITE_NAME: ep_app__${{ env.ECS_SERVICE_NAME }}__${{ env.ENV }}_${{ env.AWS_REGION }}
+        ECS_SERVICE_COMPOSITE_NAME: ep_app__${{ env.ECS_SERVICE_NAME }}__${{ env.ENV }}_${{ env.AWS_REGION }}
       run: |
 
         sudo apt-get install -y awscli jq

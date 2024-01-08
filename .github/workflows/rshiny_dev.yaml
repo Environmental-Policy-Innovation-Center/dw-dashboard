@@ -5,7 +5,7 @@ on:
     branches: [main]
     # paths:
     #  - "**"
-
+    
   workflow_dispatch:
   
 #----------------------------
@@ -17,13 +17,13 @@ env:
 
   # ECR
   ECR_REGISTRY: 516937823875.dkr.ecr.us-east-1.amazonaws.com
-  ECR_REPOSITORY: ep_app_service_dw_dashboard
+  ECR_REPOSITORY: ep_app_service_dw_dashboard_two
 
   # ECS
   ECS_CLUSTER_NAME: ep_core__dev_us-east-1
-  ECS_FAMILY: dw_dashboard
-  ECS_SERVICE_NAME: dw_dashboard
-  ECS_SERVICE_SHORT_NAME: dwd
+  ECS_FAMILY: dw_dashboard_two
+  ECS_SERVICE_NAME: dw_dashboard_two
+  ECS_SERVICE_SHORT_NAME: dwt
   ECR_SERVICE_BUILDER_IMAGE: 516937823875.dkr.ecr.us-east-1.amazonaws.com/ep_service_builder:latest
 
   EC2_SERVICE_INSTANCE_TYPE: t3.micro

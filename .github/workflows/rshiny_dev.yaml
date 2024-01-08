@@ -21,12 +21,12 @@ env:
 
   # ECS
   ECS_CLUSTER_NAME: ep_core__dev_us-east-1
-  ECS_FAMILY: dw_dashboard_two
-  ECS_SERVICE_NAME: dw_dashboard_two
-  ECS_SERVICE_SHORT_NAME: dwt
+  ECS_FAMILY: dw_dashboard
+  ECS_SERVICE_NAME: dw_dashboard
+  ECS_SERVICE_SHORT_NAME: dwd
   ECR_SERVICE_BUILDER_IMAGE: 516937823875.dkr.ecr.us-east-1.amazonaws.com/ep_service_builder:latest
 
-  EC2_SERVICE_INSTANCE_TYPE: t3.micro
+  EC2_SERVICE_INSTANCE_TYPE: t3.medium
   EC2_SERVICE_INSTANCE_COUNT: 1
   ECS_SERVICE_CONTAINER_RAM_MB: 900
 

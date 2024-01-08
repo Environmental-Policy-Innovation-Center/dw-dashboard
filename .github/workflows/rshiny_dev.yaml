@@ -1,10 +1,11 @@
-name: dev
+name: rshiny_dev
 
 on:
   push:
-    branches: [main]
+    branches: [infra-pipeline,main]
     # paths:
     #  - "**"
+
 
   workflow_dispatch:
   
@@ -22,13 +23,7 @@ env:
   # ECS
   ECS_CLUSTER_NAME: ep_core__dev_us-east-1
   ECS_FAMILY: dw_dashboard
-  ECS_SERVICE_NAME: dw_dashboard
-  ECS_SERVICE_SHORT_NAME: dwd
-  ECR_SERVICE_BUILDER_IMAGE: 516937823875.dkr.ecr.us-east-1.amazonaws.com/ep_service_builder:latest
-
-  EC2_SERVICE_INSTANCE_TYPE: t3.micro
-  EC2_SERVICE_INSTANCE_COUNT: 1
-  ECS_SERVICE_CONTAINER_RAM_MB: 900
+  ECS_SERVICE_NAME: ep_app__dw_dashboard__dev_us-east-1
 
 #----------------------------
 jobs:
@@ -65,30 +60,11 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     #-------------------------------
-    # AWS_ECR_LOGIN
-    - name: login to AWS ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    #-------------------------------
     # INIT_OPS
-    - name: run service_builder
+    - name: initialize ops
       run: |
-        docker pull ${{ env.ECR_SERVICE_BUILDER_IMAGE }}
-
-        docker run \
-          -e EP_ENV=${{ env.ENV }} \
-          -e EP_ECS_CLUSTER_NAME=${{ env.ECS_CLUSTER_NAME }} \
-          -e EP_SERVICE_NAME=${{ env.ECS_SERVICE_NAME }} \
-          -e EP_SERVICE_SHORT_NAME=${{ env.ECS_SERVICE_SHORT_NAME }} \
-          -e EP_SERVICE_INSTANCE_TYPE=${{ env.EC2_SERVICE_INSTANCE_TYPE }} \
-          -e EP_SERVICE_INSTANCE_COUNT=${{ env.EC2_SERVICE_INSTANCE_COUNT }} \
-          -e EP_SERVICE_CONTAINER_RAM_MB=${{ env.ECS_SERVICE_CONTAINER_RAM_MB }} \
-          -e EP_TF_STATE_S3_BUCKET_NAME=ep-service-builder \
-          -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-          -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-          -e AWS_REGION=us-east-1 \
-          ${{ env.ECR_SERVICE_BUILDER_IMAGE }}
+        pip3 install -r ./main/ops/requirements.txt
+        python3 ./main/ops/main.py
 
     #-------------------------------
     # CONTAINER_BUILD
@@ -99,6 +75,12 @@ jobs:
 
         # add second "latest" tag to this image
         docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+    #-------------------------------
+    # AWS_ECR_LOGIN
+    - name: login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
     #-------------------------------
     # CONTAINER_PUBLISH
@@ -137,10 +119,8 @@ jobs:
     - name: update ECS service with new image
       env:
         ECS_IMAGE: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.COMMIT_SHA }}
-        ECS_SERVICE_COMPOSITE_NAME: ep_app__${{ env.ECS_SERVICE_NAME }}__${{ env.ENV }}_${{ env.AWS_REGION }}
       run: |
 
-        sudo apt-get update
         sudo apt-get install -y awscli jq
 
         #-----------------------
@@ -161,7 +141,7 @@ jobs:
         #-----------------------
         # UPDATE_SERVICE
         
-        aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_COMPOSITE_NAME }} --task-definition $task_def_arn
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_NAME }} --task-definition $task_def_arn
 
         #-----------------------
 

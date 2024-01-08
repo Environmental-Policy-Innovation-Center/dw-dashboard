@@ -23,7 +23,7 @@ env:
   # ECS
   ECS_CLUSTER_NAME: ep_core__dev_us-east-1
   ECS_FAMILY: dw_dashboard
-  ECS_SERVICE_NAME: ep_app__dw_dashboard__dev_us-east-1
+  ECS_SERVICE_NAME: dw_dashboard
   ECS_SERVICE_SHORT_NAME: dw
   ECR_SERVICE_BUILDER_IMAGE: 516937823875.dkr.ecr.us-east-1.amazonaws.com/ep_service_builder:latest
   

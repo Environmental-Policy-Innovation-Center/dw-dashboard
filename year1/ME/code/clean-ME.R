@@ -25,11 +25,21 @@ clean_me <- function() {
     select(borrower, project_name, project_description, state_score, funding_amount, 
            principal_forgiveness_amount, project_type, funding_status)
   
+  # process backup list as Applicant projects that were not funded
+  me_backup <- fread("year1/ME/data/19-Maine_PPL_BackupList.csv",
+                     colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    mutate(funding_status = "Not Funded")
+  
   
   # process comprehensive list
   me_comp <- fread("year1/ME/data/19-Maine_PPL_Comprehensive.csv",
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
+    mutate(funding_status = "Funded")
+  
+  me_comp <- me_comp %>%
+    bind_rows(me_comp, me_backup) %>%
     # drop columns
     select(-pf_percent, -percent_annual_water_bill_of_mhi, -project_type) %>%
     # process numeric columns
@@ -53,12 +63,11 @@ clean_me <- function() {
            disadvantaged = case_when(
              principal_forgiveness_amount > funding_amount * .1 ~ "Yes",
              TRUE ~ "No"),
-           funding_status = "Funded",
-           state = "Maine",
            project_type = "General",
     ) %>%
     select(borrower, pwsid, state_score, project_name,  project_description, funding_amount, 
            principal_forgiveness_amount,  disadvantaged, project_type, population, funding_status)
+    
   
   ##TODO: row bind EC and clean
   me_clean <- bind_rows(me_comp, me_ec) %>%

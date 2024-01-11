@@ -69,7 +69,6 @@ clean_me <- function() {
            principal_forgiveness_amount,  disadvantaged, project_type, population, funding_status)
     
   
-  ##TODO: row bind EC and clean
   me_clean <- bind_rows(me_comp, me_ec) %>%
     mutate(state = "Maine",
            category = "3")

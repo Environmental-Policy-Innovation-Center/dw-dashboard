@@ -6,11 +6,15 @@ def downloadTempDriveFolder(folderID, path):
     Drive folder ID is found by copying the sharing link and removing everything 
     except the string of characters between 'https://drive.google.com/drive/folders/' and '?usp=drive_link' 
     '''
-    gdown.download_folder(id= folderID, 
+    try:
+        gdown.download_folder(id= folderID, 
                           output= path, 
                           quiet= False, 
                           use_cookies= False)
-    print("Files stored in " + path)
+        print("Files stored in " + path)
+    
+    except Exception as e:
+        print(f"Error during download: {e}")
     
 
 import shutil

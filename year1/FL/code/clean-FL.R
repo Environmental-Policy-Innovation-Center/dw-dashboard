@@ -16,12 +16,29 @@ clean_fl <- function() {
            project_name = str_squish(project_number),
            project_description = str_squish(project_description),
            state_score = str_replace_all(priority_score,"[^0-9.]",""),
-           project_type = "General",
-           state = "Florida",
-           category = "",
            funding_status = "Funded") %>%
     select(borrower, project_name, project_description, state_score, funding_amount, 
-           principal_forgiveness_amount, project_type, state, funding_status, category)
+           principal_forgiveness_amount, funding_status)
+  
+  #NOTE: This file was created manually as it only includes two rows
+  fl_waiting <- fread("year1/FL/data/9-Florida_ppl_WaitingList.csv",
+                      colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    # format number columns
+    mutate(project_cost = as.numeric(str_replace_all(estimated_unfunded_cost,"[^0-9.]",""))) %>%
+    # format text columns 
+    mutate(borrower = str_squish(applicant),
+           project_name = str_squish(project_nbr),
+           project_description = str_squish(project_description),
+           state_score = str_squish(priority_score),
+           funding_status = "Not Funded") %>%
+    select(borrower, project_name, project_description, state_score, project_cost, funding_status)
+    
+    
+  fl_clean <- bind_rows(fl_fund, fl_waiting) %>%
+    mutate(state = "Flordia",
+           project_type = "General",
+           category = "1")
   
   # rm(list=setdiff(ls(), "fl_clean"))
 

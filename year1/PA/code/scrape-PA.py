@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import PyPDF2 
 import tabula
-import camelot
+import camelot.io as camelot
 import ghostscript
 import re
 import os

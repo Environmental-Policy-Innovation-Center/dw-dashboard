@@ -8,8 +8,10 @@ For important context and caveats regarding how to interpret and use this data, 
 
 The project's pipeline includes:
 
--   Parsing state documents, typically stored as PDFs, into CSVs. This process must be done individually for each document. A sample of the parsing code is available in the `pdf-parsing-code` folder along with scripts used to correct parsed tables when needed. Each of the resulting CSVs are available in the `data` folder.
+-   Scraping data from tables in state documents, typically stored as PDFs, into CSVs. This process must be done individually for each document. Within each state folder for a given year, a python notebook details the scraping process. Each of the resulting CSVs are available in the state's `data` folder.
 
--   Standardizing state project tables into a single dataset. The `srf-standardization.Rmd` notebook takes in CSVs of each state's parsed PDF tables. It transforms each state's particular projects into the variables presented in the dashboard, prepares the standardized data for use in the dashboard, and integrates external data needed for additional dashboard features.
+-   Cleaning the raw scraped data. Within each state folder, a R script takes in the resulting scraped CSVs and details how each table is cleaned and made ready to be standardized.
+
+-   Standardizing state project tables into a single dataset. The `state-standardization.Rmd` notebook sources the cleaning script for each state. It then combines and finalizes the cleaned data to be presented in the dashboard and integrates the external data needed for additional dashboard features.
 
 -   Developing the dashboard. The `dw-dashboard-app.R` script contains code for creating and implementing the Shiny application for the dashboard itself.

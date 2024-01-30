@@ -26,8 +26,8 @@ env:
   ECS_SERVICE_SHORT_NAME: dwd
   ECR_SERVICE_BUILDER_IMAGE: 516937823875.dkr.ecr.us-east-1.amazonaws.com/ep_service_builder:latest
 
-  EC2_SERVICE_INSTANCE_TYPE: t3.medium
-  EC2_SERVICE_INSTANCE_COUNT: 1
+  EC2_SERVICE_INSTANCE_TYPE: t3.small
+  EC2_SERVICE_INSTANCE_COUNT: 2
   ECS_SERVICE_CONTAINER_RAM_MB: 900
 
 #----------------------------

@@ -336,13 +336,13 @@ all_states <- rbind(funded_states, only_applicant_states) %>%
 ## Write State-Level Data ## 
 
 # Writing to temp 
-write.csv(all_states, file.path(tempdir(), "dw-dashboard-data.csv"), row.names = FALSE)
+write.csv(all_states, file.path(tempdir(), "dw-dashboard-data_v1-1.csv"), row.names = FALSE)
 
 #Putting in Bucket
-# Updating to dw_dashboard_data_v2 to include just fundable data for summary based on design.
+##TODO: For all-y1-states PR, change this to remove the v1-1 suffix and change app to read the updated file
 put_object(
-  file = file.path(tempdir(), "dw-dashboard-data.csv"),
-  object = "apps/dw-dashboard/dw-dashboard-data.csv",
+  file = file.path(tempdir(), "dw-dashboard-data_v1-1.csv"),
+  object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv",
   bucket = "water-team-data",
   acl = "public-read"
 )

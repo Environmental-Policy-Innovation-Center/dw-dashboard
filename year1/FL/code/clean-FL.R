@@ -30,5 +30,5 @@ clean_fl <- function() {
   
   rm(list=setdiff(ls(), "fl_clean"))
 
-  return(fl_clean)
+  return(NULL)
 }

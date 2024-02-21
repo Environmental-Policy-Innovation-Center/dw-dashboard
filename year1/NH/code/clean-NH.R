@@ -49,10 +49,10 @@ clean_nh <- function() {
            base_supplemental_forgiveness = as.numeric(
              str_replace_all(base_supplemental_forgiveness, "[^0-9.]", "")),
            ## define funding amount as sum of loan, assumes it includes forgiveness_amount
-           funding_amount = emerging_contaminants + lead_service_line_lsl_loan_amount 
-           + base_supplemental_loan_amount,
+           funding_amount = emerging_contaminants + lead_service_line_lsl_loan_amount + lsl_forgiveness
+           + base_supplemental_loan_amount + base_supplemental_forgiveness,
            ## define PF as sum of forgiveness columns
-           principal_forgiveness_amount = lsl_forgiveness + base_supplemental_forgiveness
+           principal_forgiveness_amount = lsl_forgiveness + base_supplemental_forgiveness + emerging_contaminants
     ) %>%
     
     # process text columns
@@ -80,8 +80,9 @@ clean_nh <- function() {
         TRUE ~ "Not Funded"),
       project_type = case_when(
         emerging_contaminants > 0 ~ "Emerging Contaminants",
-        lead_service_line_lsl_loan_amount > 0 ~ "Lead",
-        TRUE ~ "General"),
+        lead_service_line_lsl_loan_amount > 0 | lsl_forgiveness > 0 ~ "Lead",
+        funding_amount > 0 ~ "General",
+        TRUE ~ "No Information"),
       state = "New Hampshire",
       category = "1"
     ) %>%

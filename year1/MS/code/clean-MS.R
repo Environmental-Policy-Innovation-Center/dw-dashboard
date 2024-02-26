@@ -41,5 +41,5 @@ clean_ms <- function() {
   
   rm(list=setdiff(ls(), "ms_clean"))
   
-  return(NULL)
+  return(ms_clean)
 }

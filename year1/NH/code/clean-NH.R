@@ -93,5 +93,5 @@ clean_nh <- function() {
   
   rm(list=setdiff(ls(), "nh_clean"))
   
-  return(NULL)
+  return(nh_clean)
 }

@@ -31,16 +31,9 @@ library(shinycssloaders)
 library(zip)
 library(googledrive)
 library(ggplot2)
-#library(pdftools)
-## Major Components
-## Data prep 
-## Map 
-## Table 
-## Sidebar
-## Open Modal 
 
 
-
+## Major Components ----
 
 ui <- fluidPage(
   detect(),
@@ -102,76 +95,80 @@ server <- function(input, output, session) {
     start() # start
   
   
+  ## Data Prep ----
+  
   waitress$inc(20) # increase by 10
-  DW_Data_Raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
-  PPL_Data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv", bucket = "water-team-data"))%>%
+  dw_data_raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
+  ppl_data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv", bucket = "water-team-data")) %>%
                 mutate(across('Project Type', str_replace, 'Other', 'General'))
 
   waitress$inc(20) # increase by 10
   
   
   ## Importing Geo Data 
-  Geo_Data <- geojson_sf("www/states_ak_hi_v4.geojson")
+  geo_data <- geojson_sf("www/states_ak_hi_v4.geojson")
 
   waitress$inc(20) # increase by 10
   
   ## Importing Google sheets data (Tool tips)
+  ##TODO: Replace with a pull to AWS, will need to make each sheet a separate CSV
+  ##TODO: Create function for pulling Google Drive content, formatting, and pushing to AWS
   gs4_deauth()
   URL <- "https://docs.google.com/spreadsheets/d/1hznoLfB8zMzs3jKfLjs-uy9R68mcFsYMAUg1gKXC17Y/edit#gid=0"
-  Text <- read_sheet(URL, sheet = "Text")
+  state_descriptions <- read_sheet(URL, sheet = "Text")
   
   waitress$inc(20) # increase by 10
-  ToolTip <- read_sheet(URL, sheet = "Tooltip")
+  tooltip_text <- read_sheet(URL, sheet = "Tooltip")
   
   waitress$inc(10) # increase by 10
-  ColumnToolTip <- read_sheet(URL, sheet = "ColumnToolTip")
+  column_tooltips <- read_sheet(URL, sheet = "ColumnToolTip")
   
-  DataDictionaryIndex <- read_sheet(URL, sheet = "DataDictionaryIndex")
+  data_dictionary_index <- read_sheet(URL, sheet = "DataDictionaryIndex")
   
-  glossary_link <- DataDictionaryIndex %>%
-    filter(State == "Glossary")%>%
+  glossary_link <- data_dictionary_index %>%
+    filter(State == "Glossary") %>%
     pull(Link)
   ## Summarizing by state
   ## Adding color based on number of projects - This is subject to change/flexible ## 
   ## Adding Sabs Data 
 
-  PPL_State_Data_Geo <- DW_Data_Raw %>%
-    left_join(Geo_Data, ., by = c("NAME"= "State"))%>%
-    mutate(Color = "")%>%
-    mutate(Color = ifelse(Category == 1,"#08519c", Color))%>%
-    mutate(Color = ifelse(Category == 2,"#3182BD", Color))%>%
-    mutate(Color = ifelse(Category == 3,"#6BAED6", Color))%>%
-    mutate(Color = ifelse(Category == 4, "#D3D3D3",Color))%>%
+  ppl_state_data_geo <- dw_data_raw %>%
+    left_join(geo_data, ., by = c("NAME"= "State")) %>%
+    mutate(Color = "") %>%
+    mutate(Color = ifelse(Category == 1,"#08519c", Color)) %>%
+    mutate(Color = ifelse(Category == 2,"#3182BD", Color)) %>%
+    mutate(Color = ifelse(Category == 3,"#6BAED6", Color)) %>%
+    mutate(Color = ifelse(Category == 4, "#D3D3D3",Color)) %>%
     mutate(Color = ifelse(is.na(Category), "#D3D3D3",Color))
   
   
   waitress$inc(10) # increase by 10
-  ProjectCats <- unique(PPL_Data$`Project Type`)
+  #TODO: Determine if this is used
+  ProjectCats <- unique(ppl_data$`Project Type`)
   
-  ## Var Decleration ## 
+  ### Variable Declaration ----
   
-
-  SelectedDataReactive <- reactiveValues(df = PPL_Data %>% filter(State == "Alabama"))
-  SummaryData <- reactiveValues(df = PPL_Data %>%
-                                  filter(`Funding Status` == "Funded")%>%
-                                  filter(State == "Alabama")%>%
-                                  mutate(Count = 1)%>%
-                                  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%  
-                                  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
-                                  select(`Project Type`,`Funding Amount`,`Principal Forgiveness`,Count,DAC)%>%
-                                  group_by(`Project Type`)%>%
-                                  summarize_if(is.numeric,sum)%>%
+  SelectedDataReactive <- reactiveValues(df = ppl_data %>% filter(State == "Alabama"))
+  SummaryData <- reactiveValues(df = ppl_data %>%
+                                  filter(`Funding Status` == "Funded") %>%
+                                  filter(State == "Alabama") %>%
+                                  mutate(Count = 1) %>%
+                                  mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%  
+                                  mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0"))) %>%
+                                  select(`Project Type`,`Funding Amount`,`Principal Forgiveness`,Count,DAC) %>%
+                                  group_by(`Project Type`) %>%
+                                  summarize_if(is.numeric,sum) %>%
                                   mutate(`Percent DAC` = DAC / Count))
   
-  ### END DATA PREPREATION ### 
   
   waitress$close() 
-  ### VISUAL COMPONENTS ### 
   
-  ##### MAP ##### 
+  ## Visual Components ----
+  
+  ### Map ----
   output$Map <- renderLeaflet({
-    leaflet(options = leafletOptions(zoomControl = FALSE,minZoom = 4, maxZoom = 4,dragging = FALSE))%>%
-      addPolygons(data = PPL_State_Data_Geo, 
+    leaflet(options = leafletOptions(zoomControl = FALSE,minZoom = 4, maxZoom = 4,dragging = FALSE)) %>%
+      addPolygons(data = ppl_state_data_geo, 
                   layerId = ~NAME, 
                   label = ~htmlEscape(NAME), 
                   labelOptions = labelOptions(style = list("color" = "black","font-style" = "bold","font-size" = "12px")), 
@@ -179,55 +176,54 @@ server <- function(input, output, session) {
                   fillOpacity = 1, 
                   fillColor = ~Color, 
                   color = "white", 
-                  weight = 1.5)%>%
+                  weight = 1.5) %>%
       addLegend("topleft", 
                 colors = c("#08519c", "#3182BD", "#6BAED6", "#D3D3D3"),
                 labels = c("Award Data", "No Award Data, Only Project Applicant Data","Partial Award Data","No Data"),
                 title = "Category",
-                opacity = 1)%>%
+                opacity = 1) %>%
       setView(-95.5795, 36.8283, zoom = 4)
     
   })
   
-  ## OBSERVE EVENTS ## 
+  #### Observe Events ----
   # Mapclick observe
   observeEvent(input$Map_shape_click,{
-    if(!is.na(PPL_State_Data_Geo %>% filter(NAME == input$Map_shape_click$id) %>% pull(`Funding Amount`)))
+    if(!is.na(ppl_state_data_geo %>% filter(NAME == input$Map_shape_click$id) %>% pull(`Funding Amount`)))
     {
-      SelectedDataReactive$df <- PPL_Data %>%
+      SelectedDataReactive$df <- ppl_data %>%
         filter(State == input$Map_shape_click$id)
 
       
       SummaryData$df <- SelectedDataReactive$df %>%
-      #  filter(Fundable == "Fundable")%>%
-        mutate(Count = 1)%>%
-        mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%  
-        mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0")))%>%
-        select(`Project Type`,`Funding Amount`,`Principal Forgiveness`,Count,DAC)%>%
-        group_by(`Project Type`)%>%
-        summarize_if(is.numeric,list(sum), na.rm = TRUE)%>%
+        mutate(Count = 1) %>%
+        mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%  
+        mutate(DAC = as.numeric(ifelse(`Meets State Disadvantaged Criteria` == "Yes","1","0"))) %>%
+        select(`Project Type`,`Funding Amount`,`Principal Forgiveness`,Count,DAC) %>%
+        group_by(`Project Type`) %>%
+        summarize_if(is.numeric,list(sum), na.rm = TRUE) %>%
         mutate(`Percent DAC` = DAC / Count)
       
     }
     else
     {
-      showNotification(id = "notification", Text %>% filter(State == input$Map_shape_click$id) %>% pull(Description) ,type = "warning")
+      showNotification(id = "notification", state_descriptions %>% filter(State == input$Map_shape_click$id) %>% pull(Description) ,type = "warning")
     }
   })
   
   
-  #### End Map ##### 
-  #### Table #### 
-  ## Note that renderDataTable needs to be wrapped in a renderUI to work with Shinyjs hidden... not sure why ## 
+  ### Table ----
+  
+  ##NOTE: renderDataTable needs to be wrapped in a renderUI to work with Shinyjs hidden... not sure why
   output$Table <- renderUI({
     # Missing pop 
     req(SelectedDataReactive$df)
     
     TableData <- SelectedDataReactive$df %>%
-      mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`))%>%
-      mutate(Population = as.numeric(Population))%>%
+      mutate(`Principal Forgiveness` = as.numeric(`Principal Forgiveness`)) %>%
+      mutate(Population = as.numeric(Population)) %>%
       
-      ## Note this filters down to the right columns and selects the order in which they are seen! 
+      ##NOTE: this filters down to the right columns and selects the order in which they are seen! 
       select(2,3,4,5,7,6,16,14,15,8,9,10,11,12)
     
     renderReactable({
@@ -239,23 +235,23 @@ server <- function(input, output, session) {
                 defaultSorted = 'Funding Amount',
                 defaultSortOrder = 'desc',
                 columns = list(
-                  `City Served` = colDef(na = "No Information",header = with_tooltip("City Served",ColumnToolTip[1,2])),
-                  `Borrower`= colDef(na = "No Information",header = with_tooltip("Borrower",ColumnToolTip[2,2])),
-                  `PWSID`= colDef(na = "No Information",header = with_tooltip("PWSID",ColumnToolTip[3,2]),width = 80),
-                  `Project Name` = colDef(na = "No Information",header = with_tooltip("Project Name",ColumnToolTip[4,2]), name = "Name", minWidth = 110),
-                  `Project Type` = colDef(na = "No Information",header = with_tooltip("Project Type",ColumnToolTip[5,2]), name = "Type"),
+                  `City Served` = colDef(na = "No Information", header = with_tooltip("City Served", column_tooltips[1,2])),
+                  `Borrower`= colDef(na = "No Information", header = with_tooltip("Borrower", column_tooltips[2,2])),
+                  `PWSID`= colDef(na = "No Information", header = with_tooltip("PWSID", column_tooltips[3,2]),width = 80),
+                  `Project Name` = colDef(na = "No Information", header = with_tooltip("Project Name", column_tooltips[4,2]), name = "Name", minWidth = 110),
+                  `Project Type` = colDef(na = "No Information", header = with_tooltip("Project Type", column_tooltips[5,2]), name = "Type"),
                   # Add tooltip for fundable
-                   `Funding Status` = colDef(name = "Funding Status", minWidth = 80, header = with_tooltip("Funding Status",ColumnToolTip[12,2])),
-                  `Requested Amount` = colDef(na = "No Information",minWidth = 150,header = with_tooltip("Requested Amount",ColumnToolTip[14,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  `Project Cost` = colDef(na = "No Information",minWidth = 120, header = with_tooltip("Project Cost",ColumnToolTip[13,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  `Funding Amount` = colDef(na = "No Information", header = with_tooltip("Funding Amount",ColumnToolTip[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                  `Principal Forgiveness` = colDef(na = "No Information", header = with_tooltip("Principal Forgiveness",ColumnToolTip[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
-                   Population = colDef(na = "No Information",header = with_tooltip("Population",ColumnToolTip[8,2]),format = colFormat(separators = TRUE, digits = 0)),
-                  `Project Description` = colDef(na = "No Information",header = with_tooltip("Project Description",ColumnToolTip[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
+                   `Funding Status` = colDef(name = "Funding Status", minWidth = 80, header = with_tooltip("Funding Status", column_tooltips[12,2])),
+                  `Requested Amount` = colDef(na = "No Information",minWidth = 150, header = with_tooltip("Requested Amount", column_tooltips[14,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Project Cost` = colDef(na = "No Information",minWidth = 120, header = with_tooltip("Project Cost", column_tooltips[13,2]), format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Funding Amount` = colDef(na = "No Information", header = with_tooltip("Funding Amount", column_tooltips[6,2]),minWidth = 140,format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                  `Principal Forgiveness` = colDef(na = "No Information", header = with_tooltip("Principal Forgiveness", column_tooltips[7,2]),minWidth = 160,name = "Forgiveness",format = colFormat(prefix = "$", separators = TRUE, digits = 0)),
+                   Population = colDef(na = "No Information", header = with_tooltip("Population", column_tooltips[8,2]),format = colFormat(separators = TRUE, digits = 0)),
+                  `Project Description` = colDef(na = "No Information", header = with_tooltip("Project Description", column_tooltips[9,2]), html = TRUE, class = "long-col", name = "Description", minWidth = 200, cell = function(value) {
                     div(style = "text-decoration: underline; text-decoration-style: dotted; cursor: help; font-size: 14px;",tippy(value, value))
                   }),
-                   `Meets State Disadvantaged Criteria`= colDef(na = "No Information",header = with_tooltip("Meets State Disadvantaged Criteria",ColumnToolTip[10,2]), minWidth = 250),
-                    `State Rank`= colDef(na = "No Information",header = with_tooltip("State Rank",ColumnToolTip[11,2]))
+                   `Meets State Disadvantaged Criteria`= colDef(na = "No Information", header = with_tooltip("Meets State Disadvantaged Criteria", column_tooltips[10,2]), minWidth = 250),
+                    `State Rank`= colDef(na = "No Information", header = with_tooltip("State Rank", column_tooltips[11,2]))
                   ),
                 highlight = TRUE,
                 bordered = TRUE,
@@ -286,19 +282,22 @@ server <- function(input, output, session) {
     toggle("ChartText", anim = FALSE, animType = "slide")
     
   })
-  #### End Table 
+
   
   
-  #### Sidebar #### 
+  ### Sidebar ----
+  
+  #### Description ----
+  
   #State Name
   output$StateName <- renderText({SelectedDataReactive$df$State[1]})
-  output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1],"Data Table")})
+  output$StateNameTwo <- renderText({ paste(SelectedDataReactive$df$State[1], "Data Table")})
 
   output$StateCategory <- renderText({
-    Category <- PPL_State_Data_Geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Category)
-    CategoryText <- ifelse(Category == 1,"Award Data","")
-    CategoryText <- ifelse(Category == 2,"No Award Data, Only Project Applicant Data",CategoryText)
-    CategoryText <- ifelse(Category == 3,"Partial Award Data",CategoryText)
+    Category <- ppl_state_data_geo %>% filter(NAME == SelectedDataReactive$df$State[1]) %>% pull(Category)
+    CategoryText <- ifelse(Category == 1, "Award Data", "")
+    CategoryText <- ifelse(Category == 2, "No Award Data, Only Project Applicant Data",CategoryText)
+    CategoryText <- ifelse(Category == 3, "Partial Award Data",CategoryText)
     return(paste("Category:", CategoryText))
   })
   
@@ -308,62 +307,64 @@ server <- function(input, output, session) {
   
   #State Description 
   output$StateDescription <- renderText({
-    Text %>% filter(State == SelectedDataReactive$df$State[1]) %>% pull(Description)
+    state_descriptions %>% filter(State == SelectedDataReactive$df$State[1]) %>% pull(Description)
   })
   
-  ## Needs and Funds Section ## 
+  #### Needs & Funds ---- 
   output$NeedsFunds <- renderUI({
-    State_Data <- PPL_State_Data_Geo %>%
+    State_Data <- ppl_state_data_geo %>%
       filter(NAME == SelectedDataReactive$df$State[1])
     
-    Population <- paste("<b>", "Water System Users:", scales::number(State_Data %>% pull(Population), big.mark = ","),"</b>", "<br>")
-    WaterSystems <- paste("<b>", "Water Systems:", scales::number(State_Data %>% pull(Systems), big.mark = ","),"</b>", "<br>")
-    TwentyYearNeed <- paste("<b>", "EPA Estimated 20-Year Need:", scales::dollar(State_Data %>% pull(TwentyYearNeed) / 1000000000, suffix = "B"),"</b>", "<br>")
-    PipeCount <- paste("<b>", "EPA Estimated Number of Lead Pipes:", scales::number(State_Data %>% pull(PipeEstimates), big.mark = ","),"</b>", "<br>")
-    Base <- paste("<b>", "Base:", dollar(State_Data %>% pull(Base)/1000000, suffix  = "M"),"</b>", "<br>")
-    General <- paste("<b> ", "General Supplemental:", dollar(State_Data %>% pull(General)/1000000, suffix  = "M"),"</b>", "<br>")
-    Lead <- paste("<b> ", "Lead:", dollar(State_Data %>% pull(Lead)/1000000, suffix  = "M"),"</b>", "<br>")
-    Emerging <- paste("<b> ", "Emerging Contaminants:", dollar(State_Data %>% pull(`Emerging Contaminants`)/1000000, suffix  = "M"),"</b>", "<br>")
+    Population <- paste("<b>", "Water System Users:", scales::number(State_Data %>% pull(Population), big.mark = ","), "</b>", "<br>")
+    WaterSystems <- paste("<b>", "Water Systems:", scales::number(State_Data %>% pull(Systems), big.mark = ","), "</b>", "<br>")
+    TwentyYearNeed <- paste("<b>", "EPA Estimated 20-Year Need:", scales::dollar(State_Data %>% pull(TwentyYearNeed) / 1000000000, suffix = "B"), "</b>", "<br>")
+    PipeCount <- paste("<b>", "EPA Estimated Number of Lead Pipes:", scales::number(State_Data %>% pull(PipeEstimates), big.mark = ","), "</b>", "<br>")
+    Base <- paste("<b>", "Base:", dollar(State_Data %>% pull(Base)/1000000, suffix  = "M"), "</b>", "<br>")
+    General <- paste("<b> ", "General Supplemental:", dollar(State_Data %>% pull(General)/1000000, suffix  = "M"), "</b>", "<br>")
+    Lead <- paste("<b> ", "Lead:", dollar(State_Data %>% pull(Lead)/1000000, suffix  = "M"), "</b>", "<br>")
+    Emerging <- paste("<b> ", "Emerging Contaminants:", dollar(State_Data %>% pull(`Emerging Contaminants`)/1000000, suffix  = "M"), "</b>", "<br>")
     
     tagList(
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[1,2])), options = list("delay': 1000, 'it" = "sucks")), HTML(Population),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[2,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(WaterSystems),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[3,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(TwentyYearNeed),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[4,2]), options = list("delay': 1000, 'it" = "sucks")), HTML(PipeCount),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(tooltip_text[1,2])), options = list("delay': 1000, 'it" = "sucks")), HTML(Population),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[2,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(WaterSystems),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[3,2]), options = list("delay': 1000, 'it" = "sucks")),HTML(TwentyYearNeed),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[4,2]), options = list("delay': 1000, 'it" = "sucks")), HTML(PipeCount),
       HTML("<br>"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[5,2])), HTML("<b> DWSRF Funds </b> </font> <br>"),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[5,2])), HTML("<b> DWSRF Funds </b> </font> <br>"),
       HTML("&ensp;"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[10,2]))), HTML(Base),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(tooltip_text[10,2]))), HTML(Base),
       HTML("&ensp;"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[11,2]))),HTML(General),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(tooltip_text[11,2]))), HTML(General),
       HTML("&ensp;"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[12,2]))),HTML(Lead),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(tooltip_text[12,2]))), HTML(Lead),
       HTML("&ensp;"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(ToolTip[13,2]))),HTML(Emerging),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = HTML(as.character(tooltip_text[13,2]))), HTML(Emerging),
     )
   })
   
-  ### All Projects 
+  #### Projects ----
+  
+  ##### All ----
   output$AllProjects <- renderUI({
     req(SummaryData$df)
-    TotalCount  <- paste("<b>", "Projects:", sum(SummaryData$df$`Count`),"</b>", "<br>")
+    TotalCount  <- paste("<b>", "Projects:", sum(SummaryData$df$`Count`), "</b>", "<br>")
     # Funding Amount # 
-    TotalFunding  <- paste("<b>", "Funding Amount:", dollar(sum(SummaryData$df$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+    TotalFunding  <- paste("<b>", "Funding Amount:", dollar(sum(SummaryData$df$`Funding Amount`)/1000000, suffix  = "M"), "</b>", "<br>")
     # Total Forgiveness # 
-    TotalForgive  <- paste("<b>", "Forgiveness:", ifelse(sum(as.numeric(SummaryData$df$`Principal Forgiveness`),na.rm = TRUE) != 0,dollar(sum(SummaryData$df$`Principal Forgiveness`, na.rm = TRUE)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+    TotalForgive  <- paste("<b>", "Forgiveness:", ifelse(sum(as.numeric(SummaryData$df$`Principal Forgiveness`),na.rm = TRUE) != 0,dollar(sum(SummaryData$df$`Principal Forgiveness`, na.rm = TRUE)/1000000, suffix  = "M"), "No Data"), "</b>", "<br>")
     # % to DAC Communities # 
-    TotalDAC <- paste("<b>", "Projects in Disadvantaged Areas:", scales::percent(sum(SummaryData$df$DAC) / sum(SummaryData$df$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+    TotalDAC <- paste("<b>", "Projects in Disadvantaged Areas:", scales::percent(sum(SummaryData$df$DAC) / sum(SummaryData$df$Count), accuracy = 2, suffix = "%"), "</b>", "<br>")
     
     tagList(
       # HTML("<b> All Projects: </b> <br>"),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[6,2])),HTML(TotalCount),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[7,2])),HTML(TotalFunding),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[8,2])),HTML(TotalForgive),
-      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(ToolTip[9,2])),HTML(TotalDAC)
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[6,2])), HTML(TotalCount),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[7,2])), HTML(TotalFunding),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[8,2])), HTML(TotalForgive),
+      tipify(el = icon(name = "circle-info", lib = "font-awesome"), placement = "right", title = as.character(tooltip_text[9,2])), HTML(TotalDAC)
     )
   })
   
-  ## General Projects 
+  ##### General ----
   output$GeneralProjects <- renderUI({
     req(SummaryData$df)
     
@@ -372,24 +373,24 @@ server <- function(input, output, session) {
     
     if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`), "</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"), "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"), "No Data"), "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%"), "</b>", "<br>")
     }
     else
     {
-      Count  <- paste("<b> ", "Projects:", "No Data","</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", "No Data", "</b>", "<br>")
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", "No Data","</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", "No Data", "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", "No Data","</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", "No Data", "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Projects in Disavantaged Areas:","No Data","</b>", "<br>")
+      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", "No Data", "</b>", "<br>")
     }
     
     tagList(
@@ -401,6 +402,7 @@ server <- function(input, output, session) {
     )
   })
   
+  ##### Lead ----
   output$LeadProjects <- renderUI({
     req(SummaryData$df)
     
@@ -409,24 +411,24 @@ server <- function(input, output, session) {
     
     if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`), "</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"), "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]), dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"), "No Data"), "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") , "</b>", "<br>")
     }
     else
     {
-      Count  <- paste("<b> ", "Projects:", "No Data","</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", "No Data", "</b>", "<br>")
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", "No Data","</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", "No Data", "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", "No Data","</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", "No Data", "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:","No Data","</b>", "<br>")
+      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", "No Data", "</b>", "<br>")
     }
     
     tagList(
@@ -438,6 +440,7 @@ server <- function(input, output, session) {
     )
   })
   
+  ##### EC ----
   output$ECProjects <- renderUI({
     req(SummaryData$df)
     CategoryData <- SummaryData$df %>%
@@ -445,24 +448,24 @@ server <- function(input, output, session) {
     
     if(nrow(CategoryData) > 0)
     {
-      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`),"</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", sum(CategoryData$`Count`), "</b>", "<br>")
       #
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"),"</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", dollar(sum(CategoryData$`Funding Amount`)/1000000, suffix  = "M"), "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"),"No Data"),"</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", ifelse(!is.na(CategoryData$`Principal Forgiveness`[1]),dollar(sum(CategoryData$`Principal Forgiveness`)/1000000, suffix  = "M"), "No Data"), "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") ,"</b>", "<br>")
+      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", scales::percent(sum(CategoryData$DAC) / sum(CategoryData$Count), accuracy = 2, suffix = "%") , "</b>", "<br>")
     }
     else
     {
-      Count  <- paste("<b> ", "Projects:", "No Data","</b>", "<br>")
+      Count  <- paste("<b> ", "Projects:", "No Data", "</b>", "<br>")
       # Funding Amount # 
-      Funding  <- paste("<b> ", "Funding Amount:", "No Data","</b>", "<br>")
+      Funding  <- paste("<b> ", "Funding Amount:", "No Data", "</b>", "<br>")
       # Total Forgiveness # 
-      Forgive  <- paste("<b> ", "Forgiveness:", "No Data","</b>", "<br>")
+      Forgive  <- paste("<b> ", "Forgiveness:", "No Data", "</b>", "<br>")
       # % to DAC Communities # 
-      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:","No Data","</b>", "<br>")
+      DAC <- paste("<b> ", "Percent of Projects in Disavantaged Areas:", "No Data", "</b>", "<br>")
     }
     
     tagList(
@@ -474,46 +477,49 @@ server <- function(input, output, session) {
     )
   })
   
-  ## Chart Select
+  #### Charts ----
+  
+  ##### Chart Select ----
   output$ChartSelect <- renderUI({
     req(SelectedDataReactive$df)
     
     ## This selects charting options based on data availablity - set to 75%
     ChartOptions <- SelectedDataReactive$df %>%
-                    select("Population","Project Cost","Meets State Disadvantaged Criteria")%>%
-                    select(where(function(x) sum(is.na(x)) / length(x) < 0.75))%>%
+                    select("Population","Project Cost", "Meets State Disadvantaged Criteria") %>%
+                    select(where(function(x) sum(is.na(x)) / length(x) < 0.75)) %>%
                     colnames()
   
-    selectInput("ChartSelect", "Select a Variable: ", c("Count",ChartOptions))
+    selectInput("ChartSelect", "Select a Variable: ", c("Count", ChartOptions))
   })
   
 
   output$ChartText <- renderText({
     req(input$ChartSelect)
-    Text <- ToolTip %>%
-           filter(Name == as.character(input$ChartSelect))%>%
-           pull(Text)
+    tooltip_text <- tooltip_text %>%
+           filter(Name == as.character(input$ChartSelect)) %>%
+           pull(tooltip_text)
     
   })
   
-  ## Chart ## 
+  ##### Chart Output ----
   output$ChartOne <- renderPlot({
   req(SelectedDataReactive$df)
   req(input$ChartSelect)
   
-  ## Note that sumarization is needed and the correct variables need to align with options in ChartSelect - down to the correct name/spelling!
+  ##NOTE: that sumarization is needed and the correct variables need to align with options in ChartSelect - down to the correct name/spelling!
   Counts <- SelectedDataReactive$df %>%
-            group_by(`Funding Status`, `Project Type`)%>%
+            group_by(`Funding Status`, `Project Type`) %>%
             tally()
     
+  ##TODO: Review what may or may not need to be removed here
    ChartData <- SelectedDataReactive$df %>%
-               group_by(`Funding Status`, `Project Type`)%>%
-               select(c("Project Cost","Population","Meets State Disadvantaged Criteria"))%>%
-               mutate(`Meets State Disadvantaged Criteria` = ifelse(`Meets State Disadvantaged Criteria` == "Yes",1, 0))%>%
-               summarise_if(is.numeric,sum ,na.rm = TRUE)%>%
+               group_by(`Funding Status`, `Project Type`) %>%
+               select(c("Project Cost","Population", "Meets State Disadvantaged Criteria")) %>%
+               mutate(`Meets State Disadvantaged Criteria` = ifelse(`Meets State Disadvantaged Criteria` == "Yes", 1, 0)) %>%
+               summarise_if(is.numeric, sum ,na.rm = TRUE) %>%
                ## remove this 
-               left_join(.,Counts)%>%
-               rename(Count = n)%>%
+               left_join(.,Counts) %>%
+               rename(Count = n) %>%
                mutate(`Project Type` = str_replace(`Project Type`,"Emerging Contaminants", "Emerg Contam"))
             #   mutate(`Meets State Disadvantaged Criteria` = `Meets State Disadvantaged Criteria`/Count * 100)
             
@@ -534,7 +540,8 @@ server <- function(input, output, session) {
      # theme(panel.border = element_rect(fill = "#f5f5f5"))
   })
   
-
+  ### Pop-Up Window ----
+  
   InfoModal <- modalDialog(
     title = HTML("<b> EPIC’s Drinking Water Funding Dashboard v1.1 </b>"),
     HTML("<b> About this dashboard: </b>"),
@@ -566,8 +573,8 @@ server <- function(input, output, session) {
                  showModal(InfoModal)
                })
 
-  # Download Handler ##
- # download handler for project export
+  ## Downloader ----
+
   output$DataDownload <- downloadHandler(
     
     filename = function() {
@@ -577,25 +584,25 @@ server <- function(input, output, session) {
       
       state_name <- tolower(SelectedDataReactive$df$State[1])
       
-      state_link <- DataDictionaryIndex %>%
-                    filter(State == SelectedDataReactive$df$State[1])%>%
+      state_link <- data_dictionary_index %>%
+                    filter(State == SelectedDataReactive$df$State[1]) %>%
                     pull(Link)
 
       drive_deauth()
       
       ## TO DO - Add function for pulling in correct state data 
-      dictionary_pdf <- drive_download(state_link, file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")), overwrite = TRUE)
+      dictionary_pdf <- drive_download(state_link, file.path(tempdir(), paste0(state_name, "-data-dictionary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding glossary data
       glossary_pdf <- drive_download(glossary_link, 
-                               file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep="")), overwrite = TRUE)
+                               file.path(tempdir(), paste0(state_name, "-data-glossary.pdf", sep="")), overwrite = TRUE)
       
       ## Adding state data
-      write.csv(SelectedDataReactive$df, file.path(tempdir(), paste0(state_name,"-dw-funding-data.csv", sep="")), row.names=FALSE)
+      write.csv(SelectedDataReactive$df, file.path(tempdir(), paste0(state_name, "-dw-funding-data.csv", sep="")), row.names=FALSE)
 
-      zip::zip(file, files = c(file.path(tempdir(),paste0(state_name,"-dw-funding-data.csv", sep="")),
-                               file.path(tempdir(),paste0(state_name,"-data-dictionary.pdf", sep="")),
-                               file.path(tempdir(),paste0(state_name,"-data-glossary.pdf", sep=""))),
+      zip::zip(file, files = c(file.path(tempdir() ,paste0(state_name, "-dw-funding-data.csv", sep="")),
+                               file.path(tempdir() ,paste0(state_name, "-data-dictionary.pdf", sep="")),
+                               file.path(tempdir() ,paste0(state_name, "-data-glossary.pdf", sep=""))),
                mode = "cherry-pick")
     })
 

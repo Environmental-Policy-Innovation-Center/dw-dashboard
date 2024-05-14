@@ -38,7 +38,7 @@ clean_ca <- function() {
   
   # (11,9) -> (11,9)
   # EC projects that have funding data
-  ca_ec <- fread("year1/CA/data/5-California_EC.csv",
+  ca_ec <- fread("year1/CA/data/california-ec-ppl.csv",
                         colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     # process numeric columns
@@ -69,7 +69,7 @@ clean_ca <- function() {
   ### APPLICANT - Comprehensive List, Appendix B of SFY23 IUP
   
   # (345, 11) -> (294, 8) when dropping non-project rows and likely to be funded projects and consolidating columns
-  ca_app <- fread("year1/CA/data/5-California_Comprehensive_PPL.csv",
+  ca_app <- fread("year1/CA/data/california-comprehensive-ppl.csv",
                         colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     # drop non-project rows

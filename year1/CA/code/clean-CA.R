@@ -27,6 +27,7 @@ clean_ca <- function() {
            project_name = str_squish(project_number),
            project_description = str_squish(project_title_description),
            disadvantaged = case_when(
+             is.na(degree_of_disadvantaged) ~ "No Information",
              degree_of_disadvantaged == "DAC" | degree_of_disadvantaged == "SDAC" ~ "Yes",
              TRUE ~ "No"),
            project_type = "General",

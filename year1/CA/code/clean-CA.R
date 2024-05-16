@@ -16,7 +16,6 @@ clean_ca <- function() {
     # process numeric columns
     mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
            requested_amount = as.numeric(str_replace_all(estimated_project_costs,"[^0-9.]", "")),
-           #TODO: Confirm this matches up with the comprehensive list
            funding_amount = as.numeric(str_replace_all(estimated_project_costs,"[^0-9.]", "")),
            principal_forgiveness_amount = as.numeric(str_replace_all(estimated_pf_grant_amount,"[^0-9.]", "")),    
            ) %>%

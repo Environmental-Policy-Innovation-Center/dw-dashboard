@@ -37,5 +37,5 @@ clean_ri <- function() {
   
   rm(list=setdiff(ls(), "ri_clean"))
   
-  return(NULL)
+  return(ri_clean)
 }

@@ -64,7 +64,7 @@ dc_clean <- clean_dc()
 
 # Florida
 source("year1/FL/code/clean-FL.R")
-# fl_clean <- clean_fl()
+fl_clean <- clean_fl()
 
 # Georgia
 source("year1/GA/code/clean-GA.R")

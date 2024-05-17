@@ -11,7 +11,6 @@ clean_ri <- function() {
   
   # -> (129, 10)
   ri_clean <- ri_comp %>%
-    
     mutate(
       requested_amount = as.numeric(str_replace_all(funds_requested,"[^0-9.]", "")),
       population = as.numeric(str_replace_all(pop_served,"[^0-9.]", "")),
@@ -23,9 +22,10 @@ clean_ri <- function() {
            pwsid = paste0("RI", pws_id),
            project_description = str_squish(project_description),
            project_type = case_when(
-             grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-             grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
-             TRUE ~ "General"),
+             grepl("EC", source_fund, ignore.case=TRUE) ~ "Emerging Contaminants",
+             grepl("LL", source_fund, ignore.case=TRUE) ~ "Lead",
+             grepl("BS", source_fund) | grepl("SS", source_fund) ~ "General",
+             TRUE ~ "No Information"),
            state = "Rhode Island",
            category = "2",
            funding_status = "Not Funded"

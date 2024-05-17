@@ -5,12 +5,12 @@ library(janitor)
 clean_nc <- function() {
   
   
-  # (221, 15)
-  nc_raw <- fread("year1/NC/data/33-NorthCarolina_PPL_Comprehensive.csv",
+  # (222, 15)
+  nc_raw <- fread("year1/NC/data/nc-comprehensive-ppl.csv",
                   colClass="character", na.strings="") %>%
     clean_names()
   
-  # -> (221,13)
+  # -> (222,13)
   nc_clean <- nc_raw %>%
     # format numeric columns
     mutate(population = as.numeric(str_replace_all(service_populati_on, "[^0-9.]", "")),

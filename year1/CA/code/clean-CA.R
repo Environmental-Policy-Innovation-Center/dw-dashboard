@@ -138,7 +138,7 @@ clean_ca <- function() {
   # (539, 11) -> # (539, 13)
   ca_clean <- bind_rows(ca_merge, ca_app, ca_lead) %>%
     mutate(state = "California",
-           category = "1")
+           category = "3")
   
   rm(list=setdiff(ls(), "ca_clean"))
 

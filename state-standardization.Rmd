@@ -88,7 +88,7 @@ in_clean <- clean_in()
 
 # Iowa
 source("year1/IA/code/clean-IA.R")
-in_clean <- clean_ia()
+ia_clean <- clean_ia()
 
 # Kansas
 source("year1/KS/code/clean-KS.R")

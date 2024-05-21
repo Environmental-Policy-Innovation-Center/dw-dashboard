@@ -80,5 +80,5 @@ clean_va <- function() {
 
   rm(list=setdiff(ls(), "va_clean"))
   
-  return(NULL)
+  return(va_clean)
 }

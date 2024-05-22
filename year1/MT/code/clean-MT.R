@@ -31,7 +31,7 @@ clean_mt <- function() {
     mutate(project_description = 
              case_when(
               is.na(project_information) ~ description,
-              TRUE ~ as.character(map(strsplit(project_information, split = "\\."), 2))),
+              TRUE ~ gsub("^.*?\\.","", project_information)),
       project_description = str_squish(project_description)
     ) %>%
     select(-project, -description, -project_information, -total_points)

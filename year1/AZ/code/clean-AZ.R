@@ -44,6 +44,10 @@ clean_az <- function() {
            borrower = str_replace_all(borrower, "1", ""),
            borrower = str_replace_all(borrower, ",", ""),
            borrower = str_squish(borrower),
+           # fix applicant that gets chopped up because of above mutations
+           borrower = case_when(
+             ppl_rank == "1" ~ "Sun Valley Farms Unit VI Water Company, Inc.",
+             TRUE ~ borrower),
            pwsid = str_squish(pws_number),
            project_name = str_squish(project_number),
            project_type = case_when(

@@ -1,96 +1,109 @@
 library(tidyverse)
 library(data.table)
 library(janitor)
+source("cleaning-functions.R")
 
 clean_sc <- function() {
   
   
-  # import EC project
-  sc_ec <- fread("year1/SC/data/37-SouthCarolina_EC_AppA.csv",
+  # import EC projects, (3,12) -> (3,5)
+  sc_ec <- fread("year1/SC/data/sc-fy22-iup-ec.csv",
                  colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
-    mutate(project_type = "Emerging Contaminants") %>%
-    rename(estimated_srf_loan_amount = estimated_srf_loan_amount4,
-           estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+    mutate(project_type = "Emerging Contaminants",
+           funding_status = "Funded",
+           principal_forgiveness_amount = convert_to_numeric(estimated_principal_forgiveness_assistance3),
+           funding_amount = replace_na(convert_to_numeric(estimated_srf_loan_amount),0) + principal_forgiveness_amount) %>%
+    select(srf_project_number, project_type, funding_status, principal_forgiveness_amount, funding_amount)
   
-  # import lead
-  sc_lead <- fread("year1/SC/data/37-SouthCarolina_LSLR_AppA.csv",
+  
+  # import lead (3,12)
+  sc_lead <- fread("year1/SC/data/sc-fy22-iup-lslr.csv",
                    colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
-    mutate(project_type = "Lead") %>%
-    rename(sponsors_service_population = sponsor_s_service_population)
+    mutate(project_type = "Lead",
+           funding_status = "Funded",
+           principal_forgiveness_amount = convert_to_numeric(estimated_princpal_forgiveness_3_assistance),
+           estimated_srf_loan_amount = replace_na(convert_to_numeric(estimated_srf_loan_amount),0),
+           funding_amount = estimated_srf_loan_amount + principal_forgiveness_amount) %>%
+    select(srf_project_number, project_type, funding_status, principal_forgiveness_amount, funding_amount)
   
-  # import base projects
-  sc_base <- fread("year1/SC/data/37-SouthCarolina_Base_AppA.csv",
+  
+  # import base projects (9,11)
+  sc_base <- fread("year1/SC/data/sc-fy22-iup-base.csv",
                    colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
-    rename(estimated_srf_loan_amount = estimated_srf_loan_amount4,
-           estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+    mutate(funding_status = "Funded",
+           project_type = "General",
+           principal_forgiveness_amount = replace_na(convert_to_numeric(estimated_principal_forgiveness_assistance2), 0),
+           funding_amount = replace_na(convert_to_numeric(estimated_srf_loan_amount4), 0) + principal_forgiveness_amount
+           ) %>%
+    select(srf_project_number, project_type, funding_status, principal_forgiveness_amount, funding_amount)
   
   
-  # -> (18,11)
-  sc_supp <- fread("year1/SC/data/37-SouthCarolina_Supplemental.csv",
+  # import supplemental projects (17,11)
+  sc_supp <- fread("year1/SC/data/sc-fy22-iup-gen-supp.csv",
                    colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
-    rename(estimated_principal_forgiveness_assistance = estimated_principal_forgiveness_assistance2)
+    mutate(funding_status = "Funded",
+           project_type = "General",
+           principal_forgiveness_amount = replace_na(convert_to_numeric(estimated_principal_forgiveness_assistance2), 0),
+           funding_amount = replace_na(convert_to_numeric(estimated_srf_loan_amount), 0) + principal_forgiveness_amount) %>%
+    select(srf_project_number, project_type, funding_status, principal_forgiveness_amount, funding_amount)
   
-  # for non-EC projects, separate by Lead/General based on finding terms
-  sc_combined <- bind_rows(sc_base, sc_supp) %>%
-    mutate(project_type = case_when(
-      grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
-      grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
-      TRUE ~ "General")
-    )
   
   # merge base, supp, and ec together for uniform processing other features
-  sc_combined <- bind_rows(sc_combined, sc_ec, sc_lead)
+  sc_combined <- bind_rows(sc_base, sc_supp, sc_ec, sc_lead)
   
   
-  sc_clean <- sc_combined %>%
+  # import comprehensive project list of funded and applicants
+  sc_comp <- fread("year1/SC/data/sc-fy22-iup-comprehensive-project-list.csv",
+                   colClasses = "character", na.strings = "") %>% 
+    clean_names() %>%
+    left_join(sc_combined, by="srf_project_number") 
+  
+  
+  
+  sc_clean <- sc_comp %>%
     # process numeric columns
-    mutate(funding_amount = as.numeric(str_replace_all(estimated_srf_loan_amount,"[^0-9.]","")),
+    mutate(
+           population = convert_to_numeric(sponsors_service_population),
+           project_cost = convert_to_numeric(estimated_total_project_cost),
            funding_amount = replace_na(funding_amount, 0),
-           principal_forgiveness_amount = as.numeric(str_replace_all(estimated_principal_forgiveness_assistance,"[^0-9.]","")),
-           principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
-           # funding amount should include PF
-           funding_amount = funding_amount + principal_forgiveness_amount,
-           population = as.numeric(str_replace_all(population_affected_by_project,"[^0-9.]","")),
-           project_cost = as.numeric(str_replace_all(estimated_total_project_cost,"[^0-9.]",""))
+           principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
     ) %>%
     # process text columns
     mutate(project_description = str_squish(project_description),
            # take the first portion of the water system id number and attach SC
            pwsid = paste0("SC", as.character(map(strsplit(srf_project_number, split = "-"), 1))),
-           borrower = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 1))),
-           project_name = str_squish(as.character(map(strsplit(sponsor_and_project_name, split = " - "), 2))),
+           borrower = str_extract(sponsor_project_name, "^[^-]+"),
+           project_name = str_squish(srf_project_number),
+           # manually fix two borrower / project_names that didn't have dashes
+           borrower = case_when(
+             project_name == "2620004-30" ~ "Grand Strand Water and Sewer Authority Bull Creek",
+            project_name == "2620004-28" ~ "Grand Strand Water and Sewer Authority Conway",
+             TRUE ~ borrower),
            state_score = str_replace_all(total_points,"[^0-9.]",""),
            state_rank = str_squish(v1),
            state = "South Carolina",
            category = "1",
-           funding_status = "Funded"
+           funding_status = case_when(
+             is.na(funding_status) ~ "Not Funded",
+             TRUE ~ funding_status
+           ),
+           project_type = case_when(
+             is.na(project_type) & grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
+             is.na(project_type) & grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
+             is.na(project_type) & grepl("pfas", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
+             is.na(project_type) & grepl("pfoa", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
+             is.na(project_type) & grepl("pfos", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
+             is.na(project_type) ~ "General",
+             TRUE ~ project_type)
     ) %>%
     select(borrower, pwsid, state_rank, state_score, project_name, project_description, 
            funding_amount, principal_forgiveness_amount, project_cost,
            population, project_type, state, category, funding_status)
-  
-  ## Manually fix projects where splitting by dash did not work
-  sc_clean <- sc_clean %>%
-    mutate(project_name = case_when(
-      borrower == "McCormick Commission of Public Works - Isolation Valve Installation" ~ "Isolation Valve Installation",
-      borrower == "Marlboro County / Marlboro Water Company- New Production Well and Treatment Facility" ~ "New Production Well and Treatment Facility - Phase 1",
-      borrower == "Grand Strand Water and Sewer Authority - Conway Parallel Transmission Main3" ~ "Conway Parallel Transmission Main",
-      borrower == "Gilbert-Summit Rural Water District - Siesta Cove Water Main Extension" ~ "Siesta Cove Water Main Extension",
-      borrower == "Charleston Water System - Charleston Water System Lead Service Line Replacement" ~ "Charleston Water System Lead Service Line Replacement",
-      TRUE ~ project_name),
-      
-      borrower = case_when(
-        borrower == "McCormick Commission of Public Works - Isolation Valve Installation" ~ "McCormick Commission of Public Works",
-        borrower == "Marlboro County / Marlboro Water Company- New Production Well and Treatment Facility" ~ "Marlboro County / Marlboro Water Company",
-        borrower == "Grand Strand Water and Sewer Authority - Conway Parallel Transmission Main3" ~ "Grand Strand Water and Sewer Authority",
-        borrower == "Gilbert-Summit Rural Water District - Siesta Cove Water Main Extension" ~ "Gilbert-Summit Rural Water District",
-        borrower == "Charleston Water System - Charleston Water System Lead Service Line Replacement" ~ "Charleston Water System",
-        TRUE ~ borrower)
-    )
+
   
   rm(list=setdiff(ls(), "sc_clean"))
   

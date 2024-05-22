@@ -1,6 +1,7 @@
 library(tidyverse)
 library(data.table)
 library(janitor)
+source("cleaning-functions.R")
 
 clean_mt <- function() {
   
@@ -99,13 +100,13 @@ clean_mt <- function() {
   
   # combine all projects
   mt_clean <- bind_rows(mt_ppl, mt_lsl, mt_ec) %>%
-    mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+    mutate(population = convert_to_numeric(population),
            # remove added details in srf cost and transform into numeric for both cost and funding
            project_cost = as.character(map(strsplit(srf_cost, split = " "), 1)),
-           project_cost = as.numeric(str_replace_all(project_cost,"[^0-9.]","")),
+           project_cost = convert_to_numeric(project_cost),
            funding_amount = project_cost,
            funding_amount = replace_na(funding_amount, 0),
-           requested_amount = as.numeric(str_replace_all(amount,"[^0-9.]","")),
+           requested_amount = convert_to_numeric(amount),
            ) %>%
     mutate(state_rank = str_squish(rank_no),
            disadvantaged = case_when(
@@ -118,7 +119,7 @@ clean_mt <- function() {
              funding_amount > 0 ~ "Funded",
              TRUE ~ "Not Funded"),
            state="Montana",
-           category="1"
+           category="3"
            ) %>%
     mutate(
     # calculate PF as percentage of funding now that DAC is defined

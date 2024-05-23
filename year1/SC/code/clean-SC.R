@@ -69,6 +69,7 @@ clean_sc <- function() {
     mutate(
            population = convert_to_numeric(sponsors_service_population),
            project_cost = convert_to_numeric(estimated_total_project_cost),
+           requested_amount = convert_to_numeric(requested_srf_assistance1),
            funding_amount = replace_na(funding_amount, 0),
            principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
     ) %>%
@@ -101,11 +102,11 @@ clean_sc <- function() {
              TRUE ~ project_type)
     ) %>%
     select(borrower, pwsid, state_rank, state_score, project_name, project_description, 
-           funding_amount, principal_forgiveness_amount, project_cost,
+           funding_amount, principal_forgiveness_amount, project_cost, requested_amount,
            population, project_type, state, category, funding_status)
 
   
   rm(list=setdiff(ls(), "sc_clean"))
   
-  return(NULL)
+  return(sc_clean)
 }

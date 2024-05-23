@@ -79,10 +79,18 @@ clean_sc <- function() {
            pwsid = paste0("SC", as.character(map(strsplit(srf_project_number, split = "-"), 1))),
            borrower = str_extract(sponsor_project_name, "^[^-]+"),
            project_name = str_squish(srf_project_number),
-           # manually fix two borrower / project_names that didn't have dashes
+           # manually fix borrower / project_names that didn't have dashes or multiple dashses
            borrower = case_when(
-             project_name == "2620004-30" ~ "Grand Strand Water and Sewer Authority Bull Creek",
+            project_name == "2620004-30" ~ "Grand Strand Water and Sewer Authority Bull Creek",
             project_name == "2620004-28" ~ "Grand Strand Water and Sewer Authority Conway",
+            project_name == "3220001-05" ~ "Gilbert-Summit Rural Water District",
+            project_name == "3210002-04" ~ "Batesburg-Leesville, Town of",
+            project_name == "0410011-04" ~ "Belton-Honea Path Water Authority",
+            project_name == "0420005-03" ~ "Starr-Iva Water & Sewer District",
+            project_name == "0420005-02" ~ "Starr-Iva Water & Sewer District",
+            project_name == "0420005-01" ~ "Starr-Iva Water & Sewer District",
+            project_name == "0120001-03" ~ "Donalds-Due West Water & Sewer Authority",
+            project_name == "0820002-12" ~ "Berkeley County Water & Sewer",
              TRUE ~ borrower),
            state_score = str_replace_all(total_points,"[^0-9.]",""),
            state_rank = str_squish(v1),

@@ -264,11 +264,6 @@ projects_clean_web <- combined_clean %>%
                                 `Funding Status` = funding_status,
                                 `Category` = category)
 
-
-# export lead projects for Marc
-#lead_projects <- projects_clean_web %>%
-#  filter(`Project Type` == "Lead")
-# write.csv(lead_projects, "iup-lead-projects-y1.csv", row.names=FALSE)
 ```
 
 
@@ -376,40 +371,5 @@ put_object(
 
 # TODO: Push v[n] to srf_dashboard_data_public and update meta-data about when it was last updated
 
-```
-
-## Output state level aggregates for quick analysis
-
-```{r}
-
-state_dac_funding <- projects_clean_web %>%
-  group_by(`State`, `Meets State Disadvantaged Criteria`) %>%
-  summarize(`Total Funding` = sum(as.numeric(`Funding Amount`), na.rm=TRUE),
-            `Total Principal Forgiveness` = sum(as.numeric(`Principal Forgiveness`), na.rm=TRUE)) %>%
-  ungroup() %>%
-  mutate(`Meets State Disadvantaged Criteria` = case_when(
-           `Meets State Disadvantaged Criteria` == "Yes" ~ "DACs",
-           `Meets State Disadvantaged Criteria` == "No" ~ "Not DACs",
-           TRUE ~ `Meets State Disadvantaged Criteria`
-         )) %>%
-  pivot_wider(names_from = `Meets State Disadvantaged Criteria`,
-              values_from = c(`Total Funding`, `Total Principal Forgiveness`),
-              names_sep=" ") %>% 
-  ungroup() %>%
-  mutate(`Total Funding NA` = replace_na(`Total Funding NA`, 0),
-         `Total Principal Forgiveness NA` = replace_na(`Total Principal Forgiveness NA`, 0),
-         `Total Funding No Information` = replace_na(`Total Funding No Information`, 0),
-         `Total Principal Forgiveness No Information` = replace_na(`Total Principal Forgiveness No Information`, 0),
-         `Total Funding Unknown` = `Total Funding NA` + `Total Funding No Information`,
-         `Total Principal Forgiveness Unknown` = `Total Principal Forgiveness NA` + `Total Principal Forgiveness No Information`) %>%
-  select(-`Total Funding TBD`, -`Total Principal Forgiveness TBD`, -`Total Funding NA`, -`Total Funding No Information`,
-         -`Total Principal Forgiveness NA`, -`Total Principal Forgiveness No Information`) %>%
- select(1,3,2,6,5,4,7)
-
-all_states_stats <- all_states %>%
-  left_join(state_dac_funding, by="State") %>%
-  ungroup()
-
-write.csv(all_states_stats, "year1/output/srf-dashboard-state-stats.csv", row.names=FALSE)
 ```
 

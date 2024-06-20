@@ -41,6 +41,8 @@ source("year1/AR/code/clean-AR.R")
 ar_clean <- clean_ar()
 
 # Arizona
+source("year1/AZ/code/clean-AZ.R")
+az_clean <- clean_az()
 
 # California
 source("year1/CA/code/clean-CA.R")
@@ -57,10 +59,6 @@ ct_clean <- clean_ct()
 # Delaware
 source("year1/DE/code/clean-DE.R")
 de_clean <- clean_de()
-
-# District of Columbia
-source("year1/DC/code/clean-DC.R")
-dc_clean <- clean_dc()
 
 # Florida
 source("year1/FL/code/clean-FL.R")
@@ -132,7 +130,7 @@ mo_clean <- clean_mo()
 
 # Montana
 source("year1/MT/code/clean-MT.R")
-# mt_clean <- clean_mt()
+mt_clean <- clean_mt()
 
 # Nebraska
 source("year1/NE/code/clean-NE.R")
@@ -175,6 +173,8 @@ source("year1/OK/code/clean-OK.R")
 ok_clean <- clean_ok()
 
 # Oregon
+source("year1/OR/code/clean-OR.R")
+or_clean <- clean_or()
 
 # Pennsylvania
 source("year1/PA/code/clean-PA.R")
@@ -192,7 +192,9 @@ sc_clean <- clean_sc()
 source("year1/SD/code/clean-SD.R")
 sd_clean <- clean_sd()
 
-# Tennessee (NS)
+# Tennessee
+source("year1/TN/code/clean-TN.R")
+tn_clean <- clean_tn()
 
 # Texas
 source("year1/TX/code/clean-TX.R")
@@ -203,6 +205,8 @@ source("year1/UT/code/clean-UT.R")
 ut_clean <- clean_ut()
 
 # Virginia
+source("year1/VA/code/clean-VA.R")
+va_clean <- clean_va()
 
 # Vermont
 source("year1/VT/code/clean-VT.R")

@@ -63,7 +63,7 @@ clean_az <- function() {
            category = "3"
       ) %>%
     select(borrower, pwsid, project_name, project_type, requested_amount, funding_amount, project_description,
-           population, disadvantaged, state_rank, funding_status)
+           population, disadvantaged, state_rank, funding_status, state, category)
   
   rm(list=setdiff(ls(), "az_clean"))
   

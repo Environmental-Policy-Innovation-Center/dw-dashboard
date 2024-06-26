@@ -496,7 +496,7 @@ server <- function(input, output, session) {
     req(input$ChartSelect)
     tooltip_text <- tooltip_text %>%
            filter(Name == as.character(input$ChartSelect)) %>%
-           pull(tooltip_text)
+           pull(Text)
     
   })
   

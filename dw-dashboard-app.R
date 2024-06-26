@@ -98,9 +98,8 @@ server <- function(input, output, session) {
   ## Data Prep ----
   
   waitress$inc(20) # increase by 10
-  dw_data_raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data.csv", bucket = "water-team-data"))
-  ppl_data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv", bucket = "water-team-data")) %>%
-                mutate(across('Project Type', str_replace, 'Other', 'General'))
+  dw_data_raw <-  read_csv(get_object(object = "apps/dw-dashboard/dw-dashboard-data_v1-1.csv", bucket = "water-team-data"))
+  ppl_data <- read_csv(get_object(object = "clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv", bucket = "water-team-data"))
 
   waitress$inc(20) # increase by 10
   

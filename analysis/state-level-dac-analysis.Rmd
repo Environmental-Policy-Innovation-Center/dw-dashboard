@@ -185,6 +185,7 @@ ggplot(funded_by_dac, aes(x=meets_state_disadvantaged_criteria,
        title="Expected DWSRF Projects",
        subtitle="State Fiscal Year 2023") + 
   guides(fill="none") +
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
   theme_minimal()  + 
   theme(panel.grid.minor = element_line(linetype = "blank"), 
         panel.grid.major.x = element_line(linetype="blank"),
@@ -206,6 +207,7 @@ ggplot(funded_by_dac, aes(x=meets_state_disadvantaged_criteria,
        subtitle="State Fiscal Year 2023") + 
   guides(fill="none") + 
   scale_y_continuous(labels=label_dollar(scale_cut = cut_short_scale())) + 
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
   theme_minimal() + 
   theme(
         panel.grid.minor = element_line(linetype = "blank"), 
@@ -228,12 +230,13 @@ ggplot(percent_by_pt, aes(x=project_type,
                           fill=meets_state_disadvantaged_criteria)) + 
   geom_bar(stat="identity", position="fill") + 
   labs(x="",
-       y="Total Expected Projects Funded",
-       title="Expected DWSRF Projects by Type",
+       y="Expected Projects Funded",
+       title="Expected DWSRF Projects Funded by Type",
        subtitle="State Fiscal Year 2023",
        fill="Meets State\nDisadvantaged\nCriteria") + 
   scale_y_continuous(labels=label_percent()) + 
   theme_minimal() + 
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
   theme(
         panel.grid.minor = element_line(linetype = "blank"), 
         panel.grid.major.x = element_line(linetype="blank"),

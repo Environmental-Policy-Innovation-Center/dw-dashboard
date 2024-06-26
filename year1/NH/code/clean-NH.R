@@ -19,7 +19,7 @@ clean_nh <- function() {
            -j_consolidation_interconnecti_on_score, -k_critical_infrastructur_e_score, 
            -l_project_readiness_score,
            -water_rate, -mhi, -affordability_index,
-           -requested_loan_amount, -arpa_disadvantaged_co_op_or_epa_wiin_grant,
+           -arpa_disadvantaged_co_op_or_epa_wiin_grant,
            -x2022_arpa_grant) %>%
     
     # drop empty rows
@@ -49,10 +49,11 @@ clean_nh <- function() {
            base_supplemental_forgiveness = as.numeric(
              str_replace_all(base_supplemental_forgiveness, "[^0-9.]", "")),
            ## define funding amount as sum of loan, assumes it includes forgiveness_amount
-           funding_amount = emerging_contaminants + lead_service_line_lsl_loan_amount 
-           + base_supplemental_loan_amount,
+           funding_amount = emerging_contaminants + lead_service_line_lsl_loan_amount + lsl_forgiveness
+           + base_supplemental_loan_amount + base_supplemental_forgiveness,
            ## define PF as sum of forgiveness columns
-           principal_forgiveness_amount = lsl_forgiveness + base_supplemental_forgiveness
+           principal_forgiveness_amount = lsl_forgiveness + base_supplemental_forgiveness + emerging_contaminants,
+           requested_amount = as.numeric(str_replace_all(requested_loan_amount, "[^0-9.]", "")),
     ) %>%
     
     # process text columns
@@ -80,16 +81,17 @@ clean_nh <- function() {
         TRUE ~ "Not Funded"),
       project_type = case_when(
         emerging_contaminants > 0 ~ "Emerging Contaminants",
-        lead_service_line_lsl_loan_amount > 0 ~ "Lead",
-        TRUE ~ "General"),
+        lead_service_line_lsl_loan_amount > 0 | lsl_forgiveness > 0 ~ "Lead",
+        funding_amount > 0 ~ "General",
+        TRUE ~ "No Information"),
       state = "New Hampshire",
       category = "1"
     ) %>%
-    select(borrower, pwsid, cities_served, project_name, project_type, state_rank, state_score,
-           funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state, category)
+    select(cities_served, borrower, pwsid, project_name, project_type, requested_amount, funding_amount, principal_forgiveness_amount,
+           population, disadvantaged, state_rank, state_score, funding_status, state, category)
   
   
   rm(list=setdiff(ls(), "nh_clean"))
   
-  return(NULL)
+  return(nh_clean)
 }

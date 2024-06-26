@@ -1,6 +1,7 @@
 library(tidyverse)
 library(data.table)
 library(janitor)
+source("cleaning-functions.R")
 
 clean_ut <- function() {
   
@@ -9,17 +10,17 @@ clean_ut <- function() {
                   colClasses = "character", na.strings = "") %>% 
     clean_names()
   
+  # (58,22) -> (58,13)
   ut_clean <- ut_ppl %>%
     # drop columns
     select(-green_project, -green_amount, -equivalency_project,
            -project_segments_sour, -project_segments_treat, -project_segments_stor, -project_segments_dist) %>%
     # format numeric columns
     mutate(
-      population = as.numeric(str_replace_all(pop,"[^0-9.]","")),
-      # TODO: determine if ARPA needs to be subtracted from it
-      funding_amount = as.numeric(str_replace_all(srf_assistance,"[^0-9.]","")),
-      principal_forgiveness = as.numeric(str_replace_all(principal_forgiveness,"[^0-9.]","")),
-      project_cost = as.numeric(str_replace_all(project_total,"[^0-9.]","")),
+      population = convert_to_numeric(pop),
+      funding_amount = convert_to_numeric(funds_authorized),
+      principal_forgiveness_amount = convert_to_numeric(principal_forgiveness),
+      project_cost = convert_to_numeric(project_total),
     ) %>%
     # format non-numeric columns
     mutate(
@@ -30,18 +31,17 @@ clean_ut <- function() {
       project_description = str_squish(project_title),
       disadvantaged = case_when(disadvantaged == "Y" ~ "Yes",
                                 TRUE ~ "No"),
-      project_type = case_when(
-        grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
-        TRUE ~ "General"),
+      funding_status = case_when(
+        funding_amount > 0 | principal_forgiveness_amount > 0 ~ "Funded",
+        TRUE ~ "Not Funded"),
       state = "Utah",
-      category = ""
-      # TODO: Add funding_status depending on interpretation
+      category = "3"
     ) %>%
-    select(state_score, borrower, pwsid, project_description, funding_amount, principal_forgiveness,
-           project_type, cities_served, disadvantaged, population, state, category)
+    select(cities_served, borrower, pwsid, project_cost, funding_amount, principal_forgiveness_amount,
+           population, project_description, disadvantaged, state_score, funding_status, state, category)
   
   
   rm(list=setdiff(ls(), "ut_clean"))
   
-  return(NULL)
+  return(ut_clean)
 }

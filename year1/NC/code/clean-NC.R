@@ -5,15 +5,16 @@ library(janitor)
 clean_nc <- function() {
   
   
-  # (221, 15)
-  nc_raw <- fread("year1/NC/data/33-NorthCarolina_PPL_Comprehensive.csv",
+  # (222, 15)
+  nc_raw <- fread("year1/NC/data/nc-comprehensive-ppl.csv",
                   colClass="character", na.strings="") %>%
     clean_names()
   
-  # -> (221,11)
+  # -> (222,13)
   nc_clean <- nc_raw %>%
     # format numeric columns
     mutate(population = as.numeric(str_replace_all(service_populati_on, "[^0-9.]", "")),
+           requested_amount = as.numeric(str_replace_all(total_funding_request, "[^0-9.]", "")),
            # pre-format columns that will add up to funding amount and PF
            base_dwsrf_loans = as.numeric(str_replace_all(base_dwsrf_loans, "[^0-9.]", "")),
            bil_suppl_dwsrf_loans = as.numeric(str_replace_all(bil_suppl_dwsrf_loans, "[^0-9.]", "")),
@@ -28,23 +29,24 @@ clean_nc <- function() {
     # format text columns
     mutate(borrower = str_squish(applicant_name),
            project_name = str_squish(project_name),
+           project_description = str_squish(project_name),
            state_score = str_replace_all(priorit_y_points, "[^0-9.]", ""),
            pwsid = case_when(
              pwsid == 'x' ~ as.character(NA),
              TRUE ~ pwsid),
            cities_served = str_squish(county),
            project_type = "General",
+           funding_status = case_when(
+             !is.na(funding_amount) ~ "Funded",
+             TRUE ~ "Not Funded"),
            state = "North Carolina",
-           category = "",
+           category = "3",
     ) %>%
-    mutate(funding_status = case_when(
-      !is.na(funding_amount) ~ "Funded",
-      TRUE ~ "Not Funded")) %>%
-    select(borrower, pwsid, project_name, state_score, funding_amount, principal_forgiveness_amount,
-           cities_served, project_type, population, state, category, funding_status)
+    select(cities_served, borrower, pwsid, project_name, project_type, requested_amount, funding_amount,
+           principal_forgiveness_amount, population, state_score, funding_status, state, category)
 
   
   rm(list=setdiff(ls(), "nc_clean"))
   
-  return(NULL)
+  return(nc_clean)
 }

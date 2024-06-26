@@ -1,0 +1,249 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This notebook is designed to answer a set of questions posed by the Water Team to address funder questions regarding the utilization of funds in disadvantaged communities (DAC) and assess whether the Bipartisan Infrastructure Law (BIL) has significantly moved the needle in this regard.
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+options(scipen=9999)
+source("cleaning-functions.R")
+```
+
+
+```{r}
+
+projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv") %>%
+  clean_names() 
+
+
+```
+
+1a. For how many states is there "no information" on whether the projects designated for SRF awards are for DACs?
+
+1a. For 9 states + DC, we don't have DAC status for any projects. For another 8 other states, we don't have DAC status for more than half of projects.
+
+When also considering funded/unfunded projects, there does not seem to be a strong correlation between missing DAC definitions and missing funding expectations - some states have all Funded projects, but DAC is NA for all projects. Some provide no funding status indication nor DAC status.
+
+```{r}
+
+state_projects <- projects %>%
+  group_by(state) %>%
+  summarize(total_count=n())
+
+dac_na <- projects %>%
+  filter(is.na(meets_state_disadvantaged_criteria) | meets_state_disadvantaged_criteria == "No Information") %>%
+  mutate(funded_binary = ifelse(funding_status == "Funded", 1,0)) %>%
+  group_by(state) %>%
+  summarize(count=n(), funded_count = sum(funded_binary, na.rm=TRUE)) %>%
+  left_join(state_projects) %>%
+  mutate(all_na = count / total_count,
+         funded_ratio = funded_count / total_count)
+
+```
+
+1b.  For the remaining states, what proportion of SRF awards designated on Year 1 funding list(s) are for state-defined DACs?  for general projects? for lead projects? for EC projects?
+
+1b. Of the 2,130 'funded' projects for which we know DAC status, 1149 (53%) are for DACs. The funding amount for these projects totals \$3,604,938,865. There are 981 'funded' projects for which we know DAC status and the funding amount for these projects totals \$4,358,062,193. Thus, we anticipate state-defined DACs receiving 45% of the $7.96b SRF awards designated on Year 1 funding lists.
+
+Separating projects by type, DACs are designated to receive 40% of funds going to General projects, 39% of funds going to EC projects, and 76% of funds going to Lead projects. Let me know if you also want the dollar totals for these. 
+
+```{r}
+
+funded_projects <- projects %>%
+  filter(!is.na(meets_state_disadvantaged_criteria) & meets_state_disadvantaged_criteria != "No Information") %>%
+  filter(funding_status == "Funded")
+
+funded_by_dac <- funded_projects %>%
+  group_by(meets_state_disadvantaged_criteria) %>%
+  summarize(count=n(),
+            total_funding = sum(funding_amount, na.rm=TRUE))
+
+funded_by_dac_pt <- funded_projects %>%
+  group_by(meets_state_disadvantaged_criteria, project_type) %>%
+  summarize(count=n(),
+            total_funding = sum(funding_amount, na.rm=TRUE))
+
+
+nfunded_projects <- projects %>%
+  filter(!is.na(meets_state_disadvantaged_criteria) & meets_state_disadvantaged_criteria != "No Information") %>%
+  filter(funding_status == "Not Funded")
+
+nfunded_by_dac <- nfunded_projects %>%
+  group_by(meets_state_disadvantaged_criteria) %>%
+  summarize(count=n(),
+            total_funding = sum(funding_amount, na.rm=TRUE))
+
+nfunded_by_dac_pt <- nfunded_projects %>%
+  group_by(meets_state_disadvantaged_criteria, project_type) %>%
+  summarize(count=n(),
+            total_funding = sum(funding_amount, na.rm=TRUE))
+
+sum(nfunded_by_dac_pt$count)
+sum(nfunded_by_dac_pt$total_funding)
+
+
+```
+
+2a. For how many states is there "no information" on the amount of PF to be provided designated funding awards on the state funding list(s)?
+
+2a. This is a little trickier to answer for some backend coding reasons I can go into another time, but - For 17 states, we either have No Information or 0 for 100% of their listed projects. For a number of other states we have incomplete information.
+
+```{r}
+
+no_pf <- projects %>%
+  filter(is.na(principal_forgiveness) | principal_forgiveness == 0) %>%
+  group_by(state) %>%
+  summarize(count=n()) %>%
+  left_join(state_projects) %>%
+  mutate(no_pf_ratio = count / total_count)
+
+na_pf <- projects %>%
+  filter(is.na(principal_forgiveness)) %>%
+  group_by(state) %>%
+  summarize(count=n()) %>%
+  left_join(state_projects) %>%
+  mutate(no_pf_ratio = count / total_count)
+
+```
+
+
+
+2b. Of the remaining states, how many of the designated awards include some PF?  For general projects?  for lead projects? (e.g., out of X designated awards, Y include PF).
+
+Of the 2,036 projects where PF is not NA and funding status is Funded, 1,128 include some PF. For General projects, of 1,359 designated awards 590 include PF. For lead projects, of 529 designated awards, 441 include PF. For Emerging Contaminants projects, of the 84 designated awards, 58 include PF. For projects where Project Type is NA, of 64 projects, 39 include PF.
+
+```{r}
+
+projects_pf_types <- projects %>%
+  filter(!is.na(principal_forgiveness)) %>%
+  filter(funding_status == "Funded") %>%
+  mutate(pf_binary = ifelse(principal_forgiveness >0, 1, 0)) %>%
+  group_by(project_type) %>%
+  summarize(count=n(),
+            pf_count=sum(pf_binary))
+
+sum(projects_pf_types$count)
+sum(projects_pf_types$pf_count)
+
+```
+
+2c. Of the designated awards that include some PF, what portion of the total funding awarded, on average, is provided as PF?  for general projects? for lead projects?
+
+For projects where PF is greater than 0, the average portion of total funding that's provided as PF is 61%. For General projects, the average is 55%. For Lead projects, the average is 70%. For EC, the average is 79%. Where Project Type is NA, the average is 48%.
+
+```{r}
+pf_projects <- projects %>%
+  filter(principal_forgiveness > 0 & funding_amount > 0) %>%
+  mutate(pf_ratio = round(principal_forgiveness / funding_amount,2))
+
+mean(pf_projects$pf_ratio)
+
+pf_projects_type <- pf_projects %>%
+  group_by(project_type) %>%
+  summarize(count=n(), average=mean(pf_ratio))
+
+```
+
+
+Note: For 2b and 2c, I recognize the results contradict the understanding that EC projects should be 100% PF. I will need to go back to the projects and states where this doesn't appear to be the case and see where the discrepancy is.
+
+
+Would it be very easy to determine, from EPA's data, the % of final funding awards, and the % of total funding, that went to DACs in "Year 0" (or for a set of years preceding BIL allocations)? I.e., to have a pre-BIL comparator for Q1 data (although noting that the pre-BIL dataset will be for finalized awards, rather than for awards anticipated at the IUP stage).
+```{r}
+
+dw_agreements <- s3read_using(read.csv, object="s3://water-team-data/raw_data/dwsrf_awards/epa-portal-dw-assistance-agreements.csv") %>%
+  clean_names() %>%
+  select(borrower_name, city, disadvantaged_assistance, current, state_tracking_number, initial_agreement_amount, current_agreement_amount, initial_agreement_date) %>%
+  filter(disadvantaged_assistance != "") %>%
+  mutate(initial_agreement_amount = convert_to_numeric(initial_agreement_amount),
+         agreement_date = as.Date(initial_agreement_date, "%m/%d/%Y"))
+
+agreements_dac <- dw_agreements %>%
+  group_by(disadvantaged_assistance) %>%
+  summarize(count=n(), initial_agreement_total = sum(as.numeric(initial_agreement_amount), na.rm=TRUE))
+
+```
+
+
+
+## Plotting for blog just the final calculations
+
+```{r}
+
+ggplot(funded_by_dac, aes(x=meets_state_disadvantaged_criteria,
+                          y=count,
+                          fill=meets_state_disadvantaged_criteria)) + 
+  geom_bar(stat="identity", position="stack") + 
+    labs(x="Meets State Disadvantaged Criteria",
+       y="Total Expected Projects Funded",
+       title="Expected DWSRF Projects",
+       subtitle="State Fiscal Year 2023") + 
+  guides(fill="none") +
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
+  theme_minimal()  + 
+  theme(panel.grid.minor = element_line(linetype = "blank"), 
+        panel.grid.major.x = element_line(linetype="blank"),
+        plot.subtitle = element_text(family = "sans", size = 12, margin=margin(00,0,20,0)),
+        axis.title.x = element_text(family = "sans", size = 10, margin=margin(10,0,0,0)), 
+        axis.title.y = element_text(family = "sans", size = 10, margin=margin(0,10,0,0)))
+
+```
+
+```{r}
+
+ggplot(funded_by_dac, aes(x=meets_state_disadvantaged_criteria,
+                          y=total_funding,
+                          fill=meets_state_disadvantaged_criteria)) + 
+  geom_bar(stat="identity") + 
+  labs(x="Meets State Disadvantaged Criteria",
+       y="Total Expected Funding",
+       title="Expected DWSRF Project Funding",
+       subtitle="State Fiscal Year 2023") + 
+  guides(fill="none") + 
+  scale_y_continuous(labels=label_dollar(scale_cut = cut_short_scale())) + 
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
+  theme_minimal() + 
+  theme(
+        panel.grid.minor = element_line(linetype = "blank"), 
+        panel.grid.major.x = element_line(linetype="blank"),
+        plot.subtitle = element_text(family = "sans", size = 12, margin=margin(00,0,20,0)),
+        axis.title.x = element_text(family = "sans", size = 10, margin=margin(10,0,0,0)), 
+        axis.title.y = element_text(family = "sans", size = 10, margin=margin(0,10,0,0)))
+
+```
+
+```{r}
+
+percent_by_pt <- tibble(project_type = c("General", "General", "Emerging Contaminants", "Emerging Contaminants", "Lead", "Lead"),
+                        percent = c(60, 40, 61, 39, 24, 76),
+                        meets_state_disadvantaged_criteria = c("No", "Yes", "No", "Yes", "No", "Yes")
+                        )
+
+ggplot(percent_by_pt, aes(x=project_type,
+                          y=percent,
+                          fill=meets_state_disadvantaged_criteria)) + 
+  geom_bar(stat="identity", position="fill") + 
+  labs(x="",
+       y="Expected Projects Funded",
+       title="Expected DWSRF Projects Funded by Type",
+       subtitle="State Fiscal Year 2023",
+       fill="Meets State\nDisadvantaged\nCriteria") + 
+  scale_y_continuous(labels=label_percent()) + 
+  theme_minimal() + 
+  scale_fill_manual(values=c("#333C6B", "#A1BD97")) + 
+  theme(
+        panel.grid.minor = element_line(linetype = "blank"), 
+        panel.grid.major.x = element_line(linetype="blank"),
+        legend.title=element_text(size=10),
+        plot.subtitle = element_text(family = "sans", size = 12, margin=margin(00,0,20,0)),
+        axis.title.x = element_text(family = "sans", size = 10, margin=margin(10,0,0,0)), 
+        axis.title.y = element_text(family = "sans", size = 10, margin=margin(0,10,0,0)))
+
+```
+

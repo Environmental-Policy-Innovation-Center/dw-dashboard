@@ -10,10 +10,7 @@ clean_ny <- function() {
   ny_base <- fread("year1/NY/data/32-NewYork_base_ppl.csv",
                    colClass="character", na.strings="") %>%
     clean_names() %>%
-    mutate(project_type = "General",
-           disadvantaged = case_when(
-             score == "H" ~ "Yes",
-             TRUE ~ "No"))
+    mutate(project_type = "General")
   
   ## BIL
   # (120,10) -> (120,11)
@@ -22,7 +19,22 @@ clean_ny <- function() {
     clean_names() %>%
     select(-v1) %>%
     mutate(project_type = "General",
-           disadvantaged = "Yes")
+           disadvantaged = "Yes") %>%
+    select(project_number, disadvantaged)
+  
+
+  # all projects on BIL are also on base
+  ny_base_bil <- ny_base %>%
+    left_join(ny_bil, by="project_number") %>%
+    # from Base, if H, disadvantaged. if still NA, not disadvantaged, if it already wasn't NA, inhereit "Yes" from BIL
+    mutate(disadvantaged = case_when(
+      score == "H" & is.na(disadvantaged) ~ "Yes",
+      is.na(disadvantaged) ~ "No",
+      TRUE ~ disadvantaged)
+      ) %>%
+    # drop 4 projects already on EC/lead list
+    filter(!project_number %in% c("18971", "19125", "19171", "19277"))
+  
   
   ## Lead - Amendment 4
   # (109,11) -> (109,12)
@@ -45,14 +57,20 @@ clean_ny <- function() {
     mutate(project_type = "Emerging Contaminants",
            disadvantaged = case_when(
              dac == "DAC" ~ "Yes",
-             TRUE ~ "No")
+             TRUE ~ "No"),
+           population = case_when(
+             # fix projects that are missing population from NY Base
+             project_number == "19171" ~ "14700",
+             project_number == "18971" ~ "28000",
+             project_number == "19125" ~ "621"
+           )
     )
   
   ## Combine & Clean
-  # -> (824, 13)
-  ny_combined <- bind_rows(ny_base, ny_bil, ny_lead, ny_ec)
+  # -> (700, 13)
+  ny_combined <- bind_rows(ny_base_bil, ny_lead, ny_ec)
   
-  # -> (824,12)
+  # -> (700,12)
   ny_clean <- ny_combined %>%
     select(-dac, -cumulative_total, -code) %>%
     # process numeric columns
@@ -69,7 +87,8 @@ clean_ny <- function() {
            category = "2",
            funding_status = "Not Funded") %>%
     select(borrower, state_score, project_name, project_description, project_cost,
-           population, cities_served, disadvantaged, project_type, state, category, funding_status)
+           population, cities_served, disadvantaged, project_type, state, category, funding_status) 
+
   
   rm(list=setdiff(ls(), "ny_clean"))
   

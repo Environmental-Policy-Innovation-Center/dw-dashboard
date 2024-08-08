@@ -9,7 +9,7 @@ clean_mn <- function() {
                   colClasses = "character", na.strings = "") %>% 
     clean_names()
   
-  # -> (142, 11)
+  # -> (142, 18)
   mn_clean <- mn_raw %>%
     # remove extra columns
     select(-est_const_start, v16) %>%
@@ -37,7 +37,7 @@ clean_mn <- function() {
       project_description = str_squish(project_description),
       state_rank = str_replace_all(mdh_2023_ppl_rank,"[^0-9.]",""),
       state_score = str_replace_all(mdh_2023_ppl_points,"[^0-9.]",""),
-      pwsid = paste0("MN", as.character(map(strsplit(project_number, split = "-"), 1))),
+      project_id = str_squish(project_number),
       project_type = case_when(
         status == "Part A5,LSL" ~ "Lead",
         status == "Carryover,LSL" ~ "Lead",
@@ -58,10 +58,18 @@ clean_mn <- function() {
       ),
       state = "Minnesota",
       category = "3",
+      # add in NA columns for state
+      pwsid = as.character(NA),
+      city_served = as.character(NA),
+      project_name = as.character(NA),
+      project_cost = as.character(NA),
+      requested_amount = as.character(NA),
+      
     ) %>%
     # subset columns
-    select(state_rank, state_score, borrower, pwsid, project_description, population, disadvantaged,
-           funding_amount, principal_forgiveness_amount, funding_status, project_type, state, category)
+    select(state_rank, state_score, borrower, pwsid, project_id, project_description, population, disadvantaged,
+           funding_amount, principal_forgiveness_amount, funding_status, project_type, state, category,
+           city_served, project_name, project_cost, requested_amount)
   
   rm(list=setdiff(ls(), "mn_clean"))
   

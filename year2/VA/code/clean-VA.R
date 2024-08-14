@@ -6,7 +6,7 @@ source("cleaning-functions.R")
 
 clean_va <- function() {
   
-  # (21, 14) -> ()
+  # (21, 14) -> (21, 18)
   va_clean <- read.csv("./year2/VA/data/tabula-VA-FY2023-IUP_draft-attachment1.csv") %>%
     clean_names() %>%
     mutate(community_served = as.character(NA), 

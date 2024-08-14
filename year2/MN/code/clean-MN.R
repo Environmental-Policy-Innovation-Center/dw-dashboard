@@ -43,7 +43,7 @@ clean_mn <- function() {
   mn_clean <- ppl %>%
     left_join(table_1, by="project_id") %>%
     mutate(
-      city_served = as.character(NA),
+      community_served = as.character(NA),
       borrower = str_squish(system),
       pwsid = as.character(NA),
       project_id = str_squish(project_id),
@@ -59,15 +59,15 @@ clean_mn <- function() {
       population = convert_to_numeric(population, FALSE),
       project_description = str_squish(project),
       disadvantaged = as.character(NA),
-      state_rank = str_squish(rank),
-      state_score = str_squish(points),
+      project_rank = str_squish(rank),
+      project_score = str_squish(points),
       expected_funding = replace_na(expected_funding, "No"),
       state = "Minnesota",
-      year = "SFY24"
-    ) %>%
-    select(city_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+      state_fiscal_year = "SFY24"
+    )  %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, state_rank, state_score, expected_funding, state, year)
+           disadvantaged, project_rank, project_score, expected_funding, state, state_fiscal_year)
   
   run_tests(mn_clean)
   

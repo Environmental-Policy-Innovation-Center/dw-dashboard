@@ -61,9 +61,9 @@ check_required_columns <- function(df) {
   # Get the actual columns present in the dataframe
   actual_columns <- colnames(df)
   
-  required_columns <- c("city_served", "borrower", "pwsid", "project_id", "project_name", "project_type", "project_cost",
+  required_columns <- c("community_served", "borrower", "pwsid", "project_id", "project_name", "project_type", "project_cost",
                         "requested_amount", "funding_amount", "principal_forgiveness", "population", "project_description",
-                        "disadvantaged", "state_rank", "state_score", "expected_funding", "state", "year")
+                        "disadvantaged", "project_rank", "project_score", "expected_funding", "state", "state_fiscal_year")
   
   # Identify missing columns
   missing_columns <- setdiff(required_columns, actual_columns)

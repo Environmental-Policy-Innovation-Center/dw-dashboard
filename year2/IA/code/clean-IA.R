@@ -1,3 +1,4 @@
+source("resources.R")
 
 clean_ia <- function() {
   

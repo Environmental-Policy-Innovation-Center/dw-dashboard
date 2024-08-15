@@ -1,9 +1,28 @@
+### Inputs ----
+library(tidyverse)
+library(data.table)
+library(janitor)
+options(scipen=999)
+
 
 ### Cleaning Functions ----
 
-# return column of numeric strings with non-numeric characters as numeric column
-# defaults to filling in NAs with 0s, but this can be overwritten as needed
-convert_to_numeric <- function(column, fill_na_0=TRUE) {
+
+# takes a numeric column, removes non-numeric characters, then returns as a string column
+clean_numeric_string <- function(column) {
+  
+  column_numeric <- convert_to_numeric(column)
+  
+  column_string <- as.character(column_numeric, FALSE)
+  column_string <- replace_na(column_string, "No Information")
+  
+  return(column_string)
+}
+
+# takes a numeric column, removes non-numeric characters, then returns a numeric column
+# can also automatically replace NAs with 0 for being able to add columns together
+# but note that those columns will likely then need to be processed as strings separately
+convert_to_numeric <- function(column, fill_na_0 = FALSE) {
   
   column_numeric <- as.numeric(str_replace_all(column, "[^0-9.]", ""))
   
@@ -11,9 +30,6 @@ convert_to_numeric <- function(column, fill_na_0=TRUE) {
     column_numeric <- replace_na(column_numeric, 0)
   }
   
-  if (any(is.na(column_numeric))) {
-    warning("Some values could not be converted to numeric.")
-  }
   return(column_numeric)
 }
 
@@ -24,6 +40,7 @@ convert_to_numeric <- function(column, fill_na_0=TRUE) {
 run_tests <- function(df) {
   check_na_warnings(df)
   check_required_columns(df)
+  check_column_types(df)
 }
 
 
@@ -63,7 +80,7 @@ check_required_columns <- function(df) {
   
   required_columns <- c("community_served", "borrower", "pwsid", "project_id", "project_name", "project_type", "project_cost",
                         "requested_amount", "funding_amount", "principal_forgiveness", "population", "project_description",
-                        "disadvantaged", "project_rank", "project_score", "expected_funding", "state", "state_fiscal_year")
+                        "disadvantaged", "project_rank", "project_score", "expecting_funding", "state", "state_fiscal_year")
   
   # Identify missing columns
   missing_columns <- setdiff(required_columns, actual_columns)
@@ -74,5 +91,35 @@ check_required_columns <- function(df) {
             paste(missing_columns, collapse = ", "))
   } else {
     message("PASS: All required columns are present.")
+  }
+}
+
+
+
+
+
+
+# Define the test function
+check_column_types <- function(df) {
+  # Define vectors of column names to be checked
+  string_columns <- c("community_served", "borrower", "pwsid", "project_id", "project_name", "project_type", "project_cost",
+                      "requested_amount", "funding_amount", "principal_forgiveness", "population", "project_description",
+                      "disadvantaged", "project_rank", "project_score", "expecting_funding", "state", "state_fiscal_year") 
+  
+  
+  string_check <- map(string_columns, ~ {
+    if (!is.character(df[[.x]])) {
+      return(paste("Column", .x, "should be of type character."))
+    }
+    NULL
+  }) %>% compact()  # Remove NULL values
+  
+  
+  # Print warnings for string columns
+  if (length(string_check) > 0) {
+    warning("FAIL: ", paste(string_check, collapse = "\n"))
+  }
+  else {
+    message("PASS: All text columns of correct type.")
   }
 }

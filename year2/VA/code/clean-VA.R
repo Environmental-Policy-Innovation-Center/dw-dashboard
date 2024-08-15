@@ -1,8 +1,3 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-source("cleaning-functions.R")
-
 
 clean_va <- function() {
   
@@ -18,21 +13,21 @@ clean_va <- function() {
              program_type_code %in% c("BASE", "SUPP") ~ "General", 
              TRUE ~ "Emerging Contaminants"
            ), 
-           project_cost = convert_to_numeric(project_cost), 
-           requested_amount = as.numeric(NA), 
-           funding_amount = convert_to_numeric(srf_amount_for_this_iup), 
-           principal_forgiveness = convert_to_numeric(principal_forgiveness), 
-           population = as.numeric(NA), 
+           project_cost = clean_numeric_string(project_cost), 
+           requested_amount = as.character(NA), 
+           funding_amount = clean_numeric_string(srf_amount_for_this_iup), 
+           principal_forgiveness = clean_numeric_string(principal_forgiveness), 
+           population = as.character(NA), 
            project_description = str_squish(project_description), 
            disadvantaged = as.character(NA), 
            project_rank = str_squish(priority), 
            project_score = str_squish(point_total), 
-           expected_funding = "Yes", 
+           expecting_funding = "Yes", 
            state = "Virginia", 
            state_fiscal_year = "SFY24") %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expected_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
   
   run_tests(va_clean)

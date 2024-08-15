@@ -1,9 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
 source("cleaning-functions.R")
-
-
 
 clean_mn <- function() {
   
@@ -15,9 +10,11 @@ clean_mn <- function() {
                               convert_to_numeric(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_2),
       funding_amount = convert_to_numeric(estimated_dwrf_loan) + 
                        principal_forgiveness,
-      expected_funding = case_when(
+      expecting_funding = case_when(
         funding_amount > 0 ~ "Yes",
-        TRUE ~ "No")
+        TRUE ~ "No"), 
+      funding_amount = clean_numeric_string(funding_amount), 
+      principal_forgiveness = clean_numeric_string(principal_forgiveness), 
            )
   
   # (55, 14) -> (55,17)
@@ -27,13 +24,15 @@ clean_mn <- function() {
       principal_forgiveness = convert_to_numeric(estimated_dwrf_lsl_pf_grant_3),
       funding_amount = convert_to_numeric(estimated_dwrf_lsl_loan_4) +
                        principal_forgiveness,
-      expected_funding = "Yes"
+      funding_amount = clean_numeric_string(funding_amount),
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      expecting_funding = "Yes"
     )
   
   # (-> 242,4)
   table_1 <- bind_rows(table_1a, table_1b) %>%
     rename(project_id = project_number)  %>%
-    select(project_id, funding_amount, principal_forgiveness, expected_funding)
+    select(project_id, funding_amount, principal_forgiveness, expecting_funding)
   
   # (844, 7)
   ppl <- read.csv("year2/MN/data/draft-2024-drinking-water-intended-use-plan-project-priority-list-appendix.csv") %>%
@@ -52,22 +51,22 @@ clean_mn <- function() {
         grepl("LSL", project) ~ "Lead",
         grepl("Manganese", project) | grepl("PFAS", project) ~ "Emerging Contaminants",
         TRUE ~ "General"),
-      project_cost = convert_to_numeric(project_cost),
-      requested_amount = as.numeric(NA),
-      funding_amount = replace_na(funding_amount, 0),
-      principal_forgiveness = replace_na(principal_forgiveness, 0),
-      population = convert_to_numeric(population, FALSE),
+      project_cost = clean_numeric_string(project_cost),
+      requested_amount = as.character(NA),
+      funding_amount = clean_numeric_string(funding_amount),
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      population = clean_numeric_string(population),
       project_description = str_squish(project),
       disadvantaged = as.character(NA),
       project_rank = str_squish(rank),
       project_score = str_squish(points),
-      expected_funding = replace_na(expected_funding, "No"),
+      expecting_funding = replace_na(expecting_funding, "No"),
       state = "Minnesota",
       state_fiscal_year = "SFY24"
     )  %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expected_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
   run_tests(mn_clean)
   

@@ -20,8 +20,6 @@ clean_ia <- function() {
            funding_amount = clean_numeric_string(total_loan_amount_to_date), 
            principal_forgiveness = as.character(NA), 
            project_description = str_squish(project_description), 
-           # there are some NA populations in the original dataset 
-           # TODO: replace NAs with "no information" when new function comes out 
            population = clean_numeric_string(pop),
            disadvantaged = as.character(NA), 
            project_rank = as.character(NA), 

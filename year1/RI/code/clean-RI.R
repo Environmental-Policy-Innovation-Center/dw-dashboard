@@ -1,4 +1,4 @@
-sources("resources.R")
+source("resources.R")
 
 clean_ri <- function() {
   

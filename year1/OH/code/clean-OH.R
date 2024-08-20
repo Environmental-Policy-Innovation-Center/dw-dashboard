@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_oh <- function() {
   
@@ -55,31 +53,37 @@ clean_oh <- function() {
   # -> (440,12)
   oh_clean <- oh_base %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
-           funding_amount = as.numeric(str_replace_all(estimated_loan_amount,"[^0-9.]","")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(estimated_principal_forgiveness,"[^0-9.]","")),
-           principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
+    mutate(population = clean_numeric_string(population),
+           funding_amount = clean_numeric_string(estimated_loan_amount),
+           principal_forgiveness = clean_numeric_string(estimated_principal_forgiveness),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(entity),
            project_description = str_squish(project),
            pwsid = str_squish(pwsid),
-           cities_served = str_squish(county),
+           community_served = str_squish(county),
            state = "Ohio",
-           category = "3",
-           funding_status = "Funded",
+           state_fiscal_year = "2023",
+           expecting_funding = "Yes",
            project_type = case_when(
              grepl("HAB", rate) | grepl("PFAS", rate)  ~ "Emerging Contaminants",
              grepl("Lead", project_description) | grepl("LSL", project_description) | grepl("LSL", rate) ~ "Lead",
              TRUE ~ "General"),
            disadvantaged = case_when(
              grepl("DIS", rate) ~ "Yes",
-             TRUE ~ "No")
+             TRUE ~ "No"),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           project_rank = as.character(NA),
+           project_score = as.character(NA),
     ) %>%
-    select(cities_served, borrower, pwsid, project_type, funding_amount, principal_forgiveness_amount, project_description, population,
-           disadvantaged, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-  
+  run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))
   
   return(oh_clean)

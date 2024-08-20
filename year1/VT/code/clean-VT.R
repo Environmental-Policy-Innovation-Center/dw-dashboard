@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_vt <- function() {
   
@@ -16,9 +14,9 @@ clean_vt <- function() {
   vt_ppl <- vt_ppl[1:96,]
   
   # set fundable variable based on where the line is in the document
-  vt_ppl$funding_status <- ""
-  vt_ppl$funding_status[1:46] <- "Funded"
-  vt_ppl$funding_status[47:96] <- "Not Funded"
+  vt_ppl$expecting_funding <- ""
+  vt_ppl$expecting_funding[1:46] <- "Yes"
+  vt_ppl$expecting_funding[47:96] <- "No"
   
   # (96,13) -> (93,10)
   vt_ppl <- vt_ppl %>%
@@ -26,21 +24,19 @@ clean_vt <- function() {
     filter(!is.na(wsid)) %>%
     select(-years, -admin_percent) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(user_popln,"[^0-9.]","")),
-           loan_acct_gb = as.numeric(str_replace_all(loan_acct_gb,"[^0-9.]","")),
-           gb_disadv_subsidy = as.numeric(str_replace_all(gb_disadv_subsidy,"[^0-9.]","")),
-           # replace nas for adding columns
-           gb_disadv_subsidy = replace_na(gb_disadv_subsidy, 0),
-           loan_acct_gs = as.numeric(str_replace_all(loan_acct_gs,"[^0-9.]","")),
-           gs_disadv_subsidy = as.numeric(str_replace_all(gs_disadv_subsidy,"[^0-9.]","")),
-           gs_disadv_subsidy = replace_na(gs_disadv_subsidy, 0),
-           funding_amount = as.numeric(str_replace_all(x2022_loan_amount,"[^0-9.]","")),
-           principal_forgiveness_amount = gb_disadv_subsidy + gs_disadv_subsidy
+    mutate(population = clean_numeric_string(user_popln),
+           funding_amount = clean_numeric_string(x2022_loan_amount),
+           gb_disadv_subsidy = convert_to_numeric(gb_disadv_subsidy,TRUE),
+           gs_disadv_subsidy = convert_to_numeric(gs_disadv_subsidy,TRUE),
+           principal_forgiveness = gb_disadv_subsidy + gs_disadv_subsidy,
+           principal_forgiveness = clean_numeric_string(principal_forgiveness),
+           principal_forgiveness = case_when(principal_forgiveness == "0" ~ "No Information", TRUE ~ principal_forgiveness)
+
     ) %>%
     # process text columns
     mutate(project_description = str_squish(project),
            borrower = str_squish(water_system_borrower),
-           state_score = str_replace_all(score,"[^0-9.]",""),
+           project_score = str_replace_all(score,"[^0-9.]",""),
            # fill in leading zeros to standardize length
            pwsid = case_when(
              nchar(wsid) == 4 ~ paste0("VT000", wsid),
@@ -52,8 +48,8 @@ clean_vt <- function() {
            # Applicants assume unknown since PF will be 0 by default of not receiving subsidy
     ) %>%
     # subset columns
-    select(state_score, borrower, pwsid, project_description, population,
-           funding_amount, principal_forgiveness_amount, project_type, funding_status, project_type)
+    select(project_score, borrower, pwsid, project_description, population,
+           funding_amount, principal_forgiveness, project_type, expecting_funding, project_type)
   
   
   ## Import Lead tables independently to reconcile column head differences
@@ -79,25 +75,25 @@ clean_vt <- function() {
   vt_lead <- vt_lead %>%
     select(-lsi_score3, -loan_portion_to_be_repaid) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(user_popln,"[^0-9.]","")),
-           funding_amount = as.numeric(str_replace_all(line_loan_amount,"[^0-9.]","")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(loan_forgiveness,"[^0-9.]","")),
+    mutate(population = clean_numeric_string(user_popln),
+           funding_amount = clean_numeric_string(line_loan_amount),
+           principal_forgiveness = clean_numeric_string(loan_forgiveness),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(water_system_borrower),
-           state_score = str_replace_all(application_score,"[^0-9.]",""),
+           project_score = str_replace_all(application_score,"[^0-9.]",""),
            pwsid = case_when(
              nchar(wsid) == 4 ~ paste0("VT000", wsid),
              nchar(wsid) == 5 ~ paste0("VT00", wsid)),
            project_type = "Lead",
-           funding_status = "Funded",
+           expecting_funding = "Yes",
            disadvantaged = case_when(
-             principal_forgiveness_amount > 0 ~ "Yes",
+             principal_forgiveness != "No Information" ~ "Yes",
              TRUE ~ "No"
            )
     ) %>%
-    select(state_score, borrower, pwsid, funding_amount, principal_forgiveness_amount, population,
-           disadvantaged, project_type, funding_status)
+    select(project_score, borrower, pwsid, funding_amount, principal_forgiveness, population,
+           disadvantaged, project_type, expecting_funding)
   
   
   # Emerging Contaminants
@@ -111,31 +107,45 @@ clean_vt <- function() {
   # -> (8,9)
   vt_ec <- vt_ec %>%
     select(-subtotals) %>%
-    mutate(population = as.numeric(str_replace_all(user_popln,"[^0-9.]","")),
-           funding_amount = as.numeric(str_replace_all(line_items,"[^0-9.]","")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(line_items,"[^0-9.]","")),
+    mutate(population = clean_numeric_string(user_popln),
+           funding_amount = clean_numeric_string(line_items),
+           principal_forgiveness = clean_numeric_string(line_items),
     ) %>%
     mutate(borrower = str_squish(water_system),
            project_description = str_squish(project),
            pwsid = case_when(
              nchar(wsid) == 4 ~ paste0("VT000", wsid),
              nchar(wsid) == 5 ~ paste0("VT00", wsid)),
-           state_score = str_replace_all(plist_app_score,"[^0-9.]",""),
+           project_score = str_replace_all(plist_app_score,"[^0-9.]",""),
            project_type = "Emerging Contaminants",
-           funding_status = "Funded",
+           expecting_funding = "Yes",
            disadvantaged = case_when(
-             principal_forgiveness_amount > 0 ~ "Yes",
+             principal_forgiveness != "No Information" ~ "Yes",
              TRUE ~ "No"
            )) %>%
-    select(state_score, borrower, pwsid, funding_amount, principal_forgiveness_amount,
-           project_description, disadvantaged, population, project_type, funding_status)
+    select(project_score, borrower, pwsid, funding_amount, principal_forgiveness,
+           project_description, disadvantaged, population, project_type, expecting_funding)
   
   
   # combine (174,13)
   vt_clean <- bind_rows(vt_ppl, vt_lead, vt_ec) %>%
     mutate(state="Vermont",
-           category = "1")
+           state_fiscal_year = "2023",
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           project_rank = as.character(NA),
+           project_score = replace_na(project_score, "No Information"),
+           project_description = replace_na(project_description, "No Information"),
+           disadvantaged = replace_na(disadvantaged, "No Information")
+           ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(vt_clean)
   rm(list=setdiff(ls(), "vt_clean"))
   
   return(vt_clean)

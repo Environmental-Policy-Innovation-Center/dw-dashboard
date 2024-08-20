@@ -1,7 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-
+source("resources.R")
 
 clean_ar <- function() {
 
@@ -22,13 +19,13 @@ clean_ar <- function() {
   
   ar_app <- ar_comp %>%
     ## get rid of rows that the rank is not a number (not a project, total columns, etc)
-    mutate(state_rank = as.numeric(no)) %>%
-    filter(!is.na(state_rank)) %>%
+    mutate(project_rank = as.numeric(no)) %>%
+    filter(!is.na(project_rank)) %>%
     ## process numeric columns
     mutate(
       ## getting rid of $ and comma and replacing blanks with zero         
-      population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-      funding_amount = as.numeric(str_replace_all(project_cost,"[^0-9.]", "")),
+      population = clean_numeric_string(population),
+      funding_amount = clean_numeric_string(project_cost),
     ) %>%
     mutate(
       # fix one-off NAs for pwsid
@@ -53,15 +50,15 @@ clean_ar <- function() {
         disadv_antaged_y_n == "NO" ~ "No",
         TRUE ~ as.character(NA)),
       borrower = str_squish(pws),
-      state_score = gsub(",", "", total_points),
-      state_rank = as.character(state_rank),
+      project_score = gsub(",", "", total_points),
+      project_rank = as.character(project_rank),
       # all projects in ppl are applicants, see Merged for fundable projects
-      funding_status = "Not Funded",
+      expecting_funding = "No",
     ) %>%
     ## keep relevant columns
     select(borrower, pwsid, project_description, project_type,
-           state_rank, state_score, funding_amount, 
-           disadvantaged, population, funding_status)
+           project_rank, project_score, funding_amount, 
+           disadvantaged, population, expecting_funding)
   
   
   ### FUNDABLE
@@ -72,9 +69,9 @@ clean_ar <- function() {
            -green_project_reserve_amt_estimate, -gpr_category_estimate,
            -mhi, -small_system_y_n) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-           funding_amount = as.numeric(str_replace_all(project_cost,"[^0-9.]", "")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(additional_subsidy,"[^0-9.]", ""))
+    mutate(population = clean_numeric_string(population),
+           funding_amount = clean_numeric_string(project_cost),
+           principal_forgiveness = clean_numeric_string(additional_subsidy)
     ) %>%
     # process text columns
     mutate(borrower = str_squish(pws),
@@ -83,22 +80,34 @@ clean_ar <- function() {
              nchar(pws_id) == 3 ~ paste0("AR0000", pws_id),
              nchar(pws_id) == 4 ~ paste0("AR000", pws_id)),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(total_points,"[^0-9.]", ""),
-           state_rank = str_replace_all(no,"[^0-9.]", ""),
+           project_score = str_replace_all(total_points,"[^0-9.]", ""),
+           project_rank = str_replace_all(no,"[^0-9.]", ""),
            project_type = case_when(lsl == "X" ~ "Lead",
                                     ec == "X" ~ "Emerging Contaminants",
                                     TRUE ~ "General"),
            disadvantaged = str_to_sentence(disadvantaged_community),
-           funding_status = "Funded",
+           expecting_funding = "Yes",
     ) %>%
-    select(state_rank, state_score, borrower, pwsid, project_description, 
-           funding_amount, principal_forgiveness_amount, population, disadvantaged, project_type, funding_status)
+    select(project_rank, project_score, borrower, pwsid, project_description, 
+           funding_amount, principal_forgiveness, population, disadvantaged, project_type, expecting_funding)
   
   # expect (760,11) -> (760,13)
   ar_clean <- bind_rows(ar_app, ar_fund) %>%
-    mutate(state = "Arkansas",
-           category = "1")
+    mutate(pwsid = replace_na(pwsid, "No Information"),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
+           disadvantaged = replace_na(disadvantaged, "No Information"),
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           state = "Arkansas",
+           state_fiscal_year = "2023") %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(ar_clean)
   rm(list=setdiff(ls(), "ar_clean"))
 
   return(ar_clean)

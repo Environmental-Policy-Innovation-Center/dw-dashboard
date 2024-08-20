@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_fl <- function() {
 
@@ -8,22 +6,31 @@ clean_fl <- function() {
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     # format numeric columns
-    mutate(funding_amount = as.numeric(str_replace_all(authorized_loan_amount,"[^0-9.]","")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness_amt,"[^0-9.]","")),
+    mutate(funding_amount = clean_numeric_string(authorized_loan_amount),
+           principal_forgiveness = clean_numeric_string(principal_forgiveness_amt),
     ) %>%
     # format text columns
     mutate(borrower = str_squish(applicant),
-           project_name = str_squish(project_number),
+           project_id = str_squish(project_number),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(priority_score,"[^0-9.]",""),
-           funding_status = "Funded",
-           category = "1",
-           state = "Florida"
+           project_score = str_replace_all(priority_score,"[^0-9.]",""),
+           expecting_funding = "Yes",
+           state = "Florida",
+           state_fiscal_year = "2023",
+           project_name = as.character(NA),
+           community_served = as.character(NA),
+           pwsid = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           population = as.character(NA),
+           disadvantaged = as.character(NA),
+           project_rank = as.character(NA)
            ) %>%
-    select(borrower, project_name, project_description, state_score, funding_amount, 
-           principal_forgiveness_amount, funding_status, category, state)
-
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(fl_clean)
   rm(list=setdiff(ls(), "fl_clean"))
 
   return(fl_clean)

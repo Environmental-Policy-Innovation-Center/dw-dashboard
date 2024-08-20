@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ia <- function() {
   

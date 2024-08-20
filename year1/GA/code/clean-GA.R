@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ga <- function() {
   
@@ -18,14 +16,14 @@ clean_ga <- function() {
              est_interst_rate, -est_terms) %>%
     # process numeric columns
     mutate(
-      population = as.numeric(str_replace_all(population,"[^0-9.]","")),
-      funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
-      project_cost = as.numeric(str_replace_all(total_project_cost, "[^0-9.]","")),
+      population = clean_numeric_string(population),
+      funding_amount = clean_numeric_string(total_disburs),
+      project_cost = clean_numeric_string(total_project_cost),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(community),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(project_score,"[^0-9.]",""),
+           project_score = str_squish(project_score),
            project_type = case_when(
              grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
              grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
@@ -35,13 +33,13 @@ clean_ga <- function() {
              affordability_score >= 29 ~ "Yes",
              TRUE ~ "No"
            ),
-           funding_status = case_when(
-             funding_amount > 0 ~ "Funded",
-             TRUE ~ "Not Funded"
+           expecting_funding = case_when(
+             funding_amount > 0 ~ "Yes",
+             TRUE ~ "No"
            ),
     ) %>% 
-    select(state_score, borrower, project_description, funding_amount, project_cost,
-           population, disadvantaged, funding_status, project_type)
+    select(project_score, borrower, project_description, funding_amount, project_cost,
+           population, disadvantaged, expecting_funding, project_type)
   
   
   
@@ -67,14 +65,14 @@ clean_ga <- function() {
              est_interst_rate, -est_terms) %>%
     # process numeric columns
     mutate(
-      population = as.numeric(str_replace_all(population,"[^0-9.]","")),
-      funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
-      project_cost = as.numeric(str_replace_all(total_project_cost, "[^0-9.]","")),
+      population = clean_numeric_string(population),
+      funding_amount = clean_numeric_string(total_disburs),
+      project_cost = clean_numeric_string(total_project_cost),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(community),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(project_score,"[^0-9.]",""),
+           project_score = str_squish(project_score),
            project_type = case_when(
              grepl("Lead", project_description, ignore.case=TRUE) ~ "Lead",
              grepl("PFAS", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
@@ -84,13 +82,13 @@ clean_ga <- function() {
              affordability_score >= 29 ~ "Yes",
              TRUE ~ "No"
            ),
-           funding_status = case_when(
-             funding_amount > 0 ~ "Funded",
-             TRUE ~ "Not Funded"
+           expecting_funding = case_when(
+             funding_amount > 0 ~ "Yes",
+             TRUE ~ "No"
            )
     ) %>% 
-    select(state_score, borrower, project_description, funding_amount, project_cost,
-           population, disadvantaged, funding_status, project_type)
+    select(project_score, borrower, project_description, funding_amount, project_cost,
+           population, disadvantaged, expecting_funding, project_type)
   
   
   
@@ -119,27 +117,27 @@ clean_ga <- function() {
     full_join(ga_lead_2) %>%
     # process numeric columns
     mutate(
-      population = as.numeric(str_replace_all(x2020_pop,"[^0-9.]","")),
-      funding_amount = as.numeric(str_replace_all(total_disburs, "[^0-9.]","")),
-      project_cost = as.numeric(str_replace_all(total_project_cost, "[^0-9.]","")),
+      population = clean_numeric_string(x2020_pop),
+      funding_amount = clean_numeric_string(total_disburs),
+      project_cost = clean_numeric_string(total_project_cost),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(community),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(affordability_score,"[^0-9.]",""),
+           project_score = clean_numeric_string(affordability_score),
            project_type = "Lead",
            # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
            disadvantaged = case_when(
-             as.numeric(state_score) >= 29 ~ "Yes",
+             as.numeric(project_score) >= 29 ~ "Yes",
              TRUE ~ "No"
            ),
-           funding_status = case_when(
-             funding_amount > 0 ~ "Funded",
-             TRUE ~ "Not Funded"
+           expecting_funding = case_when(
+             funding_amount > 0 ~ "Yes",
+             TRUE ~ "No"
            ),
     ) %>% 
-    select(state_score, borrower, project_description, funding_amount, project_cost,
-           population, disadvantaged, funding_status, project_type)
+    select(project_score, borrower, project_description, funding_amount, project_cost,
+           population, disadvantaged, expecting_funding, project_type)
   
   
   ## EC IUP
@@ -162,27 +160,27 @@ clean_ga <- function() {
   ga_ec <- ga_ec_1 %>%
     left_join(ga_ec_2) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(x2019_pop,"[^0-9.]","")),
-           project_cost = as.numeric(str_replace_all(total_project_cost,"[^0-9.]","")),
-           funding_amount = as.numeric(str_replace_all(total_disburs,"[^0-9.]","")),
+    mutate(population = clean_numeric_string(x2019_pop),
+           project_cost = clean_numeric_string(total_project_cost),
+           funding_amount = clean_numeric_string(total_disburs),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(community),
            project_description = str_squish(project_description),
            project_type = "Emerging Contaminants",
-           state_score = str_replace_all(affordability_score,"[^0-9.]",""),
+           project_score = clean_numeric_string(affordability_score),
            # Affordability Score in Attachment 1: 2022 Comprehensive List in PPL is 29 or above.
            disadvantaged = case_when(
-             as.numeric(state_score) >= 29 ~ "Yes",
+             as.numeric(project_score) >= 29 ~ "Yes",
              TRUE ~ "No"
            ),
-           funding_status = case_when(
-             funding_amount > 0 ~ "Funded",
-             TRUE ~ "Not Funded"
+           expecting_funding = case_when(
+             funding_amount > 0 ~ "Yes",
+             TRUE ~ "No"
            )
     ) %>%
-    select(state_score, borrower, project_description, funding_amount, project_cost,
-           population, disadvantaged, funding_status, project_type)
+    select(project_score, borrower, project_description, funding_amount, project_cost,
+           population, disadvantaged, expecting_funding, project_type)
   
   
   # join four tables together
@@ -190,8 +188,21 @@ clean_ga <- function() {
   # -> (323,10)
   ga_clean <- bind_rows(ga_base, ga_supp, ga_lead, ga_ec) %>%
     mutate(state = "Georgia",
-           category = "3")
+           state_fiscal_year = "2023",
+           project_description = replace_na(project_description, "No Information"),
+           community_served = as.character(NA),
+           pwsid = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           requested_amount = as.character(NA),
+           principal_forgiveness = as.character(NA),
+           project_rank = as.character(NA),
+          ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(ga_clean)
   rm(list=setdiff(ls(), "ga_clean"))
 
 return(ga_clean)

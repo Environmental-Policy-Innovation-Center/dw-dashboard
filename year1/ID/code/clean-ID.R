@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_id <- function() {
   
@@ -25,11 +23,11 @@ clean_id <- function() {
              grepl("PF", proposed_funding_terms) ~ "Yes",
              TRUE ~ "No"),
            # extract PF value and format as numeric
-           principal_forgiveness_amount = as.character(map(strsplit(proposed_funding_terms, split = "with"), 2)),
-           principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness_amount, "[^0-9.]", "")),
-           principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
+           principal_forgiveness = as.character(map(strsplit(proposed_funding_terms, split = "with"), 2)),
+           principal_forgiveness = clean_numeric_string(principal_forgiveness),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information")
     ) %>%
-    select(rank, loan_amt, principal_forgiveness_amount, disadvantaged)
+    select(rank, loan_amt, principal_forgiveness, disadvantaged)
   
   # (81,12)
   id_merged <- merge(id_ppl, id_fnd, by=c("rank"), all.x=TRUE)
@@ -37,36 +35,44 @@ clean_id <- function() {
   # -> (81,13)
   id_clean <- id_merged %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(pop_served, "[^0-9.]", "")),
-           project_cost = as.numeric(str_replace_all(project_cost, "[^0-9.]", "")),
-           funding_amount = as.numeric(str_replace_all(loan_amt, "[^0-9.]", "")),
+    mutate(population = clean_numeric_string(pop_served),
+           project_cost = clean_numeric_string(project_cost),
+           funding_amount = clean_numeric_string(loan_amt),
     ) %>%
     # process text columns
     mutate(project = str_squish(project),
            # remove excess spaces from scrape
            regional_office = str_squish(regional_office),
-           state_score = str_replace_all(rating_points, "[^0-9.]", ""),
-           state_rank = str_replace_all(rank, "[^0-9.]", ""),
+           project_score = str_replace_all(rating_points, "[^0-9.]", ""),
+           project_rank = str_replace_all(rank, "[^0-9.]", ""),
            project_description = str_squish(project_description),
            # custom touch-up squishing doesn't fix
            project_description = str_replace(project_description, "C onstruction", "Construction"),
            # if from fundable table, else Applicant
-           funding_status = case_when(
-             !is.na(funding_amount) ~ "Funded",
-             TRUE ~ "Not Funded"),
+           expecting_funding = case_when(
+             !is.na(funding_amount) ~ "Yes",
+             TRUE ~ "No"),
            state = "Idaho",
-           category = "3",
+           state_fiscal_year = "2023",
            # only project with Lead is the "All System fund"
            project_type = case_when(
              grepl("Lead", project) ~ "Lead",
              TRUE ~ "General"),
-           pwsid = str_replace(system_number, "Unknown", as.character(NA)),
-           pwsid = str_replace(pwsid, "All", as.character(NA))
+           pwsid = str_replace(system_number, "Unknown", "No Information"),
+           pwsid = str_replace(pwsid, "All", "No Information"),
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           requested_amount = as.character(NA),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
+           disadvantaged = replace_na(disadvantaged, "No Information")
     ) %>%
     rename(borrower = project) %>%
-    select(state_rank, state_score, borrower, pwsid, project_description, population, project_cost,
-           disadvantaged, funding_amount, funding_status, principal_forgiveness_amount, project_type, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(id_clean)
   rm(list=setdiff(ls(), "id_clean"))
   
   return(id_clean)

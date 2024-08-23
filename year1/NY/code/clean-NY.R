@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ny <- function() {
   
@@ -74,22 +72,30 @@ clean_ny <- function() {
   ny_clean <- ny_combined %>%
     select(-dac, -cumulative_total, -code) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(pop, "[^0-9.]", "")),
-           project_cost = as.numeric(str_replace_all(project_cost, "[^0-9.]", "")),
+    mutate(population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost),
     ) %>%
     # process text columns
-    mutate(project_name = str_squish(project_number),
-           cities_served = str_squish(county),
+    mutate(project_id = str_squish(project_number),
+           community_served = str_squish(county),
            borrower = paste(str_squish(system_name), "/", str_squish(borrower)),
-           state_score = str_squish(score),
+           project_score = str_squish(score),
            project_description = str_squish(description),
            state = "New York",
-           category = "2",
-           funding_status = "Not Funded") %>%
-    select(borrower, state_score, project_name, project_description, project_cost,
-           population, cities_served, disadvantaged, project_type, state, category, funding_status) 
+           state_fiscal_year = "2023",
+           expecting_funding = "Not Funded",
+           pwsid = as.character(NA),
+           project_name = as.character(NA),
+           requested_amount = as.character(NA),
+           funding_amount = as.character(NA),
+           principal_forgiveness = as.character(NA),
+           project_rank = as.character(NA),
+           ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
 
-  
+  run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   
   return(ny_clean)

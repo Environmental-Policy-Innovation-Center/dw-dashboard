@@ -237,6 +237,26 @@ dfs <- sapply(.GlobalEnv, is.data.frame)
 # for each TRUE, add the dataframe rows to a single data.frame
 combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
 
+```
+
+```{r}
+# one-time write of improved year 1 data for analysis
+
+# # Writing to temp 
+# write.csv(combined_clean, file.path(tempdir(), "dwsrf-projects-sfy23.csv"), row.names = FALSE)
+# 
+# #Putting in Bucket
+# ##TODO: For all-y1-states PR, change this to remove the v1-1 suffix and change app to read the updated file
+# put_object(
+#   file = file.path(tempdir(), "dwsrf-projects-sfy23.csv"),
+#   object = "clean_data/srf_project_priority_lists/dwsrf-projects-sfy23.csv",
+#   bucket = "water-team-data",
+#   acl = "public-read"
+# )
+```
+
+
+```{r}
 
 # Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
 projects_clean_web <- combined_clean %>%

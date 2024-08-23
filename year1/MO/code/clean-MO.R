@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_mo <- function() {
 
@@ -12,11 +10,11 @@ clean_mo <- function() {
     clean_names() %>%
     mutate(
       # Projects included on the General Funding List are considered Funded. Projects included on the General Contingency List, General Planning List are considered Not Funded.
-      funding_status = case_when(
+      expecting_funding = case_when(
         # list projects in planning list
         project_number %in% c("DW291386-01", "DW291170-02", "DW291387-01", "DW291393-01", "DW291388-01", 
-                              "DW291389-01", "DW291390-01", "DW291391-01", "DW291392-01", "DW291314-04") ~ "Not Funded",
-        TRUE ~ "Funded")
+                              "DW291389-01", "DW291390-01", "DW291391-01", "DW291392-01", "DW291314-04") ~ "No",
+        TRUE ~ "Yes")
     )
   
   # read in lead tables from the amended IUP dated 7/11/23
@@ -24,14 +22,14 @@ clean_mo <- function() {
                             colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
     mutate(
-      funding_status = "Funded",
+      expecting_funding = "Yes",
     )
   
   mo_lead_contingency <- fread("year1/MO/data/25-Missouri_LSLContingency.csv",
                                colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
     mutate(
-      funding_status = "Not Funded",
+      expecting_funding = "No",
     )
   
   # (272,14)
@@ -70,20 +68,20 @@ clean_mo <- function() {
     select(-carryover) %>%
     # process numeric columns
     mutate(
-      population = as.numeric(str_replace_all(service_area_population,"[^0-9.]","")),
-      requested_amount = as.numeric(str_replace_all(iup_amount_requested,"[^0-9.]","")),
-      loan_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),
-      additional_subsidization_amount = as.numeric(
-        str_replace_all(additional_subsidization_amount,"[^0-9.]","")),
-      # replace NA with 0 for column adding
-      additional_subsidization_amount = replace_na(additional_subsidization_amount, 0),
-      loan_amount = replace_na(loan_amount, 0),
-      funding_amount = loan_amount + additional_subsidization_amount
+      population = clean_numeric_string(service_area_population),
+      requested_amount = clean_numeric_string(iup_amount_requested),
+      loan_amount = convert_to_numeric(loan_amount, TRUE),
+      additional_subsidization_amount = convert_to_numeric(additional_subsidization_amount, TRUE),
+      funding_amount = loan_amount + additional_subsidization_amount,
+      funding_amount = clean_numeric_string(funding_amount),
+      funding_amount = case_when(funding_amount=="0" ~ "No Information",
+                                 TRUE ~ funding_amount),
+      principal_forgiveness = clean_numeric_string(additional_subsidization_amount)
     ) %>%
     # process text columns
     mutate(borrower = str_squish(applicant),
            project_name = str_squish(project_number),
-           state_score = str_replace_all(priority_points,"[^0-9.]",""),
+           project_score = str_replace_all(priority_points,"[^0-9.]",""),
            project_description = str_squish(description_needs_category),
            disadvantaged = case_when(
              disadvantaged == "D" ~ "Yes",
@@ -94,12 +92,19 @@ clean_mo <- function() {
              TRUE ~ "General"
            ),
            state = "Missouri",
-           category = "1"
+           state_fiscal_year = "2023",
+           community_served = as.character(NA),
+           pwsid = as.character(NA),
+           project_id = as.character(NA),
+           project_cost = as.character(NA),
+           project_rank = as.character(NA),
+           project_score = replace_na(project_score, "No Information")
     ) %>%
-    rename(principal_forgiveness_amount = additional_subsidization_amount) %>%
-    select(state_score, borrower, project_description, population, funding_amount,
-           principal_forgiveness_amount, disadvantaged, funding_status, state, category, project_type)  
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
 
+  run_tests(mo_clean)
   rm(list=setdiff(ls(), "mo_clean"))
   
   return(mo_clean)

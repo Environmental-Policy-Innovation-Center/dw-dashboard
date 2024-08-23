@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ms <- function() {
   
@@ -15,30 +13,40 @@ clean_ms <- function() {
     filter(!grepl("Category", project) & project_description != "NA") %>%
     # format numeric columns
     mutate(
-      population = as.numeric(str_replace_all(service_area_population,"[^0-9.]","")),
-      requested_amount = as.numeric(str_replace_all(loan_amount_requested,"[^0-9.]","")),
+      population = clean_numeric_string(service_area_population),
+      requested_amount = clean_numeric_string(loan_amount_requested),
       # use this to separate funding/applicant projects, but don't keep in standardized data
       state_cumulative = as.numeric(str_replace_all(statewide_cum, "[^0-9.]","")),
       # if above the threshold, funding amount is requested amount. otherwise 0
       funding_amount = ifelse(
-        state_cumulative < 42500000, as.numeric(str_replace_all(loan_amount_requested,"[^0-9.]","")), 0),
+        state_cumulative < 42500000, clean_numeric_string(loan_amount_requested), "No Information"),
       ) %>%
     # format text columns
     mutate(borrower = str_squish(project),
            project_description = str_squish(project_description),
-           state_score = str_replace_all(priority_points,"[^0-9.]",""),
+           project_score = str_replace_all(priority_points,"[^0-9.]",""),
            disadvantaged = ifelse(
              as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")) > 0, "Yes", "No"),
            state = "Mississippi",
-           category = "3",
-           funding_status = case_when(
+           state_fiscal_year = "2023",
+           expecting_funding = case_when(
              # funding line set at 42,500,000 in PPL
-             state_cumulative < 42500000 ~ "Funded",
-             TRUE ~ "Not Funded")) %>%
-    select(borrower, requested_amount, funding_amount, project_description, population, disadvantaged,
-           state_score, funding_status, state, category)
+             state_cumulative < 42500000 ~ "Yes",
+             TRUE ~ "No"),
+           community_served = as.character(NA),
+           pwsid = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_type = as.character(NA),
+           project_cost = as.character(NA),
+           principal_forgiveness = as.character(NA),
+           project_rank = as.character(NA),
+           ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-  
+  run_tests(ms_clean)
   rm(list=setdiff(ls(), "ms_clean"))
   
   return(ms_clean)

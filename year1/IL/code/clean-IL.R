@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_il <- function() {
   
@@ -11,7 +9,7 @@ clean_il <- function() {
   il_ppl_f <- fread("year1/IL/data/13-Illinois_PPL_Fundable.csv",
                     colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(funding_status = "Funded",
+    mutate(expecting_funding = "Yes",
            project_type = "General",
            # replace "N/E" with 0 for principal forgiveness since N/E is different from the NAs in other docs
            disadvantaged_community_principal_forgiveness = str_replace(disadvantaged_community_principal_forgiveness, "N/E", "0")
@@ -21,7 +19,7 @@ clean_il <- function() {
   il_ppl_a <- fread("year1/IL/data/13-Illinois_PPL_Applicant.csv",
                     colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(funding_status = "Not Funded",
+    mutate(expecting_funding = "No",
            project_type="General")
   
   # concat files of the same structure
@@ -29,7 +27,7 @@ clean_il <- function() {
   # (89,11)
   il_ppl <- bind_rows(il_ppl_a, il_ppl_f) %>%
     mutate(disadvantaged = case_when(
-      as.numeric(str_replace_all(disadvantaged_community_principal_forgiveness, "[^0-9.]", "")) > 0 ~ "Yes",
+      clean_numeric_string(disadvantaged_community_principal_forgiveness) > 0 ~ "Yes",
       TRUE ~ "No"))
   
   # create (85,2) list of communities and DAC status
@@ -42,14 +40,14 @@ clean_il <- function() {
   il_lead_f <- fread("year1/IL/data/13-Illinois_Lead_Fundable.csv",
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(funding_status = "Funded",
+    mutate(expecting_funding = "Yes",
            project_type = "Lead")
   
   # (1,10)
   il_lead_a <- fread("year1/IL/data/13-Illinois_Lead_Applicant.csv",
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(funding_status = "Not Funded",
+    mutate(expecting_funding = "No",
            project_type = "Lead")
   
   # merge lead projects together
@@ -69,24 +67,32 @@ clean_il <- function() {
     # drop columns
     select(-l17_number, -estimated_construction_start) %>%
     # process numeric columns
-    mutate(funding_amount = as.numeric(str_replace_all(estimated_loan_amount, "[^0-9.]", "")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(disadvantaged_community_principal_forgiveness, "[^0-9.]", "")),
-           population = as.numeric(str_replace_all(service_population, "[^0-9.]", "")),
+    mutate(funding_amount = clean_numeric_string(estimated_loan_amount),
+           principal_forgiveness = clean_numeric_string(disadvantaged_community_principal_forgiveness),
+           population = clean_numeric_string(service_population),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(loan_applicant),
            borrower = str_to_title(borrower, locale="en"),
-           state_score = str_replace_all(loan_priority_score, "[^0-9.]", ""),
+           project_score = str_replace_all(loan_priority_score, "[^0-9.]", ""),
            project_description = str_squish(project_description),
            project_description = str_to_sentence(project_description),
            state = "Illinois",
-           category = "3"
+           state_fiscal_year = "2023",
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           project_rank = as.character(NA),
     ) %>%
     # rename columns
     rename(pwsid = facility_no) %>%
-    # keep relevant columns
-    select(state_score, borrower, pwsid, project_description, population, disadvantaged, funding_amount, principal_forgiveness_amount, project_type, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   
   return(il_clean)

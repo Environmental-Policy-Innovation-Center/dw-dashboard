@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ks <- function() {
   
@@ -46,26 +44,35 @@ clean_ks <- function() {
   ks_clean <- ks_combined %>%
     # process numeric columns
     mutate(
-      requested_amount = as.numeric(str_replace_all(loan_request, "[^0-9.]", "")),
-      population = as.numeric(str_replace_all(population_served, "[^0-9.]", ""))
+      requested_amount = clean_numeric_string(loan_request),
+      population = clean_numeric_string(population_served)
     ) %>%
     # process text columns
     mutate(
       borrower = str_squish(municipality_name),
-      project_name = str_squish(project_number),
-      state_score = str_squish(rating),
+      project_id = str_squish(project_number),
+      project_score = str_squish(rating),
       project_description = str_squish(project_description),
       disadvantaged = case_when(
         requested_amount > 0 ~ "Yes",
         TRUE ~ "No"),
       state = "Kansas",
-      category = "2",
+      state_fiscal_year = "2023",
       # assume all applicant until confirmed otherwise
-      funding_status = "Not Funded"
+      expecting_funding = "No",
+      community_served = as.character(NA),
+      pwsid = as.character(NA),
+      project_name = as.character(NA),
+      project_cost = as.character(NA),
+      funding_amount = as.character(NA),
+      principal_forgiveness = as.character(NA),
+      project_rank = as.character(NA),
     ) %>%
-    select(borrower, state_score, project_name, project_description, requested_amount,
-           population, project_type, state, category, funding_status)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(ks_clean)
   rm(list=setdiff(ls(), "ks_clean"))
   
   return(ks_clean)

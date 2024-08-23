@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_wi <- function() {
   
@@ -33,30 +31,32 @@ clean_wi <- function() {
   
   # -> (50,11)
   wi_clean <- wi_fund_raw %>%
-    ## make relevant columns numbers
-    mutate(## sum of columns, getting rid of $ and comma and replacing blanks with zero
-      funding_amount = as.numeric(str_replace_all(requested_project_costs,"[^0-9.]", "")),
-      principal_forgiveness_amount = as.numeric(str_replace_all(pf_estimate,"[^0-9.]", "")),
-      ## make principal forgiveness NAs zeros
-      principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
-      population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-      requested_amount = as.numeric(str_replace_all(requested_project_costs,"[^0-9.]", "")),
+    mutate(
+      funding_amount = clean_numeric_string(requested_project_costs),
+      principal_forgiveness = clean_numeric_string(pf_estimate),
+      population = clean_numeric_string(population),
+      requested_amount = clean_numeric_string(requested_project_costs),
     ) %>%
     ## non-numeric columns
-    mutate(funding_status = case_when(!is.na(funding_amount) ~ "Funded",
-                                      TRUE ~ "Not Funded"),
+    mutate(expecting_funding = case_when(funding_amount != "No Information" ~ "Yes",
+                                      TRUE ~ "No"),
            ## get rid of numbers from borrower name
            borrower = str_to_title(str_replace_all(municipality, "[0-9.\\#]", "")),
-           state_score = str_replace_all(priority_score,"[^0-9.]",""),
-           cities_served = borrower,
+           project_score = str_replace_all(priority_score,"[^0-9.]",""),
+           project_id = str_squish(project_number),
+           community_served = borrower,
            state = "Wisconsin",
-           category = "3"
+           state_fiscal_year = "2023",
+           pwsid = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           project_rank = as.character(NA)
     ) %>%
-    ## keep relevant columns
-    select(borrower, cities_served, project_description, project_type,
-           state_score, funding_amount, principal_forgiveness_amount,
-           disadvantaged, population, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(wi_clean)
   rm(list=setdiff(ls(), "wi_clean"))
   
   return(wi_clean)

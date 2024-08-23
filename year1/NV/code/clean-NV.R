@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_nv <- function() {
   
@@ -16,8 +14,9 @@ clean_nv <- function() {
     # remove non project rows
     filter(!grepl("Total", priority_number)) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(project_population, "[^0-9.]", "")),
-           requested_amount = as.numeric(str_replace_all(estimated_loan_amount, "[^0-9.]", ""))) %>%
+    mutate(population = clean_numeric_string(project_population),
+           requested_amount = clean_numeric_string(estimated_loan_amount)
+           ) %>%
     # process text columns
     mutate(disadvantaged = case_when(
       is.na(d2) ~ "No",
@@ -25,11 +24,11 @@ clean_nv <- function() {
     ),
     borrower = str_squish(entity),
     pwsid = str_squish(state_id),
-    state_score = str_replace_all(revised_points, "[^0-9.]", ""),
-    state_rank = str_replace_all(priority_number, "[^0-9.]", ""),
+    project_score = str_replace_all(revised_points, "[^0-9.]", ""),
+    project_rank = str_replace_all(priority_number, "[^0-9.]", ""),
     project_description = str_squish(project_description)
     ) %>%
-    select(borrower, pwsid, project_description, state_rank, state_score, requested_amount, 
+    select(borrower, pwsid, project_description, project_rank, project_score, requested_amount, 
            population, disadvantaged)
   
   
@@ -40,58 +39,67 @@ clean_nv <- function() {
     clean_names() %>%
     # process numeric columns
     mutate(
-      funding_amount = as.numeric(str_replace_all(total_assistance, "[^0-9.]", "")),
+      funding_amount = clean_numeric_string(total_assistance),
       # transform the components of PF into numeric and replace NAs for summing
       # TODO: Confirm whether disadvantaged_subsidy should also be included here
-      base_disadvantaged_subsidy = as.numeric(str_replace_all(base_disadvantaged_subsidy, "[^0-9.]", "")),
-      base_disadvantaged_subsidy = replace_na(base_disadvantaged_subsidy, 0),
-      base_additional_subsidy = as.numeric(str_replace_all(base_additional_subsidy, "[^0-9.]", "")),
-      base_additional_subsidy = replace_na(base_additional_subsidy, 0),
-      disadvantaged_subsidy = as.numeric(str_replace_all(disadvantaged_subsidy, "[^0-9.]", "")),
-      disadvantaged_subsidy = replace_na(disadvantaged_subsidy, 0),
-      principal_forgiveness_amount = base_disadvantaged_subsidy + base_additional_subsidy + disadvantaged_subsidy
+      base_disadvantaged_subsidy = convert_to_numeric(base_disadvantaged_subsidy, TRUE),
+      base_additional_subsidy = convert_to_numeric(base_additional_subsidy, TRUE),
+      disadvantaged_subsidy = convert_to_numeric(disadvantaged_subsidy, TRUE),
+      principal_forgiveness = base_disadvantaged_subsidy + base_additional_subsidy + disadvantaged_subsidy,
+      principal_forgiveness = case_when(principal_forgiveness == 0 ~ "No Information", TRUE ~ clean_numeric_string(principal_forgiveness))
     ) %>%
     # process text columns
     mutate(
-      state_rank = str_replace_all(pl_rank, "[^0-9.]", ""),
+      project_rank = str_replace_all(pl_rank, "[^0-9.]", ""),
       # replace the listing of 93,94, and 95 with only 95 to attach funding_amount to a single project
       # then manually set all state ranks to the PPL list to force correct matches
-      state_rank = case_when(
-        state_rank == "939495" ~ "95",
-        state_rank == "57" ~ "60",
-        state_rank == "61" ~ "62",
-        state_rank == "97" ~ "100",
-        state_rank == "122" ~ "126",
-        state_rank == "129" & pws_id == "NV0000226" ~ "132",
-        state_rank == "163" ~ "165",
-        state_rank == "169" ~ "52",
-        TRUE ~ state_rank),
-      funding_status = "Funded",
+      project_rank = case_when(
+        project_rank == "939495" ~ "95",
+        project_rank == "57" ~ "60",
+        project_rank == "61" ~ "62",
+        project_rank == "97" ~ "100",
+        project_rank == "122" ~ "126",
+        project_rank == "129" & pws_id == "NV0000226" ~ "132",
+        project_rank == "163" ~ "165",
+        project_rank == "169" ~ "52",
+        TRUE ~ project_rank),
+      expecting_funding = "Yes",
     ) %>%
     # keep standardized columns to match onto the PPL List
-    select(state_rank, funding_amount, principal_forgiveness_amount, funding_status)
+    select(project_rank, funding_amount, principal_forgiveness, expecting_funding)
   
   
   ### Join PPL and funding list
-  nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="state_rank") %>%
+  nv_clean <- merge(nv_ppl, nv_fund, all=TRUE, by="project_rank") %>%
     # assign variables consistent across both
     mutate(state = "Nevada",
-           category = "1",
+           state_fiscal_year = "2023",
            project_type = "General",
            # manually update the two projects that are funded in project ranked 95, fill rest in as applicant
-           funding_status = case_when(
-             state_rank == "93" ~ "Funded",
-             state_rank == "94" ~ "Funded",
-             is.na(funding_status) ~ "Not Funded",
-             TRUE ~ funding_status
+           expecting_funding = case_when(
+             project_rank == "93" ~ "Funded",
+             project_rank == "94" ~ "Funded",
+             is.na(expecting_funding) ~ "No",
+             TRUE ~ expecting_funding
            ),
            #manually fix one missing project description
            project_description = case_when(
              borrower == "Beatty Water & Sanitation District - DW" ~ "Water System Rehab",
              TRUE ~ project_description
-           ))
+           ),
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
+           funding_amount = replace_na(funding_amount, "No Information")
+           ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
   
+  run_tests(nv_clean)
   rm(list=setdiff(ls(), "nv_clean"))
   
   return(nv_clean)

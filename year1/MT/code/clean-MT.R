@@ -1,7 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-source("cleaning-functions.R")
+source("resources.R")
 
 clean_mt <- function() {
   
@@ -23,7 +20,8 @@ clean_mt <- function() {
                   colClasses = "character", na.strings = "") %>%
     clean_names()  %>%
     mutate(project_type = "General",
-           state_score = str_squish(total_points))
+           project_score = str_squish(total_points),
+           borrower = str_squish(project_name))
   
   # combine tables from the general PPL
   mt_ppl <- mt_ppl_app %>%
@@ -32,9 +30,9 @@ clean_mt <- function() {
              case_when(
               is.na(project_information) ~ description,
               TRUE ~ gsub("^.*?\\.","", project_information)),
-      project_description = str_squish(project_description)
+      project_description = str_squish(project_description),
     ) %>%
-    select(-project, -description, -project_information, -total_points)
+    select(-description, -project_information, -total_points, -project_name)
   
   
   ## LEAD FUNDALBE
@@ -44,8 +42,7 @@ clean_mt <- function() {
     clean_names()  %>%
     mutate(rank_no = case_when(
       priority_rank == "6" ~ "5",
-      TRUE ~ priority_rank)) %>%
-    rename(project_name = project) 
+      TRUE ~ priority_rank))
   
   ## LEAD APPLICANT
   # Appendix 2
@@ -53,9 +50,10 @@ clean_mt <- function() {
                       colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Lead",
+           borrower = str_squish(system_name),
            ) %>%
     rename(description = project_description,
-           state_score = ranking)
+           project_score = ranking)
   
   # combined lead tables
   mt_lsl <- mt_lsl_app %>%
@@ -64,10 +62,9 @@ clean_mt <- function() {
              case_when(
                is.na(project_information) ~ description,
                TRUE ~ project_information),
-           project_description = str_squish(project_description),
-           project_name = str_squish(system_name)
+           project_description = str_squish(project_description)
     ) %>%
-    select(-priority_rank, -system_name, -description, -project_information)
+    select(-project, -priority_rank, -system_name, -description, -project_information)
 
   
   ## EC FUNDABLE
@@ -83,7 +80,7 @@ clean_mt <- function() {
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Emerging Contaminants") %>%
-    rename(project_name = system_name,
+    rename(borrower = system_name,
            description = project_description,
            state_score = ranking)
   
@@ -100,30 +97,29 @@ clean_mt <- function() {
   
   # combine all projects
   mt_clean <- bind_rows(mt_ppl, mt_lsl, mt_ec) %>%
-    mutate(population = convert_to_numeric(population),
+    mutate(population = clean_numeric_string(population),
            # remove added details in srf cost and transform into numeric for both cost and funding
            project_cost = as.character(map(strsplit(srf_cost, split = " "), 1)),
-           project_cost = convert_to_numeric(project_cost),
+           project_cost = convert_to_numeric(project_cost, TRUE),
            funding_amount = project_cost,
-           funding_amount = replace_na(funding_amount, 0),
-           requested_amount = convert_to_numeric(amount),
+           requested_amount = clean_numeric_string(amount),
            ) %>%
-    mutate(state_rank = str_squish(rank_no),
+    mutate(project_rank = str_squish(rank_no),
            disadvantaged = case_when(
              grepl("P", srf_cost) ~ "Yes",
              # both EC funded projects are Disadvantaged from the project_information column
              project_type == "Emerging Contaminants" & funding_amount > 0 ~ "Yes",
              project_type == "Emerging Contaminants" & funding_amount == 0 ~ "No Information",
              TRUE ~ "No"),
-           funding_status = case_when(
-             funding_amount > 0 ~ "Funded",
-             TRUE ~ "Not Funded"),
+           expecting_funding = case_when(
+             funding_amount != "No Information" ~ "Yes",
+             TRUE ~ "No"),
            state="Montana",
-           category="3"
+           state_fiscal_year = "2023"
            ) %>%
     mutate(
     # calculate PF as percentage of funding now that DAC is defined
-    principal_forgiveness_amount = case_when(
+    principal_forgiveness = case_when(
       # both EC projects get PF up to total of 7.555m. First gets fully funded, second gets the remaining PF available.
       project_type == "Emerging Contaminants" & funding_amount == 3000000 ~ 3000000,
       project_type == "Emerging Contaminants" & funding_amount == 5383000 ~ 4555000,
@@ -131,16 +127,27 @@ clean_mt <- function() {
       project_type == "Lead" & funding_amount > 0 & disadvantaged == "Yes" ~ funding_amount * .6,
       project_type == "General" & funding_amount > 0 & disadvantaged == "Yes" ~ funding_amount*.75),
   # for lead and general projects, check PF against the allowed cap
-  principal_forgiveness_amount = case_when(
-    project_type == "Lead" & principal_forgiveness_amount > 2000000 ~ 2000000,
-    project_type == "General" & principal_forgiveness_amount > 750000 ~ 750000,
-    TRUE ~ principal_forgiveness_amount),
-  principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)
+  principal_forgiveness = case_when(
+    project_type == "Lead" & principal_forgiveness > 2000000 ~ 2000000,
+    project_type == "General" & principal_forgiveness > 750000 ~ 750000,
+    TRUE ~ principal_forgiveness),
+  funding_amount = clean_numeric_string(funding_amount),
+  funding_amount = case_when(funding_amount == "0" ~ "No Information", TRUE ~ funding_amount),
+  project_cost = clean_numeric_string(project_cost),
+  project_cost = case_when(project_cost == "0" ~ "No Information", TRUE ~ project_cost),
+  principal_forgiveness = clean_numeric_string(principal_forgiveness),
+  principal_forgiveness = case_when(principal_forgiveness == "0" ~ "No Information", TRUE ~ principal_forgiveness),
+  community_served = as.character(NA),
+  pwsid = as.character(NA),
+  project_id = as.character(NA),
+  project_name = as.character(NA),
+  project_score = replace_na(project_score, "No Information")
     ) %>%
-    select(project_name, project_type, project_cost, requested_amount, funding_amount, principal_forgiveness_amount,
-           population, disadvantaged, project_description, state_rank, state_score, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
 
-
+  run_tests(mt_clean)
   rm(list=setdiff(ls(), "mt_clean"))
   
   return(mt_clean)

@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ia <- function() {
   
@@ -9,25 +7,35 @@ clean_ia <- function() {
   
   ia_clean <- ia_ppl %>%
     filter(project_status != "") %>%
-    mutate(population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-           requested_amount = as.numeric(str_replace_all(current_funding_request,"[^0-9.]", "")),
-           funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]", ""))) %>%
+    mutate(population = clean_numeric_string(population),
+           requested_amount = clean_numeric_string(current_funding_request),
+           funding_amount = clean_numeric_string(loan_amount)) %>%
     mutate(borrower = str_squish(project_name),
-           project_name = str_squish(dwsrf_no),
+           project_id = str_squish(dwsrf_no),
            project_type = case_when(
              grepl("LSL", lf_eligible) ~ "Lead",
              grepl("EC", lf_eligible) ~ "Emerging Contaminants",
              TRUE ~ "General"),
            project_description = str_squish(project_description),
-           state_score = str_squish(priority_points),
-           funding_status = case_when(
-             project_status == "L" | project_status == "R" ~ "Funded",
-             TRUE ~ "Not Funded"),
+           project_score = str_squish(priority_points),
+           expecting_funding = case_when(
+             project_status == "L" | project_status == "R" ~ "Yes",
+             TRUE ~ "No"),
            state = "Iowa",
-           category = "3") %>%
-    select(borrower, project_name, project_type, requested_amount, funding_amount, project_description,
-           population, state_score, funding_status, state, category)
+           state_fiscal_year = "2023",
+           community_served = as.character(NA),
+           pwsid = as.character(NA),
+           project_name = as.character(NA),
+           principal_forgiveness = as.character(NA),
+           disadvantaged = as.character(NA),
+           project_rank = as.character(NA),
+           project_cost = as.character(NA)
+           ) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(ia_clean)
   rm(list=setdiff(ls(), "ia_clean"))
   
   return(ia_clean)

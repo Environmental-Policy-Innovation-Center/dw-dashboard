@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_in <- function() {
  
@@ -26,8 +24,8 @@ clean_in <- function() {
     filter(participant != "NA") %>%
     # process numeric columns
     mutate(
-      population = as.numeric(str_replace_all(population_served, "[^0-9.]", "")),
-      requested_amount = as.numeric(str_replace_all(requested_funds, "[^0-9.]", "")),
+      population = clean_numeric_string(population_served),
+      requested_amount = clean_numeric_string(requested_funds),
     ) %>%
     # process text column
     mutate(
@@ -35,23 +33,31 @@ clean_in <- function() {
       pwsid = case_when(
         pwsid_no_s == "TBD" ~ "No Information",
         TRUE ~ paste0("IN", pwsid_no_s)),
-      project_name = str_squish(srf_project_no),
+      project_id = str_squish(srf_project_no),
       project_description = str_squish(project_description),
-      state_score = str_replace_all(ppl_score, "[^0-9.]", ""),
-      state_rank = str_replace_all(ppl_rank, "[^0-9.]", ""),
+      project_score = str_replace_all(ppl_score, "[^0-9.]", ""),
+      project_rank = str_replace_all(ppl_rank, "[^0-9.]", ""),
       disadvantaged = str_squish(disadvantaged_community),
       project_type = case_when(
         emerging_contaminants == "Yes" ~ "Emerging Contaminants",
-        as.numeric(str_replace_all(lead_service_line_replacement_cost, "[^0-9.]", "")) > 0 ~ "Lead",
+        clean_numeric_string(lead_service_line_replacement_cost) > 0 ~ "Lead",
         TRUE ~ "General"
       ),
       state = "Indiana",
-      category = "2",
-      funding_status = as.character(NA),
+      state_fiscal_year = "2023",
+      expecting_funding = as.character(NA),
+      community_served = as.character(NA),
+      project_name = as.character(NA),
+      project_cost = as.character(NA),
+      funding_amount = as.character(NA),
+      principal_forgiveness = as.character(NA),
+      project_score = replace_na(project_score, "No Information")
     ) %>%
-    select(borrower, pwsid, state_rank, state_score, project_name, project_description,
-           project_type, requested_amount, population, disadvantaged, project_type, state, category, funding_status)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(in_clean)
   rm(list=setdiff(ls(), "in_clean"))
   
   return(in_clean)

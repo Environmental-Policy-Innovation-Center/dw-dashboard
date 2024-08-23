@@ -1,7 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-source("cleaning-functions.R")
+source("resources.R")
 
 clean_wa <- function() {
   
@@ -23,40 +20,43 @@ clean_wa <- function() {
   wa_clean <- wa_merged %>%
     # drop total rows and extra columns
     filter(!grepl("total", health_application, ignore.case=TRUE)) %>%
-    select(-health_application, -comments) %>%
+    select(-comments) %>%
     # process numeric columns
-    mutate(population = convert_to_numeric(population),
-           requested_amount = convert_to_numeric(loan_request_amount),
-           funding_amount = convert_to_numeric(loan_request_amount),
-           principal_forgiveness_amount = convert_to_numeric(subsidy_award)
+    mutate(population = clean_numeric_string(population),
+           requested_amount = clean_numeric_string(loan_request_amount),
+           funding_amount = clean_numeric_string(loan_request_amount),
+           principal_forgiveness = clean_numeric_string(subsidy_award)
     ) %>%
     # process text columns
     # append state abbreviation and leading numbers to water system id
     mutate(pwsid = paste0("WA53", water_system_id),
            borrower = str_squish(applicant_name),
-           state_score = str_replace_all(score,"[^0-9.]", ""),
+           project_score = str_replace_all(score,"[^0-9.]", ""),
            project_name = str_squish(project),
-           cities_served = str_squish(county),
+           project_id = str_squish(health_application),
+           community_served = str_squish(county),
            project_description = str_squish(project_description),
-           funding_status = case_when(
-             grepl("This project was withdrawn by applicant because they were not ready to proceed", project_description) ~ "Not Funded",
-             TRUE ~ "Funded"
+           expecting_funding = case_when(
+             grepl("This project was withdrawn by applicant because they were not ready to proceed", project_description) ~ "No",
+             TRUE ~ "Yes"
            ),
-           funding_amount = ifelse(funding_status == "Funded", funding_amount, 0), 
+           funding_amount = ifelse(expecting_funding == "Yes", funding_amount, "No"), 
            project_type = "General",
            disadvantaged = case_when(
-             principal_forgiveness_amount > 0 ~ "Yes",
-             principal_forgiveness_amount == 0 ~ "No",
-             is.na(principal_forgiveness_amount) ~ "No Information"),
-           # with disadvantaged filled in, go back and fill in PF for NA projects
-           principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0),
+             subsidy_award == "0" ~ "No",
+             subsidy_award == "NA" ~ "No Information",
+             is.na(subsidy_award) ~ "No Information",
+             TRUE ~ "Yes"),
            state = "Washington",
-           category = "3"
+           state_fiscal_year = "2023",
+           project_cost = as.character(NA),
+           project_rank = as.character(NA)
     ) %>%
-    select(cities_served, borrower, pwsid, project_name, project_type, requested_amount, funding_amount,
-           principal_forgiveness_amount, population, project_description, disadvantaged, state_score, funding_status,
-           state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(wa_clean)
   rm(list=setdiff(ls(), "wa_clean"))
   
   return(wa_clean)

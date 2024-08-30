@@ -1,6 +1,3 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
 source("resources.R")
 
 

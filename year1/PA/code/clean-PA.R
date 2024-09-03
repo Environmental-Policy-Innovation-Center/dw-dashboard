@@ -12,6 +12,7 @@ clean_pa <- function() {
     mutate(population = clean_numeric_string(population),
            funding_amount = clean_numeric_string(assistance_amount),
            principal_forgiveness_amount = clean_numeric_string(principal_forgiveness),
+           project_cost = clean_numeric_string(project_cost)
     ) %>%
     ## split applicant name to borrower and project name
     ## get rid of wifta- then split at - if there is one

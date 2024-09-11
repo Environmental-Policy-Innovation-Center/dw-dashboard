@@ -1,8 +1,5 @@
 # this should be handled by opening the Project file so that all of the working directory references are the same across users
 
-# these libraries are pulled in by resources.R automatically
-
-
 source("resources.R")
 
 clean_il <- function() {

@@ -9,29 +9,31 @@ library(janitor)
 source("resources.R")
 
 clean_il <- function() {
-  base_path <- file.path("year2", "IL", "data")
+  base_path <- file.path("year3", "IL", "data")
   
-  #Clean and convert numeric values
+  # Clean and convert numeric values
   clean_numeric <- function(x) {
     as.character(as.numeric(gsub("[^0-9.-]", "", x)))
   }
   
   # Read PPL Fundable data
-  il_ppl_f <- fread(file.path(base_path, "y2-Illinois_PPL_Fundable.csv"),
+  il_ppl_f <- fread(file.path(base_path, "y3-Illinois_PPL_Fundable.csv"),
                     colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(expecting_funding = "Yes",
            project_type = "General",
            disadvantaged_community_principal_forgiveness = str_replace(disadvantaged_community_principal_forgiveness, "N/E", "0"),
-           requested_loan_amount = clean_numeric(requested_loan_amount))
+           requested_loan_amount = clean_numeric(requested_loan_amount),
+           estimated_loan_amount = clean_numeric(estimated_loan_amount))  # Add this line
   
   # Read PPL Applicant data
-  il_ppl_a <- fread(file.path(base_path, "y2-Illinois_PPL_Applicant.csv"),
+  il_ppl_a <- fread(file.path(base_path, "y3-Illinois_PPL_Applicant.csv"),
                     colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(expecting_funding = "No",
            project_type="General",
-           requested_loan_amount = clean_numeric(requested_loan_amount))
+           requested_loan_amount = clean_numeric(requested_loan_amount),
+           estimated_loan_amount = requested_loan_amount)  # Add this line
   
   # Combine PPL data
   il_ppl <- bind_rows(il_ppl_a, il_ppl_f) %>%
@@ -46,7 +48,7 @@ clean_il <- function() {
     distinct()
   
   # Process Lead Projects
-  il_lead <- fread(file.path(base_path, "y2-Illinois_Lead_Fundable.csv"),
+  il_lead <- fread(file.path(base_path, "y3-Illinois_Lead_Fundable.csv"),
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(expecting_funding = "Yes",
@@ -63,25 +65,29 @@ clean_il <- function() {
     )
   
   # Process Emerging Contaminant data
-  il_ec_f <- fread(file.path(base_path, "y2-Illinois_EC_Fundable.csv"),
+  il_ec_f <- fread(file.path(base_path, "y3-Illinois_EC_Fundable.csv"),
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(expecting_funding = "Yes",
-           project_type = "Emerging Contaminant")
+           project_type = "Emerging Contaminant",
+           pwslp_funds_reserved = clean_numeric(pwslp_funds_reserved))  # Add this line
   
   il_ec <- merge(il_ec_f, dacs, by = "loan_applicant", all.x = TRUE) %>%
     mutate(
       disadvantaged = coalesce(disadvantaged, "No Information"),
       requested_loan_amount = clean_numeric(requested_loan_amount),
       principal_forgiveness_reserved = clean_numeric(principal_forgiveness_reserved),
-      funding_amount = as.character(as.numeric(requested_loan_amount) + as.numeric(principal_forgiveness_reserved)),
+      funding_amount = as.character(as.numeric(pwslp_funds_reserved) + as.numeric(principal_forgiveness_reserved)),  # Update this line
       principal_forgiveness = principal_forgiveness_reserved
     )
   
   # Combine all data
   il_merge <- bind_rows(il_ppl, il_lead, il_ec) %>%
     mutate(
-      funding_amount = if_else(project_type == "General", requested_loan_amount, funding_amount),
+      funding_amount = case_when(
+        project_type == "General" ~ estimated_loan_amount,
+        TRUE ~ funding_amount
+      ),
       disadvantaged_community_principal_forgiveness = clean_numeric(disadvantaged_community_principal_forgiveness),
       service_population = clean_numeric(service_population),
       principal_forgiveness = coalesce(clean_numeric(principal_forgiveness), "0")
@@ -96,7 +102,7 @@ clean_il <- function() {
       project_description = str_squish(project_description),
       project_description = str_to_sentence(project_description),
       state = "Illinois",
-      state_fiscal_year = "2024",
+      state_fiscal_year = "2025",
       community_served = as.character(NA),
       project_id = coalesce(l17_number, ""),
       project_name = as.character(NA),

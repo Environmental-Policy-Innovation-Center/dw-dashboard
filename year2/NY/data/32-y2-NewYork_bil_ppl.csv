@@ -1,0 +1,86 @@
+﻿Project.Number,County,System.Name,Borrower,Description,Pop,Project.Cost,Score,Cumulative.Total
+18846,Otsego,RICHFIELD SPRINGS (V),Richfield Springs (V),"Address SWTR Compliance and DBPs, SCADA/electrical upgrades, Distribution replacement and looping, Upgrade Water Treatment Plant, New Pump Station, New Distribution System",1500,20680000,200,20680000
+18270,Essex,CHILSON-EAGLE LAKE WD,Ticonderoga (T),"Chilson-Eagle Lake SWTR Compliance Project., New Surface Water Treatment Rule Compliance Facility, New Ground Water Source, Upgrade Distribution System",200,14000000,140,34680000
+18941,Broome,VILLAGE OF ENDICOTT,Endicott (V),"New Source Development to Address Fe/Mn/1,4-dioxane., New Ground Water Source",46000,7310218,120,41990218
+19102,Schuyler,ODESSA VILLAGE,Odessa (V),"Treatment Plant for iron, manganese, and arsenic; Water Main replacement; Tank mixer, New Water Treatment Plant, Upgrade Storage, Upgrade Distribution System",810,10251410,115,52241628
+19529,Chautauqua,MAYVILLE (V),Mayville (V),"New Well, New Treatment System, Replace WM, New Ground Water Source",2000,7640540,105,59882168
+19517,Lewis,VILLAGE OF TURIN,Turin (V),"Water Main Replacement and Water Storage Tank Replacement, Upgrade Storage, Upgrade Distribution System",300,6952500,100,66834668
+19154,Jefferson,WATERTOWN (C),Watertown (C),"WTP Upgrades to address DBPs, Upgrade Water Treatment Plant",50000,51500000,95,118334668
+18923,Chenango,NEW BERLIN (V),New Berlin (V),"Treatment upgrades, main replacement, new meters and tank improvements., Upgrade Water Treatment Plant, Upgrade Storage, Upgrade Distribution System",1000,15397000,95,133731668
+19538,Chautauqua,CHAUTAUQUA (T),Chautauqua (T),"Extension of WD No. 4, Upgrade Water District",650,9591360,95,143323028
+19244,Cattaraugus,SALAMANCA (C),Salamanca (C),"Abandon Existing WTP, New Well Source, New Pump Building., Upgrade Water Treatment Plant",6150,28040556,90,171363584
+19571,Seneca,OVID (V),Ovid (V),"New UF and RO systems, tank mixing and ventilation systems, replacement of water main., New Other Expenses, New Water Treatment Plant, Upgrade Distribution System, New Other (OT)",1056,4438167,90,175801751
+19335,Seneca,SENECA FALLS (T),Seneca Falls (T),"Phase 1 of overall #19196 Project - WTP Upgrades and WM Extension, Upgrade Water Treatment Plant",9027,23500000,85,199301751
+19547,Erie,AKRON VILLAGE,Akron (V),"Improve Water Storage Tank. Install TTHM Removal System, Upgrade Storage",2900,6500000,85,205801751
+19567,Rensselaer,TROY (C),Troy (C),"Corrosion Control Treatment Optimization, Upgrade Water Treatment Plant",51400,16070000,80,221871751
+19125,Ontario,RUSHVILLE (V),Rushville (V),"WTP Improvements to address harmful algal blooms and cyanotoxins, Upgrade Water Treatment Plant",2028,1500000,80,223371751
+19119,Jefferson,PHILADELPHIA (T),Philadelphia (T),"New Proposed Water System, New Distribution System",183,6787746,80,230159497
+19487,Clinton,PLATTSBURGH (C),Plattsburgh (C),"Phase 3 - drinking water system upgrades. , Upgrade Water Treatment Plant, New Ground Water Source, Upgrade Transmission",19840,8832000,65,238991497
+19184,Chenango,BAINBRIDGE (V),Bainbridge (V),"Water System Improvements - WM Replacement, New Well, Booster PS Improvements, New Ground Water Source, Upgrade Pump Station, Upgrade Distribution System",1600,7455600,65,246447097
+18853,Jefferson,HOUNSFIELD WSA #8,Hounsfield (T),"Water Service Area #8 to serve an area currently on individual wells., New Water District",1250,13162370,65,259609467
+18958,Otsego,VILLAGE OF OTEGO,Otego (V),"GW Source Development, WTP Resiliency, AC Pipe Replacement, Booster Station Replacement, Upgrade Water Treatment Plant, New Ground Water Source, Upgrade Distribution System",1010,6899315,65,266508782
+19510,Jefferson,WD NO. 1,Lorraine (T),"Construction of WD No. 1, New Water District",160,4435000,65,270943782
+18587,Niagara,NIAGARA FALLS WATER BOARD,Niagara Falls Water Board,"Beech Ave Storage Tank Replacement, Upgrade Storage",48500,15240000,60,286183782
+19211,Wayne,WOLCOTT (V),Wolcott (V),"Village of Wolcott WTP Upgrades, Upgrade Water Treatment Plant",2465,8400000,60,294583782
+18126,Jefferson,BROWNVILLE (V),Brownville (V),"Replace Severely Aged Distribution Mains and Tank, New Storage, Upgrade Distribution System",2200,18948500,60,313532282
+18825,Lewis,COPENHAGEN (V),Copenhagen (V),"Woodbattle Road WTP and Wells Rehabilitation, Upgrade Water Treatment Plant",1000,1134000,60,314666282
+19521,Lewis,PORT LEYDEN (V),Port Leyden (V),"Water System Improvements, Upgrade Water Treatment Plant, Upgrade Distribution System",704,10197000,60,324863282
+18579,Lewis,TOWN OF DIANA WATER DISTRICT,Diana (T),"Upgrade Wells 1 and 3, Distribution Looping and New Water Meters, Upgrade Ground Water Source, Upgrade Distribution System",618,6180000,60,331043282
+19149,Chemung,WELLSBURG (V),Wellsburg (V),"Tank decommissioning & replacements, distribution upgrades, new emergency ground supply, New Ground Water Source, Upgrade Storage, Upgrade Distribution System",580,6536623,60,337579905
+18835,Sullivan,NARROWSBURG WD,Tusten (T),"System-wide Infrastructure Upgrades, Upgrade Storage, Upgrade Distribution System",500,7635000,60,345214905
+18890,Chemung,MILLPORT (V),Millport (V),"New Well and Upgrade Tank, Meters, and Telemetry, New Other Expenses, Upgrade Ground Water Source, Upgrade Storage",292,1604100,60,346819005
+18932,Oswego,COUNTY RT. 57/ HUNTLEY RD WATER DISTRICT,Schroeppel (T),"County Route 57 / Huntley Road Water District, New Distribution System",253,2879571,60,349698576
+19548,Wyoming,TOWN OF PERRY WD NO. 2,Perry (T),"New WD No. 2, Upgrade Distribution System",215,6360734,60,356059310
+18995,Rensselaer,TROY (C) PWS,Troy (C),"Phase 2 (North Section) RW Transmission Main, Upgrade Transmission",51400,2000000,55,358059310
+18822,Dutchess,WAPPINGERS FALLS (V),Wappingers Falls (V),"New Greensand WTP for Mn Removal, New Water Treatment Plant, Upgrade Ground Water Source, Upgrade Storage",6500,3042840,55,361102150
+19046,Delaware,DELHI (V),Delhi (V),"Distribution, Storage, & Pump Station Upgrades, Upgrade Storage, Upgrade Pump Station, Upgrade Distribution System",3833,6500000,55,367602150
+19232,Wayne,CLYDE (V),Clyde (V),"New vertical turbine pumps, new well houses, treatment improvements, emergency backup power, Upgrade Water Treatment Plant, Upgrade Ground Water Source",2269,1659000,55,369261150
+19133,Cayuga,WEEDSPORT (V),Weedsport (V),"Water Systems Improvements, Upgrade Storage, Upgrade Distribution System",1945,22008000,55,391269150
+19515,Oswego,OSWEGO (C),Oswego (C),"Ellen St. and Gardiner Hill HSZ Interconnect, and rehab Gardiner Hill Tank, Upgrade Storage, Upgrade Distribution System",1700,11200000,55,402469150
+18814,Otsego,EDMESTON (T),Edmeston (T),"Treatment and Distribution System Improvements, Upgrade Water Treatment Plant, Upgrade Distribution System",900,9647000,55,412116150
+19574,Steuben,PRATTSBURGH WD,Prattsburgh (T),"Water distribution system improvements, Upgrade Other Expenses, Upgrade Storage, Upgrade Distribution System, Upgrade Other (OT)",594,7107000,55,419223150
+19243,Steuben,COHOCTON (T),Cohocton (T),"Tank rehab, distribution upgrades and looping, well house improvements, Upgrade Ground Water Source, Upgrade Storage, Upgrade Distribution System",485,3759150,55,422982300
+19519,Yates,PENN YAN (V),Penn Yan (V),"Upgrades to WTP to improve water quality and system reliability, Upgrade Water Treatment Plant, Upgrade Storage",8159,5610000,50,428592300
+18820,Steuben,BATH (V),Bath (V),"W. Washington, Liberty, Geneva, W. Morris St, E Steuben Distribution Improvements, Upgrade Distribution System",5500,11834000,50,440426300
+19527,Jefferson,BLACK RIVER (V),Black River (V),"Distribution, Maple St. Well, & New Source Improvements, New Ground Water Source, Upgrade Distribution System",4170,18200000,50,458626300
+19540,Orleans,MEDINA (V),Medina (V),"Phase I - Water Main Replacement, SCADA and Pump Station Improvements, Upgrade Distribution System",6050,12025250,45,470651550
+18927,Jefferson,VILLAGE OF ADAMS,Adams (V),"Water main and water meter replacement, Upgrade Distribution System",3300,6162490,45,476814040
+19528,Jefferson,PAMELIA CONSOLIDATED WD NO. 1,Pamelia (T),"Water Main Replacement and Chlorine Booster Station, Upgrade Other Expenses, Upgrade Distribution System, Upgrade Other (OT)",2350,8786000,45,485600040
+19505,Delaware,MARGARETVILLE (V),Margaretville (V),"Hospital Tank replacement, meters, control system upgrades, Upgrade Storage, Upgrade Distribution System",514,1508801,45,487108841
+19514,St. Lawrence,TOWN OF EDWARDS WD NO. 1,Edwards (T),"Well No.2 Improvements, Upgrade Surface Water Source",465,800000,45,487908841
+18756,Lewis,CONSTABLEVILLE (V),Constableville (V),"Replace water main on N. Main street, Main street, W. Main street, Schuyler street, James street, John street, and High street, Upgrade Distribution System",310,4102000,45,492010841
+18972,Suffolk,RIVERHEAD WD,Riverhead (T),"WD Extension Nos. 95 & 96 - Calverton. Extend Public Water to Address PFAS in Private Residential Wells, Extend Distribution System, Extend Water District",190,10549704,45,502560545
+19546,Livingston,GENESEO (T),Geneseo (T),"Replace Approx. 23,000 LF of Water Main on Crossett Rd, NYS Rt 63, NYS Rt 39 & NYS Rt 20A, New Distribution System",108,3708000,45,506268545
+19127,Albany,ALBANY (C),Albany MWFA,"Basic Creek Reservoir Dam Safety Improvements, Upgrade Surface Water Source",101082,7822850,40,514091395
+19157,Albany,ALBANY (C),Albany MWFA,"Water System Improvements, Upgrade Water Treatment Plant, Upgrade Storage, Upgrade Pump Station",101082,8642193,40,522733588
+19558,Albany,ALBANY (C),Albany MWFA,"Rensselaer Lake Dam Safety Improvements, Upgrade Other Expenses, Upgrade Other (OT)",98000,1954888,40,524688476
+19273,Schenectady,SCHENECTADY (C),Schenectady (C),"Phase 2 Rice Road WTP Improvements, Upgrade Water Treatment Plant",60000,7581212,40,532269688
+18908,Steuben,HORNELL (C),Hornell (C),"Transmission main replacement, Upgrade Transmission",9592,2375000,40,534644688
+19261,Herkimer,LITTLE FALLS WATER SYSTEM,Little Falls (C),"Distribution system improvements, WTP improvements, Spuce Lake Dam rehab., Upgrade Water Treatment Plant, Upgrade Distribution System, Upgrade Other (OT)",4946,28428000,40,563072688
+19108,Rensselaer,HOOSICK FALLS (V),Hoosick Falls (V),"Rogers Ave Tank Rehab., Upgrade Storage, Upgrade Distribution System",4500,7000000,40,570072688
+18815,Schuyler,MONTOUR FALLS,Montour Falls (V),"Replace aged undersized distribution mains., Upgrade Distribution System",1800,4685856,40,574758544
+19187,Dutchess,AMENIA WD #1,Amenia (T),"Water District No. 1 Improvements, New Ground Water Source, New Storage, New Distribution System",1010,13338500,40,588097044
+18928,Oswego,VILLAGE OF PULASKI WATER SYSTEM,Pulaski (V),"Replacement of aged and deteriorating water main, Upgrade Distribution System",900,11962000,40,600059044
+19531,Allegany,ANGELICA (V),Angelica (V),"Replacement of WM and New Water District, Upgrade Distribution System",713,3932160,40,603991204
+18858,Yates,DRESDEN (V),Dresden (V),"System-wide replacement of aged mains and appurtenances, Upgrade Distribution System",600,7146006,40,611137210
+19591,Suffolk,RIVERHEAD WATER DISTRICT,Riverhead (T),"Well No. 5-2A PFAS removal, Upgrade Water Treatment Plant",190,2327800,40,613465010
+19554,Albany,ALBANY (C),Albany MWFA,"Water main replacement and upgrade of associated appurtenances., Upgrade Distribution System",98617,7604722,35,621069732
+19516,Ontario,CITY OF CANANDAIGUA,Canandaigua (C),"Rehabilitation of settling basin equipment, New Other Expenses, New Other (OT)",39239,1266000,35,622335732
+19536,Oneida,ROME (C),Rome (C),"Kessinger Dam Rehabilitation, Upgrade Surface Water Source",37300,7200000,35,629535732
+18801,Orange,MIDDLETOWN (C),Middletown (C),"Phase 1A - Kinch Pond to Greenville Turnpike Raw Water Main Replacement, Upgrade Transmission",28400,8389500,35,637925232
+19518,St. Lawrence,CANTON (V),Canton (V),"Transmission Main Upgrades and Water Storage Tank Replacement, Upgrade Transmission, Upgrade Storage",6314,17841238,35,655766470
+18900,Chenango,VILLAGE OF GREENE,Greene (V),"Phase 1 - Water main replacement, Upgrade Distribution System",1800,20566400,35,676332870
+19549,Livingston,GENESEO (V),Geneseo (V),"Replace WM approx. 3,300 LF on Oak and Second Streets, Upgrade Distribution System",240,2037550,35,678370420
+19523,St. Lawrence,OGDENSBURG (C),Ogdensburg (C),"East David St. Infrastructure Replacement Project, Upgrade Distribution System",30,1926100,35,680296520
+19570,Westchester,PEEKSKILL (C),Peekskill (C),"Camp Field Reservoir dredging, Lower Wiccopee Dam spillway modifications, and water main replacement, Upgrade Surface Water Source, Upgrade Distribution System",25514,8166000,30,688462520
+18899,Wayne,LYONS (T),Lyons (T),"Replace approx. 23,000 LF of water main and appurtenances, Upgrade Distribution System",5500,14332625,30,702795145
+19520,Cortland,HOMER (V),Homer (V),"New Water Storage Tank West of I-81, New Storage",4514,4048000,30,706843145
+19279,Ulster,PORT EWEN WD,Esopus (T),"Emergency interconnection infrastructure, WTP electrical updates, Water Main Replacement, Upgrade Water Treatment Plant, Upgrade Distribution System, New Inter-Connection",4500,3099200,30,709942345
+19202,Madison,HAMILTON (V),Hamilton (V),"NY Rt. 12B Water Main Replacement, new hydrants, valves and services, Upgrade Distribution System",4107,6446770,30,716389115
+19573,Sullivan,WURTSBORO (V),Wurtsboro (V),"Pennsylvania Ave and 1st St Well House Improvements, Upgrade Water Treatment Plant, Upgrade Ground Water Source",1265,1647200,30,718036315
+19160,Suffolk,SUFFOLK COUNTY WATER AUTHORITY,SCWA,"Replacement of Well No. 1A at the Adams Avenue Well Field., Upgrade Ground Water Source",1009264,1200000,25,719236315
+19041,Orange,WALLKILL CONSOLIDATED WD #1,Wallkill (T),"Rykowski Well Field Expansion and Water Treatment Plant Upgrades, Upgrade Water Treatment Plant, New Ground Water Source",18500,11074560,25,730310875
+19551,Allegany,ALMOND (V),Almond (V),"Mill St. & Maple Ridge Water Main Improvements Project, Upgrade Distribution System",690,1025000,25,731335875
+19139,Suffolk,SUFFOLK COUNTY WATER AUTHORITY,SCWA,"Replacement of Well No. 2A at the Oval Drive Well Field., Upgrade Ground Water Source",3315,1200000,15,732535875
+19142,Suffolk,SUFFOLK COUNTY WATER AUTHORITY,SCWA,"Replacement of Well No. 3A at the Oval Drive Well Field., Upgrade Ground Water Source",3315,1200000,15,733735875
+19148,Suffolk,SUFFOLK COUNTY WATER AUTHORITY,SCWA,"Replacement of 10,000 feet of water main., Upgrade Distribution System",34878,3427391,10,737163266

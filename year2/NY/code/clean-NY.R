@@ -1,7 +1,3 @@
-setwd("/Users/madhvimalhotra/Downloads/EPIC/Github/dw-dashboard")  # Set it to the directory where resources.R is located
-
-source("resources.R")
-
 clean_ny <- function() {
   base_path <- file.path("year2", "NY", "data")
   
@@ -20,7 +16,7 @@ clean_ny <- function() {
            disadvantaged = "Yes") %>%
     select(project_number, disadvantaged)
   
-
+  
   # all projects on BIL are also on base
   ny_base_bil <- ny_base %>%
     left_join(ny_bil, by="project_number") %>%
@@ -28,7 +24,7 @@ clean_ny <- function() {
       score == "H" & is.na(disadvantaged) ~ "Yes",
       is.na(disadvantaged) ~ "No",
       TRUE ~ disadvantaged)
-      )
+    )
   
   
   ## Lead
@@ -43,8 +39,6 @@ clean_ny <- function() {
         TRUE ~ "No"
       )
     )
-  
-  
   
   
   ## Emerging Contaminants - Updated for Year 2
@@ -62,7 +56,7 @@ clean_ny <- function() {
   ny_combined <- bind_rows(ny_base_bil, ny_lead, ny_ec)
   
   ny_clean <- ny_combined %>%
-    select(-dac, -cumulative_total, -code) %>%
+    select(-any_of(c("dac", "cumulative_total", "code"))) %>%
     # process numeric columns
     mutate(population = clean_numeric_string(pop),
            project_cost = clean_numeric_string(project_cost),
@@ -82,13 +76,28 @@ clean_ny <- function() {
            funding_amount = as.character(NA),
            principal_forgiveness = as.character(NA),
            project_rank = as.character(NA),
-           ) %>%
+    ) %>%
+    # Implement Amendment 1
+    mutate(
+      project_cost = ifelse(project_id == "17629", "1800000", as.character(project_cost)),
+      project_score = ifelse(project_id == "18854" & project_score == "40", "80", project_score)
+    ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
-
-  run_tests(ny_clean)
-  rm(list=setdiff(ls(), "ny_clean"))
   
-  return(ny_clean)
+  #Remove zero-cost projects
+  ny_clean_nonzero <- ny_clean %>%
+    filter(project_cost != "0" & project_cost != "0.0" & project_cost != "" & !is.na(project_cost))
+  
+  #Count removed projects
+  num_removed <- nrow(ny_clean) - nrow(ny_clean_nonzero)
+  
+  #Comment about removed projects
+  cat(paste0("# ", num_removed, " projects with zero or NA cost were removed.\n"))
+  
+  run_tests(ny_clean_nonzero)
+  rm(list=setdiff(ls(), "ny_clean_nonzero"))
+  
+  return(ny_clean_nonzero)
 }

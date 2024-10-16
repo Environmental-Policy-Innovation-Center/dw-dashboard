@@ -1,0 +1,140 @@
+
+```{r}
+options(scipen=999999999)
+
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+
+```
+
+```{r}
+# import project-level data
+sfy23 <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-projects-sfy23.csv") %>%
+  clean_names()
+```
+
+
+#TODO: Add category column, add set asides, allocated grants with labels and numbers, 
+
+## Create Column Status Features
+
+```{r}
+
+
+create_status_cols <- function(df, col_names) {
+  
+  # create the returned dataframe of only state and SFY
+  output_df <- df %>%
+    select(state, state_fiscal_year) %>%
+    distinct()
+  
+  # for each column passed through, make a new column name and test coverage
+  for (col_name in col_names) {
+  
+  new_col <- paste0(col_name, "_status")
+  col_sym <- sym(col_name)
+
+  new_df <- df %>%
+    group_by(state, state_fiscal_year) %>%
+    mutate(
+      # save new column name as one of these features based on whether it's NA or includes 'No Information'
+      !!new_col := case_when(
+        all(is.na(!!col_sym)) ~ 'Missing',
+        any(!!col_sym == "No Information") ~ 'Partial',
+        TRUE ~ 'Complete'
+      )
+    ) %>% 
+  select(state, state_fiscal_year, !!new_col) %>%
+  distinct()
+  
+  output_df <- output_df %>%
+    left_join(new_df, by=c("state", "state_fiscal_year"))
+  
+ }
+  
+  return(output_df)
+
+}
+
+
+feature_coverage <- create_status_cols(sfy23, col_names=c("community_served", "borrower", "pwsid", "project_id", "project_name", "project_type",
+                                                     "project_cost", "requested_amount", "funding_amount", "principal_forgiveness", "population",
+                                                     "project_description", "disadvantaged", "project_rank", "project_score", "expecting_funding" ))
+  
+```
+
+## Create Numeric Columns
+
+```{r}
+
+# NOTE: replacing NAs for math, but when this merges in, we need to go back and add "Missing" when it was actually NA in the project data
+project_features <- sfy23 %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(projects = n(),
+            # number of projects expecting funding and percent of all proejcts expecting funding
+            expecting_funding_projects = sum(expecting_funding == "Yes"),
+            expecting_funding_projects = replace_na(expecting_funding_projects, 0),
+            expecting_funding_percent = round(expecting_funding_projects / projects, 2)*100,
+            # number of disadvantaged projects and percent of all projects that are DACs
+            disadvantaged_projects = sum(disadvantaged == "Yes"),
+            disadvantaged_projects = replace_na(disadvantaged_projects, 0),
+            disadvantaged_percent = round(disadvantaged_projects / projects, 2)*100,
+            # number of projects that are both DACs and expecting funding
+            disadvantaged_expecting_funding_projects = sum(expecting_funding == "Yes" & disadvantaged == "Yes"),
+            # inverse: projects that are DACs and NOT expecting funding
+            disadvantaged_not_expecting_funding_projects = sum(expecting_funding == "No" & disadvantaged == "Yes"),
+            disadvantaged_expecting_funding_projects = replace_na(disadvantaged_expecting_funding_projects, 0),
+            # percent of all projects that are DACs expecting funding
+            disadvantaged_expecting_funding_percent_all = round(disadvantaged_expecting_funding_projects / projects, 2)*100,
+            # percent of projects expecting funding that are DACs
+            disadvantaged_expecting_funding_percent_ef = round(disadvantaged_expecting_funding_projects / expecting_funding_projects, 2)*100,
+            # percent of DACs that are expecting funding
+            disadvantaged_expecting_funding_percent_dac = round(disadvantaged_expecting_funding_projects / disadvantaged_projects, 2)*100
+            )
+
+```
+
+```{r}
+
+project_cost_aggregation <- sfy23 %>%
+  filter(!is.na(project_cost) & project_cost != "No Information") %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost)))
+```
+
+```{r}
+funding_amount_aggregation <- sfy23 %>%
+  filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount)))
+```
+
+```{r}
+requested_amount_aggregation <- sfy23 %>%
+  filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_requested_amount = sum(as.numeric(requested_amount)))
+```
+
+```{r}
+principal_forgiveness_aggregation <- sfy23 %>%
+  filter(!is.na(principal_forgiveness) & principal_forgiveness != "No Information") %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_principal_forgiveness = sum(as.numeric(principal_forgiveness)))
+```
+
+
+
+```{r}
+
+state_stats <- feature_coverage %>%
+  left_join(project_features, by=c("state", "state_fiscal_year")) %>%
+  left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
+  left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
+  left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%  
+  left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year"))  
+
+```
+
+

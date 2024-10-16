@@ -29,7 +29,7 @@ clean_ia <- function() {
              TRUE ~ "No"
            ),
            state = "Iowa", 
-           state_fiscal_year = "SFY24") %>%
+           state_fiscal_year = "2024") %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)

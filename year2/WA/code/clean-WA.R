@@ -1,8 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
 source("resources.R")
-
 
 clean_wa <- function() {
   
@@ -11,7 +7,7 @@ clean_wa <- function() {
     clean_names() %>%
     select(-starts_with("x")) %>%
     mutate(project_type = case_when(
-      grepl("EC", iup_b$comments) ~ "Emerging Contaminants", 
+      grepl("EC", comments) ~ "Emerging Contaminants", 
       TRUE ~ "General"))
   
   # (3, 12) --> (3, 13) 
@@ -49,6 +45,11 @@ clean_wa <- function() {
     mutate(final_score = as.character(final_score)) %>%
     bind_rows(lead_iup) %>%
     mutate(community_served = str_squish(county), 
+           #fix typo
+           community_served = case_when(
+             community_served == "Snohomi sh" ~ "Snohomish",
+             TRUE ~ community_served
+           ),
            borrower = str_squish(applicant_name), 
            pwsid = case_when(
              # some of the leading 0s got dropped
@@ -73,7 +74,7 @@ clean_wa <- function() {
            project_score = str_squish(final_score), 
            expecting_funding = "Yes", 
            state = "Washington", 
-           state_fiscal_year = "SFY24") %>%
+           state_fiscal_year = "2024") %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)

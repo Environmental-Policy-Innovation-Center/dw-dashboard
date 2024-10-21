@@ -1,0 +1,46 @@
+﻿Entity,Project,PWS ID,Population,County,Estimated Loan Amount,Estimated Principal Forgiveness,Loan Type,Estimated Award Date,Project Score,Readiness to Proceed,Rate,District Office
+Ashtabula County DES,Lenox New Lyme Water Line Extension,OH0400803,"13,972",ASHTABULA,"$174,000 ","$174,000 ",Design,23-Jul,16,1,PLN/DES,NEDO
+Ashtabula County DES,Lenox New Lyme Water Line Extension,OH0400803,"13,972",ASHTABULA,"$1,744,600 ",-,Construction,23-Dec,16,1,DIS/REG,NEDO
+Trumbull County,State Rd Water Regionalization,OH7804303,"7,547",TRUMBULL,"$5,141,000 ","$2,570,500 ",Construction,24-May,11,3,DIS/REG,NEDO
+Coshocton,Warsaw Water Line Repl and Ext,OH1600012,"13,537",COSHOCTON,"$10,940,000 ","$4,000,000 ",Construction,23-Oct,11,3,DIS/REG,SEDO
+Muskingum County,Maysville Regional WM Connection and Upgrade,OH6000412,"21,464",MUSKINGUM,"$445,000 ","$445,000 ",Design,23-Aug,10,1,PLN/DES,SEDO
+Muskingum County,Maysville Regional WM Connection and Upgrade,OH6000412,"21,464",MUSKINGUM,"$7,163,900 ",-,Construction,24-Apr,10,1,DIS/REG,SEDO
+Akron,Copley Twp WM Extensions for PWS Regionalization,OH7700011,"280,000",SUMMIT,"$1,250,000 ",BYPASS,Construction,24-Jan,9,3,DIS/REG,NEDO
+Ashtabula County DES,South River Rd Water Line Extension,OH0400803,"13,972",ASHTABULA,"$1,792,000 ",BYPASS,Construction,23-Jul,9,3,DIS/REG,NEDO
+Portage County,Village of Mantua Water Distribution Repl (Ph1 of IV),OH6702212,"1,207",PORTAGE,"$3,500,000 ","$1,750,000 ",Construction,23-Dec,9,2,DIS,NEDO
+Fayette,Water Distribution System Replacement,OH2600412,"1,340",FULTON,"$6,580,000 ","$3,290,000 ",Construction,24-May,8,5,DIS,NWDO
+Bowerston,WTP and Raw Water System,OH3400112,398,HARRISON,"$6,000,000 ","$3,000,000 ",Construction,23-Oct,8,3,DIS,SEDO
+Wellston,Water Treatment Plant,OH4001912,"7,000",JACKSON,"$19,999,790 ","$4,000,000 ",Construction,24-May,8,3,DIS,SEDO
+Caldwell,"WTP, Raw Water Supply and Distribution (East Tank)",OH6100011,"7,550",NOBLE,"$18,484,000 ",See EC List,Construction,23-Dec,8,2,DIS/EC,SEDO
+Akron,Portage Lakes Water Main Extension,OH7700011,"280,000",SUMMIT,"$5,300,960 ","$2,272,000 ",Construction,24-Mar,7,3,DIS/REG,NEDO
+Ashtabula County DES,Northeast Regional Water Line Extension,OH0400803,"13,972",ASHTABULA,"$10,432,000 ",BYPASS,Construction,24-Jun,7,3,DIS/REG,NEDO
+Lowell,Water Tank and Water Main Replacement,OH8400312,603,WASHINGTON,"$99,900 ","$99,900 ",Design,23-May,7,2,PLN/DES,SEDO
+Lowell,Water Tank and Water Main Replacement,OH8400312,603,WASHINGTON,"$1,066,995 ",-,Construction,23-Nov,7,2,DIS/LSL,SEDO
+Little Hocking WA,SR 339 Transmission and Barlow Tank & Booster,OH8400212,"9,892",WASHINGTON,"$870,600 ","$870,600 ",Design,23-Jul,7,1,PLN/DES,SEDO
+Little Hocking WA,SR 339 Transmission and Barlow Tank & Booster,OH8400212,"9,892",WASHINGTON,"$7,101,800 ",-,Construction,24-Apr,7,1,DIS,SEDO
+Pike Water,Green Ridge Water Line Ext,OH6602412,"15,487",PIKE,"$2,229,660 ","$1,114,830 ",Construction,23-Jul,6,5,DIS/REG,SEDO
+Hecla Water Association,Macedonia Hill WM Ext and Booster Station Imps,OH4401612,"34,942",LAWRENCE,"$3,294,000 ",BYPASS 1,Construction,23-Jul,6,5,DIS/REG,SEDO
+Manchester,Water Line Replacement Phase 2,OH0100112,"2,043",ADAMS,"$3,597,265 ","$1,798,633 ",Construction,23-Sep,6,4,DIS,SEDO
+Noble County WA,Water Line Extension & Interconnect Final Phase,OH6100503,927,NOBLE,"$3,840,680 ","$1,815,417 ",Construction,23-Dec,6,4,DIS/REG,SEDO
+Muskingum County,Claysville Rd to Hardy Rd Watermain Ext,OH6000412,"21,464",MUSKINGUM,"$344,900 ",-,Construction,24-Apr,6,3,DIS/REG,SEDO
+Kenton,France Lake Campground Water Ext,OH3300612,"8,360",HARDIN,"$536,800 ",-,Construction,24-Mar,6,3,DIS/REG,NWDO
+Muskingum County,Sunflower and Getz,OH6000412,"21,464",MUSKINGUM,"$591,400 ",-,Construction,24-Mar,6,3,DIS/REG,SEDO
+Muskingum County,Watermain Extension No. 2 to SR 555,OH6000412,"21,464",MUSKINGUM,"$734,900 ",-,Construction,24-Apr,6,3,DIS/REG,SEDO
+Burr Oak Regional WD,Morgan County Water Line Expansion,OH0501311,784,ATHENS,"$1,615,780 ",-,Construction,24-Jun,6,3,DIS/REG,SEDO
+Midvale,Meters and Water Line Improvement,OH7900612,"2,147",TUSCARAWAS,"$2,000,000 ",-,Construction,23-Sep,6,3,DIS,SEDO
+Northern Perry County WD #2,Phase 5 - Water System Imps,OH6402703,"1,476",PERRY,"$2,101,000 ",-,Construction,23-Sep,6,3,DIS/REG,SEDO
+Trumbull County-Braceville,Braceville/Southington/Farmington Regionalization,OH7806503,625,TRUMBULL,"$3,801,000 ",-,Construction,23-Oct,6,3,DIS/REG,NEDO
+Jackson County Water Co,Garrett Ridge Improvement,OH4002012,"15,903",JACKSON,"$9,585,000 ",-,Construction,24-Mar,6,3,DIS/REG,SEDO
+West Farmington,New Water Wells,OH7803911,775,TRUMBULL,"$1,114,400 ",-,Construction,24-Feb,5,-,DIS,NEDO
+Sunday Creek Valley WD,Water Line Replacement and Tank Repainting,OH0501503,"5,451",ATHENS,"$1,456,436 ",-,Construction,23-Sep,5,-,DIS,SEDO
+London,"East Water Plant Well, Pump and Pumphouse",OH4900712,"9,394",MADISON,"$1,847,500 ",-,Construction,24-May,5,-,DIS,CDO
+Brilliant W&SD,2022-2023 Water Line Replacement,OH4100412,"2,100",JEFFERSON,"$2,593,050 ",-,Construction,24-Apr,5,-,DIS,SEDO
+Nelsonville,Water System Improvements Ph 3,OH0501214,"6,656",ATHENS,"$4,536,000 ",-,Construction,24-Jan,5,-,DIS,SEDO
+Kenton,Downtown Revitalization Ph2 WL and LSL Repl,OH3300612,"8,360",HARDIN,"$7,100,000 ",-,Construction,24-Jan,5,-,DIS/LSL,NWDO
+Coal Grove,Water Line Replacement Phase ll,OH4400012,"2,167",LAWRENCE,"$8,040,300 ",-,Construction,24-May,5,-,DIS,SEDO
+Gallipolis,Water Line Replacement,OH2700112,"7,134",GALLIA,"$8,042,600 ",-,Construction,24-Jun,5,-,DIS,SEDO
+Port Clinton,Water and Sanitary Sewer Infrastructure Imps,OH6203211,"6,056",OTTAWA,"$11,458,755 ",-,Construction,23-Oct,5,-,DIS/LSL,NWDO
+Garrettsville,Windham Street Water Main Replacement,OH6701412,"2,325",PORTAGE,"$650,000 ",-,Construction,24-Apr,4,-,DIS,NEDO
+Beaver,2023 Water Line Replacement,OH6600012,434,PIKE,"$799,750 ",-,Construction,24-Apr,4,-,DIS,SEDO
+Logan,Valves and Water Line Repl,OH3700612,"6,704",HOCKING,"$1,757,301 ",-,Construction,23-Dec,4,-,DIS,SEDO
+Malvern,Water Line Replacement - Ph2,OH1000112,"1,200",CARROLL,"$6,050,000 ",-,Construction,24-Jun,4,-,DIS/LSL,NEDO

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ia <- function() {
+clean_ia_y1 <- function() {
   
   ia_ppl <- read.csv("year1/IA/data/iowa-ppl-q4.csv") %>%
     clean_names()

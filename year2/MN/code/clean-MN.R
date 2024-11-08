@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mn <- function() {
+clean_mn_y2 <- function() {
   
   # (187, 15) -> (187, 18)
   table_1a <- read.csv("year2/MN/data/draft-2024-drinking-water-intended-use-plan-project-priority-list-table-1a.csv") %>%
@@ -62,7 +62,7 @@ clean_mn <- function() {
       project_score = str_squish(points),
       expecting_funding = replace_na(expecting_funding, "No"),
       state = "Minnesota",
-      state_fiscal_year = "SFY24"
+      state_fiscal_year = "2024"
     )  %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,

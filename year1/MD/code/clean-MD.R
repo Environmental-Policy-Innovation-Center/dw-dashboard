@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_md <- function() {
+clean_md_y1 <- function() {
   
   # Due to the format of the Maryland PPL table format, the PPL and Project Funding List are manually combined
   # before further cleaning and standardization

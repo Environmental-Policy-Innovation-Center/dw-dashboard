@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_tx <- function() {
+clean_tx_y0 <- function() {
   
   
   tx_ppl <- read.csv("year0/TX/data/tx-dw-sfy22-ppl-invited.csv") %>%

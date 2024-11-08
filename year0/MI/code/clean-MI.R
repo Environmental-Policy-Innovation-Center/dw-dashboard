@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mi <- function() {
+clean_mi_y0 <- function() {
   
 
   mi_iup <- read.csv("year0/MI/data/mi-fy22-iup-final.csv") %>%

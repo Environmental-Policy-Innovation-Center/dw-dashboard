@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_wa <- function() {
+clean_wa_y2 <- function() {
   
   # (25, 13) --> (25, 14) 
   iup_b <- read.csv("year2/WA/data/tabula-Washington State IUP-appendixB.csv") %>%

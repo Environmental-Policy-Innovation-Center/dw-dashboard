@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_de <- function() {
+clean_de_y1 <- function() {
   
   ### APPLICANT
   # only three projects on this list aren't already on the fundable list

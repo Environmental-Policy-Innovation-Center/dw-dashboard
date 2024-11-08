@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_al <- function() {
+clean_al_y1 <- function() {
 
   ### APPLICANT - Not included in dashboard, kept in case it becomes relevant
   

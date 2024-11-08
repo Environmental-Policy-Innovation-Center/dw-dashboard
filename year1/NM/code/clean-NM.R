@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nm <- function() {
+clean_nm_y1 <- function() {
   
   # (6,13)
   nm_raw <- fread("year1/NM/data/31-NewMexico_PPL.csv",

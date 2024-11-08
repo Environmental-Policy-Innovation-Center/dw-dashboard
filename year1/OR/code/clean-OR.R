@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_or <- function() {
+clean_or_y1 <- function() {
 
   # read in larger tables and clean up their column names for easier parsing
   or_hcc <- fread("year1/OR/data/or-hcc-ppl.csv",

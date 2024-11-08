@@ -1,8 +1,6 @@
 source("resources.R")
 
-
-
-clean_tn <- function() {
+clean_tn_y1 <- function() {
   
   tn_ppl <- fread("year1/TN/data/tn-fy22-ppl.csv",
                     colClasses = "character", na.strings = "") %>%

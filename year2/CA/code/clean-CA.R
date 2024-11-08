@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ca <- function() {
+clean_ca_y2 <- function() {
   
   
   # (146, 13) -> (146, 3) 

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_wi <- function() {
+clean_wi_y1 <- function() {
   
   # (54,17) -> (46,19)
   wi_fund_raw <- fread("year1/WI/data/49-Wisconsin_PPL.csv",

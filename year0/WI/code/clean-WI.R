@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_wi <- function() {
+clean_wi_y0 <- function() {
   
   wi_ppl <- read.csv("year0/WI/data/sfy2022-ppl.csv") %>%
     clean_names() %>%

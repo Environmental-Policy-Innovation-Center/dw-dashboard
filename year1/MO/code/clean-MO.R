@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mo <- function() {
+clean_mo_y1 <- function() {
 
   # this is the initially scraped IUP from 10/11/22,
   # however, it is structurally the same as the list in the amended IUP dated 7/11/23, so we keep it and amend individual values below

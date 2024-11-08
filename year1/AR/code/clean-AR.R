@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ar <- function() {
+clean_ar_y1 <- function() {
 
   # the manually merged data from MDI includes fundable projects with columns from the comprehensive list
   # this is a combination of charts 3 and 4 from the IUP

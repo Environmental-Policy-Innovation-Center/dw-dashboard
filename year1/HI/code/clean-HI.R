@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_hi <- function() {
+clean_hi_y1 <- function() {
   
   # (33,8)
   # note this if from the july 22 IUP, but it is the same in the March 23 amended IUP

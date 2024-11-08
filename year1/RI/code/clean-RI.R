@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ri <- function() {
+clean_ri_y1 <- function() {
   
   # (129, 16)
   ri_comp <- fread("year1/RI/data/39-RhodeIsland_PPL_Comprehensive.csv",

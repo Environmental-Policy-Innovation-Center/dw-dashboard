@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_tn <- function() {
+clean_tn_y0 <- function() {
   
 
   tn_ppl <- read.csv("year0/TN/data/tn-srf-dw-fy2021-priority-ranking-list.csv") %>%

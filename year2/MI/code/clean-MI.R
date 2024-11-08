@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mi <- function() {
+clean_mi_y2 <- function() {
 
   mi_raw <- fread("year2/MI/data/mi-sfy24-iup.csv",
                   colClasses = "character", na.strings = "") %>%

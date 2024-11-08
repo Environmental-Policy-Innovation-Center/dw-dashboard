@@ -1,7 +1,7 @@
 source("resources.R")
 
 
-clean_ak <- function() {
+clean_ak_y1 <- function() {
   
   ak_ppl <- fread("year1/AK/data/ak-ppl-q4-final-1.csv",
                   colClasses = "character", na.strings = "") %>%

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_tx <- function() {
+clean_tx_y1 <- function() {
   
   
   # (267,14) -> (265,9)

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nv <- function() {
+clean_nv_y1 <- function() {
   
   # (172, 16)
   # Nevada Drinking Water State Revolving Fund Priority List Effective June 2022

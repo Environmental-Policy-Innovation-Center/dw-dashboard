@@ -38,7 +38,8 @@ clean_tx <- function() {
   tx_clean <- tx_ppl %>%
     # process numeric columns
     mutate(population = clean_numeric_string(population),
-           funding_amount = clean_numeric_string(project_cost)
+           project_cost = clean_numeric_string(project_cost),
+           funding_amount = clean_numeric_string(project_cost),
     ) %>%
     # process text columns
     mutate(borrower = str_squish(entity),

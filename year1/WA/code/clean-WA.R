@@ -40,7 +40,7 @@ clean_wa <- function() {
              grepl("This project was withdrawn by applicant because they were not ready to proceed", project_description) ~ "No",
              TRUE ~ "Yes"
            ),
-           funding_amount = ifelse(expecting_funding == "Yes", funding_amount, "No"), 
+           funding_amount = ifelse(expecting_funding == "Yes", funding_amount, "No Information"), 
            project_type = "General",
            disadvantaged = case_when(
              subsidy_award == "0" ~ "No",

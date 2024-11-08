@@ -1,9 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-source("cleaning-functions.R")
-
-
+source("resources.R")
 
 clean_az <- function() {
   
@@ -31,11 +26,12 @@ clean_az <- function() {
            # get rid of linebreak character, then for projects with multiple $ values, remove the second
            amount_requested_probable_green_amount = str_replace_all(amount_requested_probable_green_amount, "\\r", " "),
            amount_requested_probable_green_amount = str_replace_all(amount_requested_probable_green_amount, "/.*", ""),
-           requested_amount = convert_to_numeric(amount_requested_probable_green_amount),
-           population = convert_to_numeric(population),
+           requested_amount = clean_numeric_string(amount_requested_probable_green_amount),
            funding_amount = case_when(
              grepl("4", applicant) ~ requested_amount,
-             TRUE ~ 0)
+             TRUE ~ "No Information"),
+           project_cost = as.character(NA),
+           principal_forgiveness = as.character(NA)
            ) %>%
     mutate(
       # remove as much of the 1,3 footnotes from the borrowers, then clean up by removing numbers not caught in the regex
@@ -49,7 +45,10 @@ clean_az <- function() {
              ppl_rank == "1" ~ "Sun Valley Farms Unit VI Water Company, Inc.",
              TRUE ~ borrower),
            pwsid = str_squish(pws_number),
-           project_name = str_squish(project_number),
+           pwsid = replace_na(pwsid, "No Information"),
+           population = clean_numeric_string(population),
+           project_id = str_squish(project_number),
+           project_name = as.character(NA),
            project_type = case_when(
             is.na(project_type) ~ "General",
             TRUE ~ project_type),
@@ -57,14 +56,18 @@ clean_az <- function() {
            disadvantaged = case_when(
              grepl("1", applicant) ~ "Yes",
              TRUE ~ "No"),
-           state_rank = str_squish(ppl_rank),
-           funding_status = ifelse(funding_amount > 0, "Funded", "Not Funded"),
+           project_rank = str_squish(ppl_rank),
+           expecting_funding = ifelse(funding_amount > 0, "Yes", "No"),
            state = "Arizona",
-           category = "3"
+           state_fiscal_year = "2023",
+      community_served = as.character(NA),
+      project_score = as.character(NA)
       ) %>%
-    select(borrower, pwsid, project_name, project_type, requested_amount, funding_amount, project_description,
-           population, disadvantaged, state_rank, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(az_clean)
   rm(list=setdiff(ls(), "az_clean"))
   
   return(az_clean)

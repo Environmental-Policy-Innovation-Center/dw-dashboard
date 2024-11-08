@@ -1,0 +1,143 @@
+No.,PWS,Total Points,PWS ID.,Project Cost,Population,Small System (Y/N),MHI,Disadvantaged (Y/N),Project Description
+1,North East Water Association,331,33,"$12,200,000.00","3,540",YES,"$19,689.00",YES,System Expansion to serve Henderson & Gamaliel Areas
+2,Benton County Water Authority #5,913,40,"$854,696.00","1,468",YES,"$48,077.00",NO,Main Replacements and Interconnection to Rambo Water District No. 1
+3,Gillham Lake Regional Water System,185,658,"$4,083,100.00",N/A,NO,N/A,NO,Water Treatment Plant Rehabilitation and Expansion
+4,Clinton Waterworks,175,564,"$4,400,000.00","5,725",YES,"$30,125.00",YES,Water Treatment Plant Clarifier
+5,Mena Water Utilities,174,438,"$7,000,000.00","5,590",YES,"$28,222.00",YES,Irons Fork Water Treatment Facility Improvements
+6,Hozanna Heights Water Association,149,884,"$5,180.00",79,YES,"$18,682.00",YES,New Treatment Installation
+7,Central Arkansas Water,144,465,"$16,400,000.00","330,667",NO,"$51,165.00",NO,West Pulaski County Extension
+8,Pleasant View Water PFB,127,202,"$1,287,098.00","1,698",YES,"$34,819.00",YES,Royal Oak and Manitou Mountain Extensions
+9,Siloam Springs Water Works,124,56,"$21,033,125.00","19,022",NO,"$38,750.00",YES,Water Treatment Facility Improvements
+10,Lockesburg,84,517,"$2,223,385.00",853,YES,"$31,213.00",YES,Replacement of Distribution System
+11,Old Bella Vista POA,83,753,"$500,000.00",130,YES,"$30,700.00",YES,Water System Improvements
+12,Viola,74,205,"$85,000.00",387,YES,"$35,673.00",YES,Rehabilitation of Existing Storage Tank
+13,Scranton Waterworks,73,330,"$5,974,000.00","1,100",YES,"$24,500.00",YES,Connection to the City of Clarksville - Transmission Facilities
+14,Lee County Water Association,64,313,"$222,500.00","5,033",YES,"$27,901.00",YES,Aerator Installment
+15,Southeast Bradley County Water Association,64,870,"$2,358,073.00","2,665",YES,"$36,310.00",YES,Connection and Consolidation with Banks as well as main replacements
+16,Central Arkansas Water,64,465,"$2,000,000.00","313,588",NO,"$43,890.00",YES,Galvanized Pipe Replacement Project
+17,Bearden,63,401,"$780,200.00",921,YES,"$31,095.00",YES,Tank Rehabilitation Project
+18,"Gould, City of",62,316,"$789,312.00","1,041",YES,"$34,107.00",YES,"New 150,000 Gal. Elevated Storage Tank"
+19,Central Arkansas Water,60,465,"$35,000,000.00","313,588",NO,"$43,890.00",YES,"Ozark Point Water Treatment Plant - Reliability & Redundancy Improvements, solar panels"
+20,Arkadelphia,60,85,"$2,843,900.00","10,716",NO,"$27,344.00",YES,Gum Springs Water System Improvements Project
+21,Central Arkansas Water,58,465,"$675,000.00","313,588",NO,"$43,890.00",YES,"12"" Asbestos Cement & Cast Iron Pipe Replacement, Roosevelt Road"
+22,Central Arkansas Water,58,465,"$1,750,000.00","313,588",NO,"$43,890.00",YES,"24"" Suction Main to Pump Station/Tank No. 23 - Montgomery"
+23,Conway Corporation,53,189,"$8,000,000.00","52,000",NO,"$41,917.00",YES,Water Quality Compliance Project
+24,Omaha,48,64,"$850,000.00","1,163",YES,"$23,740.00",YES,Water System Improvements
+25,Jasper,47,397,"$1,108,260.00",466,YES,"$14,333.00",YES,Water Line Rehabilitation
+26,Marshall,47,501,"$1,128,000.00","2,760",YES,"$30,214.00",YES,Water Line Rehabilitation
+27,Chidester,45,403,"$817,500.00",335,YES,"$25,500.00",YES,New Storage Tank & Pump Replacement Project
+28,Siloam Springs,45,56,"$9,600,000.00","14,672",NO,"$38,750.00",YES,"Rehab Tank, New RW Transmission Main, Rehab AC Dist Mains"
+30,Central Arkansas Water,44,465,"$6,050,000.00","330,667",NO,"$51,165.00",NO,Paron Owensville Consolidation
+31,Nashville,43,244,"$850,000.00","4,327",YES,"$30,506.00",YES,Water System Improvements
+32,Riversouth,42,674,"$2,849,400.00","4,168",YES,"$34,104.00",YES,Water System Improvements and connect to Franklin-Sebastian PWA
+33,Fifty-Six Waterworks,42,46,"$2,643,649.00",595,YES,"$33,750.00",YES,Permanent Water Main Replacement
+33,"Waldo, City of",45,112,"$2,507,655.00",782,YES,"$18,514.00",YES,Replacement of Existing Water Distribution System
+33,Walker,40,116,"$633,300.00","1,182",YES,"$33,184.00",YES,Tank and Water System Improvements
+34,Arkansas City,39,167,"$2,750,000.00",366,YES,"$39,922.00",YES,Water System Replacement
+35,Rosston Water Department,38,395,"$545,651.00",750,YES,"$27,500.00",YES,Water Meter and Tank Improvements
+36,Parkers Chapel,38,560,"$1,545,089.00","2,369",YES,"$41,106.00",YES,Water System Improvements
+37,"Thornton, City of",38,72,"$2,496,966.00",972,YES,"$20,193.00",YES,Replacement of Existing Water Distribution System
+38,"Gould, City of",38,316,"$1,600,000.00","1,041",YES,"$15,933.00",YES,Distribution System Replacement
+39,Central Arkansas Water,38,465,"$5,835,000.00","313,588",NO,"$43,890.00",YES,"Improve Pump Station 1A, Wilson Water Treatment Plant"
+40,Siloam Springs Water Works,37,56,"$31,000,000.00","19,205",NO,"$58,569.00",NO,Water Treatment Facility Improvements
+41,Arkadelphia,37,85,"$7,500,000.00","10,716",NO,"$26,420.00",YES,"Water Treatment Plant Improvements, water meters"
+42,Bradley Waterworks,37,334,"$1,533,711.00",502,YES,"$24,632.00",YES,Distribution System Replacement
+43,Gilmore,36,154,"$1,288,000.00",332,YES,"$48,750.00",NO,New Water Treatment Plant and New Elevated Storage Tank
+44,Lee County Water Association,35,313,"$881,500.00","5,033",YES,"$27,901.00",YES,Water Line Replacement
+45,"Winthrop, City of",35,642,"$1,633,098.00",474,YES,"$32,250.00",YES,Distribution System Replacement
+46,New Hope Water Association,34,683,"$330,156.00","1,136",YES,"$41,106.00",YES,Water System Rehabilitation
+47,Beebe,33,592,"$1,065,000.00","5,000",YES,"$40,912.00",YES,LWPWA Connector Main
+48,Central Arkansas Water,33,465,"$1,700,000.00","313,588",NO,"$43,890.00",YES,"24"" and 16"" Transmission Main from Tanks 14A and 14B"
+49,Chidester Waterworks,32,403,"$1,643,716.00",335,YES,"$28,000.00",YES,Distribution System Replacement
+50,Mount Holly Waterworks,32,156,"$273,982.00",384,YES,"$41,106.00",YES,Water System Improvements
+51,"Strong, City of",32,556,"$1,341,781.00","1,220",YES,"$21,250.00",YES,Water Line Replacement
+52,"Reed, City of",32,603,"$612,256.00",141,YES,"$18,462.00",YES,Water Line replacement
+53,Caraway Waterworks,31,127,"$527,000.00","1,375",YES,"$42,332.00",YES,Water Supply Well and Tank Rehab
+54,Bella Vista POA,31,39,"$4,300,500.00","24,485",NO,"$57,933.00",NO,Distribution improvements
+55,"Huttig, City of",31,553,"$2,100,000.00",777,YES,"$31,250.00",YES,Water Line Replacement and New Well
+56,"Wooster, City of",31,196,"$2,475,510.00","3,700",YES,"$57,471.00",NO,Water System Improvements
+57,"Eudora, City of",30,83,"$4,000,000.00","3,158",YES,"$18,438.00",YES,Water Line Replacement and System Improvements
+58,Benton Washington RPWA,30,871,"$33,500,000.00","16,300",NO,"$44,048.00",YES,Water treatment improvements
+59,Lakeview Municipal Water,30,420,"$230,000.00",575,YES,"$15,536.00",YES,Rehab of Storage Tank
+60,Highway 4 & 24 Water Association,33,765,"$784,889.00","2,165",YES,"$31,233.00",YES,Water System Improvements
+61,South Pike County Water,33,978,"$339,685.00",742,YES,"$32,045.00",YES,Booster Station Improvements
+62,Wilton Waterworks,33,321,"$1,163,082.00",534,YES,"$30,625.00",YES,Distribution System Replacement and Tank Rehab
+63,Leslie Waterworks,31,500,"$2,789,484.00",740,YES,"$19,911.00",YES,Water Main Replacement Project
+64,Dumas Waterworks,28,171,"$270,023.00","6,061",YES,"$35,625.00",YES,Connection with Pickens
+65,Coy Waterworks,27,340,"$46,000.00",310,YES,"$36,250.00",YES,Rehab of Storage Tank
+66,Saline County Waterworks PFB,27,491,"$165,800.00",491,YES,"$30,500.00",YES,Mountain Circle Standpipe
+67,North Howard RWA,27,1075,"$2,227,535.00",964,YES,"$33,733.00",YES,"Replacement of Existing 10"" Water Main"
+68,Mitchellville,27,169,"$284,987.00",496,YES,"$18,383.00",YES,Water System Rehabilitation and Tank Rehabilitation
+69,"Flippin, City of",25,351,"$2,000,000.00","3,325",YES,"$28,942.00",YES,Storage/Distribution Improvements
+70,Emerson Waterworks,24,111,"$344,700.00","1,145",YES,"$30,156.00",YES,Water Meter Replacement Project
+71,Frenchport,24,,"$354,068.00","1,669",YES,"$32,136.00",YES,Water Meter Replacement Project
+72,McCrory,24,599,"$415,000.00","1,647",YES,"$33,750.00",YES,Water Meter Replacement Project
+73,Bearden,24,401,"$303,400.00",855,YES,"$22,727.00",YES,Water Meter Replacement Project
+74,"Rison, City of",24,106,"$331,309.00","1,344",YES,"$34,271.00",YES,Water Meter Replacement Project
+75,Village Water Association,24,115,"$402,183.00",417,YES,"$48,393.00",NO,Elevated Water Tank Rehab
+75,Wright-Pastoria Water Association,24,695,"$3,180,875.00","1,268",YES,"$35,381.00",YES,Water Main Replacement Project  & Meter Replacement Project
+76,Lawson Urbana Water Association,23,548,"$707,784.00","1,108",YES,"$41,106.00",YES,Well No. 4 Construction
+77,Wabbaseka Waterworks,23,283,"$405,000.00",244,YES,"$22,206.00",YES,Water Treatment Rehab
+78,Tri County Regional Water,22,782,"$800,000.00","16,698",NO,"$40,668.00",YES,Hector Plant Upgrade/Raw Water Pumps
+79,Hickory Ridge,22,159,"$1,207,411.00",280,YES,"$30,568.00",YES,Water System Replacement
+80,Tyronza,21,426,"$245,000.00","1,262",YES,"$38,125.00",YES,Painting Elevated Tank
+81,Harmony Grove,21,402,"$609,994.00","2,317",YES,"$32,136.00",YES,Water Meter Replacements
+82,Dermott Waterworks,21,82,"$1,735,648.00","2,889",YES,"$22,077.00",YES,Water System Rehabilitation
+83,Harrell Waterworks,21,71,"$1,489,843.00",336,YES,"$28,125.00",YES,Water System Replacement and Tank Rehabilitation
+84,Lewisville Waterworks,21,337,"$3,316,583.00","1,687",YES,"$23,182.00",YES,Waterline Improvements
+85,Mt. Ida Waterworks,21,392,"$499,800.00","3,218",YES,"$40,444.00",YES,Water Meter Replacements
+86,Bauxite,21,497,"$210,000.00",574,YES,"$42,404.00",YES,Water Meter Replacements
+87,Jefferson Samples Dexter,21,276,"$368,000.00","2,552",YES,"$36,377.00",YES,Water Meter Replacements
+88,Junction City Waterworks,21,552,"$2,283,408.00",552,YES,"$46,765.00",NO,Water System Rehabilitation
+89,Mountain View Water & Wastewater,21,542,"$675,000.00","5,864",YES,"$19,302.00",YES,Distribution System Improvements
+90,Salem Water Users,21,492,"$9,000,000.00","15,713",NO,"$58,985.00",NO,Water System Improvements
+91,Danville Waterworks,21,603,"$491,165.00","2,810",YES,"$42,800.00",YES,Water Meter Replacements
+92,"Berryville, City of",21,74,"$926,266.00","5,020",YES,"$28,537.00",YES,CR 501 Water Main Upgrade
+93,Tollette Waterworks,21,618,"$46,000.00",339,YES,"$21,125.00",YES,Rehab of Storage Tank
+94,Bryant. City of,21,486,"$2,000,000.00","15,382",NO,"$54,521.00",NO,Automated Meter Reading System & Replacement
+95,Danville Waterworks,21,603,"$360,500.00","2,705",YES,"$33,632.00",YES,Cedar Piney Transmission Main
+96,Riviera Utilities now called Lake Catherine WW & SFB,21,239,"$207,275.00","1,800",YES,"$38,680.00",YES,Meter Change out and Upgrade Project
+97,Midway Water Association,21,153,"$548,580.00","2,100",YES,"$43,594.00",YES,Water Meter Replacement Project
+98,Palestine,21,536,"$500,000.00","1,857",YES,"$35,170.00",YES,Water Meter Replacement Project
+99,Tumbling Shoals,21,579,"$1,000,000.00","4,830",YES,"$43,686.00",YES,Water Meter Replacement Project
+100,Omaha,21,64,"$850,000.00","1,163",YES,"$26,343.00",YES,Water Meter Replacement Project
+101,Success,21,95,"$500,000.00",164,YES,"$32,725.00",YES,Water Meter Replacement Project
+102,Wooster,21,196,"$500,000.00","3,794",YES,"$61,530.00",NO,Water Meter Replacement Project
+103,Clinton Waterworks,21,564,"$1,800,000.00","12,838",NO,"$38,148.00",YES,Water Meter Replacement Project
+104,Carlisle,21,339,"$413,500.00","2,214",YES,"$49,545.00",NO,Water Meter Replacement Project
+105,Milltown-Washburn,21,773,"$500,000.00","3,807",YES,"$60,049.00",NO,Water Meter Replacement Project
+106,Garfield,21,47,"$500,000.00",640,YES,"$60,499.00",NO,Water Meter Replacement Project
+107,Sulphur Springs,21,57,"$500,000.00",628,YES,"$26,710.00",YES,Water Meter Replacement Project
+108,Pleasant View Water PFB,21,202,"$500,000.00","1,698",YES,"$34,819.00",YES,Water Meter Replacement Project
+109,Nashville Rural Water,21,805,"$500,000.00","6,958",YES,"$33,561.00",YES,Water Meter Replacement Project
+110,Watalula Water,21,606,"$500,000.00","2,278",YES,"$31,825.00",YES,Water Meter Replacement Project
+111,East Johnson County,20,772,"$525,000.00","4,210",YES,"$27,910.00",YES,Water Meter Replacement Project
+112,Madison County Water Facilities Board,17,349,"$1,255,696.00","9,688",YES,"$36,502.00",YES,Booster Pump Station & Tank Rehab
+113,Ladd Water Association,16,277,"$365,000.00","2,800",YES,"$28,891.00",YES,Water System Improvements
+114,North White County,14,583,"$521,350.00","5,300",YES,"$40,781.00",YES,Water Meter Replacement
+115,Washington Water Authority,14,574,"$3,689,036.00","16,750",NO,"$50,580.00",NO,Water Meter Replacment
+116,Hamburg,14,15,"$2,301,916.00","5,481",YES,"$36,352.00",YES,Water System Improvements
+117,"Eudora, City of",14,83,"$1,758,184.00","3,110",YES,"$33,383.00",YES,Water Storage Tank Rehab
+118,Watson Chapel,14,284,"$775,000.00","5,865",YES,"$32,498.00",YES,Water Meter Replacement
+119,Lisbon Water Association,13,716,"$200,897.00",487,YES,"$41,106.00",YES,Water Main Extension
+120,Bono Waterworks,13,126,"$180,000.00","1,971",YES,"$31,433.00",YES,Radio Meter Replacement
+121,Gosnell Water Association,13,374,"$750,000.00","3,612",YES,"$42,475.00",YES,System Loop
+122,Hampton Waterworks,11,70,"$336,340.00","1,730",YES,"$32,500.00",YES,Water Tank Rehab
+123,Hope Tank Rehab,11,230,"$500,000.00","11,405",NO,"$33,774.00",YES,Tank Rehab
+124,Vilonia,11,195,"$1,747,612.00","23,177",NO,"$50,000.00",NO,Water Meter Replacements
+125,Vilonia,11,195,"$1,045,300.00","23,177",NO,"$50,000.00",NO,Waterline Improvements
+126,Melbourne Waterworks,11,256,"$701,400.00","3,600",YES,"$32,721.00",YES,Water Meter Replacements
+127,Nashville,11,244,"$525,000.00","2,053",YES,"$28,233.00",YES,Water Meter Replacements
+128,Crossett,11,339,"$1,758,184.00","8,038",YES,"$30,393.00",YES,Water Meter Replacements
+129,Gosnell Water Association,11,374,"$350,000.00","3,612",YES,"$42,475.00",YES,Meter Change out and Upgrade Project
+130,East End Waterworks,11,646,"$2,500,000.00","5,800",YES,"$53,732.00",NO,Water Storage Tank
+130,"Prescott, City of",11,394,"$3,397,276.00","5,198",YES,"$25,104.00",YES,Raw Water Main Replacement
+131,"Stamps, City of",11,336,"$2,581,633.00","2,268",YES,"$25,987.00",YES,Replacement of Existing Water Distribution System
+132,Greenbrier,11,191,"$137,000.00","7,893",YES,"$50,316.00",NO,Water Meter Replacements
+133,Helena Water Sewer,3,418,"$750,000.00","5,500",YES,"$21,653.00",YES,Water Meter Replacement Project & ESCO
+134,West Helena Water Works,3,416,"$750,000.00","7,500",YES,"$21,653.00",YES,Water Meter Replacement Project & ESCO
+135,Hope WL,3,230,"$450,000.00","11,405",NO,"$33,774.00",YES,Water Line Replacement
+136,Pocahontas,3,474,"$1,200,000.00","7,547",YES,"$34,248.00",YES,Water Meter Replacement Project
+137,Dyer Waterworks,3,143,"$750,000.00","1,010",YES,"$45,088.00",YES,Water Meter Replacement Project
+138,Mountain Top PWA,3,454,"$500,000.00","8,700",YES,"$59,500.00",NO,Water Meter Replacement Project
+139,Central Arkansas Water,3,465,"$50,000,000.00","313,588",NO,"$43,890.00",YES,ESCO Audit

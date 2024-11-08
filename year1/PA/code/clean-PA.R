@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_pa <- function() {
   
@@ -11,9 +9,10 @@ clean_pa <- function() {
   
   # -> (62,14)
   pa_clean <- pa_raw %>%
-    mutate(population = as.numeric(gsub(",", "", population)),
-           funding_amount = as.numeric(str_replace_all(assistance_amount,"[^0-9.]", "")),
-           principal_forgiveness_amount = as.numeric(str_replace_all(principal_forgiveness,"[^0-9.]", "")),
+    mutate(population = clean_numeric_string(population),
+           funding_amount = clean_numeric_string(assistance_amount),
+           principal_forgiveness_amount = clean_numeric_string(principal_forgiveness),
+           project_cost = clean_numeric_string(project_cost)
     ) %>%
     ## split applicant name to borrower and project name
     ## get rid of wifta- then split at - if there is one
@@ -39,27 +38,29 @@ clean_pa <- function() {
                                     TRUE ~ "General"),
            project_description = str_squish(proj_description),
            ## fundable column may need to be done manually because no column to join on
-           funding_status = case_when(fundable == "yes" ~ "Funded",
-                                      TRUE ~ "Not Funded"),
-           cities_served = str_to_title(city),
-           state_rank = gsub(",", "", projrank),
-           state_score = gsub(",", "",pv_rating),
+           expecting_funding = case_when(fundable == "yes" ~ "Yes",
+                                      TRUE ~ "No"),
+           community_served = str_to_title(city),
+           project_rank = gsub(",", "", projrank),
+           project_score = gsub(",", "",pv_rating),
            # only three EC projects have a disadvantaged distinction
            disadvantaged = case_when(
              borrower == "Susquehanna Area Reg. Airport Authority" ~ "No",
              project_name == "Pa American Water Company Frackville" ~ "Yes",
              project_name == "Saegertown Borough" ~ "No",
-             TRUE ~ as.character(NA)
+             TRUE ~ "No Information"
            ),
            state = "Pennsylvania",
-           category = "1"
+           state_fiscal_year = "2023",
+           project_id = as.character(NA),
+           requested_amount = as.character(NA),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
     ) %>%
-    ## standardize names
-    ## keep relevant columns
-    select(borrower, pwsid, cities_served, project_name, project_description, project_type,
-           state_rank, state_score, funding_amount, principal_forgiveness_amount, disadvantaged, 
-           population, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  run_tests(pa_clean)
   rm(list=setdiff(ls(), "pa_clean"))
   
   return(pa_clean)

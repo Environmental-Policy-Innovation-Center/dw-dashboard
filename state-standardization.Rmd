@@ -27,202 +27,231 @@ library(googlesheets4)
 
 # Import Clean State Data
 
+## Year 0
+
+```{r}
+
+# Arkansas
+source("year0/AR/code/clean-AR.R")
+ar_clean_y0 <- clean_ar()
+
+# Indiana
+source("year0/IN/code/clean-IN.R")
+in_clean_y0 <- clean_in()
+
+# Michigan
+source("year0/MI/code/clean-MI.R")
+mi_clean_y0 <- clean_mi()
+
+# Texas
+source("year0/TX/code/clean-TX.R")
+tx_clean_y0 <- clean_tx()
+
+# Wisconsin
+source("year0/WI/code/clean-WI.R")
+wi_clean_y0 <- clean_wi()
+
+
+```
+
+
+## Year 1
 ```{r}
 # Alabama
 source("year1/AL/code/clean-AL.R")
-al_clean <- clean_al()
+al_clean_y1 <- clean_al()
 
 # Alaska
 source("year1/AK/code/clean-AK.R")
-ak_clean <- clean_ak()
+ak_clean_y1 <- clean_ak()
 
 # Arkansas
 source("year1/AR/code/clean-AR.R")
-ar_clean <- clean_ar()
+ar_clean_y1 <- clean_ar()
 
 # Arizona
 source("year1/AZ/code/clean-AZ.R")
-az_clean <- clean_az()
+az_clean_y1 <- clean_az()
 
 # California
 source("year1/CA/code/clean-CA.R")
-ca_clean <- clean_ca()
+ca_clean_y1 <- clean_ca()
 
 # Colorado
 source("year1/CO/code/clean-CO.R")
-co_clean <- clean_co()
+co_clean_y1 <- clean_co()
 
 # Connecticut
 source("year1/CT/code/clean-CT.R")
-ct_clean <- clean_ct()
+ct_clean_y1 <- clean_ct()
 
 # Delaware
 source("year1/DE/code/clean-DE.R")
-de_clean <- clean_de()
+de_clean_y1 <- clean_de()
 
 # Florida
 source("year1/FL/code/clean-FL.R")
-fl_clean <- clean_fl()
+fl_clean_y1 <- clean_fl()
 
 # Georgia
 source("year1/GA/code/clean-GA.R")
-ga_clean <- clean_ga()
+ga_clean_y1 <- clean_ga()
 
 # Hawaii
 source("year1/HI/code/clean-HI.R")
-hi_clean <- clean_hi()
+hi_clean_y1 <- clean_hi()
 
 # Idaho
 source("year1/ID/code/clean-ID.R")
-id_clean <- clean_id()
+id_clean_y1 <- clean_id()
 
 # Illinois
 source("year1/IL/code/clean-IL.R")
-il_clean <- clean_il()
+il_clean_y1 <- clean_il()
 
 # Indiana
 source("year1/IN/code/clean-IN.R")
-in_clean <- clean_in()
+in_clean_y1 <- clean_in()
 
 # Iowa
 source("year1/IA/code/clean-IA.R")
-ia_clean <- clean_ia()
+ia_clean_y1 <- clean_ia()
 
 # Kansas
 source("year1/KS/code/clean-KS.R")
-ks_clean <- clean_ks()
+ks_clean_y1 <- clean_ks()
 
 # Kentucky
 source("year1/KY/code/clean-KY.R")
-ky_clean <- clean_ky()
+ky_clean_y1 <- clean_ky()
 
 # Louisiana
 source("year1/LA/code/clean-LA.R")
-la_clean <- clean_la()
+la_clean_y1 <- clean_la()
 
 # Maine
 source("year1/ME/code/clean-ME.R")
-me_clean <- clean_me()
+me_clean_y1 <- clean_me()
 
 # Maryland
 source("year1/MD/code/clean-MD.R")
-md_clean <- clean_md()
+md_clean_y1 <- clean_md()
 
 # Massachusetts
 source("year1/MA/code/clean-MA.R")
-ma_clean <- clean_ma()
+ma_clean_y1 <- clean_ma()
 
 # Michigan
 source("year1/MI/code/clean-MI.R")
-mi_clean <- clean_mi()
+mi_clean_y1 <- clean_mi()
 
 # Minnesota
 source("year1/MN/code/clean-MN.R")
-mn_clean <- clean_mn()
+mn_clean_y1 <- clean_mn()
 
 # Mississippi
 source("year1/MS/code/clean-MS.R")
-ms_clean <- clean_ms()
+ms_clean_y1 <- clean_ms()
 
 # Missouri
 source("year1/MO/code/clean-MO.R")
-mo_clean <- clean_mo()
+mo_clean_y1 <- clean_mo()
 
 # Montana
 source("year1/MT/code/clean-MT.R")
-mt_clean <- clean_mt()
+mt_clean_y1 <- clean_mt()
 
 # Nebraska
 source("year1/NE/code/clean-NE.R")
-ne_clean <- clean_ne()
+ne_clean_y1 <- clean_ne()
 
 # New Hampshire
 source("year1/NH/code/clean-NH.R")
-nh_clean  <- clean_nh()
+nh_clean_y1  <- clean_nh()
 
 # New Jersey
 source("year1/NJ/code/clean-NJ.R")
-nj_clean <- clean_nj()
+nj_clean_y1 <- clean_nj()
 
 # New Mexico
 source("year1/NM/code/clean-NM.R")
-nm_clean <- clean_nm()
+nm_clean_y1 <- clean_nm()
 
 # Nevada
 source("year1/NV/code/clean-NV.R")
-nv_clean <- clean_nv()
+nv_clean_y1 <- clean_nv()
 
 # New York
 source("year1/NY/code/clean-NY.R")
-ny_clean <- clean_ny()
+ny_clean_y1 <- clean_ny()
 
 # North Carolina
 source("year1/NC/code/clean-NC.R")
-nc_clean <- clean_nc()
+nc_clean_y1 <- clean_nc()
 
 # North Dakota
 source("year1/ND/code/clean-ND.R")
-nd_clean <- clean_nd()
+nd_clean_y1 <- clean_nd()
 
 # Ohio
 source("year1/OH/code/clean-OH.R")
-oh_clean <- clean_oh()
+oh_clean_y1 <- clean_oh()
 
 # Oklahoma
 source("year1/OK/code/clean-OK.R")
-ok_clean <- clean_ok()
+ok_clean_y1 <- clean_ok()
 
 # Oregon
 source("year1/OR/code/clean-OR.R")
-or_clean <- clean_or()
+or_clean_y1 <- clean_or()
 
 # Pennsylvania
 source("year1/PA/code/clean-PA.R")
-pa_clean <- clean_pa()
+pa_clean_y1 <- clean_pa()
 
 # Rhode Island
 source("year1/RI/code/clean-RI.R")
-ri_clean <- clean_ri()
+ri_clean_y1 <- clean_ri()
 
 # South Carolina
 source("year1/SC/code/clean-SC.R")
-sc_clean <- clean_sc()
+sc_clean_y1 <- clean_sc()
 
 # South Dakota
 source("year1/SD/code/clean-SD.R")
-sd_clean <- clean_sd()
+sd_clean_y1 <- clean_sd()
 
 # Tennessee
 source("year1/TN/code/clean-TN.R")
-tn_clean <- clean_tn()
+tn_clean_y1 <- clean_tn()
 
 # Texas
 source("year1/TX/code/clean-TX.R")
-tx_clean <- clean_tx()
+tx_clean_y1 <- clean_tx()
 
 # Utah
 source("year1/UT/code/clean-UT.R")
-ut_clean <- clean_ut()
+ut_clean_y1 <- clean_ut()
 
 # Virginia
 source("year1/VA/code/clean-VA.R")
-va_clean <- clean_va()
+va_clean_y1 <- clean_va()
 
 # Vermont
 source("year1/VT/code/clean-VT.R")
-vt_clean <- clean_vt()
+vt_clean_y1 <- clean_vt()
 
 # Washington
 source("year1/WA/code/clean-WA.R")
-wa_clean <- clean_wa()
+wa_clean_y1 <- clean_wa()
 
 # West Virginia
 source("year1/WV/code/clean-WV.R")
-wv_clean <- clean_wv()
+wv_clean_y1 <- clean_wv()
 
 # Wisconsin
 source("year1/WI/code/clean-WI.R")
-wi_clean <- clean_wi()
+wi_clean_y1 <- clean_wi()
   
 ```
 
@@ -237,6 +266,38 @@ dfs <- sapply(.GlobalEnv, is.data.frame)
 # for each TRUE, add the dataframe rows to a single data.frame
 combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
 
+```
+
+```{r}
+# one-time export of Y0 + Y1 data of relevant states for 'apples-to-apples' mini-report
+apples_to_apples <- combined_clean %>%
+  filter(state %in% c("Arkansas", "Indiana", "Michigan", "Texas", "Wisconsin"))
+
+write.csv(apples_to_apples, "apples-to-apples.csv", row.names = FALSE)
+
+```
+
+
+```{r}
+ #one-time write of improved year 1 data for analysis
+combined_clean <- combined_clean %>%
+  filter(state_fiscal_year == "2023")
+
+ # Writing to temp
+ write.csv(combined_clean, file.path(tempdir(), "dwsrf-projects-sfy23.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ ##TODO: For all-y1-states PR, change this to remove the v1-1 suffix and change app to read the updated file
+ put_object(
+   file = file.path(tempdir(), "dwsrf-projects-sfy23.csv"),
+   object = "clean_data/srf_project_priority_lists/dwsrf-projects-sfy23.csv",
+   bucket = "water-team-data",
+   acl = "public-read"
+ )
+```
+
+
+```{r}
 
 # Cleaning for table on web, currently leaves in Applicant projects for 1.1 release.
 projects_clean_web <- combined_clean %>%

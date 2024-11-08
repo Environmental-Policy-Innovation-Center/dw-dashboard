@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_nd <- function() {
   
@@ -30,10 +28,10 @@ clean_nd <- function() {
   # -> (51, 8)
   nd_funding <- bind_rows(nd_gen, nd_ec, nd_lead) %>%
     mutate(principal_forgiveness = as.numeric(str_replace_all(additional_subsidy,"[^0-9.]","")),
-           project_name = str_squish(tracking_no)) %>%
+           project_id = str_squish(tracking_no)) %>%
     # combine PF funding across the tables on p 10-13 where projects appear twice
-    group_by(project_name) %>%
-    summarize(principal_forgiveness_amount = sum(principal_forgiveness))
+    group_by(project_id) %>%
+    summarize(principal_forgiveness = sum(principal_forgiveness))
   
   
   
@@ -54,27 +52,27 @@ clean_nd <- function() {
   nd_clean <- nd_ppl %>%
     # transform numeric columns
     # keep state rank numeric for filtering funded / not funded temporarily
-    mutate(state_rank = as.numeric(priority_ranking_supplemental),
-           population = as.numeric(str_replace_all(present_population,"[^0-9.]","")),
+    mutate(project_rank = str_squish(priority_ranking_supplemental),
+           population = clean_numeric_string(present_population),
            # transform to numeric and multiply by 1000
-           funding_amount_gen_1000 =  as.numeric(str_replace_all(project_cost_1_000,"[^0-9.]","")) * 1000,
-           funding_amount_ec_1000 =  as.numeric(str_replace_all(project_cost_emerging_contaminants_1_000,"[^0-9.]","")) * 1000,
-           funding_amount_lead_1000 =  as.numeric(str_replace_all(project_cost_lead_1_000,"[^0-9.]","")) * 1000,
-           # replace NAs with 0 for adding together
-           funding_amount_gen_1000 =   replace_na(funding_amount_gen_1000, 0),
-           funding_amount_ec_1000 =   replace_na(funding_amount_ec_1000, 0),
-           funding_amount_lead_1000 = replace_na(funding_amount_lead_1000, 0),
+           funding_amount_gen_1000 =  convert_to_numeric(project_cost_1_000,TRUE) * 1000,
+           funding_amount_ec_1000 =  convert_to_numeric(project_cost_emerging_contaminants_1_000,TRUE) * 1000,
+           funding_amount_lead_1000 =  convert_to_numeric(project_cost_lead_1_000,TRUE) * 1000,
            # add together to make total funding amount
-           funding_amount = funding_amount_gen_1000 + funding_amount_ec_1000 + funding_amount_lead_1000
+           funding_amount = funding_amount_gen_1000 + funding_amount_ec_1000 + funding_amount_lead_1000,
+           funding_amount = clean_numeric_string(funding_amount),
+           funding_amount = case_when(
+             funding_amount == "0" ~ "No Information",
+             TRUE ~ funding_amount)
     ) %>%
     # process text columns
     mutate(project_description = str_squish(project_description),
-           project_name = str_squish(tracking_no),
-           funding_status = case_when(
-             state_rank %in% funded ~ "Funded",
-             TRUE ~ "Not Funded"),
+           project_id = str_squish(tracking_no),
+           expecting_funding = case_when(
+             project_rank %in% funded ~ "Yes",
+             TRUE ~ "No"),
            # reset state rank to character after used for funding_status
-           state_rank = as.character(state_rank),
+           project_rank = as.character(project_rank),
            # extract numeric portion of pwsid and append state abbreviation 
            pwsid = paste0("ND", as.character(map(strsplit(tracking_no, split = "-"), 1))),
            project_type = case_when(
@@ -82,19 +80,24 @@ clean_nd <- function() {
              project_cost_lead_1_000 != "-" ~ "Lead",
              TRUE ~ "General"),
            state = "North Dakota",
-           category = "1"
+           state_fiscal_year = "2023"
     ) %>%
     # rename columns
     rename(disadvantaged = disadvantaged_community,
            borrower = system_name) %>%
     left_join(nd_funding) %>%
     # replace NAs introduced by adding principal_forgiveness_amount
-    mutate(principal_forgiveness_amount = replace_na(principal_forgiveness_amount, 0)) %>%
-    # keep columns for analysis
-    select(borrower, project_name, pwsid, project_type, project_description,
-           state_rank, funding_amount, principal_forgiveness_amount, disadvantaged, population, funding_status, state, category)
+    mutate(principal_forgiveness = clean_numeric_string(principal_forgiveness),
+           community_served = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           requested_amount = as.character(NA),
+           project_score = as.character(NA)) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-  
+  run_tests(nd_clean)
   rm(list=setdiff(ls(), "nd_clean"))
   
   return(nd_clean)

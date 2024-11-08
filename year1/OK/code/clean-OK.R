@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ok <- function() {
   
@@ -13,15 +11,15 @@ clean_ok <- function() {
     mutate(project_type = "General") %>%
     rename(disadvantaged = severly_disadvantged_disadvantged_or_no)
   
-  ok_b$funding_status <- ""
-  ok_b$funding_status[1:46] <- "Funded"
-  ok_b$funding_status[47:69] <- "Not Funded"
+  ok_b$expecting_funding <- ""
+  ok_b$expecting_funding[1:46] <- "Yes"
+  ok_b$expecting_funding[47:69] <- "No"
   
   # for fundable projects, loan amount is funding amount
   ok_b <- ok_b %>%
     mutate(funding_amount = case_when(
-      funding_status == "Funded" ~ as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),
-      TRUE ~ 0
+      expecting_funding == "Yes" ~ clean_numeric_string(loan_amount),
+      TRUE ~ "No Information"
     ))
   
   ## lead
@@ -33,15 +31,15 @@ clean_ok <- function() {
     rename(disadvantaged = disadvantaged_y_or_n)
   
   # only first 24 projects are fundable 
-  ok_e$funding_status <- ""
-  ok_e$funding_status[1:24] <- "Funded"
-  ok_e$funding_status[25:42] <- "Not Funded"
+  ok_e$expecting_funding <- ""
+  ok_e$expecting_funding[1:24] <- "Yes"
+  ok_e$expecting_funding[25:42] <- "No"
   
   # for fundable projects, loan amount is funding amount
   ok_e <- ok_e %>%
     mutate(funding_amount = case_when(
-      funding_status == "Funded" ~ as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),
-      TRUE ~ 0
+      expecting_funding == "Yes" ~ clean_numeric_string(loan_amount),
+      TRUE ~ "No Information"
     ))
   
   
@@ -51,9 +49,9 @@ clean_ok <- function() {
                 colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Emerging Contaminants",
-           funding_status = "Funded",
+           expecting_funding = "Yes",
            # all projects on EC list are funded
-           funding_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]",""))) %>%
+           funding_amount = clean_numeric_string(loan_amount)) %>%
     rename(disadvantaged = disadvantaged_y_or_n)
   
   
@@ -65,27 +63,37 @@ clean_ok <- function() {
     # drop columns
     select(-base, -cumulative_amount, -anticipated_binding_commitment_date, -anticipated_construction_date) %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(population,"[^0-9.]","")),
+    mutate(population = clean_numeric_string(population),
            # for all projects on all lists, loan amount is requested amount, even if it is also funding_amount for funded projects
-           requested_amount = as.numeric(str_replace_all(loan_amount,"[^0-9.]","")),) %>%
+           requested_amount = clean_numeric_string(loan_amount)
+           ) %>%
     # process text columns
     mutate(state_score = case_when(
       priority_points == "Being Ranked" ~ "No Information",
       TRUE ~ str_squish(priority_points)),
       borrower = str_squish(system),
       project_description = str_squish(project_description),
-      project_name = str_squish(project_number),
+      project_id = str_squish(project_number),
       # disadvantaged can either be S/D/Y for some degree of disadvantaged or N for No
       disadvantaged = case_when(
         disadvantaged == "N" ~ "No",
         TRUE ~ "Yes"),
       state = "Oklahoma",
-      category = "1",
+      state_fiscal_year = "2023",
+      community_served = as.character(NA),
+      pwsid = as.character(NA),
+      project_name = as.character(NA),
+      project_cost = as.character(NA),
+      principal_forgiveness = as.character(NA),
+      project_rank = as.character(NA),
+      project_score = as.character(NA),
     ) %>%
-    select(borrower, state_score, project_name, project_description, requested_amount, funding_amount,
-           disadvantaged, population, project_type, state, category, funding_status)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
   
+  run_tests(ok_clean)
   rm(list=setdiff(ls(), "ok_clean"))
   
   return(ok_clean)

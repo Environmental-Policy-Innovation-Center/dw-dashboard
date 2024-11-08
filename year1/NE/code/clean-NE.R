@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ne <- function() {
   
@@ -38,21 +36,21 @@ clean_ne <- function() {
     select(-forgiveness_percent) %>%
     # format numeric columns
     mutate(
-      population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
-      funding_amount = as.numeric(str_replace_all(project_est_cost, "[^0-9.]", "")),
-      principal_forgiveness_amount = as.numeric(str_replace_all(forgiveness_amount, "[^0-9.]", "")),
+      population = clean_numeric_string(population),
+      funding_amount = clean_numeric_string(project_est_cost),
+      principal_forgiveness = clean_numeric_string(forgiveness_amount),
     ) %>%
     # format text columns
-    mutate(funding_status = "Funded",
-           state_score = str_squish(priority_points),
+    mutate(expecting_funding = "Yes",
+           project_score = str_squish(priority_points),
            disadvantaged = case_when(
-             principal_forgiveness_amount > 0 ~ "Yes",
+             principal_forgiveness != "0" ~ "Yes",
              TRUE ~ "No")
     ) %>%
     rename(borrower = community,
            pwsid = pws_number) %>%
-    select(borrower, pwsid, state_score, project_description, funding_amount, principal_forgiveness_amount, project_type,
-           disadvantaged, funding_status)
+    select(borrower, pwsid, project_score, project_description, funding_amount, principal_forgiveness, project_type,
+           disadvantaged, expecting_funding)
   
   ## APPLICANT
   # Appendix B2 
@@ -61,11 +59,11 @@ clean_ne <- function() {
                   colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     # process numeric columns
-    mutate(population = as.numeric(str_replace_all(population, "[^0-9.]", "")),
-           project_cost = as.numeric(str_replace_all(estimated_total_cost, "[^0-9.]", "")),
+    mutate(population = clean_numeric_string(population),
+           project_cost = clean_numeric_string(estimated_total_cost),
     ) %>%
     # process text columns
-    mutate(state_score = str_squish(priority_points),
+    mutate(project_score = str_squish(priority_points),
            borrower = str_squish(community),
            pwsid = str_squish(pws_number),
            project_description = str_squish(project_description),
@@ -74,30 +72,44 @@ clean_ne <- function() {
              TRUE ~ "General"
            )
     ) %>%
-    select(state_score, borrower, pwsid, project_description, population, project_cost, project_type)
+    select(project_score, borrower, pwsid, project_description, population, project_cost, project_type)
   
   ### Merge Fundable & Applicant ###
   
   ne_app_population <- ne_app %>%
-    select(pwsid, state_score, population)
+    select(pwsid, project_score, population)
   
   ne_clean <- ne_clean %>%
-    left_join(ne_app_population, by=c("pwsid", "state_score"))
+    left_join(ne_app_population, by=c("pwsid", "project_score"))
   
   ne_clean_sub <- ne_clean %>%
-    select(pwsid, state_score, funding_status)
+    select(pwsid, project_score, expecting_funding)
   
   ne_app <- ne_app %>%
-    left_join(ne_clean_sub, by=c("pwsid", "state_score")) %>%
-    filter(is.na(funding_status)) %>%
-    mutate(funding_status = "Not Funded")
+    left_join(ne_clean_sub, by=c("pwsid", "project_score")) %>%
+    filter(is.na(expecting_funding)) %>%
+    mutate(expecting_funding = "No")
   
   ## TODO: This currently misses population for Funded projects, figure out how to keep that column, but not the split project_cost (see data dictionary for details on this issue)
   ne_clean <- bind_rows(ne_clean, ne_app) %>%
     mutate(state = "Nebraska",
-           category = "1")
+           state_fiscal_year = "2023",
+           community_served = as.character(NA),
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           requested_amount = as.character(NA),
+           project_rank = as.character(NA),
+           pwsid = replace_na(pwsid, 'No Information'),
+           funding_amount = replace_na(funding_amount, "No Information"),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
+           disadvantaged = replace_na(disadvantaged, "No Information"),
+           population = replace_na(population, "No Information"),
+           project_cost = replace_na(project_cost, "No Information")) %>%
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
 
-  
+  run_tests(ne_clean)
   rm(list=setdiff(ls(), "ne_clean"))
   
   return(ne_clean)

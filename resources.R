@@ -114,7 +114,6 @@ check_column_types <- function(df) {
     NULL
   }) %>% compact()  # Remove NULL values
   
-  
   # Print warnings for string columns
   if (length(string_check) > 0) {
     warning("FAIL: ", paste(string_check, collapse = "\n"))

@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_co <- function() {
   
@@ -61,40 +59,47 @@ clean_co <- function() {
   co_b_combined <- bind_rows(co_b, co_b1, co_b2) %>%
     select(-approved_loan_amount, -term_yrs, -loan_type, -interest_rate) %>%
     mutate(id = str_extract(project_number, "^.{6}"),
-           funding_status = "Funded")
+           expecting_funding = "Yes")
   
   co_clean <- co_a %>%
     left_join(co_b_combined, by="id") %>%
     
     mutate(
-      population = as.numeric(str_replace_all(population,"[^0-9.]", "")),
-      funding_amount = as.numeric(str_replace_all(estimated_project_cost,"[^0-9.]", "")),
-      funding_amount = replace_na(funding_amount, 0),
-      project_cost = as.numeric(str_replace_all(project_cost,"[^0-9.]", "")),
+      population = clean_numeric_string(population),
+      funding_amount = clean_numeric_string(estimated_project_cost),
+      project_cost = clean_numeric_string(project_cost),
     ) %>%
     mutate(
-      city_served = str_squish(project_city),
+      community_served = str_squish(project_city),
+      community_served = replace_na(community_served, "No Information"),
       borrower = str_squish(entity),
       pwsid = str_squish(pwsid_number),
-      project_name = str_squish(id),
+      project_id = str_squish(id),
       project_description = str_squish(project_description.x),
+      project_description = replace_na(project_description, "No Information"),
       project_type = replace_na(project_type, "No Information"),
       disadvantaged = case_when(
         dac == "Y" ~ "Yes",
         dac == "N" ~ "No",
         TRUE ~ "No Information"),
-      state_score = str_squish(pts),
-      funding_status = case_when(
-        is.na(funding_status) ~ "Not Funded",
-        TRUE ~ funding_status),
+      project_score = str_squish(pts),
+      project_score = replace_na(project_score, "No Information"),
+      expecting_funding = case_when(
+        is.na(expecting_funding) ~ "Yes",
+        TRUE ~ expecting_funding),
       state = "Colorado",
-      category = "1"
+      state_fiscal_year = "2023",
+      project_name = as.character(NA),
+      project_rank = as.character(NA),
+      requested_amount = as.character(NA),
+      principal_forgiveness = as.character(NA),
     ) %>%
-    select(city_served, borrower, pwsid, project_name, project_type, project_cost, funding_amount, population, 
-           project_description, disadvantaged, state_score, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
 
-  
+  run_tests(co_clean)
   rm(list=setdiff(ls(), "co_clean"))
   
   return(co_clean)

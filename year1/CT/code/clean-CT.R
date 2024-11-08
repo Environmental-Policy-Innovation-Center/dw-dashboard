@@ -1,6 +1,4 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
+source("resources.R")
 
 clean_ct <- function() {
   
@@ -23,49 +21,54 @@ clean_ct <- function() {
           )
       ) %>%
     # format columns specific to funded data and for merging
-    mutate(funding_status = "Funded",
+    mutate(expecting_funding = "Yes",
            project_name = str_squish(project_name),
-           funding_amount = as.numeric(str_replace_all(amount_requested,"[^0-9.]",""))
+           funding_amount = clean_numeric_string(amount_requested)
              ) %>%
-    select(project_number,  project_name, funding_status, funding_amount)
+    select(project_number,  project_name, expecting_funding, funding_amount)
   
   
   ct_clean <- ct_comprehensive %>%
-    # pre-emptively fix spaces in ct_comprehensive so it will merge correctly
+    # preemptively fix spaces in ct_comprehensive so it will merge correctly
     mutate(project_name = str_squish(project_name)) %>%
     left_join(ct_base_supplemental, by=c("project_number", "project_name")) %>%
     # process funded and not funded together
     mutate(
-      population = as.numeric(str_replace_all(population_served_by_project,"[^0-9.]","")),
-      requested_amount =  as.numeric(str_replace_all(amount_requested,"[^0-9.]","")), 
-      funding_amount = replace_na(funding_amount, 0)
+      population = clean_numeric_string(population_served_by_project),
+      requested_amount =  clean_numeric_string(amount_requested), 
+      funding_amount = replace_na(funding_amount, "No Information")
     ) %>%
-    mutate(city_served = str_squish(town_of_pws),
+    mutate(community_served = str_squish(town_of_pws),
            borrower = str_squish(public_water_system),
            pwsid = case_when(
-             pwsid == "none" ~ as.character(NA),
+             pwsid == "none" ~ "No Information",
              TRUE ~ str_squish(pwsid)
                              ),
-           project_name = str_squish(project_number),
+           project_id = str_squish(project_number),
            project_description = str_squish(project_name),
            disadvantaged = case_when(
              project_serves_a_disadvantaged_community == "Yes" ~ "Yes",
              TRUE ~ "No"),
-           state_rank = str_squish(rank),
+           project_rank = str_squish(rank),
+           project_rank = replace_na(project_rank, "No Information"),
            project_type = case_when(
              lead_service_line_estimated_amount != "$0" ~ "Lead",
              emerg_contam_estimated_amount != "$0" ~ "Emerging Contaminants",
              TRUE ~ "General"),
-           funding_status = case_when(
-             funding_status == "Funded" ~ "Funded",
-             TRUE ~ "Not Funded"),
+           expecting_funding = case_when(
+             expecting_funding == "Yes" ~ "Yes",
+             TRUE ~ "No"),
            state = "Connecticut",
-           category = "1"
+           state_fiscal_year = "2023",
+           project_cost = as.character(NA),
+           principal_forgiveness = as.character(NA),
+           project_score = as.character(NA),
            ) %>%
-    select(city_served, borrower, pwsid, project_name, project_type, requested_amount, funding_amount,
-           project_description, population, disadvantaged, rank, funding_status, state, category)
+    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-  
+  run_tests(ct_clean)
   rm(list=setdiff(ls(), "ct_clean"))
   
   return(ct_clean)

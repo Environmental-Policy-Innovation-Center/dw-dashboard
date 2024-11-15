@@ -1,0 +1,356 @@
+---
+title: "SRF Funding Tracker YOY Analysis Template"
+author: "Phil Cork"
+date: "2024-11-08"
+---
+
+This notebook is a draft of analysis that could potentially feed into the SRF Website for the State landing pages, where multiple years of projects are considered for identifying overall trends and points of discussion.
+
+Simply changing the `state_name`
+
+# State Setup
+
+```{r}
+state_name <- "Michigan"
+```
+
+# Imports & Settings 
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+library(lubridate)
+library(sysfonts)
+library(showtext)
+
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
+
+options(scipen=999)
+
+# fonts: 
+sysfonts::font_add_google("Lato")
+showtext::showtext_auto()
+
+# theme: 
+# legend position is right, text size is at least 10, and text is Lato
+epic_chart_theme <- theme_minimal() + 
+  theme(legend.position = "right", 
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), 
+        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
+                                                   b = 0, l = 0)), 
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
+                                                    b = 0, l = 0)), 
+        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
+                                                   b = 0, l = 0)), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
+                                                    b = 0, l = 0))) 
+```
+
+```{r}
+cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
+
+# categorical palettes - based on new EPIC template: 
+cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
+                                         "#B077B2","#E4BE7C",
+                                         "#b15712","#82AB6E"))
+cat_palette <- colorRampPalette(c("#172f60","#1054a8",
+                                  "#791a7b","#de9d29", 
+                                  "#b15712","#4ea324"))
+```
+
+# State-Level Data
+
+```{r}
+state_stats <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
+  clean_names()
+
+# select single state and drop any Y0 data to only evaluate BIL years
+state_yoy <- state_stats %>%
+  filter(state == state_name) %>%
+  filter(state_fiscal_year != "2022") %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+```
+
+## Data Viz
+
+### Single Variable Bar Plots
+
+```{r}
+ggplot(state_yoy, aes(x=state_fiscal_year, y=projects)) + 
+  geom_bar(stat="identity", fill="#172f60") +
+  labs(title="Applicant Projects",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Projects") + 
+  epic_chart_theme
+```
+
+```{r}
+
+if ( nrow(state_yoy %>% filter(!is.na(total_requested_amount)))  > 0 ) {
+
+
+ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount)) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(title="Funds Requested",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Requested Funds") + 
+  epic_chart_theme
+}
+
+
+```
+
+```{r}
+if ( nrow(state_yoy %>% filter(!is.na(total_project_cost)))  > 0 ) {
+
+
+ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost)) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(title="Total Project Cost for All Applicants",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Project Cost") + 
+  epic_chart_theme
+}
+
+```
+
+
+```{r}
+if ( nrow(state_yoy %>% filter(!is.na(total_funding_amount)))  > 0 ) {
+
+
+ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount)) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(title="Expected Funding Amount",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Expecting Funding Amount") + 
+  epic_chart_theme
+}
+```
+
+```{r}
+if ( nrow(state_yoy %>% filter(!is.na(total_principal_forgiveness)))  > 0 ) {
+
+
+ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness)) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(title="Expected Principal Forgiveness",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Expecting Principal Forgiveness") + 
+  epic_chart_theme
+}
+```
+
+### Expecting Funding Comps
+
+```{r}
+
+expecting_funding_projects <- state_yoy %>%
+  mutate(not_expecting_funding_projects = projects - expecting_funding_projects) %>%
+  select(state_fiscal_year, not_expecting_funding_projects, expecting_funding_projects) %>%
+  pivot_longer(cols=c("not_expecting_funding_projects", "expecting_funding_projects")) %>%
+  mutate(expecting_funding = case_when(
+    name == "expecting_funding_projects" ~ "Yes",
+    name == "not_expecting_funding_projects" ~ "No"),
+    expecting_funding = factor(expecting_funding, levels=c("No", "Yes"))
+  )
+
+ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding)) + 
+  geom_bar(stat="identity", position="stack") +
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "Expecting Funding") + 
+  labs(title="Projects Expecting Funding Each Year",
+       subtitle="State IUP/PPLs",
+       x="State Fiscal Year",
+       y="Projects") + 
+  epic_chart_theme
+
+```
+
+
+### Disadvantaged Comps
+
+```{r}
+ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent)) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_number(suffix="%")) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="What percent of applicant projects serve DACs?") + 
+  epic_chart_theme
+```
+
+```{r}
+
+dac_project_types <- state_yoy %>%
+  select(state_fiscal_year, dac_general_projects, dac_ec_projects, dac_lead_projects) %>%
+  pivot_longer(cols=c("dac_general_projects", "dac_ec_projects", "dac_lead_projects")) %>%
+  rename(project_type = name) %>%
+  mutate(project_type = case_when(
+    project_type == "dac_general_projects" ~ "General",
+    project_type == "dac_ec_projects" ~ "Emerging Contaminants",
+    project_type == "dac_lead_projects" ~ "Lead"
+  ))
+
+ggplot(dac_project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+    scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title="Disadvantaged Community Projects by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+
+```
+
+### Expecting Funding & DAC
+
+```{r}
+
+ef_dac_projects <- state_yoy %>%
+  select(state_fiscal_year, disadvantaged_expecting_funding_projects, disadvantaged_not_expecting_funding_projects) %>%
+  pivot_longer(cols=c("disadvantaged_expecting_funding_projects", "disadvantaged_not_expecting_funding_projects")) %>%
+  rename(expecting_funding = name) %>%
+  mutate(expecting_funding = case_when(
+    expecting_funding == "disadvantaged_expecting_funding_projects" ~ "Yes",
+    TRUE ~ "No"
+  ))
+
+ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding)) + 
+  geom_bar(stat="identity", position="stack") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title="How many Disadvantaged Community Projects Could Be Funded?") + 
+    scale_fill_manual(values = cat_palette(2), 
+                      name = "Expecting Funding") + 
+  epic_chart_theme
+
+```
+
+
+### Project Type
+
+```{r}
+
+project_types <- state_yoy %>%
+  select(state_fiscal_year, general_projects, ec_projects, lead_projects) %>%
+  pivot_longer(cols=c("general_projects", "ec_projects", "lead_projects")) %>%
+  rename(project_type = name) %>%
+  mutate(project_type = case_when(
+    project_type == "general_projects" ~ "General",
+    project_type == "ec_projects" ~ "Emerging Contaminants",
+    project_type == "lead_projects" ~ "Lead"
+  ))
+
+ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+    scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title="Projects by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+
+```
+# Project-Level Data
+
+To calculate aggregate financial stats for each project type, we go back to all projects and group by type and fiscal year.
+
+
+```{r}
+
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names() %>%
+  #NOTE this may be removed in future when more data has been more consistently added in for Y0
+  filter(state_fiscal_year != "2022")
+
+# In this case we are okay filling No Infos as 0s for math purposes because the ones where we have No Info wouldn't be considered anyways
+state_projects_type <- all_projects %>%
+  filter(state == state_name) %>%
+  mutate(project_cost = as.numeric(str_replace(project_cost, "No Information", "0")),
+         requested_amount = as.numeric(str_replace(requested_amount, "No Information", "0")),
+         funding_amount = as.numeric(str_replace(funding_amount, "No Information", "0")),
+         principal_forgiveness = as.numeric(str_replace(principal_forgiveness, "No Information", "0")),
+         state_fiscal_year = as.factor(state_fiscal_year)
+         ) %>%
+  group_by(project_type, state_fiscal_year) %>%
+  summarize(count=n(),
+            total_project_cost = sum(project_cost, na.rm=TRUE),
+            total_requested_amount = sum(requested_amount, na.rm=TRUE),
+            total_principal_forgiveness = sum(principal_forgiveness, na.rm=TRUE),
+            total_funding_amount = sum(funding_amount, na.rm=TRUE)) %>%
+  #NOTE: this may need to be dropped depending on state
+  filter(project_type != "No Information")
+```
+
+```{r}
+ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+      scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="Project Cost by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+```
+
+```{r}
+
+ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+      scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="Requested Amount by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+
+```
+
+```{r}
+ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+      scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="Funding Amount by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+
+```
+
+```{r}
+ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgiveness, fill=project_type)) + 
+  geom_bar(stat="identity", position="dodge") + 
+      scale_fill_manual(values = cat_palette(3), 
+                      name = "Project Type") + 
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="Principal Forgiveness by Type",
+       subtitle="State IUP/PPLs") +
+  epic_chart_theme
+```
+

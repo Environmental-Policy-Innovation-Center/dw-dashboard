@@ -8,6 +8,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+This notebook imports the individual cleaning functions for each state and each year to create the final, standardized project-level dataset that powers the SRF Funding Tracker website and saves the results to AWS.
+
 # Settings & Imports
 
 ```{r setup, include=FALSE}

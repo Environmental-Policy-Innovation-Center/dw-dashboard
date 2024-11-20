@@ -24,6 +24,9 @@ library(aws.s3)
 library(googledrive)
 library(googlesheets4)
 
+# remove any dfs in the environment before starting
+rm(list=ls())
+
 ```
 
 
@@ -281,6 +284,17 @@ source("year2/WA/code/clean-WA.R")
 wa_clean_y2 <- clean_wa_y2()
 
 ```
+
+## Year 3
+
+```{r}
+
+# Michigan
+source("year3/MI/code/clean-MI.R")
+mi_clean_y3 <- clean_mi_y3()
+
+```
+
 
 
 # Post-Process

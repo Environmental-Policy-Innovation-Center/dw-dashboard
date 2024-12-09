@@ -1,22 +1,22 @@
-﻿Project.Number,County,System.Name,Borrower,Description,Pop,Project.Cost,Score,Cumulative.Total
-19741,Westchester,SCOTTS CORNER WD,Pound Ridge (T),"Creation of the Scotts Corners WD to serve area with private wells contaminated by PFAS, New Water District",114,10907000,110,10907000
-19714,Suffolk,GREENLAWN WD,Greenlawn WD,"Wellhead Treatment for PFAS & VOCs at Well Nos 10 & 15, Upgrade Water Treatment Plant",42000,4562500,80,15469500
-19485,Nassau,PORT WASHINGTON WD,Port Washington WD,"New GAC to remove PFAS contamination at Ricks Well 7, Upgrade Water Treatment Plant",30000,9527500,80,24997000
-19337,Nassau,PORT WASHINGTON WD,Port Washington WD,"Installation of GAC treatment to remove PFAS at Hewlett Well No. 4, Upgrade Water Treatment Plant",30000,7723610,80,32720610
-19820,Schenectady,GLENVILLE (T),Glenville (T),"Installation of GAC for PFAS removal, Upgrade Water Treatment Plant",16000,8799355,80,41519965
-19369,Nassau,WILLISTON PARK (V),Williston Park (V),"Well No.4 GAC PFAS treatment, Upgrade Water Treatment Plant",7300,8681870,80,50201835
-19750,Dutchess,QUAKER HILL WATER SYSTEM,DCWWA,"Quaker Hill WS Interconnection with Hyde Park Regional WS to resolve PFAS contamination, New Pump Station, New Inter-Connection",350,21875700,80,72077535
-18822,Dutchess,WAPPINGERS FALLS (V),Wappingers Falls (V),"New Greensand WTP for Mn Removal, New Water Treatment Plant, Upgrade Ground Water Source, Upgrade Storage",6731,3042840,55,75120375
-19568,Putnam,KENT WD NO. 1 AND 2,Kent (T),"Installation of Ion Exchange to remove PFAS, Upgrade Water Treatment Plant",480,1004000,55,76124375
-19493,Warren,QUEENSBURY WATER DISTRICT,Queensbury (T),"Extension to Jenkinsville to serve private wells contaminated with 1,4-Dioxane, New Distribution System",425,7316272,45,83440647
-19674,Suffolk,SMITHTOWN WATER DISTRICT,Smithtown (T),"Extension of water district to serve PFAS contaminated private wells, Extend Distribution System",91,1426000,45,84866647
-19727,Suffolk,SOUTH HUNTINGTON WD,South Huntington WD,"Plant No. 15 - 1,4-dioxane removal via AOP, Upgrade Water Treatment Plant",81760,7700000,40,92566647
-19582,Nassau,JERICHO WD,Jericho WD,"Well 23 PFAS Removal, Upgrade Water Treatment Plant",58000,10431840,40,102998487
-19583,Nassau,JERICHO WD,Jericho WD,"Well 28 PFAS Removal, Upgrade Water Treatment Plant",58000,6677490,40,109675977
-19653,Nassau,LEVITTOWN WATER DISTRICT,Hempstead (T),"Levittown WD Well 12 - 1,4-dioxane and iron removal treatment system, Upgrade Water Treatment Plant",53000,15000000,40,124675977
-19010,Nassau,HICKSVILLE WD,Hicksville WD,"Plant No. 11 - AOP/GAC treatment for 1,4-dioxane, Upgrade Water Treatment Plant",48000,13996670,40,138672647
-19230,Nassau,ALBERTSON WD,Albertson WD,"Well No. 5 - GAC treatment for PFAS removal; and Replace PTAS, Upgrade Water Treatment Plant",13500,18486000,40,157158647
-19792,Nassau,LOCUST VALLEY WD,Locust Valley WD,"Plant No. 9 - New GAC treatment for PFAS removal, Upgrade Water Treatment Plant",7500,7000000,40,164158647
-19591,Suffolk,RIVERHEAD WATER DISTRICT,Riverhead (T),"Well No. 5-2A PFAS removal, Upgrade Water Treatment Plant",190,2327800,40,166486447
-19562,Dutchess,BEACON (C),Beacon (C),"Melzingah Reservoir Hypolimnetic Aeration System for HABs control, Upgrade Surface Water Source",14370,1485384,15,167971831
-19564,Dutchess,BEACON (C),Beacon (C),"Cargill Reservoir Hypolimnetic Aeration System for HABS control, Upgrade Surface Water Source",14370,2727167,15,170698998
+﻿Project.Number,County,System.Name,Borrower,Description,Pop,Project.Cost,Score,Cumulative.Total,DAC,PFAS
+19741,Westchester,SCOTTS CORNER WD,Pound Ridge (T),"Creation of the Scotts Corners WD to serve area with private wells contaminated by PFAS, New Water District",114,10907000,110,10907000,DAC,PFAS
+19714,Suffolk,GREENLAWN WD,Greenlawn WD,"Wellhead Treatment for PFAS & VOCs at Well Nos 10 & 15, Upgrade Water Treatment Plant",42000,4562500,80,15469500,,PFAS
+19485,Nassau,PORT WASHINGTON WD,Port Washington WD,"New GAC to remove PFAS contamination at Ricks Well 7, Upgrade Water Treatment Plant",30000,9527500,80,24997000,,PFAS
+19337,Nassau,PORT WASHINGTON WD,Port Washington WD,"Installation of GAC treatment to remove PFAS at Hewlett Well No. 4, Upgrade Water Treatment Plant",30000,7723610,80,32720610,,PFAS
+19820,Schenectady,GLENVILLE (T),Glenville (T),"Installation of GAC for PFAS removal, Upgrade Water Treatment Plant",16000,8799355,80,41519965,,PFAS
+19369,Nassau,WILLISTON PARK (V),Williston Park (V),"Well No.4 GAC PFAS treatment, Upgrade Water Treatment Plant",7300,8681870,80,50201835,,PFAS
+19750,Dutchess,QUAKER HILL WATER SYSTEM,DCWWA,"Quaker Hill WS Interconnection with Hyde Park Regional WS to resolve PFAS contamination, New Pump Station, New Inter-Connection",350,21875700,80,72077535,DAC,PFAS
+18822,Dutchess,WAPPINGERS FALLS (V),Wappingers Falls (V),"New Greensand WTP for Mn Removal, New Water Treatment Plant, Upgrade Ground Water Source, Upgrade Storage",6731,3042840,55,75120375,DAC,
+19568,Putnam,KENT WD NO. 1 AND 2,Kent (T),"Installation of Ion Exchange to remove PFAS, Upgrade Water Treatment Plant",480,1004000,55,76124375,,PFAS
+19493,Warren,QUEENSBURY WATER DISTRICT,Queensbury (T),"Extension to Jenkinsville to serve private wells contaminated with 1,4-Dioxane, New Distribution System",425,7316272,45,83440647,,
+19674,Suffolk,SMITHTOWN WATER DISTRICT,Smithtown (T),"Extension of water district to serve PFAS contaminated private wells, Extend Distribution System",91,1426000,45,84866647,,PFAS
+19727,Suffolk,SOUTH HUNTINGTON WD,South Huntington WD,"Plant No. 15 - 1,4-dioxane removal via AOP, Upgrade Water Treatment Plant",81760,7700000,40,92566647,,
+19582,Nassau,JERICHO WD,Jericho WD,"Well 23 PFAS Removal, Upgrade Water Treatment Plant",58000,10431840,40,102998487,,PFAS
+19583,Nassau,JERICHO WD,Jericho WD,"Well 28 PFAS Removal, Upgrade Water Treatment Plant",58000,6677490,40,109675977,,PFAS
+19653,Nassau,LEVITTOWN WATER DISTRICT,Hempstead (T),"Levittown WD Well 12 - 1,4-dioxane and iron removal treatment system, Upgrade Water Treatment Plant",53000,15000000,40,124675977,,
+19010,Nassau,HICKSVILLE WD,Hicksville WD,"Plant No. 11 - AOP/GAC treatment for 1,4-dioxane, Upgrade Water Treatment Plant",48000,13996670,40,138672647,DAC,
+19230,Nassau,ALBERTSON WD,Albertson WD,"Well No. 5 - GAC treatment for PFAS removal; and Replace PTAS, Upgrade Water Treatment Plant",13500,18486000,40,157158647,,PFAS
+19792,Nassau,LOCUST VALLEY WD,Locust Valley WD,"Plant No. 9 - New GAC treatment for PFAS removal, Upgrade Water Treatment Plant",7500,7000000,40,164158647,,PFAS
+19591,Suffolk,RIVERHEAD WATER DISTRICT,Riverhead (T),"Well No. 5-2A PFAS removal, Upgrade Water Treatment Plant",190,2327800,40,166486447,DAC,PFAS
+19562,Dutchess,BEACON (C),Beacon (C),"Melzingah Reservoir Hypolimnetic Aeration System for HABs control, Upgrade Surface Water Source",14370,1485384,15,167971831,,
+19564,Dutchess,BEACON (C),Beacon (C),"Cargill Reservoir Hypolimnetic Aeration System for HABS control, Upgrade Surface Water Source",14370,2727167,15,170698998,,

@@ -1,26 +1,26 @@
-﻿Entity,Project,PWS ID,County,Estimated Loan Amount,Estimated EC Amount,Est. EC Principal Forgiveness,Loan Type,Estimated Award Date,Score (Total Points),Rate,District Office,EC Contaminant
-South Point,New Source Well,OH4401212,LAWRENCE,"$694,000 ","$694,000 ","$694,000 ",Construction,23-Sep,11,EC,SEDO,PFAS
-Beverly,Water System Imps PFAS/PFOS Treatment,OH8400112,WASHINGTON,"$181,600 ","$181,600 ","$181,600 ",Design,23-Aug,9,EC,SEDO,PFAS
-Caldwell,"WTP, Raw Water Supply and Distribution (East Tank)",OH6100011,NOBLE,"$18,484,000 ","$17,543,750 ","$10,000,000 ",Construction,23-Dec,8,DIS/EC,SEDO,PFOA
-Dayton,Expansion of Miami WF Recharge Lagoon,OH5703512,MONTGOMERY,"$8,165,760 ","$8,165,760 ","$8,165,760 ",Construction,24-May,7,EC,SWDO,PFAS
-Dayton,Install 4 Production Water Wells at Miami WF,OH5703512,MONTGOMERY,"$6,000,000 ","$6,000,000 ","$6,000,000 ",Construction,23-Aug,7,EC,SWDO,PFAS
-Dayton,Raw Water Lines at Needmore/Wagner Ford Rd,OH5703512,MONTGOMERY,"$2,400,000 ","$2,400,000 ","$2,400,000 ",Construction,23-Aug,7,EC,SWDO,PFAS
-Dayton,36 Inch Raw Water Main w/in the Miami WF - Ph A,OH5703512,MONTGOMERY,"$7,500,000 ","$7,500,000 ","$7,500,000 ",Construction,24-May,7,EC,SWDO,PFAS
-Portsmouth,Water Treatment Plant HAB,OH7300111,SCIOTO,"$80,000,000 ","$10,000,000 ","$10,000,000 ",Construction,23-Sep,6,STD/EC,SEDO,Microcystin
-Oxford,Water Treatment Plant Membrane Softening Imps,OH0902312,BUTLER,"$2,400,000 ","$2,400,000 ","$2,400,000 ",Design,23-Aug,5,EC,SWDO,PFAS
-New Richmond,PFAS Evaluation & Treatment,OH1301212,CLERMONT,"$200,000 ","$200,000 ","$200,000 ",Design,24-Jan,5,EC,SWDO,PFAS
-Chesterhill,Water System Imps PFAS,OH5800112,MORGAN,"$146,200 ","$146,200 ","$146,200 ",Design,23-Aug,5,EC,SEDO,PFAS
-Tri-County Rural W&SD,PFAS Treatment,OH8403112,WASHINGTON,"$162,200 ","$162,200 ","$162,200 ",Design,23-Sep,5,EC,SEDO,PFAS
-Mahoning Valley Sanitary District,MRWTP Process Treatment Imps,OH7801811,TRUMBULL,"$2,704,100 ","$2,704,100 ","$2,704,100 ",Design,23-Oct,5,EC,NEDO,PFAS
-Bridgeport,Well Field Abandonment,OH0700612,BELMONT,"$47,250 ","$47,250 ",Set Asides,Construction,24-Feb,4,EC,SEDO,PFAS
-Dayton,Water Quality Laboratory Expansion,OH5703512,MONTGOMERY,"$500,000 ","$500,000 ","$500,000 ",Design,23-Oct,4,EC,SWDO,PFAS
-Dayton,Miami Well Field Fate and Transport Study,OH5703512,MONTGOMERY,"$1,000,000 ","$1,000,000 ","$1,000,000 ",Planning,23-Aug,4,EC,SWDO,PFAS
-Dayton,"48"" Raw Water Interconnect (Miami WF/Ottawa TP)",OH5703512,MONTGOMERY,"$4,000,000 ","$4,000,000 ","$4,000,000 ",Design,24-May,4,EC,SWDO,PFAS
-Circleville,2.0 MGD RO Membrane Treatment Plant,OH6500412,PICKAWAY,"$2,662,000 ","$2,662,000 ","$2,662,000 ",Design,23-Sep,1,EC,CDO,PFAS
-Sandusky,Lake Intake Ph 1 - Sheldon's Marsh Lake Intake Rehab,OH2201411,ERIE,"$2,750,000 ","$2,725,000 ","$2,750,000 ",Construction,24-Mar,1,EC,NWDO,Microcystin
-Dayton,Monitoring Wells at Mad River WF,OH5703512,MONTGOMERY,"$250,000 ",,,Construction,24-Jul,4,,SWDO,PFAS
-Sandusky,Lake Intake Ph 4 - Lakeside Pump Station Rehab,OH2201411,ERIE,"$440,000 ",,,Construction,27-Mar,1,,NWDO,HAB
-Sandusky,Lake Intake Ph 3 - Raw Water Tmain Rehab,OH2201411,ERIE,"$780,000 ",,,Construction,26-Feb,1,,NWDO,HAB
-Sandusky,Lake Intake Ph 2 - Rye Beach Pump Station Rehab,OH2201411,ERIE,"$2,850,000 ",,,Construction,25-Apr,1,,NWDO,HAB
-Warren County Water,GAC Upgrades at Richard A. Renneker WTP,OH8301512,WARREN,"$2,000,000 ",,,Design,24-Jul,5,,SWDO,PFAS
-Warren County Water,GAC Upgrades at Richard A. Renneker WTP,OH8301512,WARREN,"$9,500,000 ",,,Construction,25-Jul,5,,SWDO,PFAS
+EPIC Project Id,Entity,Project,Estimated Loan Amount,PWS ID,County,Estimated EC Amount,Est. EC Principal Forgiveness,Loan Type,Estimated Award Date,Score (Total Points),Rate,District Office,EC Contaminant
+441,South Point,New Source Well,"$694,000.00",OH4401212,LAWRENCE,"$694,000.00","$694,000.00",Construction,23-Sep,11,EC,SEDO,PFAS
+56,Beverly,Water System Imps PFAS/PFOS Treatment,"$181,600.00",OH8400112,WASHINGTON,"$181,600.00","$181,600.00",Design,23-Aug,9,EC,SEDO,PFAS
+82,Caldwell,"WTP, Raw Water Supply and Distribution (East Tank)","$18,484,000.00",OH6100011,NOBLE,"$17,543,750.00","$10,000,000.00",Construction,23-Dec,8,DIS/EC,SEDO,PFOA
+174,Dayton,Expansion of Miami WF Recharge Lagoon,"$8,165,760.00",OH5703512,MONTGOMERY,"$8,165,760.00","$8,165,760.00",Construction,24-May,7,EC,SWDO,PFAS
+175,Dayton,Install 4 Production Water Wells at Miami WF,"$6,000,000.00",OH5703512,MONTGOMERY,"$6,000,000.00","$6,000,000.00",Construction,23-Aug,7,EC,SWDO,PFAS
+178,Dayton,Raw Water Lines at Needmore/Wagner Ford Rd,"$2,400,000.00",OH5703512,MONTGOMERY,"$2,400,000.00","$2,400,000.00",Construction,23-Aug,7,EC,SWDO,PFAS
+172,Dayton,36 Inch Raw Water Main w/in the Miami WF - Ph A,"$7,500,000.00",OH5703512,MONTGOMERY,"$7,500,000.00","$7,500,000.00",Construction,24-May,7,EC,SWDO,PFAS
+418,Portsmouth,Water Treatment Plant HAB,"$80,000,000.00",OH7300111,SCIOTO,"$10,000,000.00","$10,000,000.00",Construction,23-Sep,6,STD/EC,SEDO,Microcystin
+393,Oxford,Water Treatment Plant Membrane Softening Imps,"$2,400,000.00",OH0902312,BUTLER,"$2,400,000.00","$2,400,000.00",Design,23-Aug,5,EC,SWDO,PFAS
+373,New Richmond,PFAS Evaluation & Treatment,"$200,000.00",OH1301212,CLERMONT,"$200,000.00","$200,000.00",Design,24-Jan,5,EC,SWDO,PFAS
+90,Chesterhill,Water System Imps PFAS,"$146,200.00",OH5800112,MORGAN,"$146,200.00","$146,200.00",Design,23-Aug,5,EC,SEDO,PFAS
+462,Tri-County Rural W&SD,PFAS Treatment,"$162,200.00",OH8403112,WASHINGTON,"$162,200.00","$162,200.00",Design,23-Sep,5,EC,SEDO,PFAS
+330,Mahoning Valley Sanitary District,MRWTP Process Treatment Imps,"$2,704,100.00",OH7801811,TRUMBULL,"$2,704,100.00","$2,704,100.00",Design,23-Oct,5,EC,NEDO,PFAS
+72,Bridgeport,Well Field Abandonment,"$47,250.00",OH0700612,BELMONT,"$47,250.00",Set Asides,Construction,24-Feb,4,EC,SEDO,PFAS
+179,Dayton,Water Quality Laboratory Expansion,"$500,000.00",OH5703512,MONTGOMERY,"$500,000.00","$500,000.00",Design,23-Oct,4,EC,SWDO,PFAS
+177,Dayton,Miami Well Field Fate and Transport Study,"$1,000,000.00",OH5703512,MONTGOMERY,"$1,000,000.00","$1,000,000.00",Planning,23-Aug,4,EC,SWDO,PFAS
+173,Dayton,"48"" Raw Water Interconnect (Miami WF/Ottawa TP)","$4,000,000.00",OH5703512,MONTGOMERY,"$4,000,000.00","$4,000,000.00",Design,24-May,4,EC,SWDO,PFAS
+103,Circleville,2.0 MGD RO Membrane Treatment Plant,"$2,662,000.00",OH6500412,PICKAWAY,"$2,662,000.00","$2,662,000.00",Design,23-Sep,1,EC,CDO,PFAS
+429,Sandusky,Lake Intake Ph 1 - Sheldon's Marsh Lake Intake Rehab,"$2,750,000.00",OH2201411,ERIE,"$2,725,000.00","$2,750,000.00",Construction,24-Mar,1,EC,NWDO,Microcystin
+,Dayton,Monitoring Wells at Mad River WF,"$250,000.00",OH5703512,MONTGOMERY,,,Construction,24-Jul,4,,SWDO,PFAS
+,Sandusky,Lake Intake Ph 4 - Lakeside Pump Station Rehab,"$440,000.00",OH2201411,ERIE,,,Construction,27-Mar,1,,NWDO,HAB
+,Sandusky,Lake Intake Ph 3 - Raw Water Tmain Rehab,"$780,000.00",OH2201411,ERIE,,,Construction,26-Feb,1,,NWDO,HAB
+,Sandusky,Lake Intake Ph 2 - Rye Beach Pump Station Rehab,"$2,850,000.00",OH2201411,ERIE,,,Construction,25-Apr,1,,NWDO,HAB
+,Warren County Water,GAC Upgrades at Richard A. Renneker WTP,"$2,000,000.00",OH8301512,WARREN,,,Design,24-Jul,5,,SWDO,PFAS
+,Warren County Water,GAC Upgrades at Richard A. Renneker WTP,"$9,500,000.00",OH8301512,WARREN,,,Construction,25-Jul,5,,SWDO,PFAS

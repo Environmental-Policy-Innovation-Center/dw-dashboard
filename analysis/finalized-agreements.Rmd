@@ -28,185 +28,8 @@ showtext::showtext_auto()
 ```
 
 ```{r}
-state_name <- "Michigan"
+state_name <- "Texas"
 ```
-
-```{r}
-#TODO: Push this function into the EPIC plotting theme or function folders when tested
-
-# from https://rfortherestofus.com/2022/09/how-to-make-a-donut-chart-in-ggplot
-big_number_donut_plot <- function(value, font_family, highlight_color) {
-  
-  # Wrangle data to get a data frame in the format we need it in to make our donut chart
-  df <- tibble(x = 1, y = value) %>% 
-    mutate(y_negative = 1 - y) %>% 
-    pivot_longer(cols = -x) 
-  
-  # Create a nicely formatted big number to go in the donut hole
-  big_number_text_label <- percent(value, accuracy = 1)
-  
-  # Create our plot
-  ggplot(df,
-         aes(x = x,
-             y = value,
-             fill = name)) +
-    
-    # Add a bar, but don't add the legend
-    geom_col(show.legend = FALSE) +
-    
-    # A pie/donut chart is a bar chart with polar coordinates
-    # Add polar coordinates and set the direction to -1 
-    # so the filled in part starts at the top and goes clockwise
-    coord_polar(theta = "y",
-                direction = -1) +
-    
-    
-    # Set the limits, which is important for adding the hole
-    xlim(c(-2, 2)) +
-    
-    # Set a color scale with the highlighted section in whatever color
-    # is chosen with the highlight_color argument and the rest in a light gray
-    scale_fill_manual(values = c(highlight_color, "grey90")) +
-    
-    # Set theme_void() to remove grid lines and everything else from the plot
-    theme_void() +
-    
-    # Add the big number in the center of the hole
-    annotate("text",
-             label = big_number_text_label,
-             family = font_family,
-             fontface = "bold",
-             color = highlight_color,
-             size = 12,
-             x = -2,
-             y = 0)
-  
-}
-```
-
-
-# Funds Allocated in IUP
-
-```{r}
-
-iup_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/web_ppl_combined_clean.csv") %>%
-  clean_names()
-
-```
-
-
-```{r}
-
-state_projects <- iup_projects %>%
-  filter(state==state_name)
-
-
-tibble(state_projects %>% 
-         mutate(receive_pf = ifelse(principal_forgiveness > 0, 1, 0)) %>%
-         group_by(funding_status, meets_state_disadvantaged_criteria) %>%
-         summarize(count=n(), 
-                   pf_receiving = sum(receive_pf),
-                   total_funding_amount = sum(funding_amount),
-                   total_princiapl_forgiveness = sum(principal_forgiveness)))
-
-#TODO: Take the above tibble outputs and use for making donut charts
-
-```
-
-```{r}
-big_number_donut_plot(value=.65,
-                      font_family="Lato",
-                      highlight_color = "orange")
-
-```
-
-```{r}
-
-```
-
-
-```{r}
-fund_status_by_type <- state_projects %>%
-  group_by(project_type, funding_status) %>%
-  summarize(projects=n())
-```
-
-
-```{r}
-"#172F60" "#204256" "#29554C" "#326941" "#3B7C38" "#448F2E" "#4EA324"
-"#172F60" "#114D9B" "#552D8A" "#AB5B52" "#CF8521" "#A06314" "#4EA324"
-```
-
-
-```{r}
-
-pf_by_type <- state_projects %>%
-  filter(funding_status == "Funded") %>%
-  group_by(project_type) %>%
-  summarize(projects = n(),
-            total_funding_amount = sum(funding_amount),
-            total_principal_forgiveness = sum(principal_forgiveness))
-
-ggplot(pf_by_type, aes(x=total_principal_forgiveness, y=reorder(project_type, total_principal_forgiveness), fill=project_type)) + 
-  geom_bar(stat="identity") + 
-  scale_fill_manual(values=c("#737373", "#a6a6a6", "#545454")) + 
-  labs(title= "Principal Forgiveness Allocated by Project Type",
-       subtitle = "State Annual Funding Cycle 2023",
-       x="Total Principal Forgiveness",
-       y="") + 
-  scale_x_continuous(labels=label_number_si(prefix="$")) + 
-  theme_minimal() + 
-  theme(legend.position="none",
-        panel.grid.major.y = element_line(linetype="blank"))
-    
-```
-
-```{r}
-pf_by_type <- state_projects %>%
-  filter(funding_status == "Funded") %>%
-  group_by(project_type) %>%
-  summarize(projects = n(),
-            total_funding_amount = sum(funding_amount),
-            total_principal_forgiveness = sum(principal_forgiveness))
-
-ggplot(pf_by_type, aes(x=projects, y=reorder(project_type, projects), fill=project_type)) + 
-  geom_bar(stat="identity") + 
-  scale_fill_manual(values=c("#737373", "#a6a6a6", "#545454")) + 
-  labs(title= "Projects with Allocated Funds by Type",
-       subtitle = "State Annual Funding Cycle 2023",
-       x="Projects",
-       y="") + 
-  theme_minimal() + 
-  theme(legend.position="none",
-        panel.grid.major.y = element_line(linetype="blank"))
-```
-
-
-```{r}
-ggplot(state_projects %>% filter(funding_status == "Funded"), aes(x=funding_amount, y = meets_state_disadvantaged_criteria, fill=meets_state_disadvantaged_criteria)) + 
-  geom_bar(stat="identity") + 
-  labs(title="Funds Allocated by DAC Status",
-       x="Total Funding Amount Allocated",
-       y="Meets State Disadvantaged Criteria") + 
- scale_x_continuous(labels=label_number_si(prefix="$")) + 
-  scale_fill_manual(values=c("#545454", "#a6a6a6")) + 
-  theme_minimal() + 
-  theme(legend.position="none")
-```
-
-```{r}
-ggplot(state_projects %>% filter(funding_status == "Funded"), aes(x=principal_forgiveness, y = meets_state_disadvantaged_criteria, fill=meets_state_disadvantaged_criteria)) + 
-  geom_bar(stat="identity") + 
-  labs(title="Principal Forgiveness Allocated by DAC Status",
-       x="Total Principal Forgiveness Amount Allocated",
-       y="Meets State Disadvantaged Criteria") + 
- scale_x_continuous(labels=label_number_si(prefix="$")) + 
-  scale_fill_manual(values=c("#545454", "#a6a6a6")) + 
-  theme_minimal() + 
-  theme(legend.position="none")
-```
-
-
 
 # Funding Decisions (EPA Portal)
 
@@ -217,8 +40,8 @@ all_agreements <-  s3read_using(read.csv, object="s3://water-team-data/raw_data/
 
 ```{r}
 
-mi_sfy23 <- all_agreements %>%
-  filter(state == "Michigan") %>%
+state_finalized_agreements <- all_agreements %>%
+  filter(state == state_) %>%
   filter(latest_agreement_action == "Initial Agreement") %>%
   mutate(initial_agreement_date = mdy(initial_agreement_date)) %>%
   filter(initial_agreement_date >= "2022-10-01" & initial_agreement_date <= "2023-09-30") %>%
@@ -232,33 +55,28 @@ mi_sfy23 <- all_agreements %>%
 
 How much money was initially agreed upon?
 ```{r}
-print(sum(mi_sfy23$initial_agreement_amount))
+print(sum(state_finalized_agreements$initial_agreement_amount))
 ```
 
 How much of the agreement amounts are additional subsidy?
 ```{r}
-print(sum(mi_sfy23$additional_subsidy_amount))
+print(sum(state_finalized_agreements$additional_subsidy_amount))
 ```
 
 How many agreements are going to disadvantaged communities?
 ```{r}
-print(nrow(mi_sfy23 %>% filter(disadvantaged_assistance == "Yes")))
+print(nrow(state_finalized_agreements %>% filter(disadvantaged_assistance == "Yes")))
 ```
 
 How much of the initial agreement amount is going to DACs?
 ```{r}
-mi_sfy23 %>% 
+state_finalized_agreements %>% 
   filter(disadvantaged_assistance == "Yes") %>% 
   summarize(total_assistance = sum(initial_agreement_amount))
 ```
 How much of the additional subsidy amount is going to DACs?
 ```{r}
-mi_sfy23 %>% 
+state_finalized_agreements %>% 
   filter(disadvantaged_assistance == "Yes") %>% 
   summarize(total_assistance = sum(additional_subsidy_amount))
 ```
-
-```{r}
-
-```
-

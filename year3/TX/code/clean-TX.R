@@ -22,7 +22,7 @@ clean_tx_y3 <- function() {
   tx_ec <- fread(file.path(base_path, "tx-y3-appendix-j-ec.csv"),
                  colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "Emerging Contaminant",
+    mutate(project_type = "Emerging Contaminants",
            expecting_funding = "No Information")
   
   # lead applicant list

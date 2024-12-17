@@ -20,7 +20,7 @@ clean_tx_y2 <- function() {
   tx_ec <- fread(file.path(base_path, "tx-y2-appendix-j-ec.csv"),
                  colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "Emerging Contaminant")
+    mutate(project_type = "Emerging Contaminants")
   
   tx_ppl <- bind_rows(tx_ppl, tx_ec)
   

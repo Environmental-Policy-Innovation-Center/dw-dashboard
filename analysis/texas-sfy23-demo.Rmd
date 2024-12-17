@@ -1,0 +1,172 @@
+---
+title: "State Funding Pages"
+author: "Phil Cork"
+date: "2024-07-08"
+---
+
+This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level agregate data. It uses Texas SFY 23 as an example.
+
+As of December 2024, some of the tables and data visualizations are made manually from stats pulled from state IUPs, but this information will eventually be made into a tabular format by the Water Policy team and then should be imported from that forthcoming Google Sheet. At that time, much of this code which is uniquely specific to Texas SFY23 can and should be converted to an abstracted version that can be run for all states/fiscal years by simply changing the top-level variabes.
+
+# Setup
+
+## Set Variables
+
+```{r}
+state <- "Texas"
+sfy <- "2023"
+```
+
+## Imports and Styling
+
+```{r}
+options(scipen=999999999)
+
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
+
+```
+
+```{r}
+# fonts: 
+sysfonts::font_add_google("Lato")
+showtext::showtext_auto()
+
+# theme: 
+# legend position is right, text size is at least 10, and text is Lato
+epic_chart_theme <- theme_minimal() + 
+  theme(legend.position = "right", 
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), 
+        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
+                                                   b = 0, l = 0)), 
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
+                                                    b = 0, l = 0)), 
+        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
+                                                   b = 0, l = 0)), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
+                                                    b = 0, l = 0))) 
+```
+
+## Import Projects & State Data
+
+```{r}
+# import project-level data
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names()
+
+state_data <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
+  clean_names()
+```
+
+# Create Plots from Manual Data Entry
+
+## Grants Allocated
+
+```{r}
+grants_allocated <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF", "FFY22 BIL General Supplemental",
+                                                  "FFY22 BIL Lead", "FFY23 BIL Lead",
+                                                  "FFY22 BIL Emerging Contaminants"),
+                               amount = c(54911000, 140993000, 222155000, 146246000, 59202000))
+
+```
+
+```{r}
+ggplot(grants_allocated, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  labs(x="", y="", title="Federal Cap Grants", subtitle=paste0(state, ", ", sfy)) + 
+  scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
+  epic_chart_theme
+```
+
+## Principal Forgiveness
+
+```{r}
+principal_forgiveness <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF, DACs", "FFY22 Base DWSRF, Any", "FFY22 BIL General Supplemental",
+                                                       "FFY22 BIl Lead", "FFY23 BIL Lead", "FFY22 BIL Emerging Contaminants"),
+                               amount = c(8913430, 9000000, 69086570, 108855950, 71660540, 57910960))
+
+```
+
+```{r}
+ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  labs(x="", y="", title="Principal Forgiveness", subtitle=paste0(state, ", ", sfy)) + 
+  scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
+  epic_chart_theme
+```
+
+## Comparing Funds in Process Stages
+
+```{r}
+available_award_comp <- data.frame(category = c("Available", "Submitted", "Invited", "Awarded"),
+                                   amount = c(342000000, 2500000000, 324000000, 88884918)) %>%
+  mutate(category = factor(category, levels=c("Available", "Submitted", "Invited", "Awarded")))
+
+ggplot(available_award_comp, aes(x=category, y=amount)) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  labs(x="", y="", title="Funds From Availability to Awarded", subtitle=paste0(state, ", ", sfy)) + 
+  scale_y_continuous(labels=label_dollar(scale=.000000001, suffix="B")) + 
+  epic_chart_theme
+```
+## Comparing Project Costs & Available Funds
+
+```{r}
+#TODO: Push this function into the EPIC plotting theme or function folders when tested
+# from https://rfortherestofus.com/2022/09/how-to-make-a-donut-chart-in-ggplot
+big_number_donut_plot <- function(value, font_family, highlight_color, title_str) {
+  # Wrangle data to get a data frame in the format we need it in to make our donut chart
+  df <- tibble(x = 1, y = value) %>% 
+    mutate(y_negative = 1 - y) %>% 
+    pivot_longer(cols = -x) 
+  # Create a nicely formatted big number to go in the donut hole
+  big_number_text_label <- percent(value, accuracy = 1)
+  
+  # Create our plot
+  ggplot(df,
+         aes(x = x,
+             y = value,
+             fill = name)) +
+    # Add a bar, but don't add the legend
+    geom_col(show.legend = FALSE) +
+    # A pie/donut chart is a bar chart with polar coordinates
+    # Add polar coordinates and set the direction to -1 
+    # so the filled in part starts at the top and goes clockwise
+    coord_polar(theta = "y",
+                direction = -1) +
+    # Set the limits, which is important for adding the hole
+    xlim(c(-2, 2)) +
+    # Set a color scale with the highlighted section in whatever color
+    # is chosen with the highlight_color argument and the rest in a light gray
+    scale_fill_manual(values = c(highlight_color, "grey90")) +
+    # Set theme_void() to remove grid lines and everything else from the plot
+    theme_void() +
+    labs(title=title_str) + 
+    # Add the big number in the center of the hole
+    annotate("text",
+             label = big_number_text_label,
+             family = font_family,
+             fontface = "bold",
+             color = highlight_color,
+             size = 12,
+             x = -2,
+             y = 0)
+}
+```
+
+
+```{r}
+
+big_number_donut_plot(353975300/4000000000, "Lato", "#4ea324", "Comparing Lead Replacement Project Costs to Available Funds")
+
+```
+
+```{r}
+big_number_donut_plot(57910960/175000000, "Lato", "#4ea324", "Comparing Emerging Contaminant Project Costs to Available Funds")
+```

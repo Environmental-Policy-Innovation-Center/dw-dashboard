@@ -13,7 +13,7 @@ As of December 2024, some of the tables and data visualizations are made manuall
 ## Set Variables
 
 ```{r}
-state <- "Texas"
+state_name <- "Texas"
 sfy <- "2023"
 ```
 
@@ -59,10 +59,12 @@ epic_chart_theme <- theme_minimal() +
 ```{r}
 # import project-level data
 all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
-  clean_names()
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
 
 state_data <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
-  clean_names()
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
 ```
 
 # Create Plots from Manual Data Entry
@@ -80,7 +82,7 @@ grants_allocated <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF", "FFY22 BIL
 ```{r}
 ggplot(grants_allocated, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Federal Cap Grants", subtitle=paste0(state, ", ", sfy)) + 
+  labs(x="", y="", title="Federal Cap Grants", subtitle=paste0(state_name, ", ", sfy)) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
 ```
@@ -97,7 +99,7 @@ principal_forgiveness <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF, DACs",
 ```{r}
 ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Principal Forgiveness", subtitle=paste0(state, ", ", sfy)) + 
+  labs(x="", y="", title="Principal Forgiveness", subtitle=paste0(state_name, ", ", sfy)) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
 ```
@@ -111,10 +113,11 @@ available_award_comp <- data.frame(category = c("Available", "Submitted", "Invit
 
 ggplot(available_award_comp, aes(x=category, y=amount)) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Funds From Availability to Awarded", subtitle=paste0(state, ", ", sfy)) + 
+  labs(x="", y="", title="Funds From Availability to Awarded", subtitle=paste0(state_name, ", ", sfy)) + 
   scale_y_continuous(labels=label_dollar(scale=.000000001, suffix="B")) + 
   epic_chart_theme
 ```
+
 ## Comparing Project Costs & Available Funds
 
 ```{r}
@@ -160,7 +163,6 @@ big_number_donut_plot <- function(value, font_family, highlight_color, title_str
 }
 ```
 
-
 ```{r}
 
 big_number_donut_plot(353975300/4000000000, "Lato", "#4ea324", "Comparing Lead Replacement Project Costs to Available Funds")
@@ -169,4 +171,84 @@ big_number_donut_plot(353975300/4000000000, "Lato", "#4ea324", "Comparing Lead R
 
 ```{r}
 big_number_donut_plot(57910960/175000000, "Lato", "#4ea324", "Comparing Emerging Contaminant Project Costs to Available Funds")
+```
+
+# State-Level Data
+
+```{r}
+
+if (state_data$principal_forgiveness_status != "Missing") {
+  
+  pf_projects <- all_projects %>%
+    filter(principal_forgiveness != "0" & principal_forgiveness != "No Information")
+  
+}
+
+```
+
+How many state-defined DACs are not expecting to receive funding? Out of how many?
+
+```{r}
+state_data$disadvantaged_not_expecting_funding_projects[1]
+state_data$disadvantaged_projects[1]
+```
+
+```{r}
+big_number_donut_plot(
+  state_data$disadvantaged_not_expecting_funding_projects[1] / state_data$disadvantaged_projects[1],
+  "Lato", "#4ea324",
+  "Percent of DACs not expected to receive funding"
+)
+```
+
+
+```{r}
+# Add plot of expecting_funding Y/N with DAC Y/N
+```
+
+X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs"
+
+```{r}
+state_data$disadvantaged_percent[1]
+state_data$disadvantaged_expecting_funding_percent_ef
+```
+
+```{r}
+big_number_donut_plot(
+  state_data$disadvantaged_expecting_funding_percent_ef/100,
+  "Lato", "#4ea324",
+  "Percent of Projects Expecting Funding that are DACs"
+)
+```
+
+
+X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs -- same as above, but for Lead specifically
+```{r}
+
+if (state_data$disadvantaged_status != "Complete" | state_data$disadvantaged_projects == 0) {
+  state_data$disadvantaged_status[1]
+  print("Check data dictionary for more context to see how this feature should be discussed, because a 0 in disadvantaged_projects might indiciate that the defintion is missing or portially incomplete. Example: In Texas SFY23, 'Disadvantaged' is present for General projects, but not Lead projects, and EC projects are entirely missing. Thus, there is no problem reporting about DACs in general, but when it comes to Lead-specific questions, we are unable to address those questions due to insufficient data.")
+} else {
+  # percent of projects that are dacs and lead out of all projects
+  state_data$dac_lead_projects / state_data$projects *100
+  # percent of expecting_funding projects that are dac and lead
+  state_data$dac_lead_ef_projects / state_data$expecting_funding_projects
+  
+}
+
+
+```
+
+# Project-Level Data
+
+```{r}
+# range of project scores for projects expecting funding
+tibble(
+all_projects %>%
+  filter(expecting_funding == "Yes") %>%
+  mutate(score_numeric = as.numeric(project_score)) %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(min_score = min(score_numeric),
+            max_score = max(score_numeric))
+)
 ```

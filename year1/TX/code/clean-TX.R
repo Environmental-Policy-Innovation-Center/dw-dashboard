@@ -49,8 +49,8 @@ clean_tx_y1 <- function() {
            project_score = str_squish(points),
            project_rank = str_squish(rank),
            disadvantaged = case_when(
-             is.na(disadv_percent) ~ "No",
              !is.na(disadvantaged) ~ disadvantaged,
+             is.na(disadv_percent) ~ "No",
              TRUE ~ "Yes"
              ),
            project_type = replace_na(project_type, "General"),

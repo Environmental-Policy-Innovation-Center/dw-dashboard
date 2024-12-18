@@ -102,6 +102,11 @@ project_features <- all_projects %>%
             dac_ec_projects = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants"),
             dac_lead_projects = sum(disadvantaged == "Yes" & project_type == "Lead"),
             
+            # projects by type & dacs & expecting funding
+            dac_general_ef_projects = sum(disadvantaged == "Yes" & project_type == "General" & expecting_funding == "Yes"),
+            dac_lead_ef_projects = sum(disadvantaged == "Yes" & project_type == "Lead" & expecting_funding == "Yes"),
+            dac_ec_ef_projects = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants" & expecting_funding == "Yes"),
+            
             # number of projects that are both DACs and expecting funding
             disadvantaged_expecting_funding_projects = sum(expecting_funding == "Yes" & disadvantaged == "Yes"),
             disadvantaged_expecting_funding_projects = replace_na(disadvantaged_expecting_funding_projects, 0),
@@ -144,20 +149,32 @@ requested_amount_aggregation <- all_projects %>%
 ```
 
 ```{r}
+median_wo_zero <- function(col_name) {
+  non_zero <- col_name[col_name != 0]  # Filter out 0s
+  median(non_zero)  # Calculate median on the filtered data
+}
+
 principal_forgiveness_aggregation <- all_projects %>%
   filter(!is.na(principal_forgiveness) & principal_forgiveness != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
-  summarize(total_principal_forgiveness = sum(as.numeric(principal_forgiveness)))
+  summarize(total_principal_forgiveness = sum(as.numeric(principal_forgiveness)),
+            projects_receiving_pf = sum(as.numeric(principal_forgiveness) > 0),
+            dacs_receiving_pf = sum(disadvantaged == "Yes" & as.numeric(principal_forgiveness) > 0),
+            dacs_general_pf = sum(disadvantaged == "Yes" & project_type == "General" & as.numeric(principal_forgiveness) > 0),
+            dacs_lead_pf = sum(disadvantaged == "Yes" & project_type == "Lead" & as.numeric(principal_forgiveness) > 0),
+            dacs_ec_pf = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants" & as.numeric(principal_forgiveness) > 0),
+            median_pf = median_wo_zero(as.numeric(principal_forgiveness))
+            )
 ```
 
 ```{r}
 
-state_stats <- feature_coverage %>%
+state_stats <- funding_amount_aggregation %>%
   left_join(project_features, by=c("state", "state_fiscal_year")) %>%
+  left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
-  left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%  
-  left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year"))  
+  left_join(feature_coverage, by=c("state", "state_fiscal_year"))
 
 ```
 

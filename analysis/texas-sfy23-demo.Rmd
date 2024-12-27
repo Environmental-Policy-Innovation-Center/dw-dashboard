@@ -6,7 +6,7 @@ date: "2024-07-08"
 
 This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level agregate data. It uses Texas SFY 23 as an example.
 
-As of December 2024, some of the tables and data visualizations are made manually from stats pulled from state IUPs, but this information will eventually be made into a tabular format by the Water Policy team and then should be imported from that forthcoming Google Sheet. At that time, much of this code which is uniquely specific to Texas SFY23 can and should be converted to an abstracted version that can be run for all states/fiscal years by simply changing the top-level variabes.
+As of December 2024, some of the tables and data visualizations are made manually from stats pulled from state IUPs, but this information will eventually be made into a tabular format by the Water Policy team and then should be imported from that forthcoming Google Sheet. At that time, much of this code which is uniquely specific to Texas SFY23 can and should be converted to an abstracted version that can be run for all states/fiscal years by simply changing the top-level variables.
 
 # Setup
 
@@ -26,6 +26,7 @@ library(tidyverse)
 library(janitor)
 library(aws.s3)
 library(scales)
+library(ggpubr)
 
 source("../../ds-resources/shared-functions.R")
 run_code_from_file("../../local/aws.txt")
@@ -107,13 +108,13 @@ ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) 
 ## Comparing Funds in Process Stages
 
 ```{r}
-available_award_comp <- data.frame(category = c("Available", "Submitted", "Invited", "Awarded"),
-                                   amount = c(342000000, 2500000000, 324000000, 88884918)) %>%
-  mutate(category = factor(category, levels=c("Available", "Submitted", "Invited", "Awarded")))
+available_award_comp <- data.frame(category = c("Available", "Submitted", "Expecting Funding"),
+                                   amount = c(342000000, 2500000000, 324000000)) %>%
+  mutate(category = factor(category, levels=c("Submitted", "Available", "Expecting Funding")))
 
 ggplot(available_award_comp, aes(x=category, y=amount)) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Funds From Availability to Awarded", subtitle=paste0(state_name, ", ", sfy)) + 
+  labs(x="", y="", title="Comparing Available Funds to Submitted Needs and Expecting Funding", subtitle=paste0(state_name, ", ", sfy)) + 
   scale_y_continuous(labels=label_dollar(scale=.000000001, suffix="B")) + 
   epic_chart_theme
 ```
@@ -121,56 +122,49 @@ ggplot(available_award_comp, aes(x=category, y=amount)) +
 ## Comparing Project Costs & Available Funds
 
 ```{r}
-#TODO: Push this function into the EPIC plotting theme or function folders when tested
-# from https://rfortherestofus.com/2022/09/how-to-make-a-donut-chart-in-ggplot
-big_number_donut_plot <- function(value, font_family, highlight_color, title_str) {
-  # Wrangle data to get a data frame in the format we need it in to make our donut chart
-  df <- tibble(x = 1, y = value) %>% 
-    mutate(y_negative = 1 - y) %>% 
-    pivot_longer(cols = -x) 
-  # Create a nicely formatted big number to go in the donut hole
-  big_number_text_label <- percent(value, accuracy = 1)
-  
-  # Create our plot
-  ggplot(df,
-         aes(x = x,
-             y = value,
-             fill = name)) +
-    # Add a bar, but don't add the legend
-    geom_col(show.legend = FALSE) +
-    # A pie/donut chart is a bar chart with polar coordinates
-    # Add polar coordinates and set the direction to -1 
-    # so the filled in part starts at the top and goes clockwise
-    coord_polar(theta = "y",
-                direction = -1) +
-    # Set the limits, which is important for adding the hole
-    xlim(c(-2, 2)) +
-    # Set a color scale with the highlighted section in whatever color
-    # is chosen with the highlight_color argument and the rest in a light gray
-    scale_fill_manual(values = c(highlight_color, "grey90")) +
-    # Set theme_void() to remove grid lines and everything else from the plot
-    theme_void() +
-    labs(title=title_str) + 
-    # Add the big number in the center of the hole
-    annotate("text",
-             label = big_number_text_label,
-             family = font_family,
-             fontface = "bold",
-             color = highlight_color,
-             size = 12,
-             x = -2,
-             y = 0)
-}
-```
 
-```{r}
+lead_costs <- data.frame(category=c("Available Funds", "Remaining Submitted Lead Project Costs"),
+                         amount=c(353975300, (4102947493.48-353975300)),
+                         amount_str=c("$353M", "$3.7B"),
+                         amount_pct=c("9%", "91%"))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+lead_costs$category <- factor(lead_costs$category, levels=c("Remaining Submitted Lead Project Costs", "Available Funds"))
 
-big_number_donut_plot(353975300/4000000000, "Lato", "#4ea324", "Comparing Lead Replacement Project Costs to Available Funds")
+plot_labs <- paste0(lead_costs$category, " (", lead_costs$amount_pct, ", ", lead_costs$amount_str, ")")
+p <- ggdonutchart(lead_costs,
+             "amount",
+             fill="category",
+             label=plot_labs,
+             color="white",
+             palette=c("lightgrey", "#4ea324"))
+p + theme(legend.position="none",
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), ) + 
+  labs(title="Comparing Lead Replacement Costs to Available Funds")
 
 ```
 
 ```{r}
-big_number_donut_plot(57910960/175000000, "Lato", "#4ea324", "Comparing Emerging Contaminant Project Costs to Available Funds")
+ec_costs <- data.frame(category=c("Available Funds", "Remaining Emerging Contaminants Costs"),
+                         amount=c(57910960, (175000000-57910960)),
+                         amount_str=c("$57M", "$175M"),
+                         amount_pct=c("33%", "67%"))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+ec_costs$category <- factor(ec_costs$category, levels=c("Remaining Emerging Contaminants Costs", "Available Funds"))
+
+plot_labs <- paste0(ec_costs$category, " (", ec_costs$amount_pct, ", ", ec_costs$amount_str, ")")
+p <- ggdonutchart(ec_costs,
+             "amount",
+             fill="category",
+             label=plot_labs,
+             color="white",
+             palette=c("lightgrey", "#4ea324"))
+p + theme(legend.position="none",
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), ) + 
+  labs(title="Comparing Emerging Contaminants Costs to Available Funds")
 ```
 
 # State-Level Data
@@ -194,11 +188,25 @@ state_data$disadvantaged_projects[1]
 ```
 
 ```{r}
-big_number_donut_plot(
-  state_data$disadvantaged_not_expecting_funding_projects[1] / state_data$disadvantaged_projects[1],
-  "Lato", "#4ea324",
-  "Percent of DACs not expected to receive funding"
-)
+dacs_ef <- data.frame(category=c("DACs Expecting Funding", "DACs Not Expecting Funding"),
+                         amount=c(27, 97),
+                         amount_str=c("27", "97"),
+                         amount_pct=c("22%", "78%"))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+dacs_ef$category <- factor(dacs_ef$category, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
+
+plot_labs <- paste0(dacs_ef$category, " (", dacs_ef$amount_pct, ", ", dacs_ef$amount_str, ")")
+p <- ggdonutchart(dacs_ef,
+             "amount",
+             fill="category",
+             label=plot_labs,
+             color="white",
+             palette=c("lightgrey", "#4ea324"))
+p + theme(legend.position="none",
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), ) + 
+  labs(title="How many DACs are expected to receive funding?")
 ```
 
 
@@ -219,6 +227,28 @@ big_number_donut_plot(
   "Lato", "#4ea324",
   "Percent of Projects Expecting Funding that are DACs"
 )
+
+#38 projects EF, 27 are DAC
+
+ef_dacs <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Funding"),
+                         amount=c(11, 27),
+                         amount_str=c("11", "27"),
+                         amount_pct=c("29%", "71%"))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+ef_dacs$category <- factor(ef_dacs$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
+
+plot_labs <- paste0(ef_dacs$category, " (", ef_dacs$amount_pct, ", ", ef_dacs$amount_str, ")")
+p <- ggdonutchart(ef_dacs,
+             "amount",
+             fill="category",
+             label=plot_labs,
+             color="white",
+             palette=c("#4ea324", "lightgrey"))
+p + theme(legend.position="none",
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), ) + 
+  labs(title="How many projects expected to receive funding are going to DACs?")
 ```
 
 

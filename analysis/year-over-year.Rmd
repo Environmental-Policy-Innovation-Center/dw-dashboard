@@ -11,7 +11,7 @@ Simply changing the `state_name`
 # State Setup
 
 ```{r}
-state_name <- "Michigan"
+state_name <- "Texas"
 ```
 
 # Imports & Settings 
@@ -173,7 +173,7 @@ ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expect
   geom_bar(stat="identity", position="stack") +
   scale_fill_manual(values = cat_palette(2), 
                       name = "Expecting Funding") + 
-  labs(title="Projects Expecting Funding Each Year",
+  labs(title="Proportion of Applicant Projects Expecting Funding",
        subtitle="State IUP/PPLs",
        x="State Fiscal Year",
        y="Projects") + 
@@ -186,8 +186,9 @@ ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expect
 
 ```{r}
 ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent)) + 
-  geom_bar(stat="identity", fill="#172f60") + 
-  scale_y_continuous(labels=label_number(suffix="%")) + 
+  geom_line(group=1, color="#172f60") + 
+  geom_point(color="#172f60") + 
+  scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
        title="What percent of applicant projects serve DACs?") + 
@@ -235,11 +236,27 @@ ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
-       title="How many Disadvantaged Community Projects Could Be Funded?") + 
+       title="How many Disadvantaged Community Projects Could Expect Funding?") + 
     scale_fill_manual(values = cat_palette(2), 
                       name = "Expecting Funding") + 
   epic_chart_theme
 
+```
+
+```{r}
+##TODO: Add plot that is the same as above, but it is ALL EF projects and color coded by DACs
+
+```
+
+```{r}
+ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_expecting_funding_percent_ef)) + 
+  geom_line(group=1, color="#172f60") + 
+  geom_point(color="#172f60") + 
+  scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="What percent of projects expecting funding serve DACs?") + 
+  epic_chart_theme
 ```
 
 
@@ -263,8 +280,8 @@ ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) +
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
-       title="Projects by Type",
-       subtitle="State IUP/PPLs") +
+       title="Applicant Projects by Type",
+       subtitle=paste0(state_name, ", SFY23-25")) +
   epic_chart_theme
 
 ```
@@ -275,20 +292,20 @@ To calculate aggregate financial stats for each project type, we go back to all 
 
 ```{r}
 
-all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
   clean_names() %>%
   #NOTE this may be removed in future when more data has been more consistently added in for Y0
-  filter(state_fiscal_year != "2022")
-
-# In this case we are okay filling No Infos as 0s for math purposes because the ones where we have No Info wouldn't be considered anyways
-state_projects_type <- all_projects %>%
+  filter(state_fiscal_year != "2022") %>%
   filter(state == state_name) %>%
   mutate(project_cost = as.numeric(str_replace(project_cost, "No Information", "0")),
          requested_amount = as.numeric(str_replace(requested_amount, "No Information", "0")),
          funding_amount = as.numeric(str_replace(funding_amount, "No Information", "0")),
          principal_forgiveness = as.numeric(str_replace(principal_forgiveness, "No Information", "0")),
          state_fiscal_year = as.factor(state_fiscal_year)
-         ) %>%
+         )
+
+# In this case we are okay filling No Infos as 0s for math purposes because the ones where we have No Info wouldn't be considered anyways
+state_projects_type <- all_projects %>%
   group_by(project_type, state_fiscal_year) %>%
   summarize(count=n(),
             total_project_cost = sum(project_cost, na.rm=TRUE),
@@ -353,4 +370,34 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgivene
        subtitle="State IUP/PPLs") +
   epic_chart_theme
 ```
+
+```{r}
+# average and median project cost by SFY
+sfy_project_cost <- state_projects %>%
+  filter(project_cost > 0) %>%
+  group_by(state_fiscal_year) %>%
+  summarize(avg_project_cost = mean(project_cost),
+            median_project_cost = median(project_cost)) %>%
+  pivot_longer(cols=c("avg_project_cost", "median_project_cost")) %>%
+  mutate(name = case_when(
+    name == "avg_project_cost" ~ "Average",
+    TRUE ~ "Median"
+  ))
+
+```
+
+```{r}
+ggplot(sfy_project_cost, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="dodge") + 
+  scale_y_continuous(labels=label_dollar()) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="State Fiscal Year",
+       y="",
+       title="Project Cost for All Applicants",
+       subtitle=paste(state_name, " IUP/PPLs")) +
+  epic_chart_theme
+```
+
+
 

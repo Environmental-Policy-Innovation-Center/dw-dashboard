@@ -1,0 +1,100 @@
+# Setup
+
+## Set Variables
+
+```{r}
+state_name <- "Texas"
+```
+
+## Imports and Styling
+
+```{r}
+options(scipen=999999999)
+
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
+
+```
+
+```{r}
+# fonts: 
+sysfonts::font_add_google("Lato")
+showtext::showtext_auto()
+
+# theme: 
+# legend position is right, text size is at least 10, and text is Lato
+epic_chart_theme <- theme_minimal() + 
+  theme(legend.position = "right", 
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), 
+        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
+                                                   b = 0, l = 0)), 
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
+                                                    b = 0, l = 0)), 
+        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
+                                                   b = 0, l = 0)), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
+                                                    b = 0, l = 0))) 
+```
+
+## Import Projects Data
+
+```{r}
+# import project-level data
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names() %>%
+  filter(state == state_name)
+
+```
+
+
+## Try by Project IDs
+```{r}
+
+projects_by_id <- all_projects %>%
+  group_by(project_id) %>%
+  summarize(count=n(),
+            sfy23 = sum(state_fiscal_year=="2023"),
+            sfy24 = sum(state_fiscal_year=="2024"),
+            sfy25 = sum(state_fiscal_year=="2025"),
+            )
+
+```
+
+## Try by Project Descriptions
+
+```{r}
+projects_by_desc <- all_projects %>%
+  group_by(borrower, project_description) %>%
+  summarize(count=n(),
+            sfy22 = sum(state_fiscal_year=="2022"),
+            sfy23 = sum(state_fiscal_year=="2023"),
+            sfy24 = sum(state_fiscal_year=="2024"),
+            sfy25 = sum(state_fiscal_year=="2025"),
+            dac = sum(disadvantaged == "Yes"))
+
+mean(projects_by_desc$count)
+median(projects_by_desc$count)
+```
+
+## Use only projects Expecting Funding
+
+```{r}
+ef_projects_by_desc <- all_projects %>%
+  filter(expecting_funding == "Yes") %>%
+  group_by(borrower, project_description) %>%
+  summarize(count=n(),
+            sfy22 = sum(state_fiscal_year=="2022"),
+            sfy23 = sum(state_fiscal_year=="2023"),
+            sfy24 = sum(state_fiscal_year=="2024"),
+            sfy25 = sum(state_fiscal_year=="2025"),
+            dac = sum(disadvantaged == "Yes"))
+
+```
+

@@ -1,0 +1,195 @@
+
+
+This notebook generates plots from manually-gathered statistics found on the Texas State Overview page template.
+In the future, these numbers will be entered into a database and this code will need to be updated to pull it in and recreate the plots in a more reproducible fashion.
+
+# Imports & Settings 
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+library(lubridate)
+library(sysfonts)
+library(showtext)
+
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
+
+options(scipen=999)
+
+# fonts: 
+sysfonts::font_add_google("Lato")
+showtext::showtext_auto()
+
+# theme: 
+# legend position is right, text size is at least 10, and text is Lato
+epic_chart_theme <- theme_minimal() + 
+  theme(legend.position = "right", 
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), 
+        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
+                                                   b = 0, l = 0)), 
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
+                                                    b = 0, l = 0)), 
+        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
+                                                   b = 0, l = 0)), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
+                                                    b = 0, l = 0))) 
+
+cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
+
+state_name <- "Texas"
+```
+
+
+Federal Capitalization Grants
+$54,911,000
+$40,181,000
+$37,157,000
+
+```{r}
+fed_cap_grants <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(54911000, 40181000, 37157000))
+
+ggplot(fed_cap_grants, aes(x=state_fiscal_year, y=amount)) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  labs(x="", y="", title="Base DWSRF Federal Capitlization Grants", subtitle=paste0(state_name, ", SFY23-25")) + 
+  epic_chart_theme
+
+```
+
+
+Principal Forgiveness for DACs
+$8,913,430 (16%)
+$7,712,000 (19.1%)
+$8.500.000 (22.7%)
+
+```{r}
+pf_for_dacs <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                          amount = c(8913430, 7712000, 8500000),
+                          # percents are 16, 19.1, 22.7, need to scale from left-side going 0-10m to right-side being 0-100
+                          pct = c(1600000, 1910000, 2270000),
+                          grouping = "TX", "TX", "TX")
+
+ggplot(pf_for_dacs, aes(x=state_fiscal_year)) + 
+  geom_bar(aes(y=amount), stat="identity", fill="#172f60") + 
+  geom_line(aes(y=pct), color="#4ea324", group=1, size=1.5) + 
+    geom_point(aes(y=pct)) + 
+  
+    # Add secondary y-axis and manually set the range of the right hand
+  scale_y_continuous(name = "PF for DACs", labels=label_dollar(), limits = c(0, 10000000),
+    sec.axis = sec_axis(~ . * .00001, name = "Percent PF for DACs")) +
+  labs(x="", y="", title="Principal Forgiveness for DACs, Base DWSRF Program", subtitle=paste0(state_name, ", SFY23-25")) + 
+  epic_chart_theme
+```
+
+```{r}
+pf_for_dacs_pct <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(.16, .191, .227),
+                             grouping = c("TX", "TX", "TX"))
+
+ggplot(pf_for_dacs_pct, aes(x=state_fiscal_year, y=amount)) + 
+  geom_line(aes(group=grouping)) + 
+  geom_point() + 
+  scale_y_continuous(labels=label_percent()) + 
+  labs(x="", y="", title="Percent Principal Forgiveness for DACs,, Base DWSRF Program", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+```
+
+
+Total Funding Requested under Base & BIL General Supplemental Program PPL
+$2492000652
+$3255535627
+$4643722053.80
+```{r}
+
+funding_requested <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(2492000652, 3255535627, 4643722053.80))
+
+ggplot(funding_requested, aes(x=state_fiscal_year, y=amount)) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  labs(x="", y="", title="Total Funding Requested under Base & BIL General Supplemental Program PPL", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+
+
+```
+
+Total Funding Available for Projects under Base & BIL General Supplemental Program
+342000000
+435066830
+444395440
+
+```{r}
+funding_requested_available <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025",
+                                                      "SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(2492000652-342000000, 3255535627-435066830, 4643722053.80-444395440,
+                                        342000000, 435066830, 444395440),
+                             category = c("Requested", "Requested", "Requested",
+                                          "Total Available", "Total Available", "Total Available")
+                             )
+
+ggplot(funding_requested_available, aes(x=state_fiscal_year, y=amount, fill=category)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+
+```
+
+lead Program
+Total Funding Available for Projects
+213455950
+140519350
+27528500
+
+
+```{r}
+
+lead_available <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(213455950+140519350, 0, 27528500))
+
+ggplot(lead_available, aes(x=state_fiscal_year, y=amount)) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  labs(x="", y="", title="Total Funding Available, BIL LSLR", subtitle=paste0(state_name, ", SFY23-25")) + 
+  epic_chart_theme
+
+
+
+```
+
+
+EC Program
+
+Total Funding Requested
+175620496
+552609451
+Total Funding Available for Projects
+57910960
+59372280
+
+```{r}
+funding_requested_available_ec <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025",
+                                                      "SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(175620496-57910960, 552609451-59372280, 0,
+                                        57910960, 59372280, 0),
+                             category = c("Requested", "Requested", "Requested",
+                                          "Total Available", "Total Available", "Total Available")
+                             )
+
+ggplot(funding_requested_available_ec, aes(x=state_fiscal_year, y=amount, fill=category)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Requested & Available Funds, BIL EC", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+```
+

@@ -27,7 +27,6 @@ clean_tx_y1 <- function() {
   tx_ppl <- tx_ppl %>%
     left_join(tx_invite, by="pif_number")
   
-
   
   tx_lead <- fread("year1/TX/data/tx-y1-appendix-i-lsl.csv",
                    colClasses = "character", na.strings = "") %>% 
@@ -38,7 +37,18 @@ clean_tx_y1 <- function() {
            expecting_funding = "No Information") %>%
     select(-requested_phase_s)
   
-  tx_clean <- bind_rows(tx_ppl, tx_lead) %>%
+  
+  tx_ec <- fread("year1/TX/data/tx-y1-appendix-j-ec.csv",
+                 colClasses = "character", na.strings = "") %>% 
+    clean_names()  %>%
+    mutate(project_type = "Emerging Contaminants",
+           disadvantaged = "No Information",
+           funding_amount = "No Information",
+           expecting_funding = "No Information") %>%
+    rename(project_cost = total_project_cost) %>%
+    select(-requested_phase_s)
+  
+  tx_clean <- bind_rows(tx_ppl, tx_lead, tx_ec) %>%
     
     mutate(population = clean_numeric_string(population),
            project_cost = clean_numeric_string(project_cost),

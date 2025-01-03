@@ -6,6 +6,11 @@ In the future, these numbers will be entered into a database and this code will 
 # Imports & Settings 
 
 ```{r}
+state_name <- "Texas"
+```
+
+
+```{r}
 library(tidyverse)
 library(janitor)
 library(aws.s3)
@@ -41,11 +46,18 @@ epic_chart_theme <- theme_minimal() +
 
 cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
 
-state_name <- "Texas"
+cat_palette <- colorRampPalette(c("#172f60","#1054a8",
+                                  "#791a7b","#de9d29", 
+                                  "#b15712","#4ea324"))
+
+cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
+                                         "#B077B2","#E4BE7C",
+                                         "#b15712","#82AB6E"))
+
 ```
 
 
-Federal Capitalization Grants
+# Base Federal Capitalization Grants
 $54,911,000
 $40,181,000
 $37,157,000
@@ -63,7 +75,7 @@ ggplot(fed_cap_grants, aes(x=state_fiscal_year, y=amount)) +
 ```
 
 
-Principal Forgiveness for DACs
+# Base Principal Forgiveness for DACs
 $8,913,430 (16%)
 $7,712,000 (19.1%)
 $8.500.000 (22.7%)
@@ -76,13 +88,10 @@ pf_for_dacs <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025")
                           grouping = "TX", "TX", "TX")
 
 ggplot(pf_for_dacs, aes(x=state_fiscal_year)) + 
-  geom_bar(aes(y=amount), stat="identity", fill="#172f60") + 
-  geom_line(aes(y=pct), color="#4ea324", group=1, size=1.5) + 
-    geom_point(aes(y=pct)) + 
+  geom_bar(aes(y=amount), stat="identity", fill="#172f60") +
   
     # Add secondary y-axis and manually set the range of the right hand
-  scale_y_continuous(name = "PF for DACs", labels=label_dollar(), limits = c(0, 10000000),
-    sec.axis = sec_axis(~ . * .00001, name = "Percent PF for DACs")) +
+  scale_y_continuous(name = "PF for DACs", labels=label_dollar()) +
   labs(x="", y="", title="Principal Forgiveness for DACs, Base DWSRF Program", subtitle=paste0(state_name, ", SFY23-25")) + 
   epic_chart_theme
 ```
@@ -93,15 +102,15 @@ pf_for_dacs_pct <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY20
                              grouping = c("TX", "TX", "TX"))
 
 ggplot(pf_for_dacs_pct, aes(x=state_fiscal_year, y=amount)) + 
-  geom_line(aes(group=grouping)) + 
-  geom_point() + 
-  scale_y_continuous(labels=label_percent()) + 
-  labs(x="", y="", title="Percent Principal Forgiveness for DACs,, Base DWSRF Program", subtitle=paste0(state_name, " SFY23-25")) + 
+  geom_line(aes(group=grouping), color="#172f60", size=1.5) + 
+  geom_point(size=4) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0,1)) + 
+  labs(x="", y="", title="Percent Principal Forgiveness for DACs, Base DWSRF Program", subtitle=paste0(state_name, " SFY23-25")) + 
   epic_chart_theme
 ```
 
 
-Total Funding Requested under Base & BIL General Supplemental Program PPL
+# Total Funding Requested under Base & BIL General Supplemental Program PPL
 $2492000652
 $3255535627
 $4643722053.80
@@ -119,7 +128,7 @@ ggplot(funding_requested, aes(x=state_fiscal_year, y=amount)) +
 
 ```
 
-Total Funding Available for Projects under Base & BIL General Supplemental Program
+# Total Funding Available for Projects under Base & BIL General Supplemental Program
 342000000
 435066830
 444395440
@@ -143,8 +152,7 @@ ggplot(funding_requested_available, aes(x=state_fiscal_year, y=amount, fill=cate
 
 ```
 
-lead Program
-Total Funding Available for Projects
+# Total Funding Available for Lead Projects
 213455950
 140519350
 27528500
@@ -168,10 +176,10 @@ ggplot(lead_available, aes(x=state_fiscal_year, y=amount)) +
 
 EC Program
 
-Total Funding Requested
+# Total Funding Requested, EC
 175620496
 552609451
-Total Funding Available for Projects
+# Total Funding Available for Projects
 57910960
 59372280
 
@@ -190,6 +198,81 @@ ggplot(funding_requested_available_ec, aes(x=state_fiscal_year, y=amount, fill=c
   scale_fill_manual(values = cat_palette(2), 
                       name = "") + 
   labs(x="", y="", title="Comparing Requested & Available Funds, BIL EC", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+```
+
+# Set Asides
+
+State	Program	State Fiscal Year	Set Asides $	Set Asides %
+Texas	Base	2023	12885760	23%
+Texas	Base	2024	10528960	26%
+Texas	Base	2025	10045120	27%
+Texas	BIL General Supplemental	2023	5639720	4%
+Texas	BIL General Supplemental	2024	18714680	11%
+Texas	BIL General Supplemental	2025	19330240	11%
+Texas	Base & BIL General Supplemental	2023	18525480	9%
+Texas	Base & BIL General Supplemental	2024	29243640	14%
+Texas	Base & BIL General Supplemental	2025	29375360	13%
+Texas	Lead Service Line Replacement	2023	14425700	4%
+Texas	Lead Service Line Replacement	2024	NA	NA	NA
+Texas	Lead Service Line Replacement	2025	1121500	4%
+Texas	Emerging Contaminants	2023	2368080	4%
+Texas	Emerging Contaminants	2024	2436560	4%
+Texas	Emerging Contaminants	2025
+
+```{r}
+set_asides <- data.frame(state_fiscal_year=c("SFY2023","SFY2024", "SFY2025",
+                                             "SFY2023","SFY2024", "SFY2025",
+                                             "SFY2023","SFY2024", "SFY2025",
+                                             "SFY2023","SFY2024", "SFY2025",
+                                             "SFY2023","SFY2024", "SFY2025"),
+                         program=c("Base", "Base", "Base",
+                                   "BIL General Supplemental", "BIL General Supplemental", "BIL General Supplemental",
+                                   "Base & BIL General Supplemental", "Base & BIL General Supplemental", "Base & BIL General Supplemental",
+                                   "Lead Service Line Replacement", "Lead Service Line Replacement", "Lead Service Line Replacement",
+                                   "Emerging Contaminants", "Emerging Contaminants", "Emerging Contaminants"),
+                         set_aside_dollar=c(12885760, 10528960, 10045120,
+                                            5639720, 18714680, 19330240,
+                                            18525480, 29243640, 29375360,
+                                            14425700, NA, 1121500,
+                                            2368080, 2436560, NA),
+                         set_aside_pct=c(.23, .26, .27,
+                                         .04, .11, .11,
+                                         .09, .14, .13,
+                                         .04, 0, .04,
+                                         .04, .04, 0)
+                         )
+```
+
+```{r}
+ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_dollar, fill=program)) + 
+  geom_bar(stat="identity", position="dodge") + 
+  scale_y_continuous(labels=label_currency()) + 
+  scale_fill_manual(values = cat_palette(5), 
+                      name = "") + 
+  labs(x="", y="", title="Set Asides", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+  
+```
+
+```{r}
+ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_dollar, fill=program)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency()) + 
+  scale_fill_manual(values = cat_palette(5), 
+                      name = "") + 
+  labs(x="", y="", title="Set Asides", subtitle=paste0(state_name, " SFY23-25")) + 
+  epic_chart_theme
+```
+
+```{r}
+ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_pct, color=program)) + 
+  geom_line(aes(group=program), size=1.5) + 
+  geom_point(size=4) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0,.31)) + 
+  labs(x="", y="", title="Set Asides, Percent Utilized", subtitle=paste0(state_name, " SFY23-25")) + 
+  scale_color_manual(values = cat_palette(5), 
+                      name = "") + 
   epic_chart_theme
 ```
 

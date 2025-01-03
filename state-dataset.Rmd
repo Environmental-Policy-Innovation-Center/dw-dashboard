@@ -127,7 +127,6 @@ project_features <- all_projects %>%
 ```
 
 ```{r}
-
 project_cost_aggregation <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
@@ -169,12 +168,13 @@ principal_forgiveness_aggregation <- all_projects %>%
 
 ```{r}
 
-state_stats <- funding_amount_aggregation %>%
+state_stats <- feature_coverage %>%
   left_join(project_features, by=c("state", "state_fiscal_year")) %>%
+  left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
-  left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
-  left_join(feature_coverage, by=c("state", "state_fiscal_year"))
+  left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
+  
 
 ```
 

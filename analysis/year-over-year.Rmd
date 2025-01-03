@@ -54,13 +54,13 @@ epic_chart_theme <- theme_minimal() +
 ```{r}
 cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
 
-# categorical palettes - based on new EPIC template: 
-cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
-                                         "#B077B2","#E4BE7C",
-                                         "#b15712","#82AB6E"))
 cat_palette <- colorRampPalette(c("#172f60","#1054a8",
                                   "#791a7b","#de9d29", 
                                   "#b15712","#4ea324"))
+
+cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
+                                         "#B077B2","#E4BE7C",
+                                         "#b15712","#82AB6E"))
 ```
 
 # State-Level Data
@@ -82,7 +82,7 @@ state_yoy <- state_stats %>%
 
 ```{r}
 ggplot(state_yoy, aes(x=state_fiscal_year, y=projects)) + 
-  geom_bar(stat="identity", fill="#172f60") +
+  geom_bar(stat="identity", fill="#526489") +
   labs(title="Applicant Projects",
        subtitle="State IUP/PPLs",
        x="State Fiscal Year",
@@ -96,7 +96,7 @@ if ( nrow(state_yoy %>% filter(!is.na(total_requested_amount)))  > 0 ) {
 
 
 ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount)) + 
-  geom_bar(stat="identity", fill="#4ea324") +
+  geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title="Funds Requested",
        subtitle="State IUP/PPLs",
@@ -113,7 +113,7 @@ if ( nrow(state_yoy %>% filter(!is.na(total_project_cost)))  > 0 ) {
 
 
 ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost)) + 
-  geom_bar(stat="identity", fill="#4ea324") +
+  geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title="Total Project Cost for All Applicants",
        subtitle="State IUP/PPLs",
@@ -130,7 +130,7 @@ if ( nrow(state_yoy %>% filter(!is.na(total_funding_amount)))  > 0 ) {
 
 
 ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount)) + 
-  geom_bar(stat="identity", fill="#4ea324") +
+  geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title="Expected Funding Amount",
        subtitle="State IUP/PPLs",
@@ -145,7 +145,7 @@ if ( nrow(state_yoy %>% filter(!is.na(total_principal_forgiveness)))  > 0 ) {
 
 
 ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness)) + 
-  geom_bar(stat="identity", fill="#4ea324") +
+  geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title="Expected Principal Forgiveness",
        subtitle="State IUP/PPLs",
@@ -171,7 +171,7 @@ expecting_funding_projects <- state_yoy %>%
 
 ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding)) + 
   geom_bar(stat="identity", position="stack") +
-  scale_fill_manual(values = cat_palette(2), 
+  scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "Expecting Funding") + 
   labs(title="Proportion of Applicant Projects Expecting Funding",
        subtitle="State IUP/PPLs",
@@ -186,8 +186,8 @@ ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expect
 
 ```{r}
 ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent)) + 
-  geom_line(group=1, color="#172f60") + 
-  geom_point(color="#172f60") + 
+  geom_line(group=1, color=cat_palette_pastel(1), size=1.5) + 
+  geom_point(color=cat_palette_pastel(1), size=4) + 
   scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
@@ -209,7 +209,7 @@ dac_project_types <- state_yoy %>%
 
 ggplot(dac_project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-    scale_fill_manual(values = cat_palette(3), 
+    scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
@@ -237,7 +237,7 @@ ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding
   labs(x="State Fiscal Year",
        y="Projects",
        title="How many Disadvantaged Community Projects Could Expect Funding?") + 
-    scale_fill_manual(values = cat_palette(2), 
+    scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "Expecting Funding") + 
   epic_chart_theme
 
@@ -250,8 +250,8 @@ ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding
 
 ```{r}
 ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_expecting_funding_percent_ef)) + 
-  geom_line(group=1, color="#172f60") + 
-  geom_point(color="#172f60") + 
+  geom_line(group=1, color=cat_palette_pastel(1), size=1.5) + 
+  geom_point(color=cat_palette_pastel(1), size=4) + 
   scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
@@ -276,7 +276,7 @@ project_types <- state_yoy %>%
 
 ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-    scale_fill_manual(values = cat_palette(3), 
+    scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
@@ -305,7 +305,7 @@ state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data
          )
 
 # In this case we are okay filling No Infos as 0s for math purposes because the ones where we have No Info wouldn't be considered anyways
-state_projects_type <- all_projects %>%
+state_projects_type <- state_projects %>%
   group_by(project_type, state_fiscal_year) %>%
   summarize(count=n(),
             total_project_cost = sum(project_cost, na.rm=TRUE),
@@ -319,7 +319,7 @@ state_projects_type <- all_projects %>%
 ```{r}
 ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-      scale_fill_manual(values = cat_palette(3), 
+      scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
   labs(x="State Fiscal Year",
@@ -333,7 +333,7 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=
 
 ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-      scale_fill_manual(values = cat_palette(3), 
+      scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
   labs(x="State Fiscal Year",
@@ -347,7 +347,7 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, f
 ```{r}
 ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-      scale_fill_manual(values = cat_palette(3), 
+      scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
   labs(x="State Fiscal Year",
@@ -361,7 +361,7 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fil
 ```{r}
 ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgiveness, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
-      scale_fill_manual(values = cat_palette(3), 
+      scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
   labs(x="State Fiscal Year",
@@ -390,7 +390,7 @@ sfy_project_cost <- state_projects %>%
 ggplot(sfy_project_cost, aes(x=state_fiscal_year, y=value, fill=name)) + 
   geom_bar(stat="identity", position="dodge") + 
   scale_y_continuous(labels=label_dollar()) + 
-  scale_fill_manual(values = cat_palette(2), 
+  scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "") + 
   labs(x="State Fiscal Year",
        y="",

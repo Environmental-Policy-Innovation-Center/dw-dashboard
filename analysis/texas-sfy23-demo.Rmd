@@ -105,6 +105,29 @@ ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) 
   epic_chart_theme
 ```
 
+## Base PF as percents
+
+```{r}
+pf_percents <- data.frame(category=c("PF Available to DACs", "Remaining PF", "Remaining Base Funds"),
+                         amount_pct=c(16, 16, 68))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+pf_percents$category <- factor(pf_percents$category, levels=c("Remaining Base Funds", "PF Available to DACs", "Remaining PF"))
+
+plot_labs <- paste0(pf_percents$category, " (", pf_percents$amount_pct, "%)")
+p <- ggdonutchart(pf_percents,
+             "amount_pct",
+             fill="category",
+             label=plot_labs,
+             color="white",
+             palette=c("lightgrey", "#4ea324", "#172f60"))
+p + theme(legend.position="none",
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), ) + 
+  labs(title="Comparing Principal Forgiveness to Available Base Funds")
+```
+
+
 ## Comparing Funds in Process Stages
 
 ```{r}
@@ -250,7 +273,6 @@ p + theme(legend.position="none",
         legend.title = element_text(size = 11, family = "Lato"), ) + 
   labs(title="How many projects expected to receive funding are going to DACs?")
 ```
-
 
 X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs -- same as above, but for Lead specifically
 ```{r}

@@ -275,6 +275,10 @@ mi_clean_y2 <- clean_mi_y2()
 source("year2/MN/code/clean-MN.R")
 mn_clean_y2 <- clean_mn_y2()
 
+# Texas
+source("year2/TX/code/clean-TX.R")
+tx_clean_y2 <- clean_tx_y2()
+
 # Virginia
 source("year2/VA/code/clean-VA.R")
 va_clean_y2 <- clean_va_y2()
@@ -292,6 +296,11 @@ wa_clean_y2 <- clean_wa_y2()
 # Michigan
 source("year3/MI/code/clean-MI.R")
 mi_clean_y3 <- clean_mi_y3()
+
+# Texas
+source("year3/TX/code/clean-TX.R")
+tx_clean_y3 <- clean_tx_y3()
+
 
 ```
 

@@ -1,11 +1,20 @@
 ---
-title: "EPA Portal Initial Analysis"
+title: "Finalized Agreements Analysis"
 author: "Phil Cork"
 date: "2024-07-08"
 ---
 
-This notebook is a draft of analysis that could potentially feed into the SRF Website for the "Finalized Agreement" sections of a particular state, using Michigan as an example.
-In the future, this notebook will need to be modified to either handle multiple years of data or be modified to work on only one year of data and then develop a second year-over-year notebook, similar to how the IUP data is handled.
+This notebook is a draft of analysis that could potentially feed into the SRF Funding Tracker for the "Finalized Agreement" sections of a particular state, using Texas as an example.
+
+In the future, this notebook will need to be modified to either handle multiple years of data or be modified to work on only one year of data and then develop a second year-over-year notebook, similar to how the IUP data is handled. This update will be dependent on future updates to the EPA's Public SRF Portal and then repulling that data into AWS.
+
+```{r}
+state_name <- "Texas"
+years <- "SFY23"
+subtitle_str <- paste0(state_name, ", ", years)
+```
+
+
 
 ```{r}
 library(tidyverse)
@@ -43,10 +52,8 @@ epic_chart_theme <- theme_minimal() +
                                                    b = 0, l = 0)), 
         axis.title.y = element_text(margin = margin(t = 0, r = 10, 
                                                     b = 0, l = 0))) 
-```
 
-```{r}
-state_name <- "Texas"
+cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
 ```
 
 # Funding Decisions
@@ -156,8 +163,10 @@ by_dac <- state_finalized_agreements %>%
 ggplot(by_dac, aes(x=value, y=disadvantaged_assistance, fill=name)) + 
   geom_bar(stat="identity", position="stack") + 
   labs(x="", y="Disadvantaged", fill="",
-       title="Finalized Awards & Subsidy", subtitle = paste(state_name, "SFY23")) + 
-  scale_fill_manual(values=c("#4ea324", "#1054a8")) +  
+       title="How much of the finalized awards are subsidies?", subtitle = subtitle_str) + 
+  scale_fill_manual(values=cont_palette(2)) +  
+  #NOTE: for this code to be more modular, may consider how to automatically handle scaling and adding a suffix to numbers
+  # ie when it makes more sense in 100k or 1b scale
   scale_x_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
   epic_chart_theme
 

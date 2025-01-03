@@ -4,7 +4,7 @@ author: "Phil Cork"
 date: "2024-07-08"
 ---
 
-This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level agregate data. It uses Texas SFY 23 as an example.
+This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level agregate data. It currently uses Texas SFY 23 as an example.
 
 As of December 2024, some of the tables and data visualizations are made manually from stats pulled from state IUPs, but this information will eventually be made into a tabular format by the Water Policy team and then should be imported from that forthcoming Google Sheet. At that time, much of this code which is uniquely specific to Texas SFY23 can and should be converted to an abstracted version that can be run for all states/fiscal years by simply changing the top-level variables.
 
@@ -15,6 +15,7 @@ As of December 2024, some of the tables and data visualizations are made manuall
 ```{r}
 state_name <- "Texas"
 sfy <- "2023"
+subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 ```
 
 ## Imports and Styling
@@ -83,7 +84,9 @@ grants_allocated <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF", "FFY22 BIL
 ```{r}
 ggplot(grants_allocated, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Federal Cap Grants", subtitle=paste0(state_name, ", ", sfy)) + 
+  labs(x="", y="", 
+       title="How much was each Federal Cap Grant?", 
+       subtitle=subtitle_str) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
 ```
@@ -100,7 +103,8 @@ principal_forgiveness <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF, DACs",
 ```{r}
 ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Principal Forgiveness", subtitle=paste0(state_name, ", ", sfy)) + 
+  labs(x="", y="", title="How much of the Fed Cap Grants are Principal Forgiveness?", 
+       subtitle=subtitle_str) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
 ```
@@ -124,7 +128,8 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="Comparing Principal Forgiveness to Available Base Funds")
+  labs(title="How are the base funds allocated as principal forgiveness?",
+       subtitle=subtitle_str)
 ```
 
 
@@ -137,7 +142,9 @@ available_award_comp <- data.frame(category = c("Available", "Submitted", "Expec
 
 ggplot(available_award_comp, aes(x=category, y=amount)) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="Comparing Available Funds to Submitted Needs and Expecting Funding", subtitle=paste0(state_name, ", ", sfy)) + 
+  labs(x="", y="", 
+       title="How do available funds compare to submitted needs and expected funding?", 
+       subtitle=subtitle_str) + 
   scale_y_continuous(labels=label_dollar(scale=.000000001, suffix="B")) + 
   epic_chart_theme
 ```
@@ -164,7 +171,8 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="Comparing Lead Replacement Costs to Available Funds")
+  labs(title="How do lead replacement costs compare to available funds?",
+       subtitle=subtitle_str)
 
 ```
 
@@ -187,7 +195,8 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="Comparing Emerging Contaminants Costs to Available Funds")
+  labs(title="How do emerging contaminants costs compare to available funds?",
+       subtitle=subtitle_str)
 ```
 
 # State-Level Data
@@ -229,7 +238,8 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How many DACs are expected to receive funding?")
+  labs(title="How many DACs are expected to receive funding?",
+       subtitle=subtitle_str)
 ```
 
 
@@ -245,13 +255,6 @@ state_data$disadvantaged_expecting_funding_percent_ef
 ```
 
 ```{r}
-big_number_donut_plot(
-  state_data$disadvantaged_expecting_funding_percent_ef/100,
-  "Lato", "#4ea324",
-  "Percent of Projects Expecting Funding that are DACs"
-)
-
-#38 projects EF, 27 are DAC
 
 ef_dacs <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Funding"),
                          amount=c(11, 27),
@@ -271,7 +274,8 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How many projects expected to receive funding are going to DACs?")
+  labs(title="How many projects expected to receive funding are going to DACs?",
+       subtitle=subtitle_str)
 ```
 
 X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs -- same as above, but for Lead specifically

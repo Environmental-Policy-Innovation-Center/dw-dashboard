@@ -1,3 +1,13 @@
+---
+title: "Residual Projects Year over Year"
+author: "Phil Cork"
+date: "2024-12-17"
+---
+
+This notebook is a first pass at several attempts to identify "residual" projects, which are those that linger on a state's PPL/IUP year-over-year. The code looks for projects on either the applicant list that never receive funding or projects that make it onto the funding list, but are still there in subsequent years.
+
+In the initial example, Texas is used, but highlights the challenges of these techniques, as there are no consistent `project_id`s to match on and `project_descriptions` change in subtle ways year over year, even when they are clearly about the same project.
+
 # Setup
 
 ## Set Variables

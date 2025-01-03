@@ -1,7 +1,12 @@
+---
+title: "Funding Data Year Over Year"
+author: "Phil Cork"
+date: "2024-11-08"
+---
 
+This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on Funding & Finance data gathered by the Water policy team as they put together the data dictionaries and content for the website. The outputs focus on the "Funding" sections of the state overview pages.
 
-This notebook generates plots from manually-gathered statistics found on the Texas State Overview page template.
-In the future, these numbers will be entered into a database and this code will need to be updated to pull it in and recreate the plots in a more reproducible fashion.
+NOTE: These features are currently manually entered from data gathered by the Water policy team. In the near future, these numbers will be collected into a database and this code will need to be updated to pull it in from a Google Sheet and recreate the plots in a more reproducible fashion.
 
 # Imports & Settings 
 
@@ -58,9 +63,6 @@ cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
 
 
 # Base Federal Capitalization Grants
-$54,911,000
-$40,181,000
-$37,157,000
 
 ```{r}
 fed_cap_grants <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
@@ -76,9 +78,6 @@ ggplot(fed_cap_grants, aes(x=state_fiscal_year, y=amount)) +
 
 
 # Base Principal Forgiveness for DACs
-$8,913,430 (16%)
-$7,712,000 (19.1%)
-$8.500.000 (22.7%)
 
 ```{r}
 pf_for_dacs <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
@@ -111,9 +110,7 @@ ggplot(pf_for_dacs_pct, aes(x=state_fiscal_year, y=amount)) +
 
 
 # Total Funding Requested under Base & BIL General Supplemental Program PPL
-$2492000652
-$3255535627
-$4643722053.80
+
 ```{r}
 
 funding_requested <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
@@ -129,9 +126,6 @@ ggplot(funding_requested, aes(x=state_fiscal_year, y=amount)) +
 ```
 
 # Total Funding Available for Projects under Base & BIL General Supplemental Program
-342000000
-435066830
-444395440
 
 ```{r}
 funding_requested_available <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025",
@@ -153,9 +147,6 @@ ggplot(funding_requested_available, aes(x=state_fiscal_year, y=amount, fill=cate
 ```
 
 # Total Funding Available for Lead Projects
-213455950
-140519350
-27528500
 
 
 ```{r}
@@ -202,23 +193,6 @@ ggplot(funding_requested_available_ec, aes(x=state_fiscal_year, y=amount, fill=c
 ```
 
 # Set Asides
-
-State	Program	State Fiscal Year	Set Asides $	Set Asides %
-Texas	Base	2023	12885760	23%
-Texas	Base	2024	10528960	26%
-Texas	Base	2025	10045120	27%
-Texas	BIL General Supplemental	2023	5639720	4%
-Texas	BIL General Supplemental	2024	18714680	11%
-Texas	BIL General Supplemental	2025	19330240	11%
-Texas	Base & BIL General Supplemental	2023	18525480	9%
-Texas	Base & BIL General Supplemental	2024	29243640	14%
-Texas	Base & BIL General Supplemental	2025	29375360	13%
-Texas	Lead Service Line Replacement	2023	14425700	4%
-Texas	Lead Service Line Replacement	2024	NA	NA	NA
-Texas	Lead Service Line Replacement	2025	1121500	4%
-Texas	Emerging Contaminants	2023	2368080	4%
-Texas	Emerging Contaminants	2024	2436560	4%
-Texas	Emerging Contaminants	2025
 
 ```{r}
 set_asides <- data.frame(state_fiscal_year=c("SFY2023","SFY2024", "SFY2025",

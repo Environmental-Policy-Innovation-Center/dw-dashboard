@@ -1,9 +1,8 @@
-#source("resources.R")
+source("resources.R")
 
 clean_oh_y3 <- function() {
   base_path <- "year3/OH/data"
 
-  
   # Comprehensive Project List
   oh_comp <- fread(file.path(base_path, "oh-ppl-base.csv"),
                    colClasses = "character", na.strings = "") %>%
@@ -15,7 +14,6 @@ clean_oh_y3 <- function() {
            pwsid = str_squish(pws_id),
            community_served = str_squish(county)) %>%
     select(epic_project_id, borrower, project_description, funding_amount, population, pwsid, community_served)
-  print(paste("Shape of oh_comp:", nrow(oh_comp), "rows,", ncol(oh_comp), "columns"))
 
   # DAC Principal Forgiveness List
   oh_pf <- fread(file.path(base_path, "oh-ppl-pf.csv"),
@@ -24,7 +22,6 @@ clean_oh_y3 <- function() {
     rename(dac_pf = estimated_principal_forgiveness) %>%
     mutate(dac_pf = ifelse(dac_pf == "BYPASS 1", "BYPASS", dac_pf)) %>%
     select(epic_project_id, dac_pf)
-  print(paste("Shape of oh_pf:", nrow(oh_pf), "rows,", ncol(oh_pf), "columns"))
 
   # Regional Principal Forgiveness List
   oh_reg_pf <- fread(file.path(base_path, "oh-ppl-regional-pf.csv"),
@@ -33,7 +30,6 @@ clean_oh_y3 <- function() {
     rename(reg_pf = estimated_principal_forgiveness) %>%
     mutate(reg_pf = ifelse(reg_pf == "BYPASS 1", "BYPASS", reg_pf)) %>%
     select(epic_project_id, reg_pf)
-  print(paste("Shape of oh_reg_pf:", nrow(oh_reg_pf), "rows,", ncol(oh_reg_pf), "columns"))
 
   # Emerging Contaminants List
   oh_ec <- fread(file.path(base_path, "oh-ppl-ecr.csv"),
@@ -43,7 +39,6 @@ clean_oh_y3 <- function() {
            disadvantaged = "No Information",
            project_score = str_squish(score_total_points)) %>%
     select(epic_project_id, project_type, disadvantaged, estimated_ec_amount, est_ec_principal_forgiveness, project_score)
-  print(paste("Shape of oh_ec:", nrow(oh_ec), "rows,", ncol(oh_ec), "columns"))
 
   # Get extra EC projects that don't match comprehensive list
   oh_ec_extra <- fread(file.path(base_path, "oh-ppl-ecr.csv"),
@@ -63,7 +58,6 @@ clean_oh_y3 <- function() {
            population = "No Information") %>%
     select(borrower, project_description, pwsid, community_served, project_score, project_type, disadvantaged,
            expecting_funding, funding_amount, principal_forgiveness, population)
-  print(paste("Shape of oh_ec_extra:", nrow(oh_ec_extra), "rows,", ncol(oh_ec_extra), "columns"))
 
   # Lead Service Line List  
   oh_lsl <- fread(file.path(base_path, "oh-lslr.csv"),
@@ -74,11 +68,9 @@ clean_oh_y3 <- function() {
              grepl("PF", rate) ~ "Yes",
              TRUE ~ "No")) %>%
     select(epic_project_id, project_type, disadvantaged, estimated_lsl_portion_of_the_project)
-  print(paste("Shape of oh_lsl:", nrow(oh_lsl), "rows,", ncol(oh_lsl), "columns"))
 
   # Combine Lead and EC
   oh_ec_lsl <- bind_rows(oh_ec, oh_lsl)
-  print(paste("Shape of oh_ec_lsl:", nrow(oh_ec_lsl), "rows,", ncol(oh_ec_lsl), "columns"))
 
   # Join all datasets and process
   oh_comp <- oh_comp %>%
@@ -112,7 +104,6 @@ clean_oh_y3 <- function() {
         TRUE ~ "0"),
       principal_forgiveness = ifelse(project_type == "General" & principal_forgiveness == "No Information", "0", principal_forgiveness)
     )
-  print(paste("Shape after joins and processing:", nrow(oh_comp), "rows,", ncol(oh_comp), "columns"))
 
   # Add extra EC projects and final cleanup
   oh_clean <- bind_rows(oh_comp, oh_ec_extra) %>%
@@ -129,7 +120,6 @@ clean_oh_y3 <- function() {
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
-  print(paste("Final shape of oh_clean:", nrow(oh_clean), "rows,", ncol(oh_clean), "columns"))
 
   # Run validation tests
   run_tests(oh_clean)

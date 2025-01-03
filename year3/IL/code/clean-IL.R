@@ -1,7 +1,7 @@
 source("resources.R")
 
 clean_il <- function() {
-  base_path <- file.path("..", "data")
+  base_path <- file.path("year3", "IL", "data")
   
   # Read PPL Fundable data
   il_ppl_f <- fread(file.path(base_path, "y3-Illinois_PPL_Fundable.csv"),
@@ -90,9 +90,6 @@ clean_il <- function() {
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
-  
-  # Verify final shape of il_clean
-  # cat("Final shape of il_clean:", dim(il_clean), "\n")
   
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_il <- function() {
+clean_il_y3 <- function() {
   base_path <- file.path("year3", "IL", "data")
   
   # Read PPL Fundable data

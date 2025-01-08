@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mi <- function() {
+clean_mi_y2 <- function() {
   
   base_path <- file.path("year2", "MI", "data")
   

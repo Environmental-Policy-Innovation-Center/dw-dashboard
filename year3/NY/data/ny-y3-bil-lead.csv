@@ -1,0 +1,128 @@
+﻿Project.Number,County,System.Name,Borrower,Description,Pop,Project.Cost,Score,Cumulative.Total,DAC
+19595,NY City,NEW YORK CITY,NYCMWFA,"Lead Service Line Replacement (Area G)., Upgrade Distribution System",59637,11354131,40,11354131,DAC
+19320,NY City,NEW YORK CITY,NYCMWFA,"Lead service line replacement (Area E)., Upgrade Distribution System",37749,14411320,40,25765451,DAC
+19881,Oneida,MOHAWK VALLEY WATER AUTH,MVWA,"Lead service line replacement., Upgrade Distribution System",35000,12740000,40,38505451,DAC
+19318,NY City,NEW YORK CITY,NYCMWFA,"Lead service line replacement (Area C)., Upgrade Distribution System",24872,5686580,40,44192031,DAC
+19319,NY City,NEW YORK CITY,NYCMWFA,"Lead service line replacement (Area D)., Upgrade Distribution System",15929,9780120,40,53972151,DAC
+19321,NY City,NEW YORK CITY,NYCMWFA,"Lead service line replacement (Area F)., Upgrade Distribution System",15168,8365970,40,62338121,DAC
+19806,Monroe,ROCHESTER (C),Rochester (C),"Lead Service Line Replacement, Upgrade Distribution System",12000,24000000,40,86338121,DAC
+19436,Fulton,GLOVERSVILLE (C) WATER WORKS,Gloversville (C),"Lead service line replacement., Upgrade Distribution System",4723,12209763,40,98547884,DAC
+19807,Niagara,LOCKPORT (C),Lockport (C),"Lead Service Line Replacement, Upgrade Distribution System",4150,20477044,40,119024928,DAC
+19636,Sullivan,VILLAGE OF LIBERTY,Liberty (V),"Lead Service Line Inventory., Upgrade Distribution System",3900,845609,40,119870537,DAC
+19784,Dutchess,POUGHKEEPSIE (C),Poughkeepsie (C),"Lead Service Line Replacement (Zone 2, Round 1)., Upgrade Distribution System",3169,11800339,40,131670876,DAC
+19604,Dutchess,POUGHKEEPSIE (C),Poughkeepsie (C),"Lead Service Line Replacement (Phase 3)., Upgrade Distribution System",2980,9336373,40,141007249,DAC
+19621,Erie,BUFFALO (C),Buffalo (C),"Lead Service Line Replacement, Upgrade Distribution System",2800,11516000,40,152523249,DAC
+19437,Oneida,BOONVILLE (V),Boonville (V),"Lead service line inventory., Upgrade Distribution System",2500,762000,40,153285249,DAC
+19876,Washington,WHITEHALL (V),Whitehall (V),"Lead service line inventory., Upgrade Distribution System",2400,1134110,40,154419359,DAC
+19640,Montgomery,CANAJOHARIE (V),Canajoharie (V),"Lead service line inventory., Upgrade Distribution System",2300,558962,40,154978321,DAC
+19789,Dutchess,POUGHKEEPSIE (C),Poughkeepsie (C),"Lead Service Line Replacement (Zone 3, Round 1)., Upgrade Distribution System",2180,9584438,40,164562759,DAC
+19592,Sullivan,LIBERTY (T),Liberty (T),"Lead Service Line Inventory., Upgrade Distribution System",2100,569094,40,165131853,DAC
+19616,Schuyler,WATKINS GLEN VILLAGE,Watkins Glen (V),"Lead Service Line Inventory., Upgrade Distribution System",1863,1239000,40,166370853,DAC
+19406,Yates,DUNDEE (V),Dundee (V),"Lead Service Line Inventory., Upgrade Distribution System",1690,545000,40,166915853,DAC
+19351,Chenango,BAINBRIDGE (V),Bainbridge (V),"Lead Service Line Inventory, Upgrade Distribution System",1600,726000,40,167641853,DAC
+19791,Dutchess,POUGHKEEPSIE (C),Poughkeepsie (C),"Lead Service Line Replacement (Zone 4, Round 1)., Upgrade Distribution System",1567,8516534,40,176158387,DAC
+19622,Oswego,OSWEGO (C),Oswego (C),"Lead Service Line Replacement, Upgrade Distribution System",1461,6096000,40,182254387,DAC
+19823,Orange,PORT JERVIS WD,Port Jervis (C),"Lead Service Line Replacement., Upgrade Distribution System",1414,10308852,40,192563239,DAC
+19612,Cattaraugus,YORKSHIRE (T),Yorkshire (T),"Lead Service Line Inventory, Upgrade Distribution System",1000,206000,40,192769239,DAC
+19409,Erie,BUFFALO WATER BOARD,Buffalo (C),"Lead Service Line Replacement., Upgrade Distribution System",900,5460000,40,198229239,DAC
+19464,Lewis,PORT LEYDEN (V),Port Leyden (V),"Lead service line inventory., Upgrade Distribution System",820,301778,40,198531017,DAC
+19462,St. Lawrence,GOUVERNEUR (T),Gouverneur (T),"Lead service line inventory., Upgrade Distribution System",800,32747,40,198563764,DAC
+19626,Sullivan,NARROWSBURG WATER DISTRICT,Tusten (T),"Lead Service Line Inventory., Upgrade Distribution System",800,380334,40,198944098,DAC
+19366,Sullivan,WOODRIDGE (V),Woodridge (V),"Lead Service Line Inventory, Upgrade Distribution System",747,256470,40,199200568,DAC
+19628,Orange,PORT JERVIS WD,Port Jervis (C),"Lead Service Line Replacement., Upgrade Distribution System",735,10308112,40,209508680,DAC
+19639,Montgomery,ST. JOHNSVILLE (V),St. Johnsville (V),"Lead service line inventory., Upgrade Distribution System",648,340537,40,209849217,DAC
+19468,St. Lawrence,MORRISTOWN (T),Morristown (T),"Lead service line inventory., Upgrade Distribution System",500,24864,40,209874081,DAC
+19457,St. Lawrence,DE KALB JUNCTION WD,De Kalb (T),"Lead service line inventory., Upgrade Distribution System",315,20081,40,209894162,DAC
+19608,Lewis,TURIN (V),Turin (V),"Lead service line inventory., Upgrade Distribution System",300,185400,40,210079562,DAC
+19455,St. Lawrence,CLIFTON (T),Clifton (T),"Lead service line inventory., Upgrade Distribution System",232,20128,40,210099690,DAC
+19605,Orange,NEWBURGH (C),Newburgh (C),"Lead Service Line Replacement., Upgrade Distribution System",204,1010000,40,211109690,DAC
+19607,Albany,WATERVLIET (C),Watervliet (C),"Lead service line replacement., Upgrade Distribution System",120,518000,40,211627690,DAC
+19472,Oneida,ROME (C),Rome (C),"Lead service line inventory., Upgrade Distribution System",30000,412000,35,212039690,DAC
+19597,Ulster,KINGSTON (CITY) WATER DEPARTMENT,Kingston (C),"Lead Service Line Inventory., Upgrade Distribution System",24069,540000,35,212579690,DAC
+19280,Clinton,PLATTSBURGH (C),Plattsburgh (C),"Lead service line inventory., Upgrade Distribution System",19840,324000,35,212903690,DAC
+19619,Genesee,BATAVIA (C),Batavia (C),"Lead Service Line Inventory, Upgrade Distribution System",15600,772500,35,213676190,DAC
+19631,Warren,GLENS FALLS (C),Glens Falls (C),"Lead service line inventory., Upgrade Distribution System",14784,533540,35,214209730,
+19292,Ontario,CANANDAIGUA (C),Canandaigua (C),"Lead Service Line Inventory., Upgrade Distribution System",11000,869300,35,215079030,DAC
+19410,Seneca,SENECA FALLS (T),Seneca Falls (T),"Lead Service Line Inventory., Upgrade Distribution System",9000,1088710,35,216167740,DAC
+19861,Erie,BUFFALO,(C) Buffalo,"Lead Service Line Replacement, Upgrade Distribution System",4400,16372000,35,232539740,DAC
+19862,Genesee,BATAVIA,(C) Batavia,"Lead Service Line Replacement Project, Upgrade Distribution System",3110,10744805,35,243284545,DAC
+19422,Herkimer,FRANKFORT (V),Frankfort (V),"Lead service line replacement., Upgrade Distribution System",2502,551050,35,243835595,DAC
+19454,Jefferson,CLAYTON (V),Clayton (V),"Lead service line inventory., Upgrade Distribution System",2079,82391,35,243917986,DAC
+19446,Herkimer,DOLGEVILLE (V),Dolgeville (V),"Lead service line inventory., Upgrade Distribution System",2042,352260,35,244270246,DAC
+19460,St. Lawrence,STAR LAKE WD,Fine (T),"Lead service line inventory., Upgrade Distribution System",1300,48419,35,244318665,DAC
+19281,Niagara,NORTH TONAWANDA (C),North Tonawanda (C),"Lead service line inventory., Upgrade Distribution System",1000,173100,35,244491765,
+19877,Lewis,CROGHAN (V),Croghan (V),"Lead service line inventory., New Distribution System",900,267800,35,244759565,DAC
+19453,Jefferson,CHAMPION WD#2,Champion (T),"Lead service line inventory., Upgrade Distribution System",712,26766,35,244786331,DAC
+19463,St. Lawrence,HEUVELTON (V),Heuvelton (V),"Lead service line inventory., Upgrade Distribution System",659,32747,35,244819078,DAC
+19632,Warren,GLENS FALLS (C),Glens Falls (C),"Lead service line replacement., Upgrade Distribution System",42,257500,35,245076578,
+19367,Westchester,PEEKSKILL (C),Peekskill (C),"Lead Service Line Inventory, Upgrade Distribution System",24075,1465690,30,246542268,DAC
+19641,Schenectady,SCOTIA (V),Scotia (V),"Lead service line inventory., Upgrade Distribution System",12800,61800,30,246604068,
+19466,Jefferson,LERAY (T),Leray (T),"Lead service line inventory., Upgrade Distribution System",10000,87962,30,246692031,DAC
+19735,Rensselaer,HOOSICK FALLS (V),Hoosick Falls (V),"Lead service line inventory., Upgrade Distribution System",4500,492000,30,247184031,DAC
+19400,Onondaga,JORDAN (V),Jordan (V),"Lead Service Line Inventory., Upgrade Distribution System",3600,313200,30,247497231,
+19421,Essex,LAKE PLACID (V),Lake Placid (V),"Lead service line inventory., Upgrade Distribution System",2229,440632,30,247937863,DAC
+19445,Clinton,ROUSES POINT WATER DISTRICT,Rouses Point (V),"Lead service line inventory., Upgrade Distribution System",2195,273980,30,248211843,DAC
+19398,Cayuga,WEEDSPORT (V),Weedsport (V),"Lead Service Line Inventory., Upgrade Distribution System",1945,606500,30,248818343,DAC
+19461,Jefferson,ADAMS (V),Adams (V),"Lead service line inventory., Upgrade Distribution System",1775,519120,30,249337463,DAC
+19808,Greene,VILLAGE OF COXSACKIE,Coxsackie (V),"Lead Service Line Inventory., Upgrade Distribution System",1300,41450,30,249378913,DAC
+19470,Jefferson,RUTLAND (T),Rutland (T),"Lead service line inventory., Upgrade Distribution System",1250,48419,30,249427332,
+19637,Steuben,VILLAGE OF CASTILE,Castile (V),"Lead Service Line Inventory., Upgrade Distribution System",1135,315000,30,249742332,DAC
+19372,Chenango,NEW BERLIN (V),New Berlin (V),"Lead Service Line Inventory., Upgrade Distribution System",1000,398200,30,250140532,DAC
+19444,Otsego,EDMESTON (T),Edmeston (T),"LeadsService line inventory., Upgrade Distribution System",900,359200,30,250499732,DAC
+19458,Lewis,DIANA (T),Diana (T),"Lead service line inventory., Upgrade Distribution System",650,28818,30,250528550,DAC
+19459,St. Lawrence,EDWARDS (T),Edwards (T),"Lead service line inventory., Upgrade Distribution System",400,20138,30,250548687,DAC
+19815,Greene,VILLAGE OF COXSACKIE,Coxsackie (V),"Lead Service Line Replacement., Upgrade Distribution System",210,1294945,30,251843632,DAC
+19397,Monroe,MONROE COUNTY WATER AUTH,MCWA,"Lead Service Line Inventory., Upgrade Distribution System",558818,25390000,25,277233632,
+19282,Erie,TONAWANDA (T),Tonawanda (T),"Lead service line inventory., Upgrade Distribution System",88990,324500,25,277558132,
+19620,Otsego,ONEONTA (C),Oneonta (C),"Lead Service Line Replacement., Upgrade Distribution System",16000,2100000,25,279658132,
+19293,Seneca,WATERLOO (V),Waterloo (V),"Lead Service Line Inventory., Upgrade Distribution System",4924,502310,25,280160442,
+19404,Cortland,HOMER (V),Homer (V),"Lead Service Line Inventory., Upgrade Distribution System",4000,1050600,25,281211042,DAC
+19401,Onondaga,ELBRIDGE (T),Elbridge (T),"Lead Service Line Inventory., Upgrade Distribution System",3600,442656,25,281653698,DAC
+19403,Onondaga,ELBRIDGE (V),Elbridge (V),"Lead Service Line Inventory., Upgrade Distribution System",3600,288144,25,281941842,
+19443,Albany,RAVENA (V),Ravena (V),"Lead service line inventory., Upgrade Distribution System",3271,345050,25,282286892,
+19449,Warren,LAKE LUZERNE (T),Lake Luzerne (T),"Lead service line inventory., Upgrade Distribution System",2500,650342,25,282937234,DAC
+19613,Cattaraugus,RANDOLPH (T),Randolph (T),"Lead Service Line Inventory., Upgrade Distribution System",1960,563000,25,283500234,DAC
+19593,Westchester,MT. VERNON BOARD OF WATER,Mt. Vernon (C),"Lead Service Line Replacement., Upgrade Distribution System",1200,6100000,25,289600234,DAC
+19630,Delaware,FRANKLIN (V),Franklin (V),"Lead Service Line Inventory., Upgrade Distribution System",342,201465,25,289801699,DAC
+19617,Cattaraugus,FRANKLINVILLE (V),Franklinville (V),"Lead Service Line Replacement., Upgrade Distribution System",293,2626000,25,292427699,DAC
+19615,Erie,ERIE COUNTY WA,Erie County Water Authority,"Lead Service Line Replacement., Upgrade Distribution System",117,910000,25,293337699,
+19614,Onondaga,ONONDAGA COUNTY WATER AUTHORITY,OCWA,"Lead Service Line Inventory., Upgrade Distribution System",500000,1143000,20,294480699,
+19602,NY City,NEW YORK CITY,NYCMWFA,"Lead Service Line Inventory., Upgrade Distribution System",215564,4716862,20,299197561,DAC
+19336,Westchester,YONKERS (C),Yonkers (C),"Lead Service Line Inventory., Upgrade Distribution System",211569,3115750,20,302313311,DAC
+19315,Nassau,HICKSVILLE WD,Hicksville WD,"Lead service line inventory., Upgrade Distribution System",48000,1086200,20,303399511,
+19286,Oneida,SHERRILL - KENWOOD WD,Sherrill (C),"Lead service line inventory., Upgrade Distribution System",3500,25750,20,303425261,
+19380,Dutchess,MILLERTON (V),Millerton (V),"Lead Service Line Inventory., Upgrade Distribution System",2000,128000,20,303553261,DAC
+19471,Jefferson,SACKETS HARBOR (V),Sackets Harbor (V),"Lead service line inventory., Upgrade Distribution System",1550,54610,20,303607872,
+19875,Saratoga,WATERFORD WATER WORKS,Waterford (T),"Lead service line replacement., Upgrade Distribution System",366,2208887,20,305816758,
+19465,St. Lawrence,LISBON WD,Lisbon (T),"Lead service line inventory., Upgrade Distribution System",300,14494,20,305831252,
+19374,Nassau,TOWN OF HEMPSTEAD,Hempstead (T),"Lead service line inventory., Upgrade Distribution System",130000,741600,15,306572852,
+19880,Albany,LATHAM WATER DISTRICT,Colonie (T),"Lead service line inventory., Upgrade Distribution System",85590,2039679,15,308612531,
+19358,Nassau,JERICHO WD,Jericho WD,"Lead service line inventory., Upgrade Distribution System",58000,1372000,15,309984531,
+19359,Nassau,JERICHO WD,Jericho WD,"Lead service line replacement., Upgrade Distribution System",58000,9292000,15,319276531,
+19356,Nassau,FREEPORT (V),Freeport (V),"Lead service line inventory., Upgrade Distribution System",44199,500000,15,319776531,
+19373,Westchester,OSSINING WATER DEPARTMENT,Ossining (V),"Lead Service Line Replacement, Upgrade Distribution System",32000,3441000,15,323217531,DAC
+19388,Westchester,OSSINING WATER DEPARTMENT,Ossining (V),"Lead Service Line Inventory, Upgrade Distribution System",32000,134000,15,323351531,DAC
+19325,Nassau,PORT WASHINGTON WD,Port Washington WD,"Lead service line inventory., Upgrade Distribution System",30000,1236000,15,324587531,
+19329,Orange,NEW WINDSOR CWD,New Windsor (T),"Lead Service Line Inventory, Upgrade Distribution System",29500,275000,15,324862531,
+19601,Nassau,CITY OF GLEN COVE,Glen Cove (C),"Lead Service Line Inventory., Upgrade Distribution System",28000,309000,15,325171531,DAC
+19386,Orange,NEWBURGH CWD,Newburgh (T),"Lead Service Line Inventory, Upgrade Distribution System",23000,374525,15,325546056,
+19363,Nassau,GARDEN CITY (V),Garden City (V),"Lead service line inventory., Upgrade Distribution System",22384,3468100,15,329014156,
+19375,Nassau,MINEOLA (V),Mineola (V),"Lead service line inventory., Upgrade Distribution System",20600,1194000,15,330208156,
+19322,Nassau,WESTBURY WD,Westbury WD,"Lead service line inventory., Upgrade Distribution System",20500,1186000,15,331394156,
+19353,Nassau,ROSLYN WD,Roslyn WD,"Lead service line inventory., Upgrade Distribution System",18619,3811510,15,335205666,
+19323,Nassau,ALBERTSON WD,Albertson WD,"Lead service line inventory., Upgrade Distribution System",13500,1156000,15,336361666,
+19625,Rockland,SUFFERN (V),Suffern (V),"Lead Service Line Inventory., Upgrade Distribution System",12000,662545,15,337024211,
+19324,Nassau,CARLE PLACE WD,Carle Place WD,"Lead service line inventory., Upgrade Distribution System",9000,1145000,15,338169211,
+19376,Nassau,WILLISTON PARK (V),Williston Park (V),"Lead service line inventory., Upgrade Distribution System",7300,1137000,15,339306211,
+19377,Nassau,WILLISTON PARK (V),Williston Park (V),"Lead service line replacement., Upgrade Distribution System",7300,7307070,15,346613281,
+19344,Westchester,LARCHMONT (V),Larchmont (V),"Lead Service Line Inventory, Upgrade Distribution System",6630,2510728,15,349124009,
+19427,Franklin,SARANAC LAKE (V),Saranac Lake (V),"Lead service line inventory., Upgrade Distribution System",5800,1151160,15,350275169,DAC
+19355,Nassau,OLD WESTBURY (V),Old Westbury (V),"Lead service line inventory., Upgrade Distribution System",4600,1122000,15,351397169,
+19390,Ulster,PORT EWEN WD,Esopus (T),"Lead Service Line Inventory, Upgrade Distribution System",4500,228000,15,351625169,DAC
+19347,Tompkins,BOLTON POINT,Cayuga Heights (V),"Lead Service Line Inventory, Upgrade Distribution System",3600,345951,15,351971120,
+19348,Tompkins,BOLTON POINT,Cayuga Heights (V),"Lead Service Line Replacement, Upgrade Distribution System",3600,540377,15,352511497,
+19394,Ulster,NEW PALTZ WD,New Paltz (T),"Lead Service Line Inventory., Upgrade Distribution System",1775,90125,15,352601622,DAC
+19389,Dutchess,RED HOOK WATER DISTRICT NO. 1,Red Hook (T),"Lead Service Line Inventory, Upgrade Distribution System",1600,178000,15,352779622,DAC
+19439,Orange,MONROE (T),Monroe (T),"Lead Service Line Inventory, Upgrade Distribution System",1500,91250,15,352870872,DAC
+19434,Columbia,KINDERHOOK (V),Kinderhook (V),"Lead service line inventory., Upgrade Distribution System",1100,192000,15,353062872,
+19381,Orange,FIRTHCLIFFE HEIGHTS WD,Cornwall (T),"Lead Service Line Inventory, Upgrade Distribution System",460,59625,15,353122497,

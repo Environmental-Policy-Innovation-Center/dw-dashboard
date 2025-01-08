@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ks <- function() {
+clean_ks_y1 <- function() {
   
   ## Base
   # -> (98,9)

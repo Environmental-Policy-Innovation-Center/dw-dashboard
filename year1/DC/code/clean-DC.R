@@ -2,7 +2,7 @@ library(tidyverse)
 library(data.table)
 library(janitor)
 
-clean_dc <- function() {
+clean_dc_y1 <- function() {
 
   # 13,3
   dc_ppl <- fread("year1/DC/data/DistrictofColumbia_PPL.csv",

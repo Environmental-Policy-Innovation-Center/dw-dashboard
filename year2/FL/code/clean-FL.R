@@ -4,7 +4,7 @@ library(janitor)
 source("resources.R")
 
 
-clean_fl <- function() {
+clean_fl_y2 <- function() {
   
   
   # (53, 16)

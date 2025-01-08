@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_id <- function() {
+clean_id_y1 <- function() {
   
   # (81, 9)
   id_ppl <- fread("year1/ID/data/12-Idaho_PPL.csv", 

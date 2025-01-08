@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nh <- function() {
+clean_nh_y1 <- function() {
   
   # (190,32)
   nh_raw <- fread("year1/NH/data/29-NewHampshire_PPL.csv",

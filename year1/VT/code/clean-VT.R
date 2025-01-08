@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_vt <- function() {
+clean_vt_y1 <- function() {
   
   
   # PPL - Fundable and Applicants

@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ms <- function() {
+clean_ms_y1 <- function() {
   
   # (48,9)
   ms_raw <- fread("year1/MS/data/24-Mississippi_PPL.csv",

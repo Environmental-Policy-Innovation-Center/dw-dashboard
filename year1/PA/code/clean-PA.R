@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_pa <- function() {
+clean_pa_y1 <- function() {
   
   # (62,23)
   pa_raw <- fread("year1/PA/data/38-Pennsylvania_manual_fundable_PPL.csv",

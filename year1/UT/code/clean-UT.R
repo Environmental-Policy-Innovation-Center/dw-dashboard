@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ut <- function() {
+clean_ut_y1 <- function() {
   
   
   ut_ppl <- fread("year1/UT/data/44-Utah_Comprehensive.csv",

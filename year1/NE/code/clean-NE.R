@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ne <- function() {
+clean_ne_y1 <- function() {
   
   
   # read in base, all non-lead or ec projects, (14,9)

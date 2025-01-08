@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ga <- function() {
+clean_ga_y1 <- function() {
   
   
   ## BASE IUP

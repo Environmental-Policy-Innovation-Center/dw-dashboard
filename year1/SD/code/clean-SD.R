@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_sd <- function() {
+clean_sd_y1 <- function() {
   
   
   # (23,8)

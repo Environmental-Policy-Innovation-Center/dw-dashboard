@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ok <- function() {
+clean_ok_y1 <- function() {
   
   
   ## base / bil

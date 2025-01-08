@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_in <- function() {
+clean_in_y0 <- function() {
   
   in_iup <- read.csv("year0/IN/data/INDIANA-Final-DW-2021-IUP.csv") %>%
     clean_names()

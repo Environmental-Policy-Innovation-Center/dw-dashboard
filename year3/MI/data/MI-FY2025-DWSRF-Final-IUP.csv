@@ -1,0 +1,156 @@
+"ProjectNumber",Applicant,Project Scope,Project County,"TotalPriorityPoints","PopulationServed byProject","Total Loan AmountRequested","Cost perPopulation","EmergingContaminantCosts","BIL LSLREligible Costs","Non BIL LSLREligible Costs","OverburdenedDetermination",DWSRF Loan,DWSRF PF,"BIL EmergingContaminant PF","BIL DWSRFSupplementalLoan","BIL DWSRFSupplementalPF","BIL DWSRFLSLR Loan","BIL DWSRFLSLR PF","State LSLR +WM Grant",Total PF/Grant*
+7751-01,City of Muskegon Heights,"WTP, LSLR, WM and Valve Rep",Muskegon,100,"9,917","$16,420,000.00","$1,655.74",,"$7,950,000.00",$-,"SignificantlyOverburdened","$5,797,500.00",,,,"$2,672,500.00","$4,054,500.00","$3,895,500.00",,"$6,568,000.00"
+7710-01,City of Battle Creek,"LSLR, WM, and Well Improvements",Calhoun,95,"52,000","$24,575,000.00",$472.60,,"$2,600,000.00",$-,Overburdened,"$18,334,000.00",,,,"$3,641,000.00","$1,326,000.00","$1,274,000.00",,"$4,915,000.00"
+7866-01,City of Kalamazoo,"PFAS Treatment, LSLR, and WM Rep",Kalamazoo,95,"200,247","$110,265,000.00",$550.64,"$97,264,000.00","$5,890,000.00","$7,110,000.00",Overburdened,"$90,265,000.00",,"$20,000,000.00",,,,,,"$20,000,000.00"
+7729-01,YCUA (city only),"LSLR, WM Rep, Looping, Meters",Washtenaw,90,"22,926","$3,030,000.00",$132.16,,"$124,000.00",$-,Overburdened,"$2,360,760.00",,,,"$545,240.00","$63,240.00","$60,760.00",,"$606,000.00"
+7717-01,City of Muskegon,"LSLR, WM Rep and Looping",Muskegon,90,"38,300","$13,985,000.00",$365.14,,"$10,710,000.00",$-,Overburdened,"$9,761,530.00",,,,$-,"$1,426,470.00","$2,797,000.00",,"$2,797,000.00"
+7884-01,City of Dowagiac,"New WTP, LSLR, WM Rep, Looping",Cass,90,"5,943","$14,285,000.00","$2,403.67",,"$2,000,000.00",$-,Overburdened,"$10,408,000.00",,,,"$1,877,000.00","$1,020,000.00","$980,000.00",,"$2,857,000.00"
+7626-01,City of Harbor Beach,"LSLR, WTP Storage, TM and WM Rep",Huron,90,"1,604","$5,900,000.00","$3,678.30",,"$375,000.00",$-,Overburdened,"$4,528,750.00",,,,"$996,250.00","$191,250.00","$183,750.00",,"$1,180,000.00"
+7777-01,City of Hartford,"LSLR, WM Rep, Looping, Meters, SCADA",Van Buren,90,"2,080","$11,760,000.00","$5,653.85",,"$4,488,000.00",$-,"SignificantlyOverburdened","$4,767,120.00",,,,"$2,504,880.00","$2,288,880.00","$2,199,120.00",,"$4,704,000.00"
+7808-01,City of Evart,"LSLR, WM Rep, Well and Tank Improvements",Osceola,90,"1,742","$14,451,000.00","$8,295.64",,"$4,464,000.00",$-,"SignificantlyOverburdened","$5,161,600.00",,,,,"$3,509,000.00",$-,"$5,780,400.00","$5,780,400.00"
+7869-01,City of Iron Mountain,"LSLR, WM, and Looping",Dickinson,90,"1,500","$13,300,000.00","$8,866.67",,"$4,600,000.00",$-,Overburdened,"$8,294,000.00",,,,"$406,000.00","$2,346,000.00","$2,254,000.00",,"$2,660,000.00"
+7870-01,City of Saginaw (City),"LSLR, WM Rep",Saginaw,90,940,"$18,800,000.00","$20,000.00",,"$2,300,000.00",$-,"SignificantlyOverburdened","$10,107,000.00",,,,"$6,393,000.00","$1,173,000.00","$1,127,000.00",,"$7,520,000.00"
+7872-01,City of St. Louis,"LSLR, WM and Valve Rep, Looping",Gratiot,90,333,"$13,340,000.00","$40,060.06",,$-,"$180,000.00","SignificantlyOverburdened","$8,004,000.00",,,,"$5,156,000.00",$-,$-,"$180,000.00","$5,336,000.00"
+7880-01,City of Owosso,"LSLR, WTP, WM and Well Improvements",Shiawassee,85,"26,658","$11,620,000.00",$435.89,,"$900,000.00",$-,Overburdened,"$8,837,000.00",,,,"$1,424,000.00","$459,000.00","$441,000.00","$459,000.00","$2,324,000.00"
+7768-01,Mt. Pleasant,WTP Improvements and LSLR,Isabella,85,"26,007","$13,100,000.00",$503.71,,"$47,500.00","$282,500.00",Overburdened,"$10,480,000.00","$2,287,000.00",,,,,,"$333,000.00","$2,620,000.00"
+7681-01,City of Bay City,"LSLR, WM, and Looping",Bay,85,"33,644","$27,425,000.00",$815.15,,"$26,345,580.00","$327,980.00",Overburdened,"$16,840,000.00","$585,000.00",,,,"$5,100,000.00","$4,900,000.00",,"$5,485,000.00"
+7771-01,City of Sault Ste. Marie,"LSLR, MW Rep, Looping, Intake Protection",Chippewa,85,"13,410","$16,885,000.00","$1,259.13",,$-,"$1,254,774.00",Overburdened,"$13,508,000.00","$2,128,000.00",,,,,,"$1,249,000.00","$3,377,000.00"
+7779-01,City of Galesburg,"WM Rep, System Improvements",Kalamazoo,85,"2,377","$3,260,000.00","$1,371.48",,$-,$-,Overburdened,"$2,608,000.00",,,,"$652,000.00",,,,"$652,000.00"
+7680-01,City of Hart,"LSLR, WM Rep, Well System Improvements",Oceana,85,"2,063","$3,655,000.00","$1,771.69",,"$1,421,000.00",$-,Overburdened,"$2,199,290.00",,,,,"$724,710.00","$696,290.00","$34,710.00","$731,000.00"
+7887-01,GLWA/DWSD,"LSLR, WM Rep",Wayne,85,"13,495","$25,670,000.00","$1,902.19",,"$7,280,810.00","$380,000.00","SignificantlyOverburdened",$-,,,"$11,956,787.00","$6,052,403.00","$3,713,213.00","$3,567,597.00","$380,000.00","$10,000,000.00"
+7888-01,GLWA/DWSD,"LSLR, WM Rep",Wayne,85,"12,403","$25,540,000.00","$2,059.18",,"$6,881,981.00","$360,000.00","SignificantlyOverburdened","$9,036,302.00",,,"$2,993,888.00","$2,571,767.00","$3,509,810.00","$3,372,171.00","$4,056,062.00","$10,000,000.00"
+7893-01,City of Hazel Park,"LSLR, WM Rep, Looping",Oakland,85,"4,913","$13,650,000.00","$2,778.34",,"$2,401,271.00","$9,066,729.00",Overburdened,"$9,695,352.00",,,,,"$1,224,648.00","$1,176,623.00","$1,553,377.00","$2,730,000.00"
+7867-01,City of Grand Rapids (City),"LSLR, WM Rep",Kent,85,"6,376","$20,340,000.00","$3,190.09",,"$8,000,000.00",$-,Overburdened,$-,,,"$12,192,000.00",,"$4,080,000.00","$3,920,000.00","$148,000.00","$4,068,000.00"
+7863-01,Oakland County (Pontiac),"LSLR, WM Rep",Oakland,85,"5,278","$19,080,000.00","$3,615.01",,"$5,438,600.00",$-,Overburdened,"$652,435.00",,,"$11,837,879.00",,"$2,773,686.00","$2,664,914.00","$1,151,086.00","$3,816,000.00"
+7659-01,Redford,"LSLR, WM Rep, Looping",Wayne,85,"3,700","$13,755,000.00","$3,717.57",,"$2,000,000.00",$-,Overburdened,"$9,984,000.00",,,,,"$1,020,000.00","$980,000.00","$1,771,000.00","$2,751,000.00"
+7544-01,City of St. Ignace,"LSLR, WTP and WR Improvements",Mackinac,85,"2,987","$14,000,000.00","$4,686.98",,"$230,000.00",$-,Overburdened,"$11,082,700.00",,,,,"$117,300.00","$112,700.00","$2,687,300.00","$2,800,000.00"
+7845-01,City of Brown City,"LSLR, WTP Filters, Meters, Looping",Lapeer,85,"1,300","$7,415,000.00","$5,703.85",,$-,"$800,000.00",Overburdened,"$5,932,000.00",,,,,,,"$1,483,000.00","$1,483,000.00"
+7520-01,City of Eaton Rapids,"LSLR, WTP filters, WM Rep",Eaton,85,"5,340","$33,810,000.00","$6,331.46",,$-,"$3,250,000.00",Overburdened,,,,,,,,"$6,762,000.00","$6,762,000.00"
+7873-01,Village of Farwell,"LSLR, WM Rep, Meters, WT Improvements",Clare,85,880,"$5,830,000.00","$6,625.00",,$-,"$48,000.00","SignificantlyOverburdened",,,,,,,,"$2,332,000.00","$2,332,000.00"
+7827-01,City of Gaastra,"LSLR, WTP, SCADA, PS, Improvements",Iron,85,312,"$2,500,000.00","$8,012.82",,"$220,000.00","$55,000.00","SignificantlyOverburdened",$-,,,,,"$220,000.00",,"$1,000,000.00","$1,000,000.00"
+7878-01,City of Lincoln Park,LSLR and WM Improvements,Wayne,85,"1,386","$11,520,000.00","$8,311.69",,"$2,292,600.00","$1,710,228.00","SignificantlyOverburdened",$-,,,,,"$2,292,600.00",,"$4,608,000.00","$4,608,000.00"
+7892-01,City of Ecorse,"LSLR, WM Rep and Upsizing",Wayne,85,"1,205","$14,470,000.00","$12,008.30",,"$6,000,000.00",$-,"SignificantlyOverburdened",$-,,,,,"$212,000.00","$5,788,000.00",,"$5,788,000.00"
+7881-01,City of Escanaba,"LSLR, WM Rep",Delta,85,"2,799","$35,000,000.00","$12,504.47",,"$26,500,000.00",$-,Overburdened,,,,,,,,,
+7819-01,Village of Clifford,"LSLR, WTP and Storage System Improvements",Lapeer,85,324,"$6,500,000.00","$20,061.73",,$-,"$60,000.00",Overburdened,,,,,,,,,
+7879-01,City of Hamtramck,LSLR and WM Rep,Wayne,85,677,"$18,600,000.00","$27,474.15",,"$5,604,000.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7805-01,Village of Kaleva,"LSLR, WM and Storage System Improvements",Manistee,85,507,"$13,930,000.00","$27,475.35",,"$3,272,000.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7876-01,City of Kingsford,"LSLR, WM Rep and Looping",Dickinson,85,382,"$12,560,000.00","$32,879.58",,"$1,992,000.00",$-,Overburdened,,,,,,,,,
+7883-01,City of Ithaca,"LSLR, WM Rep and Looping",Gratiot,85,50,"$2,245,000.00","$44,900.00",,"$104,000.00","$34,000.00",Overburdened,,,,,,,,,
+7833-01,Lansing BWL,"WTP, Wells, and MW Improvements",Ingham,80,"274,286","$23,235,000.00",$84.71,,$-,$-,Overburdened,,,,,,,,,
+7897-01,Village of Shelby,LSLR and WM Rep,Oceana,80,"1,964","$3,500,000.00","$1,782.08",,"$600,000.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7790-01,City of Imlay City,LSLR and WM Improvements,Lapeer,80,"3,703","$9,440,000.00","$2,549.28",,"$3,594,000.00",$-,Overburdened,,,,,,,,,
+7896-01,City of Melvindale,"LSLR, WM Rep Upsizing and Looping",Wayne,80,"1,770","$7,335,000.00","$4,144.07",,"$2,640,000.00","$360,000.00","SignificantlyOverburdened",,,,,,,,,
+7894-01,City of Garden City,"LSLR, WM Rep and Upsizing",Wayne,80,"1,103","$6,135,000.00","$5,562.10",,"$360,000.00","$240,000.00",Overburdened,,,,,,,,,
+7828-01,City of Wayne,LSLR,Wayne,80,952,"$5,985,000.00","$6,286.76",,"$5,386,500.00","$598,500.00",Overburdened,,,,,,,,,
+7711-01,Village of Benzonia,"LSLR, WM Rep, Looping and Storage",Benzie,80,551,"$5,496,000.00","$9,974.59",,"$2,440,000.00",$-,Overburdened,,,,,,,,,
+7619-01,City of Sturgis,"LSLR, MW Rep and Looping",St Joseph,80,271,"$3,045,000.00","$11,236.16",,"$829,801.00",$-,Overburdened,,,,,,,,,
+7748-01,Royal Oak Twp.,WM Rep,Oakland,80,742,"$8,680,000.00","$11,698.11",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7815-01,City of Crystal Falls,LSLR and WM Rep,Iron,80,508,"$6,085,000.00","$11,978.35",,"$1,922,440.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7801-01,City of Mt. Morris,LSLR and WM Rep,Genesee,80,"1,215","$21,620,000.00","$17,794.24",,"$1,800,000.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7621-01,Village of Quincy,LSLR and WM Rep,Branch,80,100,"$2,335,000.00","$23,350.00",,"$210,000.00",$-,Overburdened,,,,,,,,,
+7783-01,City of Caro,LSLR and WM Rep,Tuscola,75,"5,029","$5,365,000.00","$1,066.81",,"$676,545.00","$274,275.00",Overburdened,,,,,,,,,
+7865-01,City of Belding,LSLR and WM Rep,Ionia,75,"5,938","$7,220,000.00","$1,215.90",,"$814,000.00","$1,000,000.00",Overburdened,,,,,,,,,
+7816-01,City of Gladstone,WM Rep and Intake Protection,Delta,75,"5,248","$7,930,000.00","$1,511.05",,"$47,725.00",$-,Overburdened,,,,,,,,,
+7791-01,City of Gladwin,"LSLR, WM Rep, Valves and Hydrants",Gladwin,75,"3,069","$4,724,000.00","$1,539.26",,"$137,170.00",$-,Overburdened,,,,,,,,,
+7795-01,City of Manistique,"LSLR, WM Rep and Looping, TM and Meters",Schoolcraft,75,"2,814","$6,725,000.00","$2,389.84",,"$3,115,809.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7742-01,City of Hudson,"LSLR, WM Rep, Storage Improvements",Lenawee,75,"2,415","$8,525,000.00","$3,530.02",,"$1,925,000.00",$-,Overburdened,,,,,,,,,
+7874-01,Village of Peck,"WM Rep, Storage and Well Improvements",Sanilac,75,603,"$3,050,000.00","$5,058.04",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7857-01,City of Caspian,"WM Rep, Storage, PRV, Well and PS Improvements",Iron,75,805,"$4,110,000.00","$5,105.59",,$-,$-,Overburdened,,,,,,,,,
+7861-01,City of Manton,"LSLR, WM Rep, and Storage Improvements",Wexford,75,"1,258","$6,500,000.00","$5,166.93",,"$5,278,100.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7770-01,City of Munising,LSLR,Alger,75,330,"$2,105,000.00","$6,378.79",,"$2,105,000.00",$-,Overburdened,,,,,,,,,
+7826-01,Village of Alpha,"LSLR, WM Rep, SCADA, and Well Improvements",Iron,75,129,"$850,000.00","$6,589.15",,"$12,000.00","$216,000.00","SignificantlyOverburdened",,,,,,,,,
+7646-01,Village of Newberry,"LSLR, WM Rep, Storage and AMP",Luce,75,"1,600","$11,000,000.00","$6,875.00",,"$5,250,000.00",$-,"SignificantlyOverburdened",,,,,,,,,
+7754-01,Village of Hillman,"New Wells, WM Rep, Storage Improvements",Montmorency,75,679,"$6,800,000.00","$10,014.73",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7739-01,Carrollton Twp.,WM Rep,Saginaw,75,500,"$5,200,000.00","$10,400.00",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7843-01,Village of Maple Rapids,LSLR and New Well,Clinton,75,573,"$5,980,000.00","$10,436.30",,"$1,300,000.00",$-,Overburdened,,,,,,,,,
+7786-01,Village of Roscommon,"LSLR, WM Rep, Well and Storage Improvements",Roscommon,75,981,"$11,545,000.00","$11,768.60",,"$500,000.00","$1,000,000.00",Overburdened,,,,,,,,,
+7834-01,Village of Akron,"WM Rep, WTP and Storage Improvements",Tuscola,75,402,"$13,200,000.00","$32,835.82",,$-,$-,Overburdened,,,,,,,,,
+7716-01,YCUA (townships),"LSLR, WM Rep, PS and Meter Improvements",Washtenaw,70,"128,175","$16,515,000.00",$128.85,,"$165,000.00",$-,,,,,,,,,,
+7822-01,Adams Township,"New WM and Storage, WTP Improvements",Houghton,70,"9,417","$8,000,000.00",$849.53,,$-,$-,Overburdened,,,,,,,,,
+7695-01,City of Northville,"LSLR, WM Rep, PVR",Wayne,70,"6,119","$9,335,000.00","$1,525.58",,$-,"$84,000.00",,,,,,,,,,
+7799-01,City of Stanton,LSLR and WM Rep,Montcalm,70,"1,348","$3,505,000.00","$2,600.15",,"$423,200.00",$-,Overburdened,,,,,,,,,
+7675-01,City of Niles,LSLR,Berrien,70,"1,050","$3,000,000.00","$2,857.14",,"$3,000,000.00",$-,Overburdened,,,,,,,,,
+7778-01,Village of Marcellus,"WTP, WM, and Meter Improvements",Cass,70,"1,074","$3,215,000.00","$2,993.48",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7889-01,Charter Twp. of Independence,"VOCs, WM Rep",Oakland,70,"2,526","$7,805,000.00","$3,089.87",,$-,$-,,,,,,,,,,
+7773-01,City of Roseville,LSLR,Macomb,70,"1,750","$6,700,000.00","$3,828.57",,"$6,697,788.00",$-,Overburdened,,,,,,,,,
+7706-01,Village of Schoolcraft,"LSLR, WM Rep, Well Improvements",Kalamazoo,70,"1,525","$9,520,000.00","$6,242.62",,"$2,669,769.00","$482,831.00",,,,,,,,,,
+7645-01,City of Pleasant Ridge,LSLR and WM Rep,Oakland,70,"2,377","$27,130,000.00","$11,413.55",,"$7,345,000.00",$-,,,,,,,,,,
+7749-01,City of Bangor,LSLR and WM Rep,Bay,70,90,"$1,400,000.00","$15,555.56",,$-,"$270,000.00",Overburdened,,,,,,,,,
+7764-01,City of Hastings,LSLR and WM Rep,Barry,70,500,"$8,140,000.00","$16,280.00",,"$129,340.00","$1,261,060.00",Overburdened,,,,,,,,,
+7763-01,City of Saugatuck,"LSLR, WM Rep, Well and Storage Improvements",Allegan,70,865,"$16,040,000.00","$18,543.35",,"$4,237,000.00","$1,412,000.00",,,,,,,,,,
+7724-01,City of Omer,New WTP and New Storage,Arenac,70,260,"$6,000,000.00","$23,076.92",,$-,$-,Overburdened,,,,,,,,,
+7797-01,Iron River Twp.,"WM Rep, Valves and Storage Improvements",Iron,70,554,"$20,645,000.00","$37,265.34",,$-,$-,Overburdened,,,,,,,,,
+7746-01,Houghton Township,"WM Rep, Storage Improvements",Houghton,70,138,"$6,700,000.00","$48,550.72",,$-,$-,Overburdened,,,,,,,,,
+7679-01,City of Holland,LSLR and WTP Improvements,Ottawa,65,"59,224","$10,000,000.00",$168.85,,"$6,000,000.00",$-,,,,,,,,,,
+7823-01,City of Houghton,WM Rep and Storage Improvements,Houghton,65,"8,386","$3,900,000.00",$465.06,,,$-,"SignificantlyOverburdened",,,,,,,,,
+7792-01,City of Iron River,"WM and PRV Rep, Storage Improvements",Iron,65,"3,410","$2,075,000.00",$608.50,,$-,$-,Overburdened,,,,,,,,,
+7654-01,City of Big Rapids,"WM Rep, WTP Improvements",Mecosta,65,"10,601","$8,090,000.00",$763.14,,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7694-01,City of Davison,"WM Rep, WT Improvements",Genesee,65,"5,092","$5,200,000.00","$1,021.21",,$-,$-,Overburdened,,,,,,,,,
+7760-01,Village of Milford,"LSLR, WM Rep, New TM",Oakland,65,"6,366","$7,105,000.00","$1,116.09",,$-,"$708,400.00",,,,,,,,,,
+7853-01,Village of Almont,"LSLR, WM Rep, and WT Improvements",Lapeer,65,"2,674","$3,500,000.00","$1,308.90",,$-,"$100,000.00",,,,,,,,,,
+7781-01,Village of Sunfield,New Well,Eaton,65,538,"$750,000.00","$1,394.05",,$-,$-,Overburdened,,,,,,,,,
+7813-01,Village of Holly,"LSLR, WM Rep, WTP Improvements",Oakland,65,"5,997","$11,475,000.00","$1,913.46",,"$1,160,000.00",$-,Overburdened,,,,,,,,,
+7787-01,Beecher MD,"New WTP, WM Rep, and SCADA",Genesee,65,"8,717","$19,915,000.00","$2,284.62",,$-,$-,Overburdened,,,,,,,,,
+7885-01,City of St Joseph,LSLR and WM Rep,St Joseph,65,"1,830","$5,000,000.00","$2,732.24",,"$3,735,000.00",$-,,,,,,,,,,
+7752-01,Ferndale,LSLR,Oakland,65,"2,781","$12,000,000.00","$4,314.99",,"$12,000,000.00",$-,,,,,,,,,,
+7858-01,Village of Carsonville,"WTP and Well Improvements, WM Rep",Sanilac,65,472,"$2,680,000.00","$5,677.97",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7796-01,Ontonagon,WM and Tank Rep,Ontonagon,65,"1,441","$8,785,000.00","$6,096.46",,$-,$-,Overburdened,,,,,,,,,
+7494-01,City of Grosse Pointe Park,LSLR and WM Rep,Wayne,65,"2,045","$12,670,000.00","$6,195.60",,"$2,400,000.00",$-,,,,,,,,,,
+7831-01,Village of Edmore,"LSLR, WM Rep, Well and Storage Improvements",Montcalm,65,"1,210","$10,290,000.00","$8,504.13",,"$2,404,080.00","$2,276,640.00",Overburdened,,,,,,,,,
+7638-01,Bangor Twp.,LSLR and WM Rep,Bay,65,465,"$4,705,000.00","$10,118.28",,$-,"$855,600.00",,,,,,,,,,
+7877-01,City of Mt. Clemens,LSLR and WM Rep,Macomb,65,425,"$5,000,000.00","$11,764.71",,"$960,000.00",$-,Overburdened,,,,,,,,,
+7678-01,Flat Rock,WM Rep,Wayne,65,389,"$4,775,000.00","$12,275.06",,$-,$-,Overburdened,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+7683-01,Albee Township,Distribution Expansion,Saginaw,65,365,"$5,165,000.00","$14,150.68",,$-,$-,,,,,,,,,,
+7812-01,City of Three Rivers,LSLR and WM Rep,St Joseph,65,840,"$14,585,000.00","$17,363.10",,"$288,750.00","$2,483,250.00",Overburdened,,,,,,,,,
+7674-01,City of Pinconning,LSLR and WM Rep,Bay,65,425,"$10,500,000.00","$24,705.88",,"$215,000.00","$585,000.00",,,,,,,,,,
+7647-01,City of Trenton,LSLR and WM Rep,Wayne,65,191,"$5,475,000.00","$28,664.92",,"$360,000.00",$-,,,,,,,,,,
+7653-01,Port Huron Charter Twp.,WM and Meter Improvements,St Clair,60,"6,475","$7,305,000.00","$1,128.19",,$-,$-,Overburdened,,,,,,,,,
+7772-01,City of Hancock,"WR Rep, Well and Storage Improvements",Houghton,60,"4,526","$5,990,000.00","$1,323.46",,$-,$-,Overburdened,,,,,,,,,
+7821-01,City of Farmington,"LSLR, WM Rep, PVR and Meters",Oakland,60,"11,597","$15,805,000.00","$1,362.85",,"$202,400.00",$-,,,,,,,,,,
+7793-01,McMillan Twp.,"New WTP and Well, Storage and PS Improvements",Luce,60,486,"$950,000.00","$1,954.73",,$-,$-,Overburdened,,,,,,,,,
+7807-01,Village of Ellsworth,New Well and Storage Improvements,Antrim,60,347,"$730,000.00","$2,103.75",,$-,$-,Overburdened,,,,,,,,,
+7824-01,Osceola Twp.,"LSLR and WM Rep, PS Improvements",Houghton,60,"1,213","$4,500,000.00","$3,709.81",,"$1,665,000.00",$-,Overburdened,,,,,,,,,
+7512-01,Village of White Pigeon,LSLR,St Joseph,60,750,"$3,000,000.00","$4,000.00",,"$3,000,000.00",$-,Overburdened,,,,,,,,,
+7891-01,City of Harper Woods,WM Rep,Wayne,60,"2,375","$15,750,000.00","$6,631.58",,$-,$-,,,,,,,,,,
+7765-01,Village of Vicksburg,LSLR and WM Rep,Kalamazoo,60,445,"$5,600,000.00","$12,584.27",,"$1,968,000.00",$-,,,,,,,,,,
+7840-01,Grayling Township,WM Extension (PFAS),Crawford,60,"3,120","$50,685,000.00","$16,245.19","$50,685,000.00",$-,$-,,,,,,,,,,
+7780-01,Bedford Charter Township,WM Extension (PFAS),Calhoun,60,50,"$4,335,000.00","$86,700.00","$4,335,000.00",$-,$-,,,,,,,,,,
+7762-01,Saginaw Midland MWSC,PS and Intake System Improvements,Saginaw,55,"332,735","$2,050,000.00",$6.16,,$-,$-,,,,,,,,,,
+7642-01,SOCWA,PS and Storage Improvements,Oakland,55,"200,728","$4,450,000.00",$22.17,,$-,$-,,,,,,,,,,
+7871-01,City of Saginaw (System),WTP and WM Improvements,Saginaw,55,"176,748","$20,460,000.00",$115.76,,$-,$-,,,,,,,,,,
+7709-01,City of Rochester,WM Rep and Looping,Oakland,55,"6,786","$6,625,000.00",$976.27,,$-,$-,,,,,,,,,,
+7862-01,Garfield Township,"WM Looping, Storage Improvements",Grand Traverse,55,"19,499","$20,005,000.00","$1,025.95",,$-,$-,,,,,,,,,,
+7825-01,Crystal Falls Twp.,LSLR and WM Rep,Iron,55,"3,612","$6,500,000.00","$1,799.56",,"$175,000.00","$325,000.00",,,,,,,,,,
+7554-01,City of Southgate,LSLR,Wayne,55,160,"$570,000.00","$3,562.50",,"$514,600.00","$55,400.00",,,,,,,,,,
+7804-01,Village of Buckley,"WR Rep and Looping, Storage and Hydrant Improvement",Wexford,55,775,"$4,160,000.00","$5,367.74",,$-,$-,Overburdened,,,,,,,,,
+7685-01,Bergland Township,"LSLR, WM Rep, Well System Improvements",Ontonagon,55,290,"$2,480,000.00","$8,551.72",,$-,"$360,000.00",Overburdened,,,,,,,,,
+7802-01,Village of Mesick,"WM, Meters, and Storage Improvements",Wexford,55,397,"$3,740,000.00","$9,420.65",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7550-01,Village of Beverly Hills,WM Rep and Looping,Oakland,55,890,"$8,420,000.00","$9,460.67",,$-,$-,,,,,,,,,,
+7737-01,City of Ionia,WM Rep,Ionia,55,800,"$8,560,000.00","$10,700.00",,$-,$-,"SignificantlyOverburdened",,,,,,,,,
+7875-01,Ely Township,New WTP System,Marquette,55,141,"$2,000,000.00","$14,184.40","$2,000,000.00",$-,$-,,,,,,,,,,
+7814-01,Rockland Twp.,"WM Rep, Well Improvements",Ontonagon,55,126,"$1,955,000.00","$15,515.87",,$-,$-,Overburdened,,,,,,,,,
+7868-01,City of Grand Rapids (System),WTP System Improvements,Kent,50,"307,815","$8,620,000.00",$28.00,,$-,$-,,,,,,,,,,
+7719-01,City of Traverse City,"LSLR, WR Rep and Looping",Grand Traverse,50,"31,542","$8,000,000.00",$253.63,,"$112,500.00","$56,250.00",,,,,,,,,,
+7690-01,Village of Constantine,Meters and Storage Improvements,St Joseph,50,"1,947","$755,000.00",$387.78,,$-,$-,Overburdened,,,,,,,,,
+7860-01,City of St. Clair,WTP and Storage Improvements,St Clair,50,"5,485","$5,250,000.00",$957.16,,$-,$-,,,,,,,,,,
+7811-01,City of Linden,WM Looping,Genesee,50,"4,142","$4,790,000.00","$1,156.45",,$-,$-,,,,,,,,,,
+7536-01,City of Dearborn,LSLR,Wayne,50,"10,963","$29,340,000.00","$2,676.27",,"$29,340,000.00",$-,,,,,,,,,,
+7895-01,City of Eastpointe,LSLR,Macomb,50,765,"$3,625,000.00","$4,738.56",,"$3,625,000.00",$-,,,,,,,,,,
+7594-01,Hampton Charter Twp.,WM Rep,Bay,50,689,"$3,980,000.00","$5,776.49",,$-,$-,,,,,,,,,,
+7849-01,City of Grosse Pointe Woods,LSLR,Wayne,50,300,"$1,745,000.00","$5,816.67",,"$1,105,640.00","$637,870.00",,,,,,,,,,
+7886-01,Village of Britton,Well and Storage Improvements,Lenawee,50,537,"$3,200,000.00","$5,959.03",,$-,$-,Overburdened,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,
+7498-01,City of Marysville,WM Rep,St Clair,50,216,"$2,500,000.00","$11,574.07",,$-,$-,,,,,,,,,,
+7660-01,White Lake Twp.,"New WM, System Improvements",Oakland,45,"5,799","$10,830,000.00","$1,867.56",,$-,$-,,,,,,,,,,
+7500-01,Charter Twp. of Bloomfield,WM Rep,Oakland,45,966,"$8,550,000.00","$8,850.93",,$-,$-,,,,,,,,,,
+7539-01,Ann Arbor Twp.,"WM Rep and Looping, Storage Improvements",Washtenaw,45,"1,338","$12,920,000.00","$9,656.20",,$-,$-,,,,,,,,,,
+7890-01,Charter Twp. of Independence,WM Extension (PFAS),Oakland,45,902,"$9,710,000.00","$10,764.97","$9,710,000.00",$-,$-,,,,,,,,,,
+7707-01,City of Wyoming,New TM,Kent,40,"246,848","$83,900,000.00",$339.89,,$-,$-,,,,,,,,,,
+7700-01,City of Grand Blanc,"WM Rep and Looping, Well and Storage Improvements",Genesee,40,"8,091","$5,000,000.00",$617.97,,$-,$-,,,,,,,,,,
+7850-01,City of Grosse Pointe,LSLR,Wayne,40,"1,657","$6,000,000.00","$3,621.00",,"$5,940,000.00","$60,000.00",,,,,,,,,,
+7663-01,Zox CLCA,LSLR and WM Rep,Oakland,40,700,"$5,100,000.00","$7,285.71",,$-,"$400,000.00",,,,,,,,,,
+7809-01,Village of Westphalia,WM Rep,Clinton,35,924,"$2,120,000.00","$2,294.37",,$-,$-,,,,,,,,,,
+7759-01,City of Warren,LSLR,Macomb,35,"3,690","$12,000,000.00","$3,252.03",,"$12,000,000.00",$-,,,,,,,,,,
+7571-01,Village of Pewamo,WM Rep,Ionia,35,469,"$3,450,000.00","$7,356.08",,$-,$-,,,,,,,,,,
+7615-01,Sumpter,WM Rep,Wayne,35,250,"$2,480,000.00","$9,920.00",,$-,$-,,,,,,,,,,

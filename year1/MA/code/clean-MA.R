@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ma <- function() {
+clean_ma_y1 <- function() {
   
   ## ALL PROJECTS
   # (120,7) -> (113,8)

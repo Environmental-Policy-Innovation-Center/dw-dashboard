@@ -1,8 +1,9 @@
 source("resources.R")
 
-clean_va <- function() {
+clean_va_y2 <- function() {
   
   # (21, 14) -> (21, 18)
+  
   va_clean <- read.csv("./year2/VA/data/tabula-VA-FY2023-IUP_draft-attachment1.csv") %>%
     clean_names() %>%
     mutate(community_served = as.character(NA), 
@@ -32,7 +33,7 @@ clean_va <- function() {
   
   
   run_tests(va_clean)
-  rm(list=setdiff(ls(), "df_clean"))
+  rm(list=setdiff(ls(), "va_clean"))
   
   return(va_clean)
 }

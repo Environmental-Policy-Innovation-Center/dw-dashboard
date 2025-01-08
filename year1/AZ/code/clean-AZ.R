@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_az <- function() {
+clean_az_y1 <- function() {
   
   # (54,9)
   # ppl is most up to date, but iup has columns not otherwise included - pwsid and project type

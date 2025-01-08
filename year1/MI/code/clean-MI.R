@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mi <- function() {
+clean_mi_y1 <- function() {
   
   # (112,24)
   mi_raw <- fread("year1/MI/data/22-Michigan_PPL.csv",

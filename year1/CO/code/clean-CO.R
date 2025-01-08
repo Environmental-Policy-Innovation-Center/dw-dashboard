@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_co <- function() {
+clean_co_y1 <- function() {
   
   
   ## Appendix A

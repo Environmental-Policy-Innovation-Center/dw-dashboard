@@ -1,14 +1,12 @@
 source("resources.R")
 
-clean_mi <- function() {
+clean_mi_y2 <- function() {
 
   mi_raw <- fread("year2/MI/data/mi-sfy24-iup.csv",
                   colClasses = "character", na.strings = "") %>%
     clean_names()
 
   mi_clean <- mi_raw %>%
-    ## get rid of rows without projects
-    filter(!is.na(project_number)) %>%
            #convert all of the various funding columns to numeric and add for funding and PF
     mutate(dwsrf_traditional_loan = convert_to_numeric(dwsrf_traditional_loan, TRUE),
            dwsrf_traditional_pf = convert_to_numeric(dwsrf_traditional_pf, TRUE),
@@ -26,13 +24,14 @@ clean_mi <- function() {
            principal_forgiveness = clean_numeric_string(principal_forgiveness),
            
            project_id = str_squish(project_number),
+           project_id = replace_na(project_id, "No Information"),
            project_cost = clean_numeric_string(total_project_costs),
            project_description = str_squish(project_components),
            population = clean_numeric_string(population),
            borrower = str_squish(applicant),
            community_served = str_squish(county),
-           project_type = case_when(lead_service_line_costs != "" ~ "Lead",
-                                    ec_related_costs != "" ~ "Emerging Contaminants",
+           project_type = case_when(grepl("LSL", project_components) ~ "Lead",
+                                    bil_dwsrf_emerging_contaminants_pf > 0 ~ "Emerging Contaminants",
                                     TRUE ~ "General"),
            project_score = str_squish(total_priority_points),
            disadvantaged = ifelse(is.na(disadvantaged_status), "No", "Yes"),

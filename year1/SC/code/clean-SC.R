@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_sc <- function() {
+clean_sc_y1 <- function() {
   
   
   # import EC projects, (3,12) -> (3,5)

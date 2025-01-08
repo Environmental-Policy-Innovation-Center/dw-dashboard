@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_la <- function() {
+clean_la_y1 <- function() {
   
   # (40,9)
   la_ppl <- fread("year1/LA/data/18-Lousiana_Comprehensive_PPL-clean.csv",

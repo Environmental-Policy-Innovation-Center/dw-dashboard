@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ny <- function() {
+clean_ny_y1 <- function() {
   
   ## Multi-year list
   ny_multi <- fread("year1/NY/data/ny-multi-year-list.csv",

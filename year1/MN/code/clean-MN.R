@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_mn <- function() {
+clean_mn_y1 <- function() {
   
   # (142, 16)
   mn_raw <- fread("year1/MN/data/23-Minnesota_IUP_manual.csv",

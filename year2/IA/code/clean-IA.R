@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ia <- function() {
+clean_ia_y2 <- function() {
   
   # (185, 15) -> (185, 18)
   ia_clean <- read.csv("./year2/IA/data/Attachment-1-Table-1.csv") %>%

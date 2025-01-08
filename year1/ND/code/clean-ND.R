@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nd <- function() {
+clean_nd_y1 <- function() {
   
   
   ## Read in tables for PF funding from the tables in page 10-13 of PPL

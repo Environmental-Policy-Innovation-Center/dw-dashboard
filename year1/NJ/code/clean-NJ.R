@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nj <- function() {
+clean_nj_y1 <- function() {
   
   # (676, 19)
   nj_raw <- fread("year1/NJ/data/30-NewJersey_PPL.csv",

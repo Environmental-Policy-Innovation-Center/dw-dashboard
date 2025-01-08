@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_il <- function() {
+clean_il_y1 <- function() {
   
   ## Read in the manually separated versions of the PPL and lead data 
   ## from the excel spreadsheets sent by the state

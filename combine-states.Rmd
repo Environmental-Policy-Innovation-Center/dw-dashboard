@@ -1,0 +1,333 @@
+---
+title: "SRF PPL & IUP Standardization"
+author: "Walker Grimshaw & Phil Cork"
+date: "2022-12-20"
+output: pdf_document
+geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
+---
+
+This notebook imports the individual cleaning functions for each state and each year to create the final, standardized project-level dataset that powers the SRF Funding Tracker website and saves the results to AWS.
+
+# Settings & Imports
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+options(scipen=999999999)
+
+library(tidyverse)
+library(data.table)
+library(janitor)
+library(aws.s3)
+library(googledrive)
+library(googlesheets4)
+
+# remove any dfs in the environment before starting
+rm(list=ls())
+
+```
+
+
+# Import Clean State Data
+
+## Year 0
+
+```{r}
+
+# Arkansas
+source("year0/AR/code/clean-AR.R")
+ar_clean_y0 <- clean_ar_y0()
+
+# Indiana
+source("year0/IN/code/clean-IN.R")
+in_clean_y0 <- clean_in_y0()
+
+# Michigan
+source("year0/MI/code/clean-MI.R")
+mi_clean_y0 <- clean_mi_y0()
+
+# Texas
+source("year0/TX/code/clean-TX.R")
+tx_clean_y0 <- clean_tx_y0()
+
+# Wisconsin
+source("year0/WI/code/clean-WI.R")
+wi_clean_y0 <- clean_wi_y0()
+
+
+```
+
+
+## Year 1
+```{r}
+# Alabama
+source("year1/AL/code/clean-AL.R")
+al_clean_y1 <- clean_al_y1()
+
+# Alaska
+source("year1/AK/code/clean-AK.R")
+ak_clean_y1 <- clean_ak_y1()
+
+# Arkansas
+source("year1/AR/code/clean-AR.R")
+ar_clean_y1 <- clean_ar_y1()
+
+# Arizona
+source("year1/AZ/code/clean-AZ.R")
+az_clean_y1 <- clean_az_y1()
+
+# California
+source("year1/CA/code/clean-CA.R")
+ca_clean_y1 <- clean_ca_y1()
+
+# Colorado
+source("year1/CO/code/clean-CO.R")
+co_clean_y1 <- clean_co_y1()
+
+# Connecticut
+source("year1/CT/code/clean-CT.R")
+ct_clean_y1 <- clean_ct_y1()
+
+# Delaware
+source("year1/DE/code/clean-DE.R")
+de_clean_y1 <- clean_de_y1()
+
+# Florida
+source("year1/FL/code/clean-FL.R")
+fl_clean_y1 <- clean_fl_y1()
+
+# Georgia
+source("year1/GA/code/clean-GA.R")
+ga_clean_y1 <- clean_ga_y1()
+
+# Hawaii
+source("year1/HI/code/clean-HI.R")
+hi_clean_y1 <- clean_hi_y1()
+
+# Idaho
+source("year1/ID/code/clean-ID.R")
+id_clean_y1 <- clean_id_y1()
+
+# Illinois
+source("year1/IL/code/clean-IL.R")
+il_clean_y1 <- clean_il_y1()
+
+# Indiana
+source("year1/IN/code/clean-IN.R")
+in_clean_y1 <- clean_in_y1()
+
+# Iowa
+source("year1/IA/code/clean-IA.R")
+ia_clean_y1 <- clean_ia_y1()
+
+# Kansas
+source("year1/KS/code/clean-KS.R")
+ks_clean_y1 <- clean_ks_y1()
+
+# Kentucky
+source("year1/KY/code/clean-KY.R")
+ky_clean_y1 <- clean_ky_y1()
+
+# Louisiana
+source("year1/LA/code/clean-LA.R")
+la_clean_y1 <- clean_la_y1()
+
+# Maine
+source("year1/ME/code/clean-ME.R")
+me_clean_y1 <- clean_me_y1()
+
+# Maryland
+source("year1/MD/code/clean-MD.R")
+md_clean_y1 <- clean_md_y1()
+
+# Massachusetts
+source("year1/MA/code/clean-MA.R")
+ma_clean_y1 <- clean_ma_y1()
+
+# Michigan
+source("year1/MI/code/clean-MI.R")
+mi_clean_y1 <- clean_mi_y1()
+
+# Minnesota
+source("year1/MN/code/clean-MN.R")
+mn_clean_y1 <- clean_mn_y1()
+
+# Mississippi
+source("year1/MS/code/clean-MS.R")
+ms_clean_y1 <- clean_ms_y1()
+
+# Missouri
+source("year1/MO/code/clean-MO.R")
+mo_clean_y1 <- clean_mo_y1()
+
+# Montana
+source("year1/MT/code/clean-MT.R")
+mt_clean_y1 <- clean_mt_y1()
+
+# Nebraska
+source("year1/NE/code/clean-NE.R")
+ne_clean_y1 <- clean_ne_y1()
+
+# New Hampshire
+source("year1/NH/code/clean-NH.R")
+nh_clean_y1  <- clean_nh_y1()
+
+# New Jersey
+source("year1/NJ/code/clean-NJ.R")
+nj_clean_y1 <- clean_nj_y1()
+
+# New Mexico
+source("year1/NM/code/clean-NM.R")
+nm_clean_y1 <- clean_nm_y1()
+
+# Nevada
+source("year1/NV/code/clean-NV.R")
+nv_clean_y1 <- clean_nv_y1()
+
+# New York
+source("year1/NY/code/clean-NY.R")
+ny_clean_y1 <- clean_ny_y1()
+
+# North Carolina
+source("year1/NC/code/clean-NC.R")
+nc_clean_y1 <- clean_nc_y1()
+
+# North Dakota
+source("year1/ND/code/clean-ND.R")
+nd_clean_y1 <- clean_nd_y1()
+
+# Ohio
+source("year1/OH/code/clean-OH.R")
+oh_clean_y1 <- clean_oh_y1()
+
+# Oklahoma
+source("year1/OK/code/clean-OK.R")
+ok_clean_y1 <- clean_ok_y1()
+
+# Oregon
+source("year1/OR/code/clean-OR.R")
+or_clean_y1 <- clean_or_y1()
+
+# Pennsylvania
+source("year1/PA/code/clean-PA.R")
+pa_clean_y1 <- clean_pa_y1()
+
+# Rhode Island
+source("year1/RI/code/clean-RI.R")
+ri_clean_y1 <- clean_ri_y1()
+
+# South Carolina
+source("year1/SC/code/clean-SC.R")
+sc_clean_y1 <- clean_sc_y1()
+
+# South Dakota
+source("year1/SD/code/clean-SD.R")
+sd_clean_y1 <- clean_sd_y1()
+
+# Tennessee
+source("year1/TN/code/clean-TN.R")
+tn_clean_y1 <- clean_tn_y1()
+
+# Texas
+source("year1/TX/code/clean-TX.R")
+tx_clean_y1 <- clean_tx_y1()
+
+# Utah
+source("year1/UT/code/clean-UT.R")
+ut_clean_y1 <- clean_ut_y1()
+
+# Virginia
+source("year1/VA/code/clean-VA.R")
+va_clean_y1 <- clean_va_y1()
+
+# Vermont
+source("year1/VT/code/clean-VT.R")
+vt_clean_y1 <- clean_vt_y1()
+
+# Washington
+source("year1/WA/code/clean-WA.R")
+wa_clean_y1 <- clean_wa_y1()
+
+# West Virginia
+source("year1/WV/code/clean-WV.R")
+wv_clean_y1 <- clean_wv_y1()
+
+# Wisconsin
+source("year1/WI/code/clean-WI.R")
+wi_clean_y1 <- clean_wi_y1()
+  
+```
+
+## Year 2
+
+```{r}
+# Iowa
+source("year2/IA/code/clean-IA.R")
+ia_clean_y2 <- clean_ia_y2()
+
+# Michigan
+source("year2/MI/code/clean-MI.R")
+mi_clean_y2 <- clean_mi_y2()
+
+# Minnesota
+source("year2/MN/code/clean-MN.R")
+mn_clean_y2 <- clean_mn_y2()
+
+# Texas
+source("year2/TX/code/clean-TX.R")
+tx_clean_y2 <- clean_tx_y2()
+
+# Virginia
+source("year2/VA/code/clean-VA.R")
+va_clean_y2 <- clean_va_y2()
+
+# Washington
+source("year2/WA/code/clean-WA.R")
+wa_clean_y2 <- clean_wa_y2()
+
+```
+
+## Year 3
+
+```{r}
+
+# Michigan
+source("year3/MI/code/clean-MI.R")
+mi_clean_y3 <- clean_mi_y3()
+
+# Texas
+source("year3/TX/code/clean-TX.R")
+tx_clean_y3 <- clean_tx_y3()
+
+
+```
+
+
+
+# Post-Process
+
+## Combine & Format States
+
+```{r}
+# create a list of all objects and boolean for whether each object is a dataframe
+dfs <- sapply(.GlobalEnv, is.data.frame) 
+# for each TRUE, add the dataframe rows to a single data.frame
+combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
+
+```
+
+```{r}
+
+ # Writing to temp
+ write.csv(combined_clean, file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ put_object(
+   file = file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"),
+   object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv",
+   bucket = "water-team-data",
+   acl = "public-read"
+ )
+```

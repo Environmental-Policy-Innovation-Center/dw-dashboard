@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ky <- function() {
+clean_ky_y1 <- function() {
   
   # (139,13)
   ky_iup <- fread("year1/KY/data/KY-iup-appendix2.csv",

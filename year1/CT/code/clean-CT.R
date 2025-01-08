@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_ct <- function() {
+clean_ct_y1 <- function() {
   
   # 199, 16
   ct_comprehensive <- fread("year1/CT/data/CT-iup-attachmentD.csv",

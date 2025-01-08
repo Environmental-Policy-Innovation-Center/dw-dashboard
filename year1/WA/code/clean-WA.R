@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_wa <- function() {
+clean_wa_y1 <- function() {
   
   # import manually merged file (31,12) that combines appendix B and D
   wa_merged <- fread("year1/WA/data/46-Washington_PPL_Merged.csv",

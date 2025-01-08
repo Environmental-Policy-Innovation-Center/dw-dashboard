@@ -1,6 +1,6 @@
 source("resources.R")
 
-clean_nc <- function() {
+clean_nc_y1 <- function() {
   
   
   # (222, 15)

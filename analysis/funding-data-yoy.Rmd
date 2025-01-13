@@ -6,16 +6,27 @@ date: "2024-11-08"
 
 This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on Funding & Finance data gathered by the Water policy team as they put together the data dictionaries and content for the website. The outputs focus on the "Funding" sections of the state overview pages.
 
-NOTE: These features are currently manually entered from data gathered by the Water policy team. In the near future, these numbers will be collected into a database and this code will need to be updated to pull it in from a Google Sheet and recreate the plots in a more reproducible fashion.
+NOTE: These features in the datasets pulled from google sheets (financial, set asides) are works in progress, so there ample opportunity for errors to appear due to changed formats, column names, etc.
 
-# Imports & Settings 
+# Setup
+
+## Local Variables
 
 ```{r}
+# filters data and changes plot names
 state_name <- "Texas"
+# only appears in subtitles
+years <- "SFY23-25"
+subtitle_str <- paste0(state_name, ", ", years)
+
+# used in setting years as factor to display correctly in plots
+years_list <- c("2023", "2024", "2025")
+
 ```
 
+## Imports & Settings
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
 library(tidyverse)
 library(janitor)
 library(aws.s3)
@@ -23,15 +34,25 @@ library(scales)
 library(lubridate)
 library(sysfonts)
 library(showtext)
+library(plotly)
+library(googledrive)
+library(googlesheets4)
 
+# bring in AWS credentials
 source("../../ds-resources/shared-functions.R")
 run_code_from_file("../../local/aws.txt")
+
+# bring in functions for cleaning numeric strings
+source("../resources.R")
 
 options(scipen=999)
 
 # fonts: 
 sysfonts::font_add_google("Lato")
 showtext::showtext_auto()
+```
+
+```{r}
 
 # theme: 
 # legend position is right, text size is at least 10, and text is Lato
@@ -62,70 +83,253 @@ cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
 ```
 
 
-# Base Federal Capitalization Grants
+# Prepare Data
+
+## Import Google Sheets
+
+```{r, echo=FALSE, warning=FALSE}
+URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
+
+financial <- data.frame(read_sheet(URL, sheet="FinancialData"))
+
+set_asides_allowances <- data.frame(read_sheet(URL, "SetAsides"))
+
+
+```
+
+## Prep Google Data
+
+```{r, warning=FALSE}
+
+set_asides_allowances <- set_asides_allowances %>%
+  clean_names() %>%
+  filter(state==state_name) %>%
+  select(-notes) %>%
+  mutate(state_fiscal_year = as.character(state_fiscal_year),
+         state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
+  mutate(amount = convert_to_numeric(amount),
+         percentage = convert_to_numeric(percentage)) %>%
+  #TODO: Modify this as needed once water team updates naming conventions
+  mutate(allowance = case_when(
+    allowance == "Administration and Technical Assistance (up to 4%)" ~ "Admin & TA",
+    allowance == "Small System (<10,000 population) Technical Assistance (up to 2%)" ~ "Small System TA",
+    allowance == "State Program Management (10%)" ~ "State Program Management",
+    allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Local Assistance & Other",
+    allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Local Assistance & Other",
+    TRUE ~ "Missing Case When Statement"
+    
+  ))
+
+financial <- financial %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  select(-notes) %>%
+  mutate(state_fiscal_year = as.character(state_fiscal_year),
+         state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
+  # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
+  # and mutating with across() produces errors or warnings depending on the context, here at least it is only warnings
+  # that can be muted, but the resulting dataframe is still as intended
+  mutate(fed_cap_grant_total = convert_to_numeric(fed_cap_grant_total),
+         state_funds = convert_to_numeric(state_funds),
+         re_allotment_funds_grants = convert_to_numeric(re_allotment_funds_grants),
+         transferred_cwsrf_funds = convert_to_numeric(transferred_cwsrf_funds),
+         unutilized_un_drawn_funds_carryover = convert_to_numeric(unutilized_un_drawn_funds_carryover),
+         leveraged_funds = convert_to_numeric(leveraged_funds),
+         total_funding_available_for_projects = convert_to_numeric(total_funding_available_for_projects),
+         set_asides_amount = convert_to_numeric(set_asides_amount),
+         set_asides_percent = convert_to_numeric(set_asides_percent),
+         pf_for_da_cs_under_base = convert_to_numeric(pf_for_da_cs_under_base),
+         pf_for_da_cs_under_base_of_fed_cap_grant_12_35 = convert_to_numeric(pf_for_da_cs_under_base_of_fed_cap_grant_12_35),
+         principal_forgiveness_for_any_eligible_applicant_under_base = convert_to_numeric(principal_forgiveness_for_any_eligible_applicant_under_base),
+         principal_forgiveness_for_any_eligible_applicant_under_base = convert_to_numeric(principal_forgiveness_for_any_eligible_applicant_under_base),
+         pf_for_eligibile_of_fed_cap_grant_under_base_14 = convert_to_numeric(pf_for_eligibile_of_fed_cap_grant_under_base_14),
+         principal_forgiveness_amount_total = convert_to_numeric(principal_forgiveness_amount_total),
+         pf_of_fed_cap_grant = convert_to_numeric(pf_of_fed_cap_grant),
+         gpr_component_cost = convert_to_numeric(gpr_component_cost))
+
+```
+
+
+## Create Data Subsets
+
+```{r, warning=FALSE}
+
+# the financial tab includes aggregated set_aside total and then calculates set_asides_percent
+# as the set_aside_amount/fed_cap_grant_total
+set_asides <- financial %>%
+  select(state, state_fiscal_year, program, set_asides_amount, set_asides_percent)
+
+base <- financial %>%
+  filter(program == "Base")
+
+gen_supp <- financial %>%
+  filter(program == "BIL General Supplemental")
+
+base_gen_supp <- financial %>%
+  filter(program == "Base & BIL General Supplemental")
+
+lead <- financial %>%
+  filter(program == "Lead Service Line Replacement")
+
+ec <- financial %>%
+  filter(program == "Emerging Contaminants")
+
+```
+
+
+# Funding Data
+
+## Base 
+
+### Federal Capitalization Grants
+
 
 ```{r}
-fed_cap_grants <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
-                             amount = c(54911000, 40181000, 37157000))
 
-ggplot(fed_cap_grants, aes(x=state_fiscal_year, y=amount)) + 
+ggplot(base, aes(x=state_fiscal_year, y=fed_cap_grant_total)) + 
   geom_bar(stat="identity", fill="#172f60") + 
   scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
-  labs(x="", y="", title="Base DWSRF Federal Capitlization Grants", subtitle=paste0(state_name, ", SFY23-25")) + 
+  labs(x="", y="", title="Base DWSRF Federal Capitlization Grants", subtitle=subtitle_str) + 
   epic_chart_theme
 
 ```
 
 
-# Base Principal Forgiveness for DACs
+### PF for DACs Amount
 
 ```{r}
-pf_for_dacs <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
-                          amount = c(8913430, 7712000, 8500000),
-                          # percents are 16, 19.1, 22.7, need to scale from left-side going 0-10m to right-side being 0-100
-                          pct = c(1600000, 1910000, 2270000),
-                          grouping = "TX", "TX", "TX")
 
-ggplot(pf_for_dacs, aes(x=state_fiscal_year)) + 
-  geom_bar(aes(y=amount), stat="identity", fill="#172f60") +
-  
-    # Add secondary y-axis and manually set the range of the right hand
+ggplot(base, aes(x=state_fiscal_year, y=pf_for_da_cs_under_base)) + 
+  geom_bar(stat="identity", fill="#172f60") +
   scale_y_continuous(name = "PF for DACs", labels=label_dollar()) +
-  labs(x="", y="", title="Principal Forgiveness for DACs, Base DWSRF Program", subtitle=paste0(state_name, ", SFY23-25")) + 
+  labs(x="", y="", title="Principal Forgiveness for DACs, Base DWSRF Program", subtitle=subtitle_str) + 
   epic_chart_theme
 ```
+### PF for DACs Percent
 
 ```{r}
-pf_for_dacs_pct <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
-                             amount = c(.16, .191, .227),
-                             grouping = c("TX", "TX", "TX"))
 
-ggplot(pf_for_dacs_pct, aes(x=state_fiscal_year, y=amount)) + 
-  geom_line(aes(group=grouping), color="#172f60", size=1.5) + 
+ggplot(base, aes(x=state_fiscal_year, y=pf_for_da_cs_under_base_of_fed_cap_grant_12_35)) + 
+  geom_line(aes(group=state), color="#172f60", linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0,1)) + 
-  labs(x="", y="", title="Percent Principal Forgiveness for DACs, Base DWSRF Program", subtitle=paste0(state_name, " SFY23-25")) + 
+  labs(x="", y="", title="Percent Principal Forgiveness for DACs, Base DWSRF Program", subtitle=subtitle_str) + 
   epic_chart_theme
+
+```
+
+```{r}
+base_pf_both <- base %>%
+  select(state_fiscal_year, pf_for_da_cs_under_base, principal_forgiveness_for_any_eligible_applicant_under_base) %>%
+  pivot_longer(cols=c(pf_for_da_cs_under_base, principal_forgiveness_for_any_eligible_applicant_under_base)) %>%
+  mutate(name = case_when(
+    name == "pf_for_da_cs_under_base" ~ "DACs",
+    name == "principal_forgiveness_for_any_eligible_applicant_under_base" ~ "Any Eligble Applicant"
+  ))
+
+ggplot(base_pf_both, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_dollar()) +
+  scale_fill_manual(values = cont_palette(2)) + 
+  labs(x="", y="", title="Principal Forgiveness for DACs, Base DWSRF Program", subtitle=subtitle_str) + 
+  epic_chart_theme
+  
 ```
 
 
-# Total Funding Requested under Base & BIL General Supplemental Program PPL
+## Lead / LSLR
+### Total Funding Available for Lead Projects
 
 ```{r}
 
-funding_requested <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
-                             amount = c(2492000652, 3255535627, 4643722053.80))
-
-ggplot(funding_requested, aes(x=state_fiscal_year, y=amount)) + 
+ggplot(lead, aes(x=state_fiscal_year, y=fed_cap_grant_total)) + 
   geom_bar(stat="identity", fill="#172f60") + 
-  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
-  labs(x="", y="", title="Total Funding Requested under Base & BIL General Supplemental Program PPL", subtitle=paste0(state_name, " SFY23-25")) + 
+  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  labs(x="", y="", title="Total Funding Available, BIL LSLR", subtitle=subtitle_str) + 
   epic_chart_theme
-
 
 ```
 
-# Total Funding Available for Projects under Base & BIL General Supplemental Program
+## Emerging Contaminants
+
+```{r}
+ggplot(ec, aes(x=state_fiscal_year, y=fed_cap_grant_total)) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  labs(x="", y="", title="Total Funding Available, BIL EC", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+
+
+# Set Aside Data
+
+## Totals
+
+```{r}
+ggplot(set_asides, aes(x=state_fiscal_year, y=set_asides_amount, fill=program)) + 
+  geom_bar(stat="identity", position="dodge") + 
+  scale_y_continuous(labels=label_currency()) + 
+  scale_fill_manual(values = cat_palette(5), 
+                      name = "") + 
+  labs(x="", y="", title="Set Asides", subtitle=subtitle_str) + 
+  epic_chart_theme
+  
+```
+
+```{r}
+
+# for percent plot, drop NAs so the lines connect points no matter how many points there are
+set_asides_percent <- set_asides %>%
+  filter(!is.na(set_asides_percent))
+
+p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=set_asides_percent, color=program)) + 
+  geom_line(aes(group=program), linewidth=1.5) + 
+  geom_point(size=4) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0,.31)) + 
+  labs(x="", y="", title="Set Asides, Percent Utilized", subtitle=subtitle_str) + 
+  scale_color_manual(values = cat_palette(5), 
+                     guide="none") + 
+  epic_chart_theme
+
+p + facet_wrap(~program)
+```
+## Set Aside allowances
+
+```{r}
+
+ggplot(set_asides_allowances, aes(x=state_fiscal_year, y=amount, fill=allowance)) + 
+  geom_bar(stat="identity", position="dodge") + 
+    labs(x="", y="", title="Set Asides, Amount by Allowance", subtitle=subtitle_str,
+         fill="") + 
+  scale_y_continuous(label=label_currency()) + 
+  scale_fill_manual(values = cat_palette(5)) +  
+  epic_chart_theme
+
+```
+
+```{r}
+# for percent plot, drop NAs so the lines connect points no matter how many points there are
+set_asides_cat_percent <- set_asides_allowances %>%
+  filter(!is.na(percentage))
+
+p <- ggplot(set_asides_cat_percent, aes(x=state_fiscal_year, y=percentage, color=fed_cap_grant)) + 
+  geom_line(aes(group=fed_cap_grant), linewidth=1.5) + 
+  geom_point(size=4) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0,.15)) + 
+  labs(x="", y="", title="Set Asides, Percent", subtitle=subtitle_str) + 
+  scale_color_manual(values = cat_palette(5)) + 
+  epic_chart_theme
+
+p + facet_wrap(~allowance)
+```
+
+
+#TODO: Remake these plots bringing in project/state data and the above datasets combined
+
+# Combined Funding + Projects
+
+## Total Funding Available for Projects under Base & BIL General Supplemental Program
 
 ```{r}
 funding_requested_available <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025",
@@ -141,36 +345,32 @@ ggplot(funding_requested_available, aes(x=state_fiscal_year, y=amount, fill=cate
   scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
   scale_fill_manual(values = cat_palette(2), 
                       name = "") + 
-  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=paste0(state_name, " SFY23-25")) + 
+  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=subtitle_str) + 
   epic_chart_theme
 
 ```
 
-# Total Funding Available for Lead Projects
-
+## Total Funding Requested under Base & BIL General Supplemental Program PPL
 
 ```{r}
 
-lead_available <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
-                             amount = c(213455950+140519350, 0, 27528500))
+funding_requested <- data.frame(state_fiscal_year = c("SFY2023", "SFY2024", "SFY2025"),
+                             amount = c(2492000652, 3255535627, 4643722053.80))
 
-ggplot(lead_available, aes(x=state_fiscal_year, y=amount)) + 
+ggplot(funding_requested, aes(x=state_fiscal_year, y=amount)) + 
   geom_bar(stat="identity", fill="#172f60") + 
-  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
-  labs(x="", y="", title="Total Funding Available, BIL LSLR", subtitle=paste0(state_name, ", SFY23-25")) + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  labs(x="", y="", title="Total Funding Requested under Base & BIL General Supplemental Program PPL", subtitle=subtitle_str) + 
   epic_chart_theme
-
 
 
 ```
 
 
-EC Program
-
-# Total Funding Requested, EC
+## Total Funding Requested, EC
 175620496
 552609451
-# Total Funding Available for Projects
+Total Funding Available for Projects
 57910960
 59372280
 
@@ -188,65 +388,8 @@ ggplot(funding_requested_available_ec, aes(x=state_fiscal_year, y=amount, fill=c
   scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
   scale_fill_manual(values = cat_palette(2), 
                       name = "") + 
-  labs(x="", y="", title="Comparing Requested & Available Funds, BIL EC", subtitle=paste0(state_name, " SFY23-25")) + 
+  labs(x="", y="", title="Comparing Requested & Available Funds, BIL EC", subtitle=subtitle_str) + 
   epic_chart_theme
 ```
 
-# Set Asides
-
-```{r}
-set_asides <- data.frame(state_fiscal_year=c("SFY2023","SFY2024", "SFY2025",
-                                             "SFY2023","SFY2024", "SFY2025",
-                                             "SFY2023","SFY2024", "SFY2025",
-                                             "SFY2023","SFY2024", "SFY2025",
-                                             "SFY2023","SFY2024", "SFY2025"),
-                         program=c("Base", "Base", "Base",
-                                   "BIL General Supplemental", "BIL General Supplemental", "BIL General Supplemental",
-                                   "Base & BIL General Supplemental", "Base & BIL General Supplemental", "Base & BIL General Supplemental",
-                                   "Lead Service Line Replacement", "Lead Service Line Replacement", "Lead Service Line Replacement",
-                                   "Emerging Contaminants", "Emerging Contaminants", "Emerging Contaminants"),
-                         set_aside_dollar=c(12885760, 10528960, 10045120,
-                                            5639720, 18714680, 19330240,
-                                            18525480, 29243640, 29375360,
-                                            14425700, NA, 1121500,
-                                            2368080, 2436560, NA),
-                         set_aside_pct=c(.23, .26, .27,
-                                         .04, .11, .11,
-                                         .09, .14, .13,
-                                         .04, 0, .04,
-                                         .04, .04, 0)
-                         )
-```
-
-```{r}
-ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_dollar, fill=program)) + 
-  geom_bar(stat="identity", position="dodge") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = cat_palette(5), 
-                      name = "") + 
-  labs(x="", y="", title="Set Asides", subtitle=paste0(state_name, " SFY23-25")) + 
-  epic_chart_theme
-  
-```
-
-```{r}
-ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_dollar, fill=program)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = cat_palette(5), 
-                      name = "") + 
-  labs(x="", y="", title="Set Asides", subtitle=paste0(state_name, " SFY23-25")) + 
-  epic_chart_theme
-```
-
-```{r}
-ggplot(set_asides, aes(x=state_fiscal_year, y=set_aside_pct, color=program)) + 
-  geom_line(aes(group=program), size=1.5) + 
-  geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent(), limits=c(0,.31)) + 
-  labs(x="", y="", title="Set Asides, Percent Utilized", subtitle=paste0(state_name, " SFY23-25")) + 
-  scale_color_manual(values = cat_palette(5), 
-                      name = "") + 
-  epic_chart_theme
-```
 

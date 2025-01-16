@@ -131,6 +131,19 @@ project_cost_aggregation <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost)))
+
+pc_by_type <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost != "No Information") %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
+  pivot_wider(names_from=project_type, values_from=total_project_cost) %>%
+  rename(ec_total_project_cost = `Emerging Contaminants`,
+         lead_total_project_cost = `Lead`,
+         general_total_project_cost = `General`) %>%
+  select(state, state_fiscal_year, ec_total_project_cost, lead_total_project_cost, general_total_project_cost)
+
+project_cost_aggregation <- project_cost_aggregation %>%
+  left_join(pc_by_type, by=c("state", "state_fiscal_year"))
 ```
 
 ```{r}
@@ -138,6 +151,19 @@ funding_amount_aggregation <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
   summarize(total_funding_amount = sum(as.numeric(funding_amount)))
+
+fa_by_type <- all_projects %>%
+  filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount))) %>%
+  pivot_wider(names_from=project_type, values_from=total_funding_amount) %>%
+  rename(ec_total_funding_amount = `Emerging Contaminants`,
+         lead_total_funding_amount = `Lead`,
+         general_total_funding_amount = `General`) %>%
+  select(state, state_fiscal_year, ec_total_funding_amount, lead_total_funding_amount, general_total_funding_amount)
+
+funding_amount_aggregation <- funding_amount_aggregation %>%
+  left_join(fa_by_type, by=c("state", "state_fiscal_year"))
 ```
 
 ```{r}
@@ -145,6 +171,19 @@ requested_amount_aggregation <- all_projects %>%
   filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
   summarize(total_requested_amount = sum(as.numeric(requested_amount)))
+
+ra_by_type <- all_projects %>%
+  filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(total_requested_amount = sum(as.numeric(requested_amount))) %>%
+  pivot_wider(names_from=project_type, values_from=total_requested_amount) %>%
+  rename(ec_total_requested_amount = `Emerging Contaminants`,
+         lead_total_requested_amount = `Lead`,
+         general_total_requested_amount = `General`) %>%
+  select(state, state_fiscal_year, ec_total_requested_amount, lead_total_requested_amount, general_total_requested_amount)
+
+requested_amount_aggregation <- requested_amount_aggregation %>%
+  left_join(ra_by_type, by=c("state", "state_fiscal_year"))
 ```
 
 ```{r}

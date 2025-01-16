@@ -1,0 +1,275 @@
+
+# Combined Funding + Projects
+
+This notebook combines data used in the `funding-data-yoy` and `project-data-yoy` notebooks and combines them for data viz and analysis where the two overlap. These include comparing the total funding available to requested amounts or project costs to consider oversubscription and other considerations.
+
+# Setup
+
+## Local Variables
+
+```{r}
+# filters data and changes plot names
+state_name <- "Texas"
+
+# only appears in subtitles
+years <- "SFY23-25"
+subtitle_str <- paste0(state_name, ", ", years)
+
+# used in setting years as factor to display correctly in plots
+years_list <- c("2023", "2024", "2025")
+
+include_y0 <- FALSE
+
+```
+
+## Imports & Settings
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(tidyverse)
+library(janitor)
+library(aws.s3)
+library(scales)
+library(lubridate)
+library(sysfonts)
+library(showtext)
+library(plotly)
+library(googledrive)
+library(googlesheets4)
+
+# bring in AWS credentials
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
+
+# bring in functions for cleaning numeric strings and data viz template code
+source("../resources.R")
+
+```
+
+
+# Prepare Data
+
+```{r, warning=FALSE}
+
+financial <- get_financial(state_name)
+
+set_asides_allowances <- get_set_asides(state_name)
+
+```
+
+
+## Create Data Subsets
+
+```{r, warning=FALSE}
+
+# the financial tab includes aggregated set_aside total and then calculates set_asides_percent
+# as the set_aside_amount/fed_cap_grant_total
+set_asides <- financial %>%
+  select(state, state_fiscal_year, program, set_asides_amount, set_asides_percent)
+
+base <- financial %>%
+  filter(program == "Base")
+
+gen_supp <- financial %>%
+  filter(program == "BIL General Supplemental")
+
+base_gen_supp <- financial %>%
+  filter(program == "Base & BIL General Supplemental")
+
+lead <- financial %>%
+  filter(program == "Lead Service Line Replacement")
+
+ec <- financial %>%
+  filter(program == "Emerging Contaminants")
+
+```
+
+
+```{r}
+state_stats <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  mutate(state_fiscal_year = factor(state_fiscal_year))
+
+if (include_y0 == FALSE) {
+# select single state and drop any Y0 data to only evaluate BIL years
+  state_stats <- state_stats %>%
+    filter(state_fiscal_year != "2022")
+ }
+
+```
+
+## Base & BIL General Supplemental Program
+
+### Comparing Project Costs & Funds Available
+
+```{r}
+
+compare_available_funds <- state_stats %>%
+  # keep cost and requested amount so we can try plotting one or the other
+  select(state, state_fiscal_year, general_total_project_cost, general_total_requested_amount) %>%
+  # join with only relevant columns from funding data
+  left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available_for_projects)) %>%
+  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = general_total_project_cost - total_funding_available_for_projects,
+         requested_less_available = general_total_requested_amount - total_funding_available_for_projects)
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost <- compare_available_funds %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "cost_less_available" ~ "Remaining Project Cost"
+  ))
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount <- compare_available_funds %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "requested_less_available" ~ "Remaining Requested Amount"
+  ))
+
+```
+
+```{r}
+ggplot(compare_project_cost, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Project Costs & Available Funds under Base & Bil Gen. Supp", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+
+
+### Comparing Requested Amount & Funds Available
+
+```{r}
+
+ggplot(compare_requested_amount, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+
+## EC
+
+### Data Prep
+
+```{r}
+compare_available_funds_ec <- state_stats %>%
+  # keep cost and requested amount so we can try plotting one or the other
+  select(state, state_fiscal_year, ec_total_project_cost, ec_total_requested_amount) %>%
+  # join with only relevant columns from funding data
+  left_join(ec %>% select(state, state_fiscal_year, total_funding_available_for_projects)) %>%
+  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = ec_total_project_cost - total_funding_available_for_projects,
+         requested_less_available = ec_total_requested_amount - total_funding_available_for_projects)
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_ec <- compare_available_funds_ec %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "cost_less_available" ~ "Remaining Project Cost"
+  ))
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_ec <- compare_available_funds_ec %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "requested_less_available" ~ "Remaining Requested Amount"
+  ))
+```
+
+### Project Costs
+
+```{r}
+ggplot(compare_project_cost_ec, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Project Costs & Available Funds under EC", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+### Requested Amount
+
+```{r}
+ggplot(compare_requested_amount_ec, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+## Lead
+
+### Data Prep
+
+```{r}
+compare_available_funds_lead <- state_stats %>%
+  # keep cost and requested amount so we can try plotting one or the other
+  select(state, state_fiscal_year, lead_total_project_cost, lead_total_requested_amount) %>%
+  # join with only relevant columns from funding data
+  left_join(lead %>% select(state, state_fiscal_year, total_funding_available_for_projects)) %>%
+  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = lead_total_project_cost - total_funding_available_for_projects,
+         requested_less_available = lead_total_requested_amount - total_funding_available_for_projects)
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_lead <- compare_available_funds_lead %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "cost_less_available" ~ "Remaining Project Cost"
+  ))
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_lead <- compare_available_funds_lead %>%
+  select(state, state_fiscal_year, total_funding_available_for_projects, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available_for_projects, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available_for_projects" ~ "Total Available",
+    name == "requested_less_available" ~ "Remaining Requested Amount"
+  ))
+```
+
+### Project Cost
+
+```{r}
+ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Project Costs & Available Funds under Lead", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```
+### Requested Amount
+
+```{r}
+ggplot(compare_requested_amount_lead, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_y_continuous(labels=label_currency(scale=.000000001, suffix="B")) + 
+  scale_fill_manual(values = cat_palette(2), 
+                      name = "") + 
+  labs(x="", y="", title="Comparing Requested & Available Funds under Base & Bil Gen. Supp", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+```

@@ -5,6 +5,39 @@ library(janitor)
 options(scipen=999)
 
 
+### Data Viz Template Settings ----
+
+# fonts: 
+sysfonts::font_add_google("Lato")
+showtext::showtext_auto()
+
+# theme: 
+# legend position is right, text size is at least 10, and text is Lato
+epic_chart_theme <- theme_minimal() + 
+  theme(legend.position = "right", 
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_text(size = 11, family = "Lato"), 
+        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
+                                                   b = 0, l = 0)), 
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
+                                                    b = 0, l = 0)), 
+        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
+                                                   b = 0, l = 0)), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
+                                                    b = 0, l = 0))) 
+
+cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
+
+cat_palette <- colorRampPalette(c("#172f60","#1054a8",
+                                  "#791a7b","#de9d29","#4ea324"))
+
+cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
+                                         "#B077B2","#E4BE7C",
+                                         "#b15712","#82AB6E"))
+
+
+
 ### Cleaning Functions ----
 
 

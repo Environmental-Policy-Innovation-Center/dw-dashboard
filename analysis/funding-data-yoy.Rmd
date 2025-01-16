@@ -53,73 +53,13 @@ source("../resources.R")
 
 # Prepare Data
 
-## Import Google Sheets
-
-```{r, echo=FALSE, warning=FALSE}
-URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
-
-financial_in <- data.frame(read_sheet(URL, sheet="FinancialData"))
-
-set_asides_allowances_in <- data.frame(read_sheet(URL, "SetAsides"))
-
-
-```
-
-## Prep Google Data
-
 ```{r, warning=FALSE}
 
-set_asides_allowances <- set_asides_allowances_in %>%
-  clean_names() %>%
-  filter(state==state_name) %>%
-  select(-notes) %>%
-  mutate(state_fiscal_year = as.character(state_fiscal_year),
-         state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
-  mutate(amount = convert_to_numeric(amount),
-         percentage = convert_to_numeric(percentage)) %>%
-  #TODO: Modify this as needed once water team updates naming conventions
-  mutate(allowance = case_when(
-    allowance == "Administration and Technical Assistance (up to 4%)" ~ "Admin & TA",
-    allowance == "Small System (<10,000 population) Technical Assistance (up to 2%)" ~ "Small System TA",
-    allowance == "State Program Management (10%)" ~ "State Program Management",
-    allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Local Assistance & Other",
-    allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Local Assistance & Other",
-    TRUE ~ "Missing Case When Statement"),
-         fed_cap_grant = case_when(
-           fed_cap_grant == "General DWSRF (Base)" ~ "Base",
-           fed_cap_grant == "General DWSRF (BILGeneral Supplemental)" ~ "BIL Gen/Supp",
-           fed_cap_grant == "DWSRF LSLR Program" ~ "LSLR",
-           fed_cap_grant == "DWSRF EC Program" ~ "EC",
-           TRUE ~ "Missing Fed Cap Grant"
-         ))
 
-financial <- financial_in %>%
-  clean_names() %>%
-  filter(state == state_name) %>%
-  select(-notes) %>%
-  mutate(state_fiscal_year = as.character(state_fiscal_year),
-         state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
-  # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
-  # and mutating with across() produces errors or warnings depending on the context, here at least it is only warnings
-  # that can be muted, but the resulting dataframe is still as intended
-  mutate(fed_cap_grant_str = str_squish(fed_cap_grant_total),
-         fed_cap_grant_total = convert_to_numeric(fed_cap_grant_total),
-         state_funds = convert_to_numeric(state_funds),
-         re_allotment_funds_grants = convert_to_numeric(re_allotment_funds_grants),
-         #transferred_cwsrf_funds = convert_to_numeric(transferred_cwsrf_funds),
-         unutilized_un_drawn_funds_carryover = convert_to_numeric(unutilized_un_drawn_funds_carryover),
-         leveraged_funds = convert_to_numeric(leveraged_funds),
-         total_funding_available_for_projects = convert_to_numeric(total_funding_available_for_projects),
-         set_asides_amount = convert_to_numeric(set_asides_amount),
-         set_asides_percent = convert_to_numeric(set_asides_percent),
-         pf_for_da_cs_under_base = convert_to_numeric(pf_for_da_cs_under_base),
-         pf_for_da_cs_under_base_of_fed_cap_grant_12_35 = convert_to_numeric(pf_for_da_cs_under_base_of_fed_cap_grant_12_35),
-         principal_forgiveness_for_any_eligible_applicant_under_base = convert_to_numeric(principal_forgiveness_for_any_eligible_applicant_under_base),
-         principal_forgiveness_for_any_eligible_applicant_under_base = convert_to_numeric(principal_forgiveness_for_any_eligible_applicant_under_base),
-         pf_for_eligibile_of_fed_cap_grant_under_base_14 = convert_to_numeric(pf_for_eligibile_of_fed_cap_grant_under_base_14),
-         principal_forgiveness_amount_total = convert_to_numeric(principal_forgiveness_amount_total),
-         pf_of_fed_cap_grant = convert_to_numeric(pf_of_fed_cap_grant),
-         gpr_component_cost = convert_to_numeric(gpr_component_cost))
+
+financial <- get_financial(state_name)
+
+set_asides_allowances <- get_set_asides(state_name)
 
 ```
 

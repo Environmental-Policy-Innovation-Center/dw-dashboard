@@ -6,3 +6,4 @@
 *.pyc
 */temp-docs
 *.pdf
+*/analysis/output

@@ -35,6 +35,7 @@ clean_tx_y1 <- function() {
            disadvantaged = "No Information",
            funding_amount = "No Information",
            expecting_funding = "No Information") %>%
+    rename(project_cost = total_project_cost) %>%
     select(-requested_phase_s)
   
   

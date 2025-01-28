@@ -10,6 +10,7 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 ```{r}
 # filters data and changes plot names
 state_name <- "Texas"
+state_abbr <- "TX"
 
 # only appears in subtitles
 years <- "SFY23-25"
@@ -151,7 +152,7 @@ gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 gen_pc_gp
-
+save_to_aws(gen_pc_gp, "compare-demand-available-funds-gen", state_abbr)
 ```
 
 
@@ -173,7 +174,7 @@ gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 gen_ra_gp
-
+#save_to_aws(gen_ra_gp, "compare-demand-available-funds-gen", state_abbr)
 ```
 
 ## EC
@@ -230,7 +231,7 @@ ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 ec_pc_gp
-
+save_to_aws(ec_pc_gp, "compare-demand-available-funds-ec", state_abbr)
 ```
 ### Requested Amount
 
@@ -249,7 +250,7 @@ ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 ec_ra_gp
-
+#save_to_aws(ec_ra_gp, "compare-demand-available-funds-ec", state_abbr)
 ```
 ## Lead
 
@@ -304,7 +305,7 @@ lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 lead_pc_gp
-
+save_to_aws(lead_pc_gp, "compare-demand-available-funds-lead", state_abbr)
 ```
 
 ### Requested Amount
@@ -324,5 +325,5 @@ lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 lead_ra_gp
-
+#save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr)
 ```

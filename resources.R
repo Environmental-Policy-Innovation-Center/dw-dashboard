@@ -152,6 +152,29 @@ format_percent <- function(x) {
 }
 
 
+### Save to AWS Functions ----
+
+save_to_aws <- function(gp_object, file_name, state_abbr) {
+  
+  file_path <- paste0("output/", file_name, ".html")
+  object_url <- paste0("/funding-tracker/", state_abbr, "/", file_name, ".html")
+  
+  htmlwidgets::saveWidget(partial_bundle(gp_object) %>%
+                            config(displayModeBar = FALSE) %>%
+                            config(displaylogo = FALSE) %>%
+                            layout(xaxis = list(fixedrange = TRUE),
+                                   yaxis = list(fixedrange = TRUE))%>%
+                            layout(plot_bgcolor='transparent') %>%
+                            layout(paper_bgcolor='transparent'),
+                          file_path)
+  
+  put_object(
+    file = file.path(file_path),
+    object = object_url,
+    bucket = "tech-team-data"
+  )
+  
+}
 
 ### Cleaning Functions ----
 

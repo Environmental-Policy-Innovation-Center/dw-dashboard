@@ -14,6 +14,7 @@ As of December 2024, some of the tables and data visualizations are made manuall
 
 ```{r}
 state_name <- "Texas"
+state_abbr <- "TX"
 sfy <- "2023"
 subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 years_list <- c("2023")
@@ -93,6 +94,7 @@ grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
                                     subtitle_str)))
 
 grants_gp
+save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr)
 ```
 
 ## Principal Forgiveness
@@ -121,6 +123,7 @@ all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
                                     subtitle_str)))
 
 all_pf_gp
+#save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr)
 ```
 
 ## Base PF as percents
@@ -189,6 +192,7 @@ funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
                                     subtitle_str)))
 
 funds_comp_gp
+save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), state_abbr)
 ```
 
 ## Project Costs & Available Funds

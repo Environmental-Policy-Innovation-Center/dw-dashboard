@@ -16,6 +16,7 @@ As of December 2024, some of the tables and data visualizations are made manuall
 state_name <- "Texas"
 sfy <- "2023"
 subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
+years_list <- c("2023")
 ```
 
 ## Imports and Styling
@@ -28,33 +29,15 @@ library(janitor)
 library(aws.s3)
 library(scales)
 library(ggpubr)
+library(plotly)
 
 source("../../ds-resources/shared-functions.R")
 run_code_from_file("../../local/aws.txt")
 
+source("../resources.R")
+
 ```
 
-```{r}
-# fonts: 
-sysfonts::font_add_google("Lato")
-showtext::showtext_auto()
-
-# theme: 
-# legend position is right, text size is at least 10, and text is Lato
-epic_chart_theme <- theme_minimal() + 
-  theme(legend.position = "right", 
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), 
-        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
-                                                   b = 0, l = 0)), 
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
-                                                    b = 0, l = 0)), 
-        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
-                                                   b = 0, l = 0)), 
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
-                                                    b = 0, l = 0))) 
-```
 
 ## Import Projects & State Data
 
@@ -66,61 +49,106 @@ all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/s
 
 state_data <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
   clean_names() %>%
-  filter(state == state_name & state_fiscal_year == sfy)
+  filter(state == state_name & state_fiscal_year == sfy) %>%
+  select(  -community_served_status, -borrower_status,pwsid_status, -project_id_status, -project_name_status, -project_type_status, -project_cost_status, -requested_amount_status,
+           -funding_amount_status, -principal_forgiveness_status, population_status, -project_description_status, -disadvantaged_status, -project_rank_status, 
+           -project_score_status, -expecting_funding_status)
 ```
 
-# Create Plots from Manual Data Entry
+
+```{r}
+financial <- get_financial(state_name, years_list) %>%
+  clean_names() %>%
+  filter(state_fiscal_year == sfy)
+```
+
+
+# Funding Data
 
 ## Grants Allocated
 
 ```{r}
-grants_allocated <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF", "FFY22 BIL General Supplemental",
-                                                  "FFY22 BIL Lead", "FFY23 BIL Lead",
-                                                  "FFY22 BIL Emerging Contaminants"),
-                               amount = c(54911000, 140993000, 222155000, 146246000, 59202000))
-
+grants <- financial %>%
+  select(fed_cap_grant, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg) %>%
+  pivot_longer(cols=c(ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg)) %>%
+  filter(!is.na(value) & value > 0) %>%
+  mutate(name = str_to_upper(str_remove(name, "_fcg")),
+         name = paste0(fed_cap_grant, ", ", name)
+         )
 ```
 
+
 ```{r}
-ggplot(grants_allocated, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
+grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
   labs(x="", y="", 
-       title="How much was each Federal Cap Grant?", 
+       title="Federal Cap Grants", 
        subtitle=subtitle_str) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
+
+grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
+  layout(title = list(text = paste0('Federal Cap Grants',
+                                    '<br>',
+                                    subtitle_str)))
+
+grants_gp
 ```
 
 ## Principal Forgiveness
 
 ```{r}
-principal_forgiveness <- data.frame(fed_cap_grants = c("FFY22 Base DWSRF, DACs", "FFY22 Base DWSRF, Any", "FFY22 BIL General Supplemental",
-                                                       "FFY22 BIl Lead", "FFY23 BIL Lead", "FFY22 BIL Emerging Contaminants"),
-                               amount = c(8913430, 9000000, 69086570, 108855950, 71660540, 57910960))
-
+total_pf_sfy <- financial %>%
+  select(fed_cap_grant, total_pf_amt) %>%
+  pivot_longer(cols=c(-fed_cap_grant)) %>%
+  filter(!is.na(value) & value > 0)
 ```
 
+
 ```{r}
-ggplot(principal_forgiveness, aes(x=amount, y=reorder(fed_cap_grants, amount))) + 
+#TODO: Recreate after PF dataset is finished
+
+all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(fed_cap_grant, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", title="How much of the Fed Cap Grants are Principal Forgiveness?", 
+  labs(x="", y="", title=" ", 
        subtitle=subtitle_str) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
+
+all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How much of the Fed Cap Grants are Principal Forgiveness",
+                                    '<br>',
+                                    subtitle_str)))
+
+all_pf_gp
 ```
 
 ## Base PF as percents
 
 ```{r}
-pf_percents <- data.frame(category=c("PF Available to DACs", "Remaining PF", "Remaining Base Funds"),
-                         amount_pct=c(16, 16, 68))
-#NOTE: Have to plot the bigger number first for it to appear intuitively
-pf_percents$category <- factor(pf_percents$category, levels=c("Remaining Base Funds", "PF Available to DACs", "Remaining PF"))
+base_pf_pct <- financial %>%
+  select(fed_cap_grant, dac_pf_pct_base, dis_pf_pct_base) %>%
+  pivot_longer(c(-fed_cap_grant)) %>%
+  filter(!is.na(value)) %>%
+  mutate(name = case_when(
+    name == "dac_pf_pct_base" ~ "PF Reserved for DACs",
+    name == "dis_pf_pct_base" ~ "Discretionary PF",
+    TRUE ~ "ERROR"),
+    value = round(value*100, 0))
 
-plot_labs <- paste0(pf_percents$category, " (", pf_percents$amount_pct, "%)")
-p <- ggdonutchart(pf_percents,
-             "amount_pct",
-             fill="category",
+base_pf_pct <- base_pf_pct %>%
+  add_row(fed_cap_grant = "Base", name = "Remaining Base Funds", value = (100-sum(base_pf_pct$value))) %>%
+  mutate(name = factor(name, levels=c("Remaining Base Funds", "PF Reserved for DACs", "Discretionary PF")))
+```
+
+
+```{r}
+
+plot_labs <- paste0(base_pf_pct$name, " (", base_pf_pct$value, "%)")
+
+p <- ggdonutchart(base_pf_pct,
+             "value",
+             fill="name",
              label=plot_labs,
              color="white",
              palette=c("lightgrey", "#4ea324", "#172f60"))
@@ -132,24 +160,59 @@ p + theme(legend.position="none",
        subtitle=subtitle_str)
 ```
 
+# Comparing Funding and Project Data
 
-## Comparing Funds in Process Stages
+## Funds by Process
 
 ```{r}
-available_award_comp <- data.frame(category = c("Available", "Submitted", "Expecting Funding"),
-                                   amount = c(342000000, 2500000000, 324000000)) %>%
-  mutate(category = factor(category, levels=c("Submitted", "Available", "Expecting Funding")))
-
-ggplot(available_award_comp, aes(x=category, y=amount)) + 
-  geom_bar(stat="identity", fill="#4ea324") +
-  labs(x="", y="", 
-       title="How do available funds compare to submitted needs and expected funding?", 
-       subtitle=subtitle_str) + 
-  scale_y_continuous(labels=label_dollar(scale=.000000001, suffix="B")) + 
-  epic_chart_theme
+#TODO: Confirm correct column use, TBD on policy team's data development
+funds_process_comp <- data.frame(name=c("Available Funding", "Demand for Funds", "Expected Funding"),
+                                 value=c(sum(financial$total_funding_available, na.rm = TRUE),
+                                         state_data$total_project_cost,
+                                         state_data$total_funding_amount)) %>%
+  mutate(category = factor(name, levels=c("Expected Funding", "Available Funding", "Demand for Funds")))
 ```
 
-## Comparing Project Costs & Available Funds
+
+```{r}
+funds_comp_p <- ggplot(funds_process_comp, aes(y=category, x=value, text=format_currency(value))) + 
+  geom_bar(stat="identity", fill="#4ea324") +
+  labs(x="", y="", 
+       title=" ", 
+       subtitle=subtitle_str) + 
+  scale_x_continuous(labels=label_dollar()) + 
+  epic_chart_theme
+
+funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How do available funds compare to demand and expected funding?",
+                                    '<br>',
+                                    subtitle_str)))
+
+funds_comp_gp
+```
+
+## Project Costs & Available Funds
+
+### Lead
+
+```{r}
+
+lead_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="Lead Service Line Replacement"]
+
+lead_costs <- data.frame(name=c("Available Funds", "Remaining Submitted Lead Project Costs"),
+                         value=c(lead_funds_available,
+                                 state_data$lead_total_project_cost - lead_funds_available)) %>%
+  mutate(value_str = case_when(
+    #TODO: make this a function, since it will likely be used again
+    value >= 100000 & value < 999999 ~ paste0("$", value, "k"),
+    value >= 1000000 & value < 999999999 ~ paste0("$", value, "M"),
+    value >= 1000000000 ~ paste0("$", value, "B"),
+    TRUE ~ "ERROR"),
+    #TODO: Test above
+   #TODO:L define value_pct 
+  )
+```
+
 
 ```{r}
 
@@ -171,11 +234,12 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How do lead replacement costs compare to available funds?",
+  labs(title="How do submitted lead projects costs compare to available funds?",
        subtitle=subtitle_str)
 
 ```
 
+### EC
 ```{r}
 ec_costs <- data.frame(category=c("Available Funds", "Remaining Emerging Contaminants Costs"),
                          amount=c(57910960, (175000000-57910960)),
@@ -195,7 +259,7 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How do emerging contaminants costs compare to available funds?",
+  labs(title="How do submitted EC project costs compare to available funds?",
        subtitle=subtitle_str)
 ```
 

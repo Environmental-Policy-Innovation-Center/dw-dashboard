@@ -25,35 +25,10 @@ library(lubridate)
 library(sysfonts)
 library(showtext)
 
-#TODO: bringing cleaning functions into shared functions and update references
 source("../../dw-dashboard/resources.R")
 
 source("../../ds-resources/shared-functions.R")
 run_code_from_file("../../local/aws.txt")
-
-options(scipen=999)
-
-# fonts: 
-sysfonts::font_add_google("Lato")
-showtext::showtext_auto()
-
-# theme: 
-# legend position is right, text size is at least 10, and text is Lato
-epic_chart_theme <- theme_minimal() + 
-  theme(legend.position = "right", 
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), 
-        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
-                                                   b = 0, l = 0)), 
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
-                                                    b = 0, l = 0)), 
-        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
-                                                   b = 0, l = 0)), 
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
-                                                    b = 0, l = 0))) 
-
-cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
 ```
 
 # Funding Decisions

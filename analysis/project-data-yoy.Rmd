@@ -28,43 +28,13 @@ library(scales)
 library(lubridate)
 library(sysfonts)
 library(showtext)
+library(plotly)
 
 source("../../ds-resources/shared-functions.R")
 run_code_from_file("../../local/aws.txt")
 
-options(scipen=999)
-
-# fonts: 
-sysfonts::font_add_google("Lato")
-showtext::showtext_auto()
-
-# theme: 
-# legend position is right, text size is at least 10, and text is Lato
-epic_chart_theme <- theme_minimal() + 
-  theme(legend.position = "right", 
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), 
-        axis.text.x = element_text(margin = margin(t = 10, r = 0, 
-                                                   b = 0, l = 0)), 
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, 
-                                                    b = 0, l = 0)), 
-        axis.text.y = element_text(margin = margin(t = 0, r = 10, 
-                                                   b = 0, l = 0)), 
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, 
-                                                    b = 0, l = 0))) 
-```
-
-```{r}
-cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
-
-cat_palette <- colorRampPalette(c("#172f60","#1054a8",
-                                  "#791a7b","#de9d29", 
-                                  "#b15712","#4ea324"))
-
-cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
-                                         "#B077B2","#E4BE7C",
-                                         "#b15712","#82AB6E"))
+# bring in functions for cleaning numeric strings and data viz template code
+source("../resources.R")
 ```
 
 # State-Level Data
@@ -75,7 +45,11 @@ state_stats <- s3read_using(read.csv, object="s3://water-team-data/clean_data/sr
 
 state_yoy <- state_stats %>%
   filter(state == state_name) %>%
-  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+  mutate(state_fiscal_year = as.factor(state_fiscal_year)) %>%
+  mutate(total_project_cost_str = format_currency(total_project_cost),
+         total_requested_amount_str = format_currency(total_requested_amount),
+         total_principal_forgiveness_str = format_currency(total_principal_forgiveness),
+         total_funding_amount_str = format_currency(total_funding_amount))
 
 if (include_y0 == FALSE) {
 # select single state and drop any Y0 data to only evaluate BIL years
@@ -91,13 +65,20 @@ if (include_y0 == FALSE) {
 ### Single Variable Bar Plots
 
 ```{r}
-ggplot(state_yoy, aes(x=state_fiscal_year, y=projects)) + 
+projects_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=projects, text=projects)) + 
   geom_bar(stat="identity", fill="#526489") +
-  labs(title="How many projects apply per year?",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Projects") + 
   epic_chart_theme
+
+projects_gp <- ggplotly(projects_p, tooltip="text") %>%
+  layout(title = list(text = paste0('How many applicant projects per year?',
+                                    '<br>',
+                                    subtitle_str)))
+
+projects_gp
 ```
 
 ```{r}
@@ -105,14 +86,21 @@ ggplot(state_yoy, aes(x=state_fiscal_year, y=projects)) +
 if ( nrow(state_yoy %>% filter(!is.na(total_requested_amount)))  > 0 ) {
 
 
-ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount)) + 
+tra_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount, text=total_requested_amount_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="Funds Requested",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Requested Funds") + 
   epic_chart_theme
+
+tra_gp <- ggplotly(tra_p, tooltip="text") %>%
+  layout(title = list(text = paste0('Requested Funds',
+                                    '<br>',
+                                    subtitle_str)))
+
+tra_gp
 }
 
 
@@ -120,16 +108,22 @@ ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount)) +
 
 ```{r}
 if ( nrow(state_yoy %>% filter(!is.na(total_project_cost)))  > 0 ) {
-
-
-ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost)) + 
+  
+tpc_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost, text=total_project_cost_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="What's the total cost of projects per year?",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Project Cost") + 
   epic_chart_theme
+
+tpc_gp <- ggplotly(tpc_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total cost of submitted projects applications?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tpc_gp
 }
 
 ```
@@ -138,15 +132,21 @@ ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost)) +
 ```{r}
 if ( nrow(state_yoy %>% filter(!is.na(total_funding_amount)))  > 0 ) {
 
-
-ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount)) + 
+tfa_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount, text=total_funding_amount_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="Expected Funding Amount",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Expecting Funding Amount") + 
   epic_chart_theme
+
+tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total expected funding per year?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tfa_gp
 }
 ```
 
@@ -154,14 +154,21 @@ ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount)) +
 if ( nrow(state_yoy %>% filter(!is.na(total_principal_forgiveness)))  > 0 ) {
 
 
-ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness)) + 
+tpf_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness, text=total_principal_forgiveness_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="Expected Principal Forgiveness",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Expecting Principal Forgiveness") + 
   epic_chart_theme
+
+tpf_gp <- ggplotly(tpf_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How much PF is expected each year?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tpf_gp
 }
 ```
 
@@ -171,23 +178,33 @@ ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness)) +
 
 expecting_funding_projects <- state_yoy %>%
   mutate(not_expecting_funding_projects = projects - expecting_funding_projects) %>%
-  select(state_fiscal_year, not_expecting_funding_projects, expecting_funding_projects) %>%
+  select(state_fiscal_year, not_expecting_funding_projects, expecting_funding_projects, projects) %>%
   pivot_longer(cols=c("not_expecting_funding_projects", "expecting_funding_projects")) %>%
   mutate(expecting_funding = case_when(
     name == "expecting_funding_projects" ~ "Yes",
     name == "not_expecting_funding_projects" ~ "No"),
-    expecting_funding = factor(expecting_funding, levels=c("No", "Yes"))
+    expecting_funding = factor(expecting_funding, levels=c("No", "Yes")),
+    project_percent = value / projects,
+    project_percent_str = format_percent(project_percent),
+    plot_str = paste0(expecting_funding, ": ", as.character(value), " (", project_percent_str, ")")
   )
 
-ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding)) + 
+efp_p <- ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") +
   scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "Expecting Funding") + 
-  labs(title="What proportion of projects could expect funding?",
+  labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Projects") + 
   epic_chart_theme
+
+efp_gp <- ggplotly(efp_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What proportion of projects could expect funding?",
+                                    '<br>',
+                                    subtitle_str)))
+
+efp_gp
 
 ```
 
@@ -195,15 +212,22 @@ ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expect
 ### Disadvantaged Comps
 
 ```{r}
-ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent)) + 
+dac_pct_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent, text=format_percent(disadvantaged_percent/100))) + 
   geom_line(group=1, color=cat_palette_pastel(1), size=1.5) + 
   geom_point(color=cat_palette_pastel(1), size=4) + 
   scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
-       title="What percent of applicant projects serve DACs?",
+       title=" ",
        subtitle=subtitle_str) + 
   epic_chart_theme
+
+dac_pct_gp <- ggplotly(dac_pct_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What percent of all applicant projects serve DACs?",
+                                    '<br>',
+                                    subtitle_str)))
+
+dac_pct_gp
 ```
 
 ```{r}
@@ -215,18 +239,26 @@ dac_project_types <- state_yoy %>%
   mutate(project_type = case_when(
     project_type == "dac_general_projects" ~ "General",
     project_type == "dac_ec_projects" ~ "Emerging Contaminants",
-    project_type == "dac_lead_projects" ~ "Lead"
-  ))
+    project_type == "dac_lead_projects" ~ "Lead"),
+    plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", value, " projects")
+  )
 
-ggplot(dac_project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
+dac_pt_p <- ggplot(dac_project_types, aes(x=state_fiscal_year, y=value, fill=project_type, text=plot_str)) + 
   geom_bar(stat="identity", position="dodge") + 
     scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
-       title="Disadvantaged Community Projects by Type",
+       title=" ",
        subtitle=subtitle_str) +
   epic_chart_theme
+
+dac_pt_gp <- ggplotly(dac_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What type of projects serve DACs?",
+                                    '<br>',
+                                    subtitle_str)))
+
+dac_pt_gp
 
 ```
 
@@ -240,19 +272,27 @@ ef_dac_projects <- state_yoy %>%
   rename(expecting_funding = name) %>%
   mutate(expecting_funding = case_when(
     expecting_funding == "disadvantaged_expecting_funding_projects" ~ "Yes",
-    TRUE ~ "No"
-  ))
+    TRUE ~ "No"),
+         plot_str = paste0(expecting_funding, ": ", value, " projects")
+    )
 
-ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding)) + 
+ef_dac_p <- ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
-       title="How many DAC projects could expect funding?",
+       title=" ",
        subtitle=subtitle_str) + 
     scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "Expecting Funding") + 
   epic_chart_theme
 
+ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How many DAC projects could expect funding?",
+                                    '<br>',
+                                    subtitle_str)))
+
+  
+ef_dac_gp
 ```
 
 ```{r}
@@ -261,15 +301,23 @@ ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding
 ```
 
 ```{r}
-ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_expecting_funding_percent_ef)) + 
+ef_dac_pct_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_expecting_funding_percent_ef,
+                                      text = format_percent(disadvantaged_expecting_funding_percent_ef/100))) + 
   geom_line(group=1, color=cat_palette_pastel(1), size=1.5) + 
   geom_point(color=cat_palette_pastel(1), size=4) + 
   scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
-       title="What percent of projects expecting funding serve DACs?",
+       title=" ?",
        subtitle=subtitle_str) + 
   epic_chart_theme
+
+ef_dac_pct_gp <- ggplotly(ef_dac_pct_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What percent of projects expecting funding serve DACs?",
+                                    '<br>',
+                                    subtitle_str)))
+
+ef_dac_pct_gp
 ```
 
 
@@ -284,18 +332,25 @@ project_types <- state_yoy %>%
   mutate(project_type = case_when(
     project_type == "general_projects" ~ "General",
     project_type == "ec_projects" ~ "Emerging Contaminants",
-    project_type == "lead_projects" ~ "Lead"
-  ))
+    project_type == "lead_projects" ~ "Lead"),
+    plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", value, " projects"))
 
-ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type)) + 
+all_pt_p <- ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type, text=plot_str)) + 
   geom_bar(stat="identity", position="dodge") + 
     scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
-       title="Applicant Projects by Type",
+       title=" ",
        subtitle=paste0(state_name, ", SFY23-25")) +
   epic_chart_theme
+
+all_pt_gp <- ggplotly(all_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("Applicant Projects by Type",
+                                    '<br>',
+                                    subtitle_str)))
+
+all_pt_gp
 
 ```
 # Project-Level Data
@@ -325,29 +380,41 @@ state_projects_type <- state_projects %>%
   group_by(project_type, state_fiscal_year) %>%
   summarize(count=n(),
             total_project_cost = sum(project_cost, na.rm=TRUE),
+            total_project_cost_str = format_currency(total_project_cost),
             total_requested_amount = sum(requested_amount, na.rm=TRUE),
+            total_requested_amount_str = format_currency(total_requested_amount),
             total_principal_forgiveness = sum(principal_forgiveness, na.rm=TRUE),
-            total_funding_amount = sum(funding_amount, na.rm=TRUE)) %>%
+            total_princpal_forgiveness_str = format_currency(total_principal_forgiveness),
+            total_funding_amount = sum(funding_amount, na.rm=TRUE),
+            total_funding_amount_str = format_currency(total_funding_amount),
+) %>%
   #NOTE: this may need to be dropped depending on state
   filter(project_type != "No Information")
 ```
 
 ```{r}
-ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type)) + 
+tpc_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type, text=total_project_cost_str)) + 
   geom_bar(stat="identity", position="dodge") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
   labs(x="State Fiscal Year",
        y="",
-       title="What's the total project cost for each type of project?",
+       title=" ",
        subtitle=subtitle_str) +
   epic_chart_theme
+
+tpc_pt_gp <- ggplotly(tpc_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total project cost for each type of project?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tpc_pt_gp
 ```
 
 ```{r}
 
-ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type)) + 
+tra_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type, text=total_requested_amount_str)) + 
   geom_bar(stat="identity", position="dodge") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
@@ -358,10 +425,17 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, f
        subtitle=subtitle_str) +
   epic_chart_theme
 
+
+tra_pt_gp <- ggplotly(tra_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total requested amount for each type of project?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tra_pt_gp
 ```
 
 ```{r}
-ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fill=project_type)) + 
+tfa_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fill=project_type, text=total_funding_amount_str)) + 
   geom_bar(stat="identity", position="dodge") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
@@ -372,10 +446,17 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fil
        subtitle=subtitle_str) +
   epic_chart_theme
 
+tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total funding amount for each type of project?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tfa_pt_gp
+
 ```
 
 ```{r}
-ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgiveness, fill=project_type)) + 
+tpf_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgiveness, fill=project_type)) + 
   geom_bar(stat="identity", position="dodge") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
@@ -385,6 +466,13 @@ ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgivene
        title="Principal Forgiveness by Type",
        subtitle=subtitle_str) +
   epic_chart_theme
+
+tpf_pt_gp <- ggplotly(tpf_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the total PF for each type of project?",
+                                    '<br>',
+                                    subtitle_str)))
+
+tpf_pt_gp
 ```
 
 ```{r}
@@ -397,22 +485,29 @@ sfy_project_cost <- state_projects %>%
   pivot_longer(cols=c("avg_project_cost", "median_project_cost")) %>%
   mutate(name = case_when(
     name == "avg_project_cost" ~ "Average",
-    TRUE ~ "Median"
-  ))
+    TRUE ~ "Median"),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
 
 ```
 
 ```{r}
-ggplot(sfy_project_cost, aes(x=state_fiscal_year, y=value, fill=name)) + 
+avg_demand_p <- ggplot(sfy_project_cost, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="dodge") + 
   scale_y_continuous(labels=label_dollar()) + 
   scale_fill_manual(values = cat_palette_pastel(2), 
                       name = "") + 
   labs(x="State Fiscal Year",
        y="",
-       title="What's the average project cost per year?",
+       title=" ",
        subtitle=subtitle_str) +
   epic_chart_theme
+
+avg_demand_gp <- ggplotly(avg_demand_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What's the average demand for funds per year?",
+                                    '<br>',
+                                    subtitle_str)))
+
+avg_demand_gp
 ```
 
 

@@ -2,6 +2,9 @@
 library(tidyverse)
 library(data.table)
 library(janitor)
+library(googledrive)
+library(googlesheets4)
+library(aws.s3)
 options(scipen=999)
 
 
@@ -43,11 +46,11 @@ cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
 # can be fragile. As such, these functions exist to standardize pulling and cleaning the data in one location
 # so any changes to column names, types, or additional features can be handled here exclusively.
 
-get_financial <- function(state_name) {
+get_financial <- function(state_name, years_list) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   
-  financial <- data.frame(read_sheet(URL, sheet="FinancialData"))
+  financial <- data.frame(read_sheet(URL, sheet="Financial Data", skip=1))
   
   financial <- financial %>%
     clean_names() %>%
@@ -58,32 +61,38 @@ get_financial <- function(state_name) {
     # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
     # and mutating with across() produces errors or warnings depending on the context, here at least it is only warnings
     # that can be muted, but the resulting dataframe is still as intended
-    mutate(fed_cap_grant_str = str_squish(fed_cap_grant_total),
-           fed_cap_grant_total = convert_to_numeric(fed_cap_grant_total),
-           state_funds = convert_to_numeric(state_funds),
-           re_allotment_funds_grants = convert_to_numeric(re_allotment_funds_grants),
-           #transferred_cwsrf_funds = convert_to_numeric(transferred_cwsrf_funds),
-           unutilized_un_drawn_funds_carryover = convert_to_numeric(unutilized_un_drawn_funds_carryover),
+    mutate(total_fcg = convert_to_numeric(total_fcg),
+           ffy22_fcg = convert_to_numeric(ffy22_fcg),
+           ffy23_fcg = convert_to_numeric(ffy23_fcg),
+           ffy24_fcg = convert_to_numeric(ffy24_fcg),
+           ffy25_fcg = convert_to_numeric(ffy25_fcg),
+           ffy26_fcg = convert_to_numeric(ffy26_fcg),
+           nonsrf_state_funds = convert_to_numeric(nonsrf_state_funds),
+           arpa_funds = convert_to_numeric(arpa_funds),
+           reallotments = convert_to_numeric(reallotments),
+           cw_transferred_to_dw = convert_to_numeric(cw_transferred_to_dw),
+           dw_transferred_to_cw = convert_to_numeric(dw_transferred_to_cw),
+           unutilized_fcg = convert_to_numeric(unutilized_fcg),
            leveraged_funds = convert_to_numeric(leveraged_funds),
-           total_funding_available_for_projects = convert_to_numeric(total_funding_available_for_projects),
-           set_asides_amount = convert_to_numeric(set_asides_amount),
-           set_asides_percent = convert_to_numeric(set_asides_percent),
-           pf_for_da_cs_under_base = convert_to_numeric(pf_for_da_cs_under_base),
-           pf_for_da_cs_under_base_of_fed_cap_grant_12_35 = convert_to_numeric(pf_for_da_cs_under_base_of_fed_cap_grant_12_35),
-           principal_forgiveness_for_any_eligible_applicant_under_base = convert_to_numeric(principal_forgiveness_for_any_eligible_applicant_under_base),
-           pf_for_eligibile_of_fed_cap_grant_under_base_14 = convert_to_numeric(pf_for_eligibile_of_fed_cap_grant_under_base_14),
-           principal_forgiveness_amount_total = convert_to_numeric(principal_forgiveness_amount_total),
-           pf_of_fed_cap_grant = convert_to_numeric(pf_of_fed_cap_grant),
-           gpr_component_cost = convert_to_numeric(gpr_component_cost))
+           total_funding_available = convert_to_numeric(total_funding_available),
+           total_setasides_amt = convert_to_numeric(total_setasides_amt),
+           total_setasides_pct = convert_to_numeric(total_setasides_pct),
+           dac_pf_pct_base = convert_to_numeric(dac_pf_pct_base),
+           dac_pf_amt_base = convert_to_numeric(dac_pf_amt_base),
+           dis_pf_amt_base = convert_to_numeric(dis_pf_amt_base),
+           dis_pf_pct_base = convert_to_numeric(dis_pf_pct_base),
+           total_pf_amt = convert_to_numeric(total_pf_amt),
+           total_pf_pct = convert_to_numeric(total_pf_pct),
+           gpr_cost = convert_to_numeric(gpr_cost))
   
   return(financial)
 }
 
 
-get_set_asides <- function(state_name) {
+get_set_asides <- function(state_name, yaers_list) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
-  set_asides_allowances <- data.frame(read_sheet(URL, "SetAsides"))
+  set_asides_allowances <- data.frame(read_sheet(URL, "Set Asides", skip=1))
   
   set_asides_allowances <- set_asides_allowances %>%
     clean_names() %>%
@@ -91,8 +100,20 @@ get_set_asides <- function(state_name) {
     select(-notes) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
-    mutate(amount = convert_to_numeric(amount),
-           percentage = convert_to_numeric(percentage)) %>%
+    
+    mutate(ffy22_sa_amt = convert_to_numeric(ffy22_sa_amt),
+           ffy22_sa_pct = convert_to_numeric(ffy22_sa_pct),
+           ffy23_sa_amt = convert_to_numeric(ffy23_sa_amt),
+           ffy23_sa_pct = convert_to_numeric(ffy23_sa_pct),
+           ffy24_sa_amt = convert_to_numeric(ffy24_sa_amt),
+           ffy24_sa_pct = convert_to_numeric(ffy24_sa_pct),
+           ffy25_sa_amt = convert_to_numeric(ffy25_sa_amt),
+           ffy25_sa_pct = convert_to_numeric(ffy25_sa_pct),
+           ffy26_sa_amt = convert_to_numeric(ffy26_sa_amt),
+           ffy26_sa_pct = convert_to_numeric(ffy26_sa_pct),
+           total_sa_amt = convert_to_numeric(total_sa_amt),
+           total_sa_pct = convert_to_numeric(total_sa_pct)
+           ) %>%
     #TODO: Modify this as needed once water team updates naming conventions
     mutate(allowance = case_when(
       allowance == "Administration and Technical Assistance (up to 4%)" ~ "Admin & TA",
@@ -100,17 +121,37 @@ get_set_asides <- function(state_name) {
       allowance == "State Program Management (10%)" ~ "State Program Management",
       allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Local Assistance & Other",
       allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Local Assistance & Other",
-      TRUE ~ "Missing Case When Statement"),
-      fed_cap_grant = case_when(
-        fed_cap_grant == "General DWSRF (Base)" ~ "Base",
-        fed_cap_grant == "General DWSRF (BILGeneral Supplemental)" ~ "BIL Gen/Supp",
-        fed_cap_grant == "DWSRF LSLR Program" ~ "LSLR",
-        fed_cap_grant == "DWSRF EC Program" ~ "EC",
-        TRUE ~ "Missing Fed Cap Grant"
-      ))
+      TRUE ~ "Missing Allowance"),
+      )
   
   return(set_asides_allowances)
 }
+
+## takes a numeric column and returns one formatted with dollar sign and commas
+## IE 1000000 -> $1,000,000
+format_currency <- function(num_col) {
+  #typically this will already have been done, but a failsafe
+  num_col <- as.numeric(num_col)
+  
+  # Apply formatting for each number in the column
+  formatted_col <- sapply(num_col, function(num) {
+    formatted <- formatC(num, format = "f", big.mark = ",", digits = 2)
+    paste0("$", formatted)
+  })
+  return(formatted_col)
+}
+
+## takes a numeric column of the default percent setting from google sheets
+## and returns a string column in a user-friendly format 
+## IE .16 -> 16%
+format_percent <- function(x) {
+  # Format the numbers as percentages, rounding to 0 decimal places
+  formatted <- paste0(round(x * 100), "%")
+  
+  return(formatted)
+}
+
+
 
 ### Cleaning Functions ----
 

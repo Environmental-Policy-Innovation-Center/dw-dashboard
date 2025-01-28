@@ -26,6 +26,8 @@ years_list <- c("2022", "2023", "2024", "2025")
 
 include_y0 <- TRUE
 
+save_plots <- FALSE
+
 ```
 
 ## Imports & Settings
@@ -120,7 +122,9 @@ all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
                                     subtitle_str)))
 
 all_grants_gp
-#save_to_aws(all_grants_gp, "total-funds-fed-cap-grant", state_abbr)
+
+if (save_plots) {
+save_to_aws(all_grants_gp, "total-funds-fed-cap-grant", state_abbr) }
 ```
 
 ```{r}
@@ -143,7 +147,9 @@ all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
                                     subtitle_str)))
 
 all_grants_pf_gp
-#save_to_aws(all_grants_pf_gp, "pf-from-fed-cap-grants", state_abbr)
+
+if (save_plots) {
+save_to_aws(all_grants_pf_gp, "pf-from-fed-cap-grants", state_abbr) }
 ```
 
 
@@ -166,7 +172,9 @@ base_fed_cap_grants_gp <- ggplotly(base_fed_cap_grants_p, tooltip="text") %>%
                                     subtitle_str)))
 
 base_fed_cap_grants_gp
-#save_to_aws(base_fed_cap_grants_gp, "base-fed-cap-grant", state_abbr)
+
+if (save_plots) {
+save_to_aws(base_fed_cap_grants_gp, "base-fed-cap-grant", state_abbr) }
 ```
 
 ### Leveraged Funds
@@ -191,7 +199,9 @@ leveraged_gp <- ggplotly(leveraged_p, tooltip="text") %>%
                                     subtitle_str)))
 
 leveraged_gp
-#save_to_aws(leveraged_gp, "leveraged-funds", state_abbr)
+
+# if (save_plots) {
+# save_to_aws(leveraged_gp, "leveraged-funds", state_abbr) } 
 ```
 
 ### Unutilized Funds
@@ -214,7 +224,9 @@ unutilized_gp <- ggplotly(unutilized_p, tooltip="text") %>%
                                     subtitle_str)))
 
 unutilized_gp
-#save_to_aws(unutilized_gp, "unutilized-funds", state_abbr)
+
+# if (save_plots) {
+# save_to_aws(unutilized_gp, "unutilized-funds", state_abbr) }
 ```
 
 
@@ -254,7 +266,9 @@ base_pf_both_pct_gp <- ggplotly(base_pf_both_pct_p, tooltip="text") %>%
   
 
 base_pf_both_pct_gp
-#save_to_aws(base_pf_both_pct_gp, "base-pf-percent", state_abbr)
+
+if (save_plots) {
+save_to_aws(base_pf_both_pct_gp, "base-pf-percent", state_abbr) }
 ```
 
 ### Base PF Amount
@@ -290,7 +304,29 @@ base_pf_combined_gp <- ggplotly(base_pf_combined_p, tooltip="text") %>%
   
 
 base_pf_combined_gp
-#save_to_aws(base_pf_combined_gp, "base-pf-amount", state_abbr)
+
+if (save_plots) {
+ save_to_aws(base_pf_combined_gp, "base-pf-amount", state_abbr) }
+```
+
+#BIL Gen/Supp
+
+```{r}
+gensupp_fed_cap_grants_p <- ggplot(gen_supp, aes(x=state_fiscal_year, y=total_fcg, text=format_currency(total_fcg))) + 
+  geom_bar(stat="identity", fill="#172f60") + 
+  scale_y_continuous(labels=label_currency()) + 
+  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+  epic_chart_theme
+
+gensupp_fed_cap_grants_gp <- ggplotly(gensupp_fed_cap_grants_p, tooltip="text") %>%
+  layout(title = list(text = paste0('BIL Gen. Supp. Federal Cap Grants',
+                                    '<br>',
+                                    subtitle_str)))
+
+gensupp_fed_cap_grants_gp
+
+if (save_plots) {
+save_to_aws(gensupp_fed_cap_grants_gp, "gensupp-fed-cap-grant", state_abbr) }
 ```
 
 
@@ -317,7 +353,9 @@ set_asides_gp <- ggplotly(set_asides_p, tooltip="text") %>%
                                     subtitle_str)))
 
 set_asides_gp
-#save_to_aws(set_asides_gp, "set-asides-fed-cap-grant-amount", state_abbr)
+
+if (save_plots) {
+save_to_aws(set_asides_gp, "set-asides-fed-cap-grant-amount", state_abbr) }
 ```
 
 ```{r}
@@ -341,7 +379,9 @@ set_asides_pct_gp <- ggplotly(set_asides_pct_p, tooltip="text") %>%
                                     subtitle_str)))
 
 set_asides_pct_gp
-#save_to_aws(set_asides_pct_gp, "set-asides-percent-utilized", state_abbr)
+
+if (save_plots) {
+save_to_aws(set_asides_pct_gp, "set-asides-percent-utilized", state_abbr) }
 ```
 
 ## By Allowances
@@ -367,7 +407,9 @@ setasides_allowances_group_gp <- ggplotly(setasides_allowances_group_p, tooltip=
                                     subtitle_str)))
 
 setasides_allowances_group_gp
-#save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", state_abbr)
+
+if (save_plots) {
+save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", state_abbr) }
 ```
   
 
@@ -391,7 +433,9 @@ sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
                                     subtitle_str)))
 
 sa_pct_base_gp
-save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr)
+
+if (save_plots) {
+save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr) }
 
 ```
 
@@ -414,7 +458,9 @@ sa_pct_bil_gp <- ggplotly(sa_pct_bil_p, tooltip="text") %>%
                                     subtitle_str)))
 
 sa_pct_bil_gp
-#save_to_aws(sa_pct_bil_gp, "set-asides-allowance-percent-bil", state_abbr)
+
+if (save_plots) {
+save_to_aws(sa_pct_bil_gp, "set-asides-allowance-percent-bil", state_abbr) }
 ```
 
 ```{r}
@@ -437,8 +483,9 @@ sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
                                     subtitle_str)))
 
 sa_pct_lead_gp
-#save_to_aws(sa_pct_lead_gp, "set-asides-allowance-percent-lead", state_abbr)
 
+if (save_plots) {
+save_to_aws(sa_pct_lead_gp, "set-asides-allowance-percent-lead", state_abbr) }
 ```
 
 ```{r}
@@ -461,7 +508,9 @@ sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
                                     subtitle_str)))
 
 sa_pct_ec_gp
-#save_to_aws(sa_pct_ec_gp, "set-asides-allowance-percent-ec", state_abbr)
+
+if (save_plots) {
+save_to_aws(sa_pct_ec_gp, "set-asides-allowance-percent-ec", state_abbr) }
 
 ```
 

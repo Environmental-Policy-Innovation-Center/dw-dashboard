@@ -12,15 +12,18 @@ options(scipen=999)
 
 # fonts: 
 sysfonts::font_add_google("Lato")
+
 showtext::showtext_auto()
 
 # theme: 
 # legend position is right, text size is at least 10, and text is Lato
+#TODO: Replace font with web-friendly option for website to be san-serif by default OR 
+# upload custom fonts to AWS to make them look better
 epic_chart_theme <- theme_minimal() + 
   theme(legend.position = "right", 
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), 
+        text = element_text(size = 11), 
+        legend.text = element_text(size = 10), 
+        legend.title = element_text(size = 11), 
         axis.text.x = element_text(margin = margin(t = 10, r = 0, 
                                                    b = 0, l = 0)), 
         axis.title.x = element_text(margin = margin(t = 10, r = 0, 

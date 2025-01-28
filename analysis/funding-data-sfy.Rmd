@@ -18,6 +18,8 @@ state_abbr <- "TX"
 sfy <- "2023"
 subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 years_list <- c("2023")
+
+save_plots <- FALSE
 ```
 
 ## Imports and Styling
@@ -94,7 +96,9 @@ grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
                                     subtitle_str)))
 
 grants_gp
-save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr)
+
+if (save_plots) {
+save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr) }
 ```
 
 ## Principal Forgiveness
@@ -103,7 +107,8 @@ save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr)
 total_pf_sfy <- financial %>%
   select(fed_cap_grant, total_pf_amt) %>%
   pivot_longer(cols=c(-fed_cap_grant)) %>%
-  filter(!is.na(value) & value > 0)
+  filter(!is.na(value) & value > 0) %>%
+  filter(fed_cap_grant != "Base & BIL General Supplemental")
 ```
 
 
@@ -118,12 +123,14 @@ all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(fed_cap_grant, value), t
   epic_chart_theme
 
 all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How much of the Fed Cap Grants are Principal Forgiveness",
+  layout(title = list(text = paste0("How much of the Fed Cap Grants are Principal Forgiveness?",
                                     '<br>',
                                     subtitle_str)))
 
 all_pf_gp
-#save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr)
+
+ if (save_plots) {
+save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr) }
 ```
 
 ## Base PF as percents
@@ -192,7 +199,9 @@ funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
                                     subtitle_str)))
 
 funds_comp_gp
-save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), state_abbr)
+
+if (save_plots) { 
+save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), state_abbr) }
 ```
 
 ## Project Costs & Available Funds

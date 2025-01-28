@@ -17,6 +17,8 @@ years <- "SFY22-25"
 subtitle_str <- paste0(state_name, ", ", years)
 
 include_y0 <- TRUE
+
+save_plots <- TRUE
 ```
 
 # Imports & Settings 
@@ -80,7 +82,8 @@ projects_gp <- ggplotly(projects_p, tooltip="text") %>%
                                     subtitle_str)))
 
 projects_gp
-#save_to_aws(projects_gp, "applicant-projects-yoy", state_abbr)
+# if (save_plots) {
+# save_to_aws(projects_gp, "applicant-projects-yoy", state_abbr) }
 ```
 
 ```{r}
@@ -103,7 +106,8 @@ tra_gp <- ggplotly(tra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tra_gp
-#save_to_aws(tra_gp, "total-requested-amount-yoy", state_abbr)
+# if (save_plots) {
+#save_to_aws(tra_gp, "total-requested-amount-yoy", state_abbr) }
 }
 
 
@@ -127,7 +131,8 @@ tpc_gp <- ggplotly(tpc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tpc_gp
-#save_to_aws(tpc_gp, "total-project-cost-yoy", state_abbr)
+if (save_plots) {
+save_to_aws(tpc_gp, "total-project-cost-yoy", state_abbr) }
 }
 
 ```
@@ -151,7 +156,8 @@ tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tfa_gp
-#save_to_aws(tfa_gp, "total-funding-amount-yoy", state_abbr)
+# if (save_plots) {
+#save_to_aws(tfa_gp, "total-funding-amount-yoy", state_abbr) }
 }
 ```
 
@@ -174,7 +180,8 @@ tpf_gp <- ggplotly(tpf_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tpf_gp
-#save_to_aws(tpf_gp, "total-pf-yoy", state_abbr)
+# if (save_plots) {
+#save_to_aws(tpf_gp, "total-pf-yoy", state_abbr) }
 }
 ```
 
@@ -211,7 +218,8 @@ efp_gp <- ggplotly(efp_p, tooltip="text") %>%
                                     subtitle_str)))
 
 efp_gp
-save_to_aws(efp_gp, "applicant-expected-funding-projects-yoy", state_abbr)
+if (save_plots) {
+save_to_aws(efp_gp, "applicant-expected-funding-projects-yoy", state_abbr) }
 
 ```
 
@@ -235,7 +243,9 @@ dac_pct_gp <- ggplotly(dac_pct_p, tooltip="text") %>%
                                     subtitle_str)))
 
 dac_pct_gp
-save_to_aws(dac_pct_gp, "percent-projects-serving-dacs", state_abbr)
+
+if (save_plots) {
+save_to_aws(dac_pct_gp, "percent-projects-serving-dacs", state_abbr) }
 ```
 
 ```{r}
@@ -267,7 +277,9 @@ dac_pt_gp <- ggplotly(dac_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 dac_pt_gp
-#save_to_aws(dac_pt_gp, "project-type-serving-dacs", state_abbr)
+
+# if (save_plots) {
+#save_to_aws(dac_pt_gp, "project-type-serving-dacs", state_abbr) }
 ```
 
 ### Expecting Funding & DAC
@@ -301,7 +313,9 @@ ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
 
   
 ef_dac_gp
-#save_to_aws(ef_dac_gp, "dacs-percent-expecting-funding", state_abbr)
+
+if (save_plots) {
+save_to_aws(ef_dac_gp, "dacs-projects-expecting-funding", state_abbr) } 
 ```
 
 ```{r}
@@ -327,7 +341,9 @@ ef_dac_pct_gp <- ggplotly(ef_dac_pct_p, tooltip="text") %>%
                                     subtitle_str)))
 
 ef_dac_pct_gp
-save_to_aws(ef_dac_pct_gp, "percent-expecting-funding-serving-dacs", state_abbr)
+
+if (save_plots) {
+save_to_aws(ef_dac_pct_gp, "percent-expecting-funding-serving-dacs", state_abbr) }
 ```
 
 
@@ -361,7 +377,9 @@ all_pt_gp <- ggplotly(all_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 all_pt_gp
-#save_to_aws(all_pt_gp, "applicant-projects-by-type", state_abbr)
+
+# if (save_plots) {
+#save_to_aws(all_pt_gp, "applicant-projects-by-type", state_abbr) }
 ```
 # Project-Level Data
 
@@ -420,7 +438,8 @@ tpc_pt_gp <- ggplotly(tpc_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tpc_pt_gp
-#save_to_aws(tpc_pt_gp, "project-cost-by-type", state_abbr)
+if (save_plots) {
+save_to_aws(tpc_pt_gp, "project-cost-by-type", state_abbr) }
 ```
 
 ```{r}
@@ -443,7 +462,8 @@ tra_pt_gp <- ggplotly(tra_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tra_pt_gp
-#save_to_aws(tra_pt_gp, "requested-amount-by-project-type", state_abbr)
+# if (save_plots) {
+#save_to_aws(tra_pt_gp, "requested-amount-by-project-type", state_abbr) }
 ```
 
 ```{r}
@@ -464,7 +484,9 @@ tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tfa_pt_gp
-#save_to_aws(tfa_pt_gp, "funding-amount-by-project-type", state_abbr)
+
+# if (save_plots) {
+#save_to_aws(tfa_pt_gp, "funding-amount-by-project-type", state_abbr) }
 ```
 
 ```{r}
@@ -485,7 +507,9 @@ tpf_pt_gp <- ggplotly(tpf_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tpf_pt_gp
-#save_to_aws(tpf_pt_gp, "principal-forgiveness-by-project-type", state_abbr)
+
+# if (save_plots) {
+#save_to_aws(tpf_pt_gp, "principal-forgiveness-by-project-type", state_abbr) }
 ```
 
 ```{r}
@@ -521,7 +545,9 @@ avg_demand_gp <- ggplotly(avg_demand_p, tooltip="text") %>%
                                     subtitle_str)))
 
 avg_demand_gp
-save_to_aws(avg_demand_gp, "average-median-demand", state_abbr)
+
+if (save_plots) {
+save_to_aws(avg_demand_gp, "average-median-demand", state_abbr) }
 ```
 
 

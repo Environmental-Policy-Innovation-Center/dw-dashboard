@@ -20,23 +20,21 @@ clean_al_y2 <- function() {
   # two overlapping projects in base and supp: FS010168-05, FS010096-04, 
   # requiring a merge
   al_gen <- merge(al_base, al_supp,
-                    by = c("project_number", "applicant_name", 
-                           "project_description", "city_town", 
-                           "county", "justice_40_map_coverage", 
-                           "population", "financial_rank", "dw_ratio", 
-                           "disadvantged_rank", "priority_ranking_points"), all = T) %>%
+                  by = c("project_number", "applicant_name", 
+                         "project_description", "city_town", 
+                         "county", "justice_40_map_coverage", 
+                         "population", "financial_rank", "dw_ratio", 
+                         "disadvantged_rank", "priority_ranking_points"), all = T) %>%
     # replace NAs in non-matching columns to zero for math
     mutate(across(.cols = c("dw_bil_amount_granted", "dw_srf_amount_granted", 
                             "dw_srf_principal_forgiveness", "dw_bil_principal_forgiveness"), 
-                  ~case_when(
-                    is.na(.) ~ "$0", 
-                    TRUE ~ . ))) %>%
+                  ~case_when(is.na(.) ~ "$0", 
+                             TRUE ~ .))) %>%
     # calculating requested amount, funding amount, and PF:
-    mutate(requested_amount = case_when(
-      is.na(applied_for_project_amount.x) ~ clean_numeric_string(applied_for_project_amount.y), 
-      TRUE ~ clean_numeric_string(applied_for_project_amount.x)),
-      funding_amount = convert_to_numeric(dw_srf_amount_granted) + convert_to_numeric(dw_bil_amount_granted), 
-      principal_forgiveness = convert_to_numeric(dw_srf_principal_forgiveness) + convert_to_numeric(dw_bil_principal_forgiveness)) %>%
+    mutate(requested_amount = case_when(is.na(applied_for_project_amount.x) ~ clean_numeric_string(applied_for_project_amount.y), 
+                                        TRUE ~ clean_numeric_string(applied_for_project_amount.x)),
+           funding_amount = convert_to_numeric(dw_srf_amount_granted) + convert_to_numeric(dw_bil_amount_granted), 
+           principal_forgiveness = convert_to_numeric(dw_srf_principal_forgiveness) + convert_to_numeric(dw_bil_principal_forgiveness)) %>%
     # formatting: 
     mutate(funding_amount = as.character(funding_amount), 
            principal_forgiveness = as.character(principal_forgiveness))
@@ -55,33 +53,30 @@ clean_al_y2 <- function() {
            principal_forgiveness = as.character(principal_forgiveness))
   
   # (1, 9)
-  # NOTE - this project is missing project_number and lots of other 
-  # info present in EC2
   al_ec_1 <- fread(file.path(base_path, "al-y2-ec-ppl-1.csv"),
                    colClasses = "character", na.strings = "")
   # (4, 16)
   al_ec_2 <- fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
-                   colClasses = "character", na.strings = "") 
+                   colClasses = "character", na.strings = "") %>%
+    # this is just one project that got duplicated over multiple rows
+    slice(1)
+  
   # (5, )
   al_ec <- bind_rows(al_ec_1, al_ec_2) %>%
     clean_names() %>%
     # replace NAs in non-matching columns to zero for math
     mutate(across(.cols = c("project_amount", "dw_bil_ec_amount_granted"), 
-                  ~case_when(
-                    is.na(.) ~ "$0", 
-                    TRUE ~ . ))) %>%
+                  ~case_when(is.na(.) ~ "$0", 
+                             TRUE ~ . ))) %>%
     mutate(project_type = "Emerging Contaminants", 
            funding_amount = convert_to_numeric(project_amount) + convert_to_numeric(dw_bil_ec_amount_granted), 
            principal_forgiveness = convert_to_numeric(project_amount) + convert_to_numeric(dw_bil_ec_amount_granted), 
-           expecting_funding = case_when(
-             convert_to_numeric(dw_bil_ec_amount_granted) > 0 ~ "Yes", 
-             TRUE ~ "No"),
-           project_number = case_when(
-             is.na(project_number) ~ "No Information", 
-             TRUE ~ project_number), 
-           priority_ranking_points = case_when(
-             is.na(priority_ranking_points) ~ "No Information", 
-             TRUE ~ priority_ranking_points)) %>%
+           expecting_funding = case_when(convert_to_numeric(dw_bil_ec_amount_granted) > 0 ~ "Yes", 
+                                         TRUE ~ "No"),
+           project_number = case_when(is.na(project_number) ~ "No Information", 
+                                      TRUE ~ project_number), 
+           priority_ranking_points = case_when(is.na(priority_ranking_points) ~ "No Information", 
+                                               TRUE ~ priority_ranking_points)) %>%
     # formatting: 
     mutate(funding_amount = as.character(funding_amount), 
            principal_forgiveness = as.character(principal_forgiveness))
@@ -109,7 +104,11 @@ clean_al_y2 <- function() {
              convert_to_numeric(disadvantged_rank) < 1 ~ "No", 
              TRUE ~ "Yes"), 
            project_rank = as.character(NA),
-           project_score = str_squish(priority_ranking_points), 
+           project_score = case_when(
+             # supp grants are not scored
+             priority_ranking_points %in% c("Supp", "SUPP") ~ "No Information", 
+             TRUE ~  str_squish(priority_ranking_points), 
+           ),
            expecting_funding = case_when(
              is.na(expecting_funding) ~ "Yes", 
              TRUE ~ expecting_funding),

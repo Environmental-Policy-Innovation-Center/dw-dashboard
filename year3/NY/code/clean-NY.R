@@ -3,31 +3,37 @@ source("resources.R")
 clean_ny_y3 <- function() {
   base_path <- file.path("year3", "NY", "data")
   
-  ny_annual <- fread(file.path(base_path, "ny-y3-annual-list.csv"),
+  # NOTE - there were changes to these lists, and emmali scraped the latest 
+  # list on Jan 24th 2025. All files ending with "-v2" are from the latest 
+  # list, and additional guidance/notes on scraping are included in the data 
+  # folder 
+  
+  ny_annual <- fread(file.path(base_path, "ny-y3-annual-list-v2.csv"),
                      colClass="character", na.strings="") %>%
     clean_names()  %>%
     mutate(cumulative_total = convert_to_numeric(cumulative_total),
-           expecting_funding = ifelse(row_number() <= 234, "Yes", "No"),
+           # the expected subsidized interest rate funding line is now on 243
+           expecting_funding = ifelse(row_number() <= 243, "Yes", "No"),
            cumulative_total = clean_numeric_string(cumulative_total))
   
   # Multi-year list: Contains all eligible projects submitted for SRF assistance
-  ny_multi_year <- fread(file.path(base_path, "ny-y3-multi-year.csv"),
+  ny_multi_year <- fread(file.path(base_path, "ny-y3-multi-year-v2.csv"),
                    colClass="character", na.strings="") %>%
     clean_names()
   
   # Annual List/BIL PPL: Projects with reports
-  ny_gs <- fread(file.path(base_path, "ny-y3-bil-ppl.csv"),
+  ny_gs <- fread(file.path(base_path, "ny-y3-bil-ppl-v2.csv"),
                      colClass="character", na.strings="") %>%
     clean_names()
   
   # Lead PPL: Lead service line projects
-  ny_lead <- fread(file.path(base_path, "ny-y3-bil-lead.csv"),
+  ny_lead <- fread(file.path(base_path, "ny-y3-bil-lead-v2.csv"),
                    colClasses="character", na.strings=c("", "NA")) %>%
     clean_names()
 
   
   # EC PPL: Projects addressing emerging contaminants (e.g., PFAS)
-  ny_ec <- fread(file.path(base_path, "ny-y3-bil-ec.csv"),
+  ny_ec <- fread(file.path(base_path, "ny-y3-bil-ec-v2.csv"),
                  colClass="character", na.strings="") %>%
     clean_names()
   
@@ -40,9 +46,7 @@ clean_ny_y3 <- function() {
         dac == "DAC" ~ "Yes",
         TRUE ~ "No Information"
       ),
-      expecting_funding = case_when(
-        TRUE ~ "Yes"  # all projects on the lead list are funded
-      )
+      expecting_funding = "Yes"  
     )
   
   # Process EC projects second
@@ -53,9 +57,7 @@ clean_ny_y3 <- function() {
         dac == "dac" ~ "Yes",
         TRUE ~ "No Information"
       ),
-      expecting_funding = case_when(
-        TRUE ~ "No"  # data dictionary doesn't list any EC projects as expecting funding, except those that are above the funding line
-      )
+      expecting_funding =  "No" 
     )
 
   
@@ -95,7 +97,7 @@ clean_ny_y3 <- function() {
   # Step 5: Combine all projects and check distributions
   ny_clean <- bind_rows(
     lead_projects %>% select(-dac),
-    ec_projects %>% select(-dac, -pfas),
+    ec_projects %>% select(-dac),
     annual_projects,
     multiyear_projects
   )
@@ -108,7 +110,7 @@ clean_ny_y3 <- function() {
       project_cost = clean_numeric_string(project_cost),
       project_id = str_squish(project_number),
       community_served = str_squish(county),
-      borrower = paste(str_squish(system_name), "/", str_squish(borrower)),
+      borrower = str_squish(system_name_borrower),
       project_score = str_squish(score),
       project_description = str_squish(description),
       state = "New York",

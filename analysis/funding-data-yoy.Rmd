@@ -152,6 +152,18 @@ if (save_plots) {
 save_to_aws(all_grants_pf_gp, "pf-from-fed-cap-grants", state_abbr) }
 ```
 
+### Stats
+
+These tables inform the Year by Year section on each state's overview page.
+
+```{r}
+tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_pf = format_currency(sum(total_pf_amt, na.rm=TRUE))))
+```
+```{r}
+tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_fcg = sum(total_fcg)))
+
+```
+
 
 ## Base 
 

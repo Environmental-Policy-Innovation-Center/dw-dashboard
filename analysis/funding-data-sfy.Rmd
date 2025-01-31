@@ -141,14 +141,14 @@ base_pf_pct <- financial %>%
   pivot_longer(c(-fed_cap_grant)) %>%
   filter(!is.na(value)) %>%
   mutate(name = case_when(
-    name == "dac_pf_pct_base" ~ "PF Reserved for DACs",
+    name == "dac_pf_pct_base" ~ "DAC PF",
     name == "dis_pf_pct_base" ~ "Discretionary PF",
     TRUE ~ "ERROR"),
     value = round(value*100, 0))
 
 base_pf_pct <- base_pf_pct %>%
   add_row(fed_cap_grant = "Base", name = "Remaining Base Funds", value = (100-sum(base_pf_pct$value))) %>%
-  mutate(name = factor(name, levels=c("Remaining Base Funds", "PF Reserved for DACs", "Discretionary PF")))
+  mutate(name = factor(name, levels=c("Remaining Base Funds", "DAC PF", "Discretionary PF")))
 ```
 
 
@@ -229,12 +229,12 @@ lead_costs <- data.frame(name=c("Available Funds", "Remaining Submitted Lead Pro
 
 ```{r}
 
-lead_costs <- data.frame(category=c("Available Funds", "Remaining Submitted Lead Project Costs"),
+lead_costs <- data.frame(category=c("Available Funds", "Unmet Demand"),
                          amount=c(353975300, (4102947493.48-353975300)),
                          amount_str=c("$353M", "$3.7B"),
                          amount_pct=c("9%", "91%"))
 #NOTE: Have to plot the bigger number first for it to appear intuitively
-lead_costs$category <- factor(lead_costs$category, levels=c("Remaining Submitted Lead Project Costs", "Available Funds"))
+lead_costs$category <- factor(lead_costs$category, levels=c("Unmet Demand", "Available Funds"))
 
 plot_labs <- paste0(lead_costs$category, " (", lead_costs$amount_pct, ", ", lead_costs$amount_str, ")")
 p <- ggdonutchart(lead_costs,
@@ -247,19 +247,19 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How do submitted lead projects costs compare to available funds?",
+  labs(title="Unmet demand compared to available LSLR funds",
        subtitle=subtitle_str)
 
 ```
 
 ### EC
 ```{r}
-ec_costs <- data.frame(category=c("Available Funds", "Remaining Emerging Contaminants Costs"),
+ec_costs <- data.frame(category=c("Available Funds", "Unmet Demand"),
                          amount=c(57910960, (175000000-57910960)),
                          amount_str=c("$57M", "$175M"),
                          amount_pct=c("33%", "67%"))
 #NOTE: Have to plot the bigger number first for it to appear intuitively
-ec_costs$category <- factor(ec_costs$category, levels=c("Remaining Emerging Contaminants Costs", "Available Funds"))
+ec_costs$category <- factor(ec_costs$category, levels=c("Unmet Demand", "Available Funds"))
 
 plot_labs <- paste0(ec_costs$category, " (", ec_costs$amount_pct, ", ", ec_costs$amount_str, ")")
 p <- ggdonutchart(ec_costs,
@@ -272,20 +272,16 @@ p + theme(legend.position="none",
         text = element_text(size = 11, family = "Lato"), 
         legend.text = element_text(size = 10, family = "Lato"), 
         legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How do submitted EC project costs compare to available funds?",
+  labs(title="Unmet demand compared to availabe EC funds",
        subtitle=subtitle_str)
 ```
 
 # State-Level Data
 
 ```{r}
+pf_projects <- all_projects %>%
+  filter(principal_forgiveness != "0" & principal_forgiveness != "No Information")
 
-if (state_data$principal_forgiveness_status != "Missing") {
-  
-  pf_projects <- all_projects %>%
-    filter(principal_forgiveness != "0" & principal_forgiveness != "No Information")
-  
-}
 
 ```
 

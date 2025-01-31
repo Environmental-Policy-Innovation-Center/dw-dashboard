@@ -16,6 +16,9 @@ state_abbr <- "TX"
 years <- "SFY22-25"
 subtitle_str <- paste0(state_name, ", ", years)
 
+gs_tab <- "Overview"
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
+
 include_y0 <- TRUE
 
 save_plots <- TRUE
@@ -81,9 +84,14 @@ projects_gp <- ggplotly(projects_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
+if (save_plots) {
+  run_save_plots(gp_object = projects_gp, # change
+                 sub_folders, 
+                 plot_name = "applicant-projects-yoy.html", # change
+                 gs_tab)
+}
+
 projects_gp
-# if (save_plots) {
-# save_to_aws(projects_gp, "applicant-projects-yoy", state_abbr) }
 ```
 
 ```{r}

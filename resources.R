@@ -155,12 +155,32 @@ format_percent <- function(x) {
 }
 
 
-### Save to AWS Functions ----
 
-save_to_aws <- function(gp_object, file_name, state_abbr) {
+
+
+### Export Files ----
+
+## Store a GGPlotly object as HTML, store it on AWS, and store the results in Google Sheets
+## Takes the plotly object, the file's name, directories within a bucket where it should be stored,
+## and the tab within a google sheet where it should be stored.
+## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
+## Assumes file_name ends with file type (.html, .png)
+run_save_plots <- function(gp_object, sub_folders, file_name, gs_tab) {
   
-  file_path <- paste0("output/", file_name, ".html")
-  object_url <- paste0("/funding-tracker/", state_abbr, "/", file_name, ".html")
+  object_url <- paste0(sub_folders, file_name)
+  # aws url is aws bucket + state abbr + page folder + file name ie TX/overview/plot-1.html
+  file_link <- paste0("https://funding-tracker.s3.us-east-1.amazonaws.com/", object_url)
+  
+  # to get state abbr, take first two characters of sub_folders -- helper function below
+  sheet_url <- get_gs_link(str_extract(sub_folders, "^.{2}"))
+  
+  # see below for both functions
+  save_to_aws(gp_object, file_name, object_url)
+  update_google_sheet(sheet_url, gs_tab, file_name, file_link)
+}
+
+
+save_to_aws <- function(gp_object, file_name, object_url) {
   
   htmlwidgets::saveWidget(partial_bundle(gp_object) %>%
                             config(displayModeBar = FALSE) %>%
@@ -169,15 +189,65 @@ save_to_aws <- function(gp_object, file_name, state_abbr) {
                                    yaxis = list(fixedrange = TRUE))%>%
                             layout(plot_bgcolor='transparent') %>%
                             layout(paper_bgcolor='transparent'),
-                          file_path)
+                          paste0("output/", file_name))
   
   put_object(
-    file = file.path(file_path),
+    file = file.path(paste0("output/", file_name)),
+    acl="public-read",
     object = object_url,
-    bucket = "tech-team-data"
+    bucket = "funding-tracker"
   )
   
 }
+
+get_gs_link <- function(state_abbr) {
+  
+  gs_urls <- data.frame(state=c(""), url=c("")) %>%
+    add_row(state="TX", url="https://docs.google.com/spreadsheets/d/1rlw0zeu1hmw2rNO1d1lJEihvVM3raUs7C_wfnGy4Jd4")
+  
+  return(gs_urls$url[gs_urls$state==state_abbr])
+                        
+  
+}
+
+update_google_sheet <- function(sheet_url, sheet_tab, file_name, file_link) {
+  
+  file_link <- paste0("https://funding-tracker.s3.us-east-1.amazonaws.com/", file_link)
+  
+  # Read the existing Google Sheet to get current data
+  sheet_data <- read_sheet(sheet_url, sheet = sheet_tab)
+  
+  # if data exists
+  if (nrow(sheet_data) > 0) {
+  
+  # check if file_name already exists
+  file_exists <- sheet_data %>% filter(`Name` == file_name)
+  
+  # if the file exists, update the existing row
+  if (nrow(file_exists) > 0) {
+    sheet_data <- sheet_data %>%
+      mutate(
+        `Link` = ifelse(`Name` == file_name, file_link, as.character(`Link`)),
+        `Updated` = ifelse(`Name` == file_name, format(Sys.Date(), "%m/%d/%Y"), as.character(`Updated`))
+      )
+  } else {
+    # if file doesn't exist, append a new row
+    new_row <- tibble(`Name` = file_name, `Link` = file_link, `Updated` = format(Sys.Date(), "%m/%d/%Y"))
+    sheet_data <- bind_rows(sheet_data, new_row)
+  } # end row bind else
+  
+ }  else { # if the sheet is empty, simply add a new row
+   sheet_data <- tibble(`Name` = file_name, `Link` = file_link, `Updated` = format(Sys.Date(), "%m/%d/%Y"))
+ }
+  
+  # export to sheet
+  write_sheet(sheet_data, sheet_url, sheet = sheet_tab)
+}
+
+
+
+
+
 
 ### Cleaning Functions ----
 

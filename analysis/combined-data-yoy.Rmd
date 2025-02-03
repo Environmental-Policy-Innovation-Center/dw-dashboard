@@ -12,16 +12,31 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 state_name <- "Texas"
 state_abbr <- "TX"
 
+# include 2022?
+include_y0 <- TRUE
+
+# export plots to AWS and Drive?
+save_plots <- FALSE
+
+
+if (include_y0) {
+  years <- "SFY22-25"
+  
+  # used in setting years as factor to display correctly in plots
+  years_list <- c("2022", "2023", "2024", "2025")
+
+} else {
+
 # only appears in subtitles
-years <- "SFY23-25"
+  years <- "SFY23-25"
+  years_list <- c("2023", "2024", "2025")
+}
+
 subtitle_str <- paste0(state_name, ", ", years)
 
-# used in setting years as factor to display correctly in plots
-years_list <- c("2023", "2024", "2025")
 
-include_y0 <- FALSE
 
-save_plots <- TRUE
+
 
 ```
 
@@ -55,7 +70,9 @@ source("../resources.R")
 
 financial <- get_financial(state_name, years_list)
 
-#set_asides_allowances <- get_set_asides(state_name)
+set_asides <- get_set_asides(state_name, years_list)
+
+pf <- get_pf(state_name, years_list)
 
 ```
 
@@ -73,16 +90,16 @@ base <- financial %>%
   filter(fed_cap_grant == "Base")
 
 gen_supp <- financial %>%
-  filter(fed_cap_grant == "BIL General Supplemental")
+  filter(fed_cap_grant == "BIL Gen Supp")
 
 base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & BIL General Supplemental")
+  filter(fed_cap_grant == "Base & BIL Gen Supp")
 
 lead <- financial %>%
-  filter(fed_cap_grant == "Lead Service Line Replacement")
+  filter(fed_cap_grant == "LSLR")
 
 ec <- financial %>%
-  filter(fed_cap_grant == "Emerging Contaminants")
+  filter(fed_cap_grant == "EC")
 
 ```
 

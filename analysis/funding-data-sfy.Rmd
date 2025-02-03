@@ -53,15 +53,17 @@ all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/s
 state_data <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
   clean_names() %>%
   filter(state == state_name & state_fiscal_year == sfy) %>%
-  select(  -community_served_status, -borrower_status,pwsid_status, -project_id_status, -project_name_status, -project_type_status, -project_cost_status, -requested_amount_status,
-           -funding_amount_status, -principal_forgiveness_status, population_status, -project_description_status, -disadvantaged_status, -project_rank_status, 
+  select(-community_served_status, -borrower_status,pwsid_status, -project_id_status, -project_name_status, -project_type_status, -project_cost_status, -requested_amount_status,
+           -funding_amount_status, -principal_forgiveness_status, population_status, -project_description_status, -project_rank_status, 
            -project_score_status, -expecting_funding_status)
 ```
 
 
 ```{r}
 financial <- get_financial(state_name, years_list) %>%
-  clean_names() %>%
+  filter(state_fiscal_year == sfy)
+
+pf <- get_pf(state_name, years_list) %>%
   filter(state_fiscal_year == sfy)
 ```
 
@@ -104,18 +106,25 @@ save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr) }
 ## Principal Forgiveness
 
 ```{r}
-total_pf_sfy <- financial %>%
-  select(fed_cap_grant, total_pf_amt) %>%
-  pivot_longer(cols=c(-fed_cap_grant)) %>%
+total_pf_sfy <- pf %>%
+    filter(fed_cap_grant != "Base & BIL General Supplemental") %>%
+    select(fed_cap_grant, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt) %>%
+  pivot_longer(cols=c(ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt)) %>%
   filter(!is.na(value) & value > 0) %>%
-  filter(fed_cap_grant != "Base & BIL General Supplemental")
+  mutate(name = str_to_upper(str_remove(name, "_amt")),
+         name = paste0(fed_cap_grant, ", ", name)
+         ) %>%
+  group_by(name) %>%
+  summarize(value = sum(value, na.rm=TRUE))
+  
+
 ```
 
 
 ```{r}
 #TODO: Recreate after PF dataset is finished
 
-all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(fed_cap_grant, value), text=format_currency(value))) + 
+all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
   labs(x="", y="", title=" ", 
        subtitle=subtitle_str) + 
@@ -136,29 +145,24 @@ save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr) }
 ## Base PF as percents
 
 ```{r}
-base_pf_pct <- financial %>%
-  select(fed_cap_grant, dac_pf_pct_base, dis_pf_pct_base) %>%
-  pivot_longer(c(-fed_cap_grant)) %>%
-  filter(!is.na(value)) %>%
-  mutate(name = case_when(
-    name == "dac_pf_pct_base" ~ "DAC PF",
-    name == "dis_pf_pct_base" ~ "Discretionary PF",
-    TRUE ~ "ERROR"),
-    value = round(value*100, 0))
+base_pf_pct <- pf %>%
+  filter(fed_cap_grant == "Base") %>%
+  select(fed_cap_grant, pf_category, total_pf_pct) %>%
+  filter(!is.na(total_pf_pct))
 
 base_pf_pct <- base_pf_pct %>%
-  add_row(fed_cap_grant = "Base", name = "Remaining Base Funds", value = (100-sum(base_pf_pct$value))) %>%
-  mutate(name = factor(name, levels=c("Remaining Base Funds", "DAC PF", "Discretionary PF")))
+  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_pct = (1-sum(base_pf_pct$total_pf_pct))) %>%
+  mutate(pf_category = factor(pf_category, levels=c("Remaining Base Funds", "DAC", "Discretionary")))
 ```
 
 
 ```{r}
 
-plot_labs <- paste0(base_pf_pct$name, " (", base_pf_pct$value, "%)")
+plot_labs <- paste0(base_pf_pct$pf_category, " (", round(base_pf_pct$total_pf_pct, 2)*100, "%)")
 
 p <- ggdonutchart(base_pf_pct,
-             "value",
-             fill="name",
+             "total_pf_pct",
+             fill="pf_category",
              label=plot_labs,
              color="white",
              palette=c("lightgrey", "#4ea324", "#172f60"))
@@ -210,36 +214,26 @@ save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), s
 
 ```{r}
 
-lead_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="Lead Service Line Replacement"]
+lead_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="LSLR"]
 
-lead_costs <- data.frame(name=c("Available Funds", "Remaining Submitted Lead Project Costs"),
+lead_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
                          value=c(lead_funds_available,
-                                 state_data$lead_total_project_cost - lead_funds_available)) %>%
-  mutate(value_str = case_when(
-    #TODO: make this a function, since it will likely be used again
-    value >= 100000 & value < 999999 ~ paste0("$", value, "k"),
-    value >= 1000000 & value < 999999999 ~ paste0("$", value, "M"),
-    value >= 1000000000 ~ paste0("$", value, "B"),
-    TRUE ~ "ERROR"),
-    #TODO: Test above
-   #TODO:L define value_pct 
-  )
+                                 state_data$lead_total_project_cost - lead_funds_available))
+
+lead_costs <- lead_costs %>%
+  mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
+         value_str = format_currency(value),
+         pct_value = round(value / sum(lead_costs$value),2),
+         pct_value_str = format_percent(pct_value))
 ```
 
 
 ```{r}
 
-lead_costs <- data.frame(category=c("Available Funds", "Unmet Demand"),
-                         amount=c(353975300, (4102947493.48-353975300)),
-                         amount_str=c("$353M", "$3.7B"),
-                         amount_pct=c("9%", "91%"))
-#NOTE: Have to plot the bigger number first for it to appear intuitively
-lead_costs$category <- factor(lead_costs$category, levels=c("Unmet Demand", "Available Funds"))
-
-plot_labs <- paste0(lead_costs$category, " (", lead_costs$amount_pct, ", ", lead_costs$amount_str, ")")
+plot_labs <- paste0(lead_costs$name, " (", lead_costs$pct_value_str, ", ", lead_costs$value_str, ")")
 p <- ggdonutchart(lead_costs,
-             "amount",
-             fill="category",
+             "pct_value",
+             fill="name",
              label=plot_labs,
              color="white",
              palette=c("lightgrey", "#4ea324"))
@@ -254,17 +248,26 @@ p + theme(legend.position="none",
 
 ### EC
 ```{r}
-ec_costs <- data.frame(category=c("Available Funds", "Unmet Demand"),
-                         amount=c(57910960, (175000000-57910960)),
-                         amount_str=c("$57M", "$175M"),
-                         amount_pct=c("33%", "67%"))
-#NOTE: Have to plot the bigger number first for it to appear intuitively
-ec_costs$category <- factor(ec_costs$category, levels=c("Unmet Demand", "Available Funds"))
 
-plot_labs <- paste0(ec_costs$category, " (", ec_costs$amount_pct, ", ", ec_costs$amount_str, ")")
+ec_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="EC"]
+
+ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                         value=c(ec_funds_available,
+                                 state_data$ec_total_project_cost - ec_funds_available))
+  
+  ec_costs <- ec_costs %>%
+  mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
+         value_str = format_currency(value),
+         pct_value = round(value / sum(ec_costs$value),2),
+         pct_value_str = format_percent(pct_value))
+
+
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+
+plot_labs <- paste0(ec_costs$name, " (", ec_costs$pct_value_str, ", ", ec_costs$value_str, ")")
 p <- ggdonutchart(ec_costs,
-             "amount",
-             fill="category",
+             "pct_value",
+             fill="name",
              label=plot_labs,
              color="white",
              palette=c("lightgrey", "#4ea324"))
@@ -288,20 +291,21 @@ pf_projects <- all_projects %>%
 How many state-defined DACs are not expecting to receive funding? Out of how many?
 
 ```{r}
-state_data$disadvantaged_not_expecting_funding_projects[1]
-state_data$disadvantaged_projects[1]
+dacs_nef <- state_data$disadvantaged_not_expecting_funding_projects[1]
+all_dacs <- state_data$disadvantaged_projects[1]
+dacs_ef <- all_dacs - dacs_nef
 ```
 
 ```{r}
-dacs_ef <- data.frame(category=c("DACs Expecting Funding", "DACs Not Expecting Funding"),
-                         amount=c(27, 97),
-                         amount_str=c("27", "97"),
-                         amount_pct=c("22%", "78%"))
+dacs_df <- data.frame(category=c("DACs Expecting Funding", "DACs Not Expecting Funding"),
+                         amount=c(dacs_ef, dacs_nef),
+                         amount_str=c(as.character(dacs_ef), as.character(dacs_nef)),
+                         amount_pct=c(format_percent(dacs_ef/all_dacs), format_percent(dacs_nef/all_dacs)))
 #NOTE: Have to plot the bigger number first for it to appear intuitively
-dacs_ef$category <- factor(dacs_ef$category, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
+dacs_df$category <- factor(dacs_df$category, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
 
-plot_labs <- paste0(dacs_ef$category, " (", dacs_ef$amount_pct, ", ", dacs_ef$amount_str, ")")
-p <- ggdonutchart(dacs_ef,
+plot_labs <- paste0(dacs_df$category, " (", dacs_df$amount_pct, ", ", dacs_df$amount_str, ")")
+p <- ggdonutchart(dacs_df,
              "amount",
              fill="category",
              label=plot_labs,
@@ -320,7 +324,8 @@ p + theme(legend.position="none",
 # Add plot of expecting_funding Y/N with DAC Y/N
 ```
 
-X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs"
+X percent of SFY23 funding cycle applicants qualify as DACs, and 
+X percent of projects designated for DWSRF anticipated awards qualify as DACs"
 
 ```{r}
 state_data$disadvantaged_percent[1]
@@ -329,15 +334,18 @@ state_data$disadvantaged_expecting_funding_percent_ef
 
 ```{r}
 
-ef_dacs <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Funding"),
-                         amount=c(11, 27),
-                         amount_str=c("11", "27"),
-                         amount_pct=c("29%", "71%"))
-#NOTE: Have to plot the bigger number first for it to appear intuitively
-ef_dacs$category <- factor(ef_dacs$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
+ef <- state_data$expecting_funding_projects
+ef_not_dacs <- ef - dacs_ef
 
-plot_labs <- paste0(ef_dacs$category, " (", ef_dacs$amount_pct, ", ", ef_dacs$amount_str, ")")
-p <- ggdonutchart(ef_dacs,
+ef_df <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Funding"),
+                         amount=c(ef_not_dacs, dacs_ef),
+                         amount_str=c(as.character(ef_not_dacs), as.character(dacs_ef)),
+                         amount_pct=c(format_percent(ef_not_dacs / ef), format_percent(dacs_ef/ef)))
+#NOTE: Have to plot the bigger number first for it to appear intuitively
+ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
+
+plot_labs <- paste0(ef_df$category, " (", ef_df$amount_pct, ", ", ef_df$amount_str, ")")
+p <- ggdonutchart(ef_df,
              "amount",
              fill="category",
              label=plot_labs,

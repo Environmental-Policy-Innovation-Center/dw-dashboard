@@ -6,27 +6,37 @@ date: "2024-11-08"
 
 This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on Funding & Finance data gathered by the Water policy team as they put together the data dictionaries and content for the website. The outputs focus on the "Funding" sections of the state overview pages.
 
-NOTE: These features in the datasets pulled from google sheets (financial, set asides) are works in progress, so there ample opportunity for errors to appear due to changed formats, column names, etc.
+NOTE: These features in the datasets pulled from google sheets (financial, set asides, pf) are works in progress, so there ample opportunity for errors to appear due to changed formats, column names, etc.
 
 # Setup
 
 ## Local Variables
 
 ```{r}
-# filters data and changes plot names
 state_name <- "Texas"
 state_abbr <- "TX"
 
-# only appears in subtitles
-years <- "SFY22-25"
-subtitle_str <- paste0(state_name, ", ", years)
 
-# used in setting years as factor to display correctly in plots
-years_list <- c("2022", "2023", "2024", "2025")
-
+# include 2022?
 include_y0 <- TRUE
 
+# export plots to AWS and Drive?
 save_plots <- FALSE
+
+gs_tab <- "Overview"
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
+
+
+if (include_y0) {
+  years <- "SFY22-25"
+  # used in setting years as factor to display correctly in plots
+  years_list <- c("2022", "2023", "2024", "2025") 
+ } else {
+  years <- "SFY23-25"
+  years_list <- c("2023", "2024", "2025")
+}
+
+subtitle_str <- paste0(state_name, ", ", years)
 
 ```
 
@@ -60,9 +70,12 @@ source("../resources.R")
 
 financial <- get_financial(state_name, years_list)
 
-set_asides_allowances <- get_set_asides(state_name, years_list) %>%
+set_asides <- get_set_asides(state_name, years_list) %>%
   mutate(total_sa_amt_str = format_currency(total_sa_amt),
-         total_sa_pct_str = format_percent(total_sa_pct))
+         total_sa_pct_str = format_percent(total_sa_pct)) %>%
+  filter(fed_cap_grant != "Base & BIL Gen Sup")
+
+pf <- get_pf(state_name, years_list)
 
 ```
 
@@ -74,20 +87,14 @@ set_asides_allowances <- get_set_asides(state_name, years_list) %>%
 financial <- financial %>%
   mutate(total_fcg_str = format_currency(total_fcg))
 
-# the financial tab includes aggregated set_aside total and then calculates set_asides_percent
-# as the set_aside_amount/fed_cap_grant_total
-set_asides <- financial %>%
-  select(state, state_fiscal_year, fed_cap_grant, total_setasides_amt, total_setasides_pct) %>%
-  filter(fed_cap_grant != "Base & BIL General Supplemental")
-
 base <- financial %>%
   filter(fed_cap_grant == "Base")
 
 gen_supp <- financial %>%
-  filter(fed_cap_grant == "BIL General Supplemental")
+  filter(fed_cap_grant == "BIL Gen Supp")
 
 base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & BIL General Supplemental")
+  filter(fed_cap_grant == "Base & BIL Gen Supp")
 
 lead <- financial %>%
   filter(fed_cap_grant == "Lead Service Line Replacement")
@@ -128,8 +135,7 @@ save_to_aws(all_grants_gp, "total-funds-fed-cap-grant", state_abbr) }
 ```
 
 ```{r}
-all_grants_pf <- financial %>%
-  filter(fed_cap_grant != "Base & BIL General Supplemental") %>%
+all_grants_pf <- pf %>%
   mutate(total_pf_str = format_currency(total_pf_amt),
          plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
                            total_pf_str))
@@ -160,7 +166,7 @@ These tables inform the Year by Year section on each state's overview page.
 tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_pf = format_currency(sum(total_pf_amt, na.rm=TRUE))))
 ```
 ```{r}
-tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_fcg = sum(total_fcg)))
+tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_fcg = sum(total_fcg, na.rm=TRUE)))
 
 ```
 
@@ -251,16 +257,12 @@ unutilized_gp
 ### Base PF Percent
 
 ```{r}
-base_pf_both_pct <- base %>%
-  select(state_fiscal_year, dac_pf_pct_base, dis_pf_pct_base) %>%
-  pivot_longer(cols=c(dac_pf_pct_base, dis_pf_pct_base)) %>%
-  mutate(name = case_when(
-    name == "dac_pf_pct_base" ~ "DAC PF",
-    name == "dis_pf_pct_base" ~ "Discretionary PF"),
-    value_str = format_percent(value))
+base_pf_both_pct <- pf %>%
+  filter(fed_cap_grant == "Base") %>%
+  mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", format_percent(total_pf_pct)))
 
-base_pf_both_pct_p <- ggplot(base_pf_both_pct, aes(x=state_fiscal_year, y=value, color=name, text=value_str)) + 
-  geom_line(aes(group=name), linewidth=1.5) + 
+base_pf_both_pct_p <- ggplot(base_pf_both_pct, aes(x=state_fiscal_year, y=total_pf_pct, color=pf_category, text=plot_str)) + 
+  geom_line(aes(group=pf_category), linewidth=1.5) + 
   geom_point(size=4) + 
   geom_hline(yintercept=.14) + 
   annotate("text", x=.7, y=.16, label="Disc. PF Max") + 
@@ -286,23 +288,30 @@ save_to_aws(base_pf_both_pct_gp, "base-pf-percent", state_abbr) }
 ### Base PF Amount
 
 ```{r}
-base_pf_combined <- base %>%
-  select(fed_cap_grant, state_fiscal_year, total_fcg, dac_pf_amt_base, dis_pf_amt_base) %>%
-  mutate(remaining_fcg = total_fcg - dac_pf_amt_base - dis_pf_amt_base) %>%
-  pivot_longer(cols=c(remaining_fcg, dac_pf_amt_base, dis_pf_amt_base)) %>%
-  mutate(name = case_when(
-    name == "remaining_fcg" ~ "Remaining Grant",
-    name == "dac_pf_amt_base" ~ "DAC PF",
-    name == "dis_pf_amt_base" ~ "Discretionary PF",
-    TRUE ~ "ERROR"),
-    name = factor(name, levels=c("Remaining Grant", "Discretionary PF", "DAC PF")),
-    amt_value_str = format_currency(value),
-    pct_value = value / total_fcg,
+base_pf_combined <- pf %>%
+  filter(fed_cap_grant == "Base") %>%
+  select(fed_cap_grant, state_fiscal_year, pf_category, total_fcg, total_pf_amt)
+
+
+base_pf_calc <- base_pf_combined %>%
+  select(fed_cap_grant, state_fiscal_year, total_pf_amt, total_fcg) %>%
+  group_by(fed_cap_grant, state_fiscal_year) %>%
+  summarize(combined_pf_amt = sum(total_pf_amt, na.rm=TRUE),
+            total_fcg = max(total_fcg)) %>%
+  mutate(pf_category = "Remaining Grant",
+         total_pf_amt = total_fcg - combined_pf_amt) 
+
+base_pf_combined <- bind_rows(base_pf_combined, base_pf_calc) %>%
+  select(-combined_pf_amt) %>%
+  mutate(
+    pf_category = factor(pf_category, levels=c("Remaining Grant", "Discretionary", "DAC")),
+    amt_value_str = format_currency(total_pf_amt),
+    pct_value = total_pf_amt / total_fcg,
     pct_value_str = format_percent(pct_value),
-    plot_str = paste0(name, ", ", state_fiscal_year, '<br>', amt_value_str, " (", pct_value_str, ")")
+    plot_str = paste0(pf_category, ", ", state_fiscal_year, '<br>', amt_value_str, " (", pct_value_str, ")")
     )
 
-base_pf_combined_p <- ggplot(base_pf_combined, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+base_pf_combined_p <- ggplot(base_pf_combined, aes(x=state_fiscal_year, y=total_pf_amt, fill=pf_category, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_dollar()) +
   scale_fill_manual(values = cat_palette(3)) + 
@@ -348,11 +357,16 @@ save_to_aws(gensupp_fed_cap_grants_gp, "gensupp-fed-cap-grant", state_abbr) }
 
 ```{r}
 
-set_asides <- set_asides %>%
-  mutate(total_setasides_amt_str = format_currency(total_setasides_amt))
+set_asides_fcg_group <- set_asides %>%
+  group_by(fed_cap_grant, state_fiscal_year) %>%
+  summarize(total_sa_amt = sum(total_sa_amt),
+            total_fcg = max(total_fcg),
+            total_sa_pct = total_sa_amt / total_fcg) %>%
+  mutate(total_sa_amt_str = format_currency(total_sa_amt),
+         total_sa_pct_str = format_percent(total_sa_pct))
 
-set_asides_p <- ggplot(set_asides, aes(x=state_fiscal_year, y=total_setasides_amt, fill=fed_cap_grant, text=total_setasides_amt_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+set_asides_p <- ggplot(set_asides_fcg_group, aes(x=state_fiscal_year, y=total_sa_amt, fill=fed_cap_grant, text=total_sa_amt_str)) + 
+  geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
   scale_fill_manual(values = cat_palette(4), 
                       name = "") + 
@@ -371,12 +385,10 @@ save_to_aws(set_asides_gp, "set-asides-fed-cap-grant-amount", state_abbr) }
 ```
 
 ```{r}
+set_asides_percent <- set_asides_fcg_group %>%
+  filter(!is.na(total_sa_pct))
 
-set_asides_percent <- set_asides %>%
-  filter(!is.na(total_setasides_pct)) %>%
-  mutate(setasides_pct_str = format_percent(total_setasides_pct))
-
-set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_setasides_pct, color=fed_cap_grant, text=setasides_pct_str)) + 
+set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_sa_pct, color=fed_cap_grant, text=total_sa_pct_str)) + 
   geom_line(aes(group=fed_cap_grant), linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0,.31)) + 
@@ -399,7 +411,7 @@ save_to_aws(set_asides_pct_gp, "set-asides-percent-utilized", state_abbr) }
 ## By Allowances
 
 ```{r}
-set_asides_allowances_group <- set_asides_allowances %>%
+set_asides_allowances_group <- set_asides %>%
   group_by(allowance, state_fiscal_year) %>%
   summarize(total_sa_amt_fcg = sum(total_sa_amt, na.rm=TRUE),
             total_sa_amt_fcg_str = format_currency(total_sa_amt_fcg))
@@ -427,7 +439,7 @@ save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", sta
 
 ```{r}
 
-sa_pct_base <- set_asides_allowances %>%
+sa_pct_base <- set_asides %>%
   filter(fed_cap_grant == "Base" & !is.na(total_sa_pct))
   
 
@@ -452,8 +464,8 @@ save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr) }
 ```
 
 ```{r}
-sa_pct_bil <- set_asides_allowances %>%
-  filter(fed_cap_grant == "BIL General Supplemental" & !is.na(total_sa_pct))
+sa_pct_bil <- set_asides %>%
+  filter(fed_cap_grant == "BIL Gen Supp" & !is.na(total_sa_pct))
   
 
 sa_pct_bil_p <- ggplot(sa_pct_bil, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
@@ -477,8 +489,8 @@ save_to_aws(sa_pct_bil_gp, "set-asides-allowance-percent-bil", state_abbr) }
 
 ```{r}
 
-sa_pct_lead <- set_asides_allowances %>%
-  filter(fed_cap_grant == "Lead Service Line Replacement" & !is.na(total_sa_pct))
+sa_pct_lead <- set_asides %>%
+  filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct))
   
 
 sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
@@ -502,8 +514,8 @@ save_to_aws(sa_pct_lead_gp, "set-asides-allowance-percent-lead", state_abbr) }
 
 ```{r}
 
-sa_pct_ec <- set_asides_allowances %>%
-  filter(fed_cap_grant == "Emerging Contaminants" & !is.na(total_sa_pct))
+sa_pct_ec <- set_asides %>%
+  filter(fed_cap_grant == "EC" & !is.na(total_sa_pct))
   
 
 sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 

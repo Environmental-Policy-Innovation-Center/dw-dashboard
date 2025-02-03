@@ -4,9 +4,7 @@ author: "Phil Cork"
 date: "2024-07-08"
 ---
 
-This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level agregate data. It currently uses Texas SFY 23 as an example.
-
-As of December 2024, some of the tables and data visualizations are made manually from stats pulled from state IUPs, but this information will eventually be made into a tabular format by the Water Policy team and then should be imported from that forthcoming Google Sheet. At that time, much of this code which is uniquely specific to Texas SFY23 can and should be converted to an abstracted version that can be run for all states/fiscal years by simply changing the top-level variables.
+This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level aggregate data.
 
 # Setup
 
@@ -84,6 +82,9 @@ grants <- financial %>%
 
 
 ```{r}
+
+if (sum(grants$value, na.rm=TRUE)>0) {
+
 grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
   labs(x="", y="", 
@@ -97,10 +98,13 @@ grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-grants_gp
+
 
 if (save_plots) {
 save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr) }
+
+grants_gp
+}
 ```
 
 ## Principal Forgiveness
@@ -116,13 +120,13 @@ total_pf_sfy <- pf %>%
          ) %>%
   group_by(name) %>%
   summarize(value = sum(value, na.rm=TRUE))
-  
 
 ```
 
 
 ```{r}
-#TODO: Recreate after PF dataset is finished
+
+if(sum(total_pf_sfy$value, na.rm=TRUE) > 0) {
 
 all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
@@ -136,10 +140,13 @@ all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-all_pf_gp
+
 
  if (save_plots) {
 save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr) }
+
+all_pf_gp
+}
 ```
 
 ## Base PF as percents
@@ -158,6 +165,9 @@ base_pf_pct <- base_pf_pct %>%
 
 ```{r}
 
+# greater than 1 because the add_row above will always make it at least 1
+if(nrow(base_pf_pct) >1) {
+
 plot_labs <- paste0(base_pf_pct$pf_category, " (", round(base_pf_pct$total_pf_pct, 2)*100, "%)")
 
 p <- ggdonutchart(base_pf_pct,
@@ -172,6 +182,8 @@ p + theme(legend.position="none",
         legend.title = element_text(size = 11, family = "Lato"), ) + 
   labs(title="How are the base funds allocated as principal forgiveness?",
        subtitle=subtitle_str)
+
+}
 ```
 
 # Comparing Funding and Project Data
@@ -179,16 +191,31 @@ p + theme(legend.position="none",
 ## Funds by Process
 
 ```{r}
-#TODO: Confirm correct column use, TBD on policy team's data development
+
+if (!is.na(state_data$total_project_cost)) {
+
 funds_process_comp <- data.frame(name=c("Available Funding", "Demand for Funds", "Expected Funding"),
                                  value=c(sum(financial$total_funding_available, na.rm = TRUE),
                                          state_data$total_project_cost,
                                          state_data$total_funding_amount)) %>%
   mutate(category = factor(name, levels=c("Expected Funding", "Available Funding", "Demand for Funds")))
+
+} else {
+ 
+  funds_process_comp <- data.frame(name=c("Available Funding", "Demand for Funds", "Expected Funding"),
+                                 value=c(sum(financial$total_funding_available, na.rm = TRUE),
+                                         state_data$total_requested_amount,
+                                         state_data$total_funding_amount)) %>%
+  mutate(category = factor(name, levels=c("Expected Funding", "Available Funding", "Demand for Funds"))) 
+  
+}
 ```
 
 
 ```{r}
+
+if(nrow(funds_process_comp %>% filter(!is.na(value))) == nrow(funds_process_comp)) {
+
 funds_comp_p <- ggplot(funds_process_comp, aes(y=category, x=value, text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
   labs(x="", y="", 
@@ -202,10 +229,13 @@ funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-funds_comp_gp
+
 
 if (save_plots) { 
 save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), state_abbr) }
+
+funds_comp_gp
+}
 ```
 
 ## Project Costs & Available Funds
@@ -230,6 +260,8 @@ lead_costs <- lead_costs %>%
 
 ```{r}
 
+if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
+  
 plot_labs <- paste0(lead_costs$name, " (", lead_costs$pct_value_str, ", ", lead_costs$value_str, ")")
 p <- ggdonutchart(lead_costs,
              "pct_value",
@@ -244,6 +276,7 @@ p + theme(legend.position="none",
   labs(title="Unmet demand compared to available LSLR funds",
        subtitle=subtitle_str)
 
+}
 ```
 
 ### EC
@@ -262,8 +295,9 @@ ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
          pct_value_str = format_percent(pct_value))
 
 
-#NOTE: Have to plot the bigger number first for it to appear intuitively
+if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
 
+  
 plot_labs <- paste0(ec_costs$name, " (", ec_costs$pct_value_str, ", ", ec_costs$value_str, ")")
 p <- ggdonutchart(ec_costs,
              "pct_value",
@@ -277,6 +311,8 @@ p + theme(legend.position="none",
         legend.title = element_text(size = 11, family = "Lato"), ) + 
   labs(title="Unmet demand compared to availabe EC funds",
        subtitle=subtitle_str)
+
+}
 ```
 
 # State-Level Data
@@ -284,8 +320,6 @@ p + theme(legend.position="none",
 ```{r}
 pf_projects <- all_projects %>%
   filter(principal_forgiveness != "0" & principal_forgiveness != "No Information")
-
-
 ```
 
 How many state-defined DACs are not expecting to receive funding? Out of how many?
@@ -301,8 +335,10 @@ dacs_df <- data.frame(category=c("DACs Expecting Funding", "DACs Not Expecting F
                          amount=c(dacs_ef, dacs_nef),
                          amount_str=c(as.character(dacs_ef), as.character(dacs_nef)),
                          amount_pct=c(format_percent(dacs_ef/all_dacs), format_percent(dacs_nef/all_dacs)))
-#NOTE: Have to plot the bigger number first for it to appear intuitively
 dacs_df$category <- factor(dacs_df$category, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
+
+
+if ( nrow(dacs_df %>% filter(!is.na(amount))) == nrow(dacs_df))  {
 
 plot_labs <- paste0(dacs_df$category, " (", dacs_df$amount_pct, ", ", dacs_df$amount_str, ")")
 p <- ggdonutchart(dacs_df,
@@ -317,11 +353,8 @@ p + theme(legend.position="none",
         legend.title = element_text(size = 11, family = "Lato"), ) + 
   labs(title="How many DACs are expected to receive funding?",
        subtitle=subtitle_str)
-```
 
-
-```{r}
-# Add plot of expecting_funding Y/N with DAC Y/N
+}
 ```
 
 X percent of SFY23 funding cycle applicants qualify as DACs, and 
@@ -344,6 +377,9 @@ ef_df <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Fun
 #NOTE: Have to plot the bigger number first for it to appear intuitively
 ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
 
+
+if ( nrow(ef_df %>% filter(!is.na(amount))) == nrow(ef_df))  {
+
 plot_labs <- paste0(ef_df$category, " (", ef_df$amount_pct, ", ", ef_df$amount_str, ")")
 p <- ggdonutchart(ef_df,
              "amount",
@@ -357,6 +393,8 @@ p + theme(legend.position="none",
         legend.title = element_text(size = 11, family = "Lato"), ) + 
   labs(title="How many projects expected to receive funding are going to DACs?",
        subtitle=subtitle_str)
+
+}
 ```
 
 X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs -- same as above, but for Lead specifically

@@ -116,6 +116,10 @@ all_grants <- financial %>%
   mutate(plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
                            total_fcg_str))
 
+if(nrow(all_grants) > 0 &
+   nrow(all_grants %>% filter(!is.na(total_fcg))) > 0
+   ) {
+
 all_grants_p <- ggplot(all_grants, aes(x=state_fiscal_year, y=total_fcg, fill=fed_cap_grant, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -128,10 +132,14 @@ all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-all_grants_gp
+
 
 if (save_plots) {
 save_to_aws(all_grants_gp, "total-funds-fed-cap-grant", state_abbr) }
+
+all_grants_gp
+
+}
 ```
 
 ```{r}
@@ -139,6 +147,10 @@ all_grants_pf <- pf %>%
   mutate(total_pf_str = format_currency(total_pf_amt),
          plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
                            total_pf_str))
+
+if(nrow(all_grants_pf) > 0 &
+   nrow(all_grants_pf %>% filter(!is.na(total_pf_amt))) > 0
+   ) {
 
 all_grants_pf_p <- ggplot(all_grants_pf, aes(x=state_fiscal_year, y=total_pf_amt, fill=fed_cap_grant, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
@@ -152,10 +164,14 @@ all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-all_grants_pf_gp
+
 
 if (save_plots) {
 save_to_aws(all_grants_pf_gp, "pf-from-fed-cap-grants", state_abbr) }
+
+all_grants_pf_gp
+
+}
 ```
 
 ### Stats
@@ -178,6 +194,8 @@ tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_fcg
 
 ```{r}
 
+if(sum(base$total_fcg, na.rm=TRUE) > 0) {
+
 base_fed_cap_grants_p <- ggplot(base, aes(x=state_fiscal_year, y=total_fcg, text=total_fcg_str)) + 
   geom_bar(stat="identity", fill="#172f60") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -189,19 +207,25 @@ base_fed_cap_grants_gp <- ggplotly(base_fed_cap_grants_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-base_fed_cap_grants_gp
+
 
 if (save_plots) {
 save_to_aws(base_fed_cap_grants_gp, "base-fed-cap-grant", state_abbr) }
+
+base_fed_cap_grants_gp
+}
 ```
 
 ### Leveraged Funds
 
 ```{r}
 
+
+if(sum(financial$leveraged_funds, na.rm=TRUE) > 0) {
+
 leveraged <- financial %>%
   select(fed_cap_grant, state_fiscal_year, leveraged_funds) %>%
-  filter(!is.na(leveraged_funds)) %>%
+  filter(!is.na(leveraged_funds) & leveraged_funds > 0) %>%
   mutate(leveraged_funds_str = format_currency(leveraged_funds))
 
 leveraged_p <- ggplot(leveraged, aes(x=state_fiscal_year, y=leveraged_funds, fill=fed_cap_grant, text=leveraged_funds_str)) + 
@@ -216,22 +240,27 @@ leveraged_gp <- ggplotly(leveraged_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-leveraged_gp
+
 
 # if (save_plots) {
 # save_to_aws(leveraged_gp, "leveraged-funds", state_abbr) } 
+
+leveraged_gp
+}
 ```
 
 ### Unutilized Funds
 
 ```{r}
 unutilized <- financial %>%
-  filter(unutilized_fcg > 0) %>%
+  filter(unutilized_fcg > 0 & !is.na(unutilized_fcg)) %>%
   mutate(unutilized_fcg_str = format_currency(unutilized_fcg))
+
+if (nrow(unutilized) > 0) {
 
 unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, fill=fed_cap_grant, text=unutilized_fcg_str)) + 
   geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency(scale=.000001, suffix="M")) + 
+  scale_y_continuous(labels=label_currency()) + 
   scale_fill_manual(values=cat_palette(3)) + 
   labs(x="", y="", title="Unutilized Funds (Carryover)", subtitle=subtitle_str, fill="") + 
   epic_chart_theme
@@ -241,18 +270,14 @@ unutilized_gp <- ggplotly(unutilized_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-unutilized_gp
+
 
 # if (save_plots) {
 # save_to_aws(unutilized_gp, "unutilized-funds", state_abbr) }
+unutilized_gp
+}
 ```
 
-
-### Funds by FFY Grant
-
-```{r}
-#recreate plot with FCG but color-coded by which year the funds come from
-```
 
 ### Base PF Percent
 
@@ -260,6 +285,8 @@ unutilized_gp
 base_pf_both_pct <- pf %>%
   filter(fed_cap_grant == "Base") %>%
   mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", format_percent(total_pf_pct)))
+
+if(sum(base_pf_both_pct$total_pf_pct, na.rm=TRUE) > 0) {
 
 base_pf_both_pct_p <- ggplot(base_pf_both_pct, aes(x=state_fiscal_year, y=total_pf_pct, color=pf_category, text=plot_str)) + 
   geom_line(aes(group=pf_category), linewidth=1.5) + 
@@ -279,10 +306,12 @@ base_pf_both_pct_gp <- ggplotly(base_pf_both_pct_p, tooltip="text") %>%
                                     subtitle_str)))
   
 
-base_pf_both_pct_gp
 
 if (save_plots) {
 save_to_aws(base_pf_both_pct_gp, "base-pf-percent", state_abbr) }
+
+base_pf_both_pct_gp
+}
 ```
 
 ### Base PF Amount
@@ -292,7 +321,8 @@ base_pf_combined <- pf %>%
   filter(fed_cap_grant == "Base") %>%
   select(fed_cap_grant, state_fiscal_year, pf_category, total_fcg, total_pf_amt)
 
-
+# combine the PF categories to get the correct difference between PF and grant, 
+# then combine them together to plot as a single variable
 base_pf_calc <- base_pf_combined %>%
   select(fed_cap_grant, state_fiscal_year, total_pf_amt, total_fcg) %>%
   group_by(fed_cap_grant, state_fiscal_year) %>%
@@ -311,6 +341,8 @@ base_pf_combined <- bind_rows(base_pf_combined, base_pf_calc) %>%
     plot_str = paste0(pf_category, ", ", state_fiscal_year, '<br>', amt_value_str, " (", pct_value_str, ")")
     )
 
+if(sum(base_pf_combined$total_pf_amt) > 0) {
+
 base_pf_combined_p <- ggplot(base_pf_combined, aes(x=state_fiscal_year, y=total_pf_amt, fill=pf_category, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_dollar()) +
@@ -324,15 +356,21 @@ base_pf_combined_gp <- ggplotly(base_pf_combined_p, tooltip="text") %>%
                                     subtitle_str)))
   
 
-base_pf_combined_gp
+
 
 if (save_plots) {
  save_to_aws(base_pf_combined_gp, "base-pf-amount", state_abbr) }
+
+base_pf_combined_gp
+}
 ```
 
 #BIL Gen/Supp
 
 ```{r}
+
+if (sum(gen_supp$total_fcg > 0)) {
+
 gensupp_fed_cap_grants_p <- ggplot(gen_supp, aes(x=state_fiscal_year, y=total_fcg, text=format_currency(total_fcg))) + 
   geom_bar(stat="identity", fill="#172f60") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -344,10 +382,12 @@ gensupp_fed_cap_grants_gp <- ggplotly(gensupp_fed_cap_grants_p, tooltip="text") 
                                     '<br>',
                                     subtitle_str)))
 
-gensupp_fed_cap_grants_gp
 
 if (save_plots) {
 save_to_aws(gensupp_fed_cap_grants_gp, "gensupp-fed-cap-grant", state_abbr) }
+
+gensupp_fed_cap_grants_gp
+}
 ```
 
 
@@ -365,6 +405,8 @@ set_asides_fcg_group <- set_asides %>%
   mutate(total_sa_amt_str = format_currency(total_sa_amt),
          total_sa_pct_str = format_percent(total_sa_pct))
 
+if(sum(set_asides_fcg_group$total_sa_amt, na.rm=TRUE) > 0) {
+
 set_asides_p <- ggplot(set_asides_fcg_group, aes(x=state_fiscal_year, y=total_sa_amt, fill=fed_cap_grant, text=total_sa_amt_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -378,15 +420,20 @@ set_asides_gp <- ggplotly(set_asides_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-set_asides_gp
+
 
 if (save_plots) {
 save_to_aws(set_asides_gp, "set-asides-fed-cap-grant-amount", state_abbr) }
+
+set_asides_gp
+}
 ```
 
 ```{r}
 set_asides_percent <- set_asides_fcg_group %>%
   filter(!is.na(total_sa_pct))
+
+if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
 
 set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_sa_pct, color=fed_cap_grant, text=total_sa_pct_str)) + 
   geom_line(aes(group=fed_cap_grant), linewidth=1.5) + 
@@ -402,10 +449,13 @@ set_asides_pct_gp <- ggplotly(set_asides_pct_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-set_asides_pct_gp
+
 
 if (save_plots) {
 save_to_aws(set_asides_pct_gp, "set-asides-percent-utilized", state_abbr) }
+
+set_asides_pct_gp
+}
 ```
 
 ## By Allowances
@@ -415,6 +465,8 @@ set_asides_allowances_group <- set_asides %>%
   group_by(allowance, state_fiscal_year) %>%
   summarize(total_sa_amt_fcg = sum(total_sa_amt, na.rm=TRUE),
             total_sa_amt_fcg_str = format_currency(total_sa_amt_fcg))
+
+if( sum(set_asides_allowances_group$total_sa_amt_fcg, na.rm=TRUE) > 0 ) {
 
 setasides_allowances_group_p <- ggplot(set_asides_allowances_group, aes(x=state_fiscal_year, y=total_sa_amt_fcg, fill=allowance, text=total_sa_amt_fcg_str)) + 
   geom_bar(stat="identity", position="dodge") + 
@@ -430,10 +482,12 @@ setasides_allowances_group_gp <- ggplotly(setasides_allowances_group_p, tooltip=
                                     '<br>',
                                     subtitle_str)))
 
-setasides_allowances_group_gp
 
 if (save_plots) {
 save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", state_abbr) }
+
+setasides_allowances_group_gp
+}
 ```
   
 
@@ -442,6 +496,7 @@ save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", sta
 sa_pct_base <- set_asides %>%
   filter(fed_cap_grant == "Base" & !is.na(total_sa_pct))
   
+if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
 
 sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
@@ -456,10 +511,12 @@ sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-sa_pct_base_gp
 
 if (save_plots) {
 save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr) }
+
+sa_pct_base_gp
+}
 
 ```
 
@@ -467,6 +524,7 @@ save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr) }
 sa_pct_bil <- set_asides %>%
   filter(fed_cap_grant == "BIL Gen Supp" & !is.na(total_sa_pct))
   
+if (sum(sa_pct_bil$total_sa_pct, na.rm=TRUE) >0 ) {
 
 sa_pct_bil_p <- ggplot(sa_pct_bil, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
@@ -481,17 +539,21 @@ sa_pct_bil_gp <- ggplotly(sa_pct_bil_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-sa_pct_bil_gp
+
 
 if (save_plots) {
 save_to_aws(sa_pct_bil_gp, "set-asides-allowance-percent-bil", state_abbr) }
+sa_pct_bil_gp
+}
 ```
 
 ```{r}
 
 sa_pct_lead <- set_asides %>%
   filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct))
-  
+
+if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
+
 
 sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
@@ -510,13 +572,17 @@ sa_pct_lead_gp
 
 if (save_plots) {
 save_to_aws(sa_pct_lead_gp, "set-asides-allowance-percent-lead", state_abbr) }
+
+sa_pct_lead_gp
+}
 ```
 
 ```{r}
 
 sa_pct_ec <- set_asides %>%
   filter(fed_cap_grant == "EC" & !is.na(total_sa_pct))
-  
+
+if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
 
 sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
@@ -531,10 +597,13 @@ sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-sa_pct_ec_gp
+
 
 if (save_plots) {
 save_to_aws(sa_pct_ec_gp, "set-asides-allowance-percent-ec", state_abbr) }
+
+sa_pct_ec_gp
+}
 
 ```
 

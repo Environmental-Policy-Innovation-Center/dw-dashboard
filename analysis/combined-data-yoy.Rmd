@@ -149,7 +149,7 @@ compare_requested_amount <- compare_available_funds %>%
   select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
   mutate(name = case_when(
-    name == "total_funding_available" ~ "Available Funds",
+    name == "total_funding_available" ~ "Total Available",
     name == "requested_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
@@ -157,6 +157,9 @@ compare_requested_amount <- compare_available_funds %>%
 ```
 
 ```{r}
+
+if(sum(compare_project_cost$value[compare_project_cost$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
 gen_pc_p <- ggplot(compare_project_cost, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -170,10 +173,13 @@ gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-gen_pc_gp
+
 
 if (save_plots) {
 save_to_aws(gen_pc_gp, "compare-demand-available-funds-gen", state_abbr) }
+
+gen_pc_gp
+}
 ```
 
 
@@ -181,6 +187,8 @@ save_to_aws(gen_pc_gp, "compare-demand-available-funds-gen", state_abbr) }
 
 ```{r}
 
+if(sum(compare_requested_amount$value[compare_requested_amount$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
 gen_ra_p <- ggplot(compare_requested_amount, aes(x=state_fiscal_year, y=value, fill=name)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -194,10 +202,13 @@ gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-gen_ra_gp
+
 
 # if (save_plots) {
 #save_to_aws(gen_ra_gp, "compare-demand-available-funds-gen", state_abbr) }
+
+gen_ra_gp
+}
 ```
 
 ## EC
@@ -240,6 +251,10 @@ compare_requested_amount_ec <- compare_available_funds_ec %>%
 ### Project Costs
 
 ```{r}
+
+if(sum(compare_project_cost_ec$value[compare_project_cost_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+
+
 ec_pc_p <- ggplot(compare_project_cost_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -253,14 +268,21 @@ ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-ec_pc_gp
+
 
 if (save_plots) {
 save_to_aws(ec_pc_gp, "compare-demand-available-funds-ec", state_abbr) }
+
+ec_pc_gp
+}
 ```
 ### Requested Amount
 
 ```{r}
+
+if(sum(compare_requested_amount_ec$value[compare_requested_amount_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+
+
 ec_ra_p <- ggplot(compare_requested_amount_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -274,10 +296,13 @@ ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-ec_ra_gp
+
 
 # if (save_plots) {
 #save_to_aws(ec_ra_gp, "compare-demand-available-funds-ec", state_abbr) }
+
+ec_ra_gp
+}
 ```
 ## Lead
 
@@ -318,6 +343,8 @@ compare_requested_amount_lead <- compare_available_funds_lead %>%
 ### Project Cost
 
 ```{r}
+if(sum(compare_project_cost_lead$value[compare_project_cost_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+
 lead_pc_p <- ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -331,15 +358,21 @@ lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-lead_pc_gp
+
 
 if (save_plots) {
 save_to_aws(lead_pc_gp, "compare-demand-available-funds-lead", state_abbr) }
+
+lead_pc_gp
+}
 ```
 
 ### Requested Amount
 
 ```{r}
+
+if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+
 lead_ra_p <- ggplot(compare_requested_amount_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
@@ -353,8 +386,11 @@ lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-lead_ra_gp
+
 
 # if (save_plots) {
 #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
+
+lead_ra_gp
+}
 ```

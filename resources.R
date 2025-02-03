@@ -58,13 +58,14 @@ get_financial <- function(state_name, years_list) {
   financial <- financial %>%
     clean_names() %>%
     filter(state == state_name) %>%
-    select(-notes) %>%
+    select(-notes, -assignee) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
     # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
     # and mutating with across() produces errors or warnings depending on the context, here at least it is only warnings
     # that can be muted, but the resulting dataframe is still as intended
     mutate(total_fcg = convert_to_numeric(total_fcg),
+           ffy21_fcg = convert_to_numeric(ffy21_fcg),
            ffy22_fcg = convert_to_numeric(ffy22_fcg),
            ffy23_fcg = convert_to_numeric(ffy23_fcg),
            ffy24_fcg = convert_to_numeric(ffy24_fcg),
@@ -78,14 +79,6 @@ get_financial <- function(state_name, years_list) {
            unutilized_fcg = convert_to_numeric(unutilized_fcg),
            leveraged_funds = convert_to_numeric(leveraged_funds),
            total_funding_available = convert_to_numeric(total_funding_available),
-           total_setasides_amt = convert_to_numeric(total_setasides_amt),
-           total_setasides_pct = convert_to_numeric(total_setasides_pct),
-           dac_pf_pct_base = convert_to_numeric(dac_pf_pct_base),
-           dac_pf_amt_base = convert_to_numeric(dac_pf_amt_base),
-           dis_pf_amt_base = convert_to_numeric(dis_pf_amt_base),
-           dis_pf_pct_base = convert_to_numeric(dis_pf_pct_base),
-           total_pf_amt = convert_to_numeric(total_pf_amt),
-           total_pf_pct = convert_to_numeric(total_pf_pct),
            gpr_cost = convert_to_numeric(gpr_cost))
   
   return(financial)
@@ -95,16 +88,21 @@ get_financial <- function(state_name, years_list) {
 get_set_asides <- function(state_name, yaers_list) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
-  set_asides_allowances <- data.frame(read_sheet(URL, "Set Asides", skip=1))
+  set_asides <- data.frame(read_sheet(URL, "Set Asides", skip=1))
   
-  set_asides_allowances <- set_asides_allowances %>%
+  set_asides <- set_asides %>%
     clean_names() %>%
     filter(state==state_name) %>%
-    select(-notes) %>%
+    # drop all total columns used by policy analysts
+    filter(!grepl("Total", allowance)) %>%
+    # drop policy analyst specific columns
+    select(-notes, -assignee) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
     
-    mutate(ffy22_sa_amt = convert_to_numeric(ffy22_sa_amt),
+    mutate(total_sa_amt = convert_to_numeric(total_sa_amt),
+           total_sa_pct = convert_to_numeric(total_sa_pct),
+           ffy22_sa_amt = convert_to_numeric(ffy22_sa_amt),
            ffy22_sa_pct = convert_to_numeric(ffy22_sa_pct),
            ffy23_sa_amt = convert_to_numeric(ffy23_sa_amt),
            ffy23_sa_pct = convert_to_numeric(ffy23_sa_pct),
@@ -115,7 +113,8 @@ get_set_asides <- function(state_name, yaers_list) {
            ffy26_sa_amt = convert_to_numeric(ffy26_sa_amt),
            ffy26_sa_pct = convert_to_numeric(ffy26_sa_pct),
            total_sa_amt = convert_to_numeric(total_sa_amt),
-           total_sa_pct = convert_to_numeric(total_sa_pct)
+           total_sa_pct = convert_to_numeric(total_sa_pct),
+           total_fcg = convert_to_numeric(total_fcg)
            ) %>%
     #TODO: Modify this as needed once water team updates naming conventions
     mutate(allowance = case_when(
@@ -127,7 +126,47 @@ get_set_asides <- function(state_name, yaers_list) {
       TRUE ~ "Missing Allowance"),
       )
   
-  return(set_asides_allowances)
+  return(set_asides)
+}
+
+get_pf <- function(state_name, yaers_list) {
+  
+  URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
+  principal_forgiveness <- data.frame(read_sheet(URL, "Principal Forgiveness", skip=1))
+  
+  principal_forgiveness <- principal_forgiveness %>%
+    clean_names() %>%
+    filter(state==state_name) %>%
+    # drop policy analyst specific columns
+    select(-notes, -assignee) %>%
+    mutate(state_fiscal_year = as.character(state_fiscal_year),
+           state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
+    mutate(total_fcg = convert_to_numeric(total_fcg),
+           total_pf_amt = convert_to_numeric(total_pf_amt),
+           total_pf_pct  = convert_to_numeric(total_pf_pct),
+           ffy21_fcg = convert_to_numeric(ffy21_fcg),
+           ffy21_amt = convert_to_numeric(ffy21_amt),
+           ffy21_pct = convert_to_numeric(ffy21_pct),
+           ffy22_fcg = convert_to_numeric(ffy22_fcg),
+           ffy22_amt = convert_to_numeric(ffy22_amt),
+           ffy22_pct = convert_to_numeric(ffy22_pct),
+           ffy23_fcg = convert_to_numeric(ffy23_fcg),
+           ffy23_amt = convert_to_numeric(ffy23_amt),
+           ffy23_pct = convert_to_numeric(ffy23_pct),
+           ffy24_fcg = convert_to_numeric(ffy24_fcg),
+           ffy24_amt = convert_to_numeric(ffy24_amt),
+           ffy24_pct = convert_to_numeric(ffy24_pct),
+           ffy25_fcg = convert_to_numeric(ffy25_fcg),
+           ffy25_amt = convert_to_numeric(ffy25_amt),
+           ffy25_pct = convert_to_numeric(ffy25_pct),
+           ffy26_fcg = convert_to_numeric(ffy26_fcg),
+           ffy26_amt = convert_to_numeric(ffy26_amt),
+           ffy26_pct = convert_to_numeric(ffy26_pct)
+            )
+  
+  
+  return(principal_forgiveness)
+  
 }
 
 ## takes a numeric column and returns one formatted with dollar sign and commas
@@ -160,11 +199,14 @@ format_percent <- function(x) {
 
 ### Export Files ----
 
+## Vars
+
 ## Store a GGPlotly object as HTML, store it on AWS, and store the results in Google Sheets
 ## Takes the plotly object, the file's name, directories within a bucket where it should be stored,
 ## and the tab within a google sheet where it should be stored.
 ## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
 ## Assumes file_name ends with file type (.html, .png)
+
 run_save_plots <- function(gp_object, sub_folders, file_name, gs_tab) {
   
   object_url <- paste0(sub_folders, file_name)
@@ -200,14 +242,23 @@ save_to_aws <- function(gp_object, file_name, object_url) {
   
 }
 
-get_gs_link <- function(state_abbr) {
-  
+get_gs_urls <- function() {
   gs_urls <- data.frame(state=c(""), url=c("")) %>%
-    add_row(state="TX", url="https://docs.google.com/spreadsheets/d/1rlw0zeu1hmw2rNO1d1lJEihvVM3raUs7C_wfnGy4Jd4")
+    add_row(state="TX", url="https://docs.google.com/spreadsheets/d/1rlw0zeu1hmw2rNO1d1lJEihvVM3raUs7C_wfnGy4Jd4") %>%
+    add_row(state="AL", url="https://docs.google.com/spreadsheets/d/1PZO5UfGZ_FHhDKnyVVtu6G_E2HJEegVmw7FGIuWQHNk") %>%
+    add_row(state="NY", url="https://docs.google.com/spreadsheets/d/1oH07f-AOPzxlB6ozxjtmw1JKYx2qEFMCHAB-WaWs8W4") %>%
+    add_row(state="IL", url="https://docs.google.com/spreadsheets/d/1cM8G-83FtrW98MYgvhV5iyaY6m81wDRM0Yo34L2qrZU") %>%
+    add_row(state="IN", url="https://docs.google.com/spreadsheets/d/1sV1SUmGlybQTw8VdfyOfw0xSqT8aX--_Tau3vMDgVDs") %>%
+    add_row(state="MI", url="https://docs.google.com/spreadsheets/d/1cSYUzZgLUhN10ZMw7QJUtkBlTzMmPnjs5bLHJ17itYY") %>%
+    add_row(state="OH", url="https://docs.google.com/spreadsheets/d/1NE0Pl4p1Yv_lXBSIoLS89KpqmIUBWtBPoLQzj2GH2F4") %>%
+    add_row(state="PA", url="https://docs.google.com/spreadsheets/d/1-MrH5VRuPABvovqz9fHBGufc-Zz2vpEqZcrPgQyNQzI")
   
+  return(gs_urls)
+}
+
+get_gs_link <- function(state_abbr) {
+  gs_url <- get_gs_urls()
   return(gs_urls$url[gs_urls$state==state_abbr])
-                        
-  
 }
 
 update_google_sheet <- function(sheet_url, sheet_tab, file_name, file_link) {

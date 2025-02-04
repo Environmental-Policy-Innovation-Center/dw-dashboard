@@ -37,6 +37,9 @@ run_code_from_file("../../local/aws.txt")
 
 source("../resources.R")
 
+donut_colors_2 <- c("#4ea324","lightgrey")
+donut_colors_3 <- c("#4ea324",  "#172f60","lightgrey")
+
 ```
 
 
@@ -152,13 +155,16 @@ all_pf_gp
 ## Base PF as percents
 
 ```{r}
+
+total_base <- sum(financial$total_fcg[financial$fed_cap_grant=="Base"], na.rm=TRUE)
+
 base_pf_pct <- pf %>%
   filter(fed_cap_grant == "Base") %>%
-  select(fed_cap_grant, pf_category, total_pf_pct) %>%
-  filter(!is.na(total_pf_pct))
+  select(fed_cap_grant, pf_category, total_pf_amt) %>%
+  filter(!is.na(total_pf_amt))
 
 base_pf_pct <- base_pf_pct %>%
-  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_pct = (1-sum(base_pf_pct$total_pf_pct))) %>%
+  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_amt = (total_base-sum(base_pf_pct$total_pf_pct))) %>%
   mutate(pf_category = factor(pf_category, levels=c("Remaining Base Funds", "DAC", "Discretionary")))
 ```
 
@@ -168,21 +174,14 @@ base_pf_pct <- base_pf_pct %>%
 # greater than 1 because the add_row above will always make it at least 1
 if(nrow(base_pf_pct) >1) {
 
-plot_labs <- paste0(base_pf_pct$pf_category, " (", round(base_pf_pct$total_pf_pct, 2)*100, "%)")
+base_pf_fig <- base_pf_pct %>% plot_ly(labels = ~pf_category, values = ~total_pf_amt) %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_3)) %>% 
+  layout(title = paste0("How are the base funds allocated as principal forgiveness?", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
-p <- ggdonutchart(base_pf_pct,
-             "total_pf_pct",
-             fill="pf_category",
-             label=plot_labs,
-             color="white",
-             palette=c("lightgrey", "#4ea324", "#172f60"))
-p + theme(legend.position="none",
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How are the base funds allocated as principal forgiveness?",
-       subtitle=subtitle_str)
-
+base_pf_fig
 }
 ```
 
@@ -258,23 +257,20 @@ lead_costs <- lead_costs %>%
 ```
 
 
+
 ```{r}
 
 if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
   
-plot_labs <- paste0(lead_costs$name, " (", lead_costs$pct_value_str, ", ", lead_costs$value_str, ")")
-p <- ggdonutchart(lead_costs,
-             "pct_value",
-             fill="name",
-             label=plot_labs,
-             color="white",
-             palette=c("lightgrey", "#4ea324"))
-p + theme(legend.position="none",
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="Unmet demand compared to available LSLR funds",
-       subtitle=subtitle_str)
+lead_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value) %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
+  layout(title = paste0("Unmet demand compared to available LSLR funds", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+
+lead_fig
 
 }
 ```
@@ -298,20 +294,13 @@ ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
 if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
 
   
-plot_labs <- paste0(ec_costs$name, " (", ec_costs$pct_value_str, ", ", ec_costs$value_str, ")")
-p <- ggdonutchart(ec_costs,
-             "pct_value",
-             fill="name",
-             label=plot_labs,
-             color="white",
-             palette=c("lightgrey", "#4ea324"))
-p + theme(legend.position="none",
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="Unmet demand compared to availabe EC funds",
-       subtitle=subtitle_str)
-
+ec_fig <- ec_costs %>% plot_ly(labels = ~name, values = ~value) %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
+  layout(title = paste0("Unmet demand compared to available EC funds", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ec_fig
 }
 ```
 
@@ -331,29 +320,23 @@ dacs_ef <- all_dacs - dacs_nef
 ```
 
 ```{r}
-dacs_df <- data.frame(category=c("DACs Expecting Funding", "DACs Not Expecting Funding"),
-                         amount=c(dacs_ef, dacs_nef),
+dacs_df <- data.frame(name=c("DACs Expecting Funding", "DACs Not Expecting Funding"),
+                         value=c(dacs_ef, dacs_nef),
                          amount_str=c(as.character(dacs_ef), as.character(dacs_nef)),
                          amount_pct=c(format_percent(dacs_ef/all_dacs), format_percent(dacs_nef/all_dacs)))
-dacs_df$category <- factor(dacs_df$category, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
+dacs_df$name <- factor(dacs_df$name, levels=c("DACs Not Expecting Funding", "DACs Expecting Funding"))
 
 
-if ( nrow(dacs_df %>% filter(!is.na(amount))) == nrow(dacs_df))  {
+if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
 
-plot_labs <- paste0(dacs_df$category, " (", dacs_df$amount_pct, ", ", dacs_df$amount_str, ")")
-p <- ggdonutchart(dacs_df,
-             "amount",
-             fill="category",
-             label=plot_labs,
-             color="white",
-             palette=c("lightgrey", "#4ea324"))
-p + theme(legend.position="none",
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How many DACs are expected to receive funding?",
-       subtitle=subtitle_str)
+dacs_ef_fig <- dacs_df %>% plot_ly(labels = ~name, values = ~value) %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
+  layout(title = paste0("How many DACs could expect funding?", "<br>", subtitle_str),  
+         margin = list(t = 100),
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
+dacs_ef_fig
 }
 ```
 
@@ -380,20 +363,14 @@ ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non
 
 if ( nrow(ef_df %>% filter(!is.na(amount))) == nrow(ef_df))  {
 
-plot_labs <- paste0(ef_df$category, " (", ef_df$amount_pct, ", ", ef_df$amount_str, ")")
-p <- ggdonutchart(ef_df,
-             "amount",
-             fill="category",
-             label=plot_labs,
-             color="white",
-             palette=c("#4ea324", "lightgrey"))
-p + theme(legend.position="none",
-        text = element_text(size = 11, family = "Lato"), 
-        legend.text = element_text(size = 10, family = "Lato"), 
-        legend.title = element_text(size = 11, family = "Lato"), ) + 
-  labs(title="How many projects expected to receive funding are going to DACs?",
-       subtitle=subtitle_str)
+ef_df_fig <- ef_df %>% plot_ly(labels = ~category, values = ~amount) %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
+  layout(title = paste0("How many projects expected to receive funding are going to DACs?", "<br>", subtitle_str),
+         margin = list(t = 100),
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
+  ef_df_fig
 }
 ```
 

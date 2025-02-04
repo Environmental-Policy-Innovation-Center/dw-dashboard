@@ -434,6 +434,124 @@ all_pt_gp
 }
 ```
 
+### Small Community
+
+How many applicants serve small communities?
+
+```{r}
+
+
+if(nrow(state_yoy %>% filter(!is.na(sc_projects))) > 0) {
+
+  sc_df <- state_yoy %>%
+    select(state_fiscal_year, sc_projects, non_sc_projects, projects) %>%
+    pivot_longer(cols=c(-state_fiscal_year, -projects)) %>%
+    mutate(name = case_when(
+      name == "non_sc_projects" ~ "Other Projects",
+      name == "sc_projects" ~ "Small Community Projects"),
+      name = factor(name, levels=c("Other Projects", "Small Community Projects")),
+      pct_str = format_percent(value / projects),
+      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
+    )
+  
+
+sc_pop_p <- ggplot(sc_df, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+  geom_bar(stat="identity", position="stack") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title=" ",
+       subtitle=subtitle_str) + 
+    scale_fill_manual(values = cat_palette_pastel(2), 
+                      name = "") + 
+  epic_chart_theme
+
+sc_pop_gp <- ggplotly(sc_pop_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How many projects serve small communities (<10k)?",
+                                    '<br>',
+                                    subtitle_str)))
+
+
+if (save_plots) {}
+
+sc_pop_gp
+}
+
+```
+
+```{r}
+if(nrow(state_yoy %>% filter(!is.na(sc_ef_projects))) > 0) {
+
+  sc_df_ef <- state_yoy %>%
+    select(state_fiscal_year, sc_ef_projects, ef_non_sc, expecting_funding_projects) %>%
+    pivot_longer(cols=c(-state_fiscal_year, -expecting_funding_projects)) %>%
+    mutate(name = case_when(
+      name == "ef_non_sc" ~ "Other Projects Expecting Funding",
+      name == "sc_ef_projects" ~ "Small Community Projects Expecting Funding"),
+      name = factor(name, levels=c("Other Projects Expecting Funding", "Small Community Projects Expecting Funding")),
+      pct_str = format_percent(value / expecting_funding_projects),
+      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
+    )
+  
+
+sc_ef_p <- ggplot(sc_df_ef, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+  geom_bar(stat="identity", position="stack") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title=" ",
+       subtitle=subtitle_str) + 
+    scale_fill_manual(values = cat_palette_pastel(2), 
+                      name = "") + 
+  epic_chart_theme
+
+sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How many projects serving small communities (<10k) could expect funding?",
+                                    '<br>',
+                                    subtitle_str)))
+
+
+if (save_plots) {}
+
+sc_ef_gp
+}
+```
+
+```{r}
+if(nrow(state_yoy %>% filter(!is.na(sc_dac_projects))) > 0) {
+
+  sc_df_dac <- state_yoy %>%
+    select(state_fiscal_year, sc_dac_projects, dac_non_sc, disadvantaged_projects) %>%
+    pivot_longer(cols=c(-state_fiscal_year, -disadvantaged_projects)) %>%
+    mutate(name = case_when(
+      name == "dac_non_sc" ~ "Other DAC Projects",
+      name == "sc_dac_projects" ~ "Small Community DAC Projects"),
+      name = factor(name, levels=c("Other DAC Projects", "Small Community DAC Projects")),
+      pct_str = format_percent(value / disadvantaged_projects),
+      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
+    )
+  
+
+sc_dac_p <- ggplot(sc_df_dac, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+  geom_bar(stat="identity", position="stack") + 
+  labs(x="State Fiscal Year",
+       y="Projects",
+       title=" ",
+       subtitle=subtitle_str) + 
+    scale_fill_manual(values = cat_palette_pastel(2), 
+                      name = "") + 
+  epic_chart_theme
+
+sc_dac_gp <- ggplotly(sc_dac_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How many projects serving small communities (<10k) serve DACs?",
+                                    '<br>',
+                                    subtitle_str)))
+
+
+if (save_plots) {}
+
+sc_dac_gp
+}
+```
+
 
 # Project-Level Data
 

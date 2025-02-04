@@ -14,6 +14,8 @@ library(aws.s3)
 source("../ds-resources/shared-functions.R")
 run_code_from_file("../local/aws.txt")
 
+source("resources.R")
+
 ```
 
 ```{r}
@@ -92,7 +94,7 @@ project_features <- all_projects %>%
             ef_general_projects = sum(expecting_funding == "Yes" & project_type == "General"),
             ef_ec_projects = sum(expecting_funding == "Yes" & project_type == "Emerging Contaminants"),
             ef_lead_projects = sum(expecting_funding == "Yes" & project_type == "Lead"),
-            
+
             # number of disadvantaged projects and percent of all projects that are DACs
             disadvantaged_projects = sum(disadvantaged == "Yes"),
             disadvantaged_projects = replace_na(disadvantaged_projects, 0),
@@ -121,7 +123,17 @@ project_features <- all_projects %>%
             disadvantaged_expecting_funding_percent_ef = round(disadvantaged_expecting_funding_projects / expecting_funding_projects, 2)*100,
             
             # percent of DACs that are expecting funding
-            disadvantaged_expecting_funding_percent_dac = round(disadvantaged_expecting_funding_projects / disadvantaged_projects, 2)*100
+            disadvantaged_expecting_funding_percent_dac = round(disadvantaged_expecting_funding_projects / disadvantaged_projects, 2)*100,
+            
+            # number of projects serving small communities
+            sc_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000),
+            sc_ef_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & expecting_funding == "Yes"),
+            sc_dac_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & disadvantaged == "Yes"),
+            sc_ef_dac_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & expecting_funding == "Yes" & disadvantaged == "Yes"),
+            # inverse of above for plotting purposes
+            non_sc_projects = projects - sc_projects,
+            dac_non_sc = disadvantaged_projects - sc_dac_projects,
+            ef_non_sc = expecting_funding_projects - sc_ef_projects
             )
 
 ```

@@ -16,7 +16,10 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
+
+gs_tab <- "Overview"
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
 
 
 if (include_y0) {
@@ -176,7 +179,10 @@ gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(gen_pc_gp, "compare-demand-available-funds-gen", state_abbr) }
+  run_save_plots(gp_object = gen_pc_gp, # change
+                 sub_folders, 
+                 file_name = "compare-project-cost-available-funds-gen.html", # change
+                 gs_tab) }
 
 gen_pc_gp
 }
@@ -204,8 +210,11 @@ gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
 
 
 
-# if (save_plots) {
-#save_to_aws(gen_ra_gp, "compare-demand-available-funds-gen", state_abbr) }
+if (save_plots) {
+  run_save_plots(gp_object = gen_ra_gp, # change
+                 sub_folders, 
+                 file_name = "compare-requested-amount-available-funds-gen.html", # change
+                 gs_tab) }
 
 gen_ra_gp
 }
@@ -269,9 +278,11 @@ ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(ec_pc_gp, "compare-demand-available-funds-ec", state_abbr) }
+  run_save_plots(gp_object = ec_pc_gp, # change
+                 sub_folders, 
+                 file_name = "compare-project-cost-available-funds-ec.html", # change
+                 gs_tab) }
 
 ec_pc_gp
 }
@@ -297,9 +308,11 @@ ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
-# if (save_plots) {
-#save_to_aws(ec_ra_gp, "compare-demand-available-funds-ec", state_abbr) }
+if (save_plots) {
+  run_save_plots(gp_object = ec_ra_gp, # change
+                 sub_folders, 
+                 file_name = "compare-requested-amount-available-funds-ec.html", # change
+                 gs_tab) }
 
 ec_ra_gp
 }
@@ -359,9 +372,11 @@ lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(lead_pc_gp, "compare-demand-available-funds-lead", state_abbr) }
+  run_save_plots(gp_object = lead_pc_gp, # change
+                 sub_folders, 
+                 file_name = "compare-project-cost-available-funds-lead.html", # change
+                 gs_tab) }
 
 lead_pc_gp
 }
@@ -390,6 +405,12 @@ lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
 
 # if (save_plots) {
 #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
+
+if (save_plots) {
+  run_save_plots(gp_object = lead_ra_gp, # change
+                 sub_folders, 
+                 file_name = "compare-requested-amount-available-funds-lead.html", # change
+                 gs_tab) }
 
 lead_ra_gp
 }

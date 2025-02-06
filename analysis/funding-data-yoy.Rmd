@@ -21,7 +21,7 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -134,8 +134,12 @@ all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
 
 
 
+
 if (save_plots) {
-save_to_aws(all_grants_gp, "total-funds-fed-cap-grant", state_abbr) }
+  run_save_plots(gp_object = all_grants_gp, # change
+                 sub_folders, 
+                 file_name = "total-funds-fed-cap-grant.html", # change
+                 gs_tab) }
 
 all_grants_gp
 
@@ -166,8 +170,12 @@ all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
 
 
 
+
 if (save_plots) {
-save_to_aws(all_grants_pf_gp, "pf-from-fed-cap-grants", state_abbr) }
+  run_save_plots(gp_object = all_grants_pf_gp, # change
+                 sub_folders, 
+                 file_name = "pf-from-fed-cap-grants.html", # change
+                 gs_tab) }
 
 all_grants_pf_gp
 
@@ -210,7 +218,10 @@ base_fed_cap_grants_gp <- ggplotly(base_fed_cap_grants_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(base_fed_cap_grants_gp, "base-fed-cap-grant", state_abbr) }
+  run_save_plots(gp_object = base_fed_cap_grants_gp, # change
+                 sub_folders, 
+                 file_name = "base-fed-cap-grant.html", # change
+                 gs_tab) }
 
 base_fed_cap_grants_gp
 }
@@ -241,9 +252,12 @@ leveraged_gp <- ggplotly(leveraged_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
+if (save_plots) {
+  run_save_plots(gp_object = leveraged_gp, # change
+                 sub_folders, 
+                 file_name = "leveraged-funds.html", # change
+                 gs_tab) }
 
-# if (save_plots) {
-# save_to_aws(leveraged_gp, "leveraged-funds", state_abbr) } 
 
 leveraged_gp
 }
@@ -271,9 +285,12 @@ unutilized_gp <- ggplotly(unutilized_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
+if (save_plots) {
+  run_save_plots(gp_object = unutilized_gp, # change
+                 sub_folders, 
+                 file_name = "unutilized-funds.html", # change
+                 gs_tab) }
 
-# if (save_plots) {
-# save_to_aws(unutilized_gp, "unutilized-funds", state_abbr) }
 unutilized_gp
 }
 ```
@@ -304,11 +321,13 @@ base_pf_both_pct_gp <- ggplotly(base_pf_both_pct_p, tooltip="text") %>%
   layout(title = list(text = paste0('Percent of Base Fed Cap Grant reserved for DAC & Discretionary PF',
                                     '<br>',
                                     subtitle_str)))
-  
 
 
 if (save_plots) {
-save_to_aws(base_pf_both_pct_gp, "base-pf-percent", state_abbr) }
+  run_save_plots(gp_object = base_pf_both_pct_gp, # change
+                 sub_folders, 
+                 file_name = "base-pf-percent.html", # change
+                 gs_tab) }
 
 base_pf_both_pct_gp
 }
@@ -356,10 +375,11 @@ base_pf_combined_gp <- ggplotly(base_pf_combined_p, tooltip="text") %>%
                                     subtitle_str)))
   
 
-
-
 if (save_plots) {
- save_to_aws(base_pf_combined_gp, "base-pf-amount", state_abbr) }
+  run_save_plots(gp_object = base_pf_combined_gp, # change
+                 sub_folders, 
+                 file_name = "base-pf-amount.html", # change
+                 gs_tab) }
 
 base_pf_combined_gp
 }
@@ -384,7 +404,10 @@ gensupp_fed_cap_grants_gp <- ggplotly(gensupp_fed_cap_grants_p, tooltip="text") 
 
 
 if (save_plots) {
-save_to_aws(gensupp_fed_cap_grants_gp, "gensupp-fed-cap-grant", state_abbr) }
+  run_save_plots(gp_object = gensupp_fed_cap_grants_gp, # change
+                 sub_folders, 
+                 file_name = "gensupp-fed-cap-grant.html", # change
+                 gs_tab) }
 
 gensupp_fed_cap_grants_gp
 }
@@ -421,9 +444,12 @@ set_asides_gp <- ggplotly(set_asides_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(set_asides_gp, "set-asides-fed-cap-grant-amount", state_abbr) }
+  run_save_plots(gp_object = set_asides_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-fed-cap-grant-amount.html", # change
+                 gs_tab) }
+
 
 set_asides_gp
 }
@@ -450,9 +476,11 @@ set_asides_pct_gp <- ggplotly(set_asides_pct_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(set_asides_pct_gp, "set-asides-percent-utilized", state_abbr) }
+  run_save_plots(gp_object = set_asides_pct_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-percent-utilized.html", # change
+                 gs_tab) }
 
 set_asides_pct_gp
 }
@@ -484,7 +512,10 @@ setasides_allowances_group_gp <- ggplotly(setasides_allowances_group_p, tooltip=
 
 
 if (save_plots) {
-save_to_aws(setasides_allowances_group_gp, "set-asides-amount-by-allowance", state_abbr) }
+  run_save_plots(gp_object = setasides_allowances_group_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-amount-by-allowance.html", # change
+                 gs_tab) }
 
 setasides_allowances_group_gp
 }
@@ -513,7 +544,10 @@ sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(sa_pct_base_gp, "set-asides-allowance-percent-base", state_abbr) }
+  run_save_plots(gp_object = sa_pct_base_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-allowance-percent-base.html", # change
+                 gs_tab) }
 
 sa_pct_base_gp
 }
@@ -542,7 +576,11 @@ sa_pct_bil_gp <- ggplotly(sa_pct_bil_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(sa_pct_bil_gp, "set-asides-allowance-percent-bil", state_abbr) }
+  run_save_plots(gp_object = sa_pct_bil_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-allowance-percent-bil.html", # change
+                 gs_tab) }
+
 sa_pct_bil_gp
 }
 ```
@@ -568,10 +606,12 @@ sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-sa_pct_lead_gp
 
 if (save_plots) {
-save_to_aws(sa_pct_lead_gp, "set-asides-allowance-percent-lead", state_abbr) }
+  run_save_plots(gp_object = sa_pct_lead_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-allowance-percent-lead.html", # change
+                 gs_tab) }
 
 sa_pct_lead_gp
 }
@@ -598,9 +638,11 @@ sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(sa_pct_ec_gp, "set-asides-allowance-percent-ec", state_abbr) }
+  run_save_plots(gp_object = sa_pct_ec_gp, # change
+                 sub_folders, 
+                 file_name = "set-asides-allowance-percent-ec.html", # change
+                 gs_tab) }
 
 sa_pct_ec_gp
 }

@@ -19,7 +19,7 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -130,8 +130,11 @@ tra_gp <- ggplotly(tra_p, tooltip="text") %>%
                                     subtitle_str)))
 
 tra_gp
-# if (save_plots) {
-#save_to_aws(tra_gp, "total-requested-amount-yoy", state_abbr) }
+ if (save_plots) {
+  run_save_plots(gp_object = tra_gp, # change
+                 sub_folders, 
+                 file_name = "total-requested-amount-yoy.html", # change
+                 gs_tab) }
 }
 
 
@@ -155,7 +158,10 @@ tpc_gp <- ggplotly(tpc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 if (save_plots) {
-save_to_aws(tpc_gp, "total-project-cost-yoy", state_abbr) }
+    run_save_plots(gp_object = tpc_gp, # change
+                 sub_folders, 
+                 file_name = "total-project-cost-yoy.html", # change
+                 gs_tab) }
 
 tpc_gp
 }
@@ -180,8 +186,12 @@ tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-# if (save_plots) {
-#save_to_aws(tfa_gp, "total-funding-amount-yoy", state_abbr) }
+ if (save_plots) {
+   run_save_plots(gp_object = tfa_gp, # change
+                 sub_folders, 
+                 file_name = "total-funding-amount-yoy.html", # change
+                 gs_tab) }
+
 tfa_gp
 }
 ```
@@ -205,8 +215,12 @@ tpf_gp <- ggplotly(tpf_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-# if (save_plots) {
-#save_to_aws(tpf_gp, "total-pf-yoy", state_abbr) }
+ if (save_plots) {
+     run_save_plots(gp_object = tpf_gp, # change
+                 sub_folders, 
+                 file_name = "total-principal-forgiveness-yoy.html", # change
+                 gs_tab) }
+
 tpf_gp
 }
 ```
@@ -246,7 +260,12 @@ efp_gp <- ggplotly(efp_p, tooltip="text") %>%
                                     subtitle_str)))
 
 if (save_plots) {
-save_to_aws(efp_gp, "applicant-expected-funding-projects-yoy", state_abbr) }
+
+    run_save_plots(gp_object = efp_gp, # change
+                 sub_folders, 
+                 file_name = "expecting-funding-applicant-comparison-yoy.html", # change
+                 gs_tab) }
+   
 
 efp_gp
 }
@@ -276,7 +295,11 @@ dac_pct_gp <- ggplotly(dac_pct_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(dac_pct_gp, "percent-projects-serving-dacs", state_abbr) }
+
+    run_save_plots(gp_object = dac_pct_gp, # change
+                 sub_folders, 
+                 file_name = "dac-percent-applicants-yoy.html", # change
+                 gs_tab) }
 
 dac_pct_gp
 }
@@ -312,8 +335,12 @@ dac_pt_gp <- ggplotly(dac_pt_p, tooltip="text") %>%
                                     '<br>',
                                     subtitle_str)))
 
-# if (save_plots) {
-#save_to_aws(dac_pt_gp, "project-type-serving-dacs", state_abbr) }
+if (save_plots) {
+
+    run_save_plots(gp_object = dac_pt_gp, # change
+                 sub_folders, 
+                 file_name = "dac-project-types-yoy.html", # change
+                 gs_tab) }
 
 dac_pt_gp
 
@@ -354,7 +381,11 @@ ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(ef_dac_gp, "dacs-projects-expecting-funding", state_abbr) } 
+
+    run_save_plots(gp_object = ef_dac_gp, # change
+                 sub_folders, 
+                 file_name = "dacs-expecting-funding-yoy.html", # change
+                 gs_tab) }
 
 ef_dac_gp
 }
@@ -384,7 +415,11 @@ ef_dac_pct_gp <- ggplotly(ef_dac_pct_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(ef_dac_pct_gp, "percent-expecting-funding-serving-dacs", state_abbr) }
+
+    run_save_plots(gp_object = ef_dac_pct_gp, # change
+                 sub_folders, 
+                 file_name = "percent-expecting-funding-dacs-yoy.html", # change
+                 gs_tab) }
 
 ef_dac_pct_gp
 }
@@ -427,8 +462,12 @@ all_pt_gp <- ggplotly(all_pt_p, tooltip="text") %>%
 
 
 
-# if (save_plots) {
-#save_to_aws(all_pt_gp, "applicant-projects-by-type", state_abbr) }
+if (save_plots) {
+
+    run_save_plots(gp_object = all_pt_gp, # change
+                 sub_folders, 
+                 file_name = "project-types-yoy.html", # change
+                 gs_tab) }
 
 all_pt_gp
 }
@@ -471,7 +510,12 @@ sc_pop_gp <- ggplotly(sc_pop_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-if (save_plots) {}
+if (save_plots) {
+
+    run_save_plots(gp_object = sc_pop_gp, # change
+                 sub_folders, 
+                 file_name = "small-community-projects-yoy.html", # change
+                 gs_tab) }
 
 sc_pop_gp
 }
@@ -509,7 +553,12 @@ sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-if (save_plots) {}
+if (save_plots) {
+
+    run_save_plots(gp_object = sc_ef_gp, # change
+                 sub_folders, 
+                 file_name = "small-community-expecting-funding-yoy.html", # change
+                 gs_tab) }
 
 sc_ef_gp
 }
@@ -546,7 +595,12 @@ sc_dac_gp <- ggplotly(sc_dac_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-if (save_plots) {}
+if (save_plots) {
+
+    run_save_plots(gp_object = sc_dac_gp, # change
+                 sub_folders, 
+                 file_name = "small-community-dacs-yoy.html", # change
+                 gs_tab) }
 
 sc_dac_gp
 }
@@ -612,8 +666,14 @@ tpc_pt_gp <- ggplotly(tpc_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
+
 if (save_plots) {
-save_to_aws(tpc_pt_gp, "project-cost-by-type", state_abbr) }
+
+    run_save_plots(gp_object = tpc_pt_gp, # change
+                 sub_folders, 
+                 file_name = "total-project-cost-project-type-yoy.html", # change
+                 gs_tab) }
+
 tpc_pt_gp
 }
 ```
@@ -640,8 +700,12 @@ tra_pt_gp <- ggplotly(tra_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-# if (save_plots) {
-#save_to_aws(tra_pt_gp, "requested-amount-by-project-type", state_abbr) }
+if (save_plots) {
+
+    run_save_plots(gp_object = tra_pt_gp, # change
+                 sub_folders, 
+                 file_name = "total-requested-amount-project-type-yoy.html", # change
+                 gs_tab) }
 tra_pt_gp
 }
 ```
@@ -667,8 +731,12 @@ tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
 
 
 
-# if (save_plots) {
-#save_to_aws(tfa_pt_gp, "funding-amount-by-project-type", state_abbr) }
+if (save_plots) {
+
+    run_save_plots(gp_object = tfa_pt_gp, # change
+                 sub_folders, 
+                 file_name = "total-funding-amount-project-type-yoy.html", # change
+                 gs_tab) }
 tfa_pt_gp
 }
 ```
@@ -695,9 +763,12 @@ tpf_pt_gp <- ggplotly(tpf_pt_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
+if (save_plots) {
 
-# if (save_plots) {
-#save_to_aws(tpf_pt_gp, "principal-forgiveness-by-project-type", state_abbr) }
+    run_save_plots(gp_object = tpf_pt_gp, # change
+                 sub_folders, 
+                 file_name = "total-principal-forgiveness-project-type-yoy.html", # change
+                 gs_tab) }
 tpf_pt_gp
 }
 ```
@@ -742,7 +813,11 @@ avg_demand_gp <- ggplotly(avg_demand_p, tooltip="text") %>%
 
 
 if (save_plots) {
-save_to_aws(avg_demand_gp, "average-median-demand", state_abbr) }
+
+    run_save_plots(gp_object = efp_gp, # change
+                 sub_folders, 
+                 file_name = "average-median-project-cost-yoy.html", # change
+                 gs_tab) }
 avg_demand_gp
 }
 ```

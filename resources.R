@@ -5,7 +5,12 @@ library(janitor)
 library(googledrive)
 library(googlesheets4)
 library(aws.s3)
+library(scales)
+library(plotly)
 options(scipen=999)
+
+source("../../ds-resources/shared-functions.R")
+run_code_from_file("../../local/aws.txt")
 
 
 ### Data Viz Template Settings ----
@@ -85,7 +90,7 @@ get_financial <- function(state_name, years_list) {
 }
 
 
-get_set_asides <- function(state_name, yaers_list) {
+get_set_asides <- function(state_name, years_list) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   set_asides <- data.frame(read_sheet(URL, "Set Asides", skip=1))
@@ -129,7 +134,7 @@ get_set_asides <- function(state_name, yaers_list) {
   return(set_asides)
 }
 
-get_pf <- function(state_name, yaers_list) {
+get_pf <- function(state_name, years_list) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   principal_forgiveness <- data.frame(read_sheet(URL, "Principal Forgiveness", skip=1))
@@ -211,14 +216,14 @@ run_save_plots <- function(gp_object, sub_folders, file_name, gs_tab) {
   
   object_url <- paste0(sub_folders, file_name)
   # aws url is aws bucket + state abbr + page folder + file name ie TX/overview/plot-1.html
-  file_link <- paste0("https://funding-tracker.s3.us-east-1.amazonaws.com/", object_url)
   
   # to get state abbr, take first two characters of sub_folders -- helper function below
-  sheet_url <- get_gs_link(str_extract(sub_folders, "^.{2}"))
+  state_abbr <- str_extract(object_url, "^.{2}")
+  sheet_url <- get_gs_link(state_abbr)
   
   # see below for both functions
   save_to_aws(gp_object, file_name, object_url)
-  update_google_sheet(sheet_url, gs_tab, file_name, file_link)
+  update_google_sheet(sheet_url, gs_tab, file_name, object_url)
 }
 
 
@@ -243,6 +248,7 @@ save_to_aws <- function(gp_object, file_name, object_url) {
 }
 
 get_gs_urls <- function() {
+  
   gs_urls <- data.frame(state=c(""), url=c("")) %>%
     add_row(state="TX", url="https://docs.google.com/spreadsheets/d/1rlw0zeu1hmw2rNO1d1lJEihvVM3raUs7C_wfnGy4Jd4") %>%
     add_row(state="AL", url="https://docs.google.com/spreadsheets/d/1PZO5UfGZ_FHhDKnyVVtu6G_E2HJEegVmw7FGIuWQHNk") %>%
@@ -257,7 +263,7 @@ get_gs_urls <- function() {
 }
 
 get_gs_link <- function(state_abbr) {
-  gs_url <- get_gs_urls()
+  gs_urls <- get_gs_urls()
   return(gs_urls$url[gs_urls$state==state_abbr])
 }
 

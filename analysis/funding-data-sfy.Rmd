@@ -10,40 +10,37 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 
 ## Set Variables
 
-```{r}
+```{r, warning=FALSE}
+source("../resources.R")
+
 state_name <- "Texas"
 state_abbr <- "TX"
-sfy <- "2023"
-subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
-years_list <- c("2023")
 
-save_plots <- FALSE
+sfy <- "2025"
+subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
+
+years_list <- c(sfy)
+
+save_plots <- TRUE
+
+gs_tab <- paste0("SFY", str_sub(sfy,-2,-1))
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
 ```
 
 ## Imports and Styling
 
 ```{r}
-options(scipen=999999999)
-
-library(tidyverse)
-library(janitor)
-library(aws.s3)
-library(scales)
-library(ggpubr)
-library(plotly)
-
-source("../../ds-resources/shared-functions.R")
-run_code_from_file("../../local/aws.txt")
-
-source("../resources.R")
-
+# when only comparing % of a single total
 donut_colors_2 <- c("#4ea324","lightgrey")
+# when comparing 2 types of PF versus remaining grants
 donut_colors_3 <- c("#4ea324",  "#172f60","lightgrey")
+# when comparing 2 types of PF, 4 types of set asides, and remaining grant
+donut_colors_7 <- c("#4ea324", "#82AB6E",  "#172f60", "#1054a8", "#526489", "#527CAF", "lightgrey")
 
 ```
 
 
-## Import Projects & State Data
+### Import Projects & State Data
 
 ```{r}
 # import project-level data
@@ -64,6 +61,9 @@ state_data <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf
 financial <- get_financial(state_name, years_list) %>%
   filter(state_fiscal_year == sfy)
 
+set_asides <- get_set_asides(state_name, years_list) %>%
+  filter(state_fiscal_year == sfy)
+
 pf <- get_pf(state_name, years_list) %>%
   filter(state_fiscal_year == sfy)
 ```
@@ -75,8 +75,8 @@ pf <- get_pf(state_name, years_list) %>%
 
 ```{r}
 grants <- financial %>%
-  select(fed_cap_grant, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg) %>%
-  pivot_longer(cols=c(ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg)) %>%
+  select(fed_cap_grant, ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg) %>%
+  pivot_longer(cols=c(ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg)) %>%
   filter(!is.na(value) & value > 0) %>%
   mutate(name = str_to_upper(str_remove(name, "_fcg")),
          name = paste0(fed_cap_grant, ", ", name)
@@ -91,7 +91,7 @@ if (sum(grants$value, na.rm=TRUE)>0) {
 grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
   geom_bar(stat="identity", fill="#4ea324") +
   labs(x="", y="", 
-       title="Federal Cap Grants", 
+       title=" ", 
        subtitle=subtitle_str) + 
   scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
   epic_chart_theme
@@ -102,9 +102,11 @@ grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
 if (save_plots) {
-save_to_aws(grants_gp, paste0("fed-cap-grant-amount-", sfy), state_abbr) }
+  run_save_plots(gp_object = grants_gp, # change
+                 sub_folders, 
+                 file_name = paste0("fed-cap-grant-amount-",sfy,".html"), # change
+                 gs_tab) }
 
 grants_gp
 }
@@ -115,8 +117,8 @@ grants_gp
 ```{r}
 total_pf_sfy <- pf %>%
     filter(fed_cap_grant != "Base & BIL General Supplemental") %>%
-    select(fed_cap_grant, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt) %>%
-  pivot_longer(cols=c(ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt)) %>%
+    select(fed_cap_grant, ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt) %>%
+  pivot_longer(cols=c(ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt)) %>%
   filter(!is.na(value) & value > 0) %>%
   mutate(name = str_to_upper(str_remove(name, "_amt")),
          name = paste0(fed_cap_grant, ", ", name)
@@ -145,12 +147,64 @@ all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
 
 
 
- if (save_plots) {
-save_to_aws(all_pf_gp, paste0("fed-cap-grant-pf-amount-", sfy), state_abbr) }
+if (save_plots) {
+  run_save_plots(gp_object = all_pf_gp, # change
+                 sub_folders, 
+                 file_name = paste0("fed-cap-grant-pf-amount-",sfy,".html"), # change
+                 gs_tab) }
 
 all_pf_gp
 }
 ```
+
+## Base, Set Asides, PF Percents
+
+```{r}
+
+base_distribution <-data.frame(name=c(""), value=c(0))
+
+base_distribution <- base_distribution %>%
+  add_row(name="DAC PF", 
+          value=pf$total_pf_amt[pf$pf_category=="DAC"]) %>%
+  add_row(name="Discretionary PF",
+          value=pf$total_pf_amt[pf$pf_category=="Discretionary"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Local Assistance & Other"])
+
+base_distribution <- base_distribution %>%
+  add_row(name="Remaining Base Grant",
+          value = financial$total_fcg[financial$fed_cap_grant=="Base"] - sum(base_distribution$value)) %>%
+  filter(name!="")
+
+```
+
+```{r}
+if (nrow(base_distribution) > 0) {
+  
+  base_all_fig <- base_distribution %>% plot_ly(labels = ~name, values = ~value,
+                                       hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_7)) %>% 
+  layout(title = paste0("How are the base funds allocated?", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+if (save_plots) {
+  run_save_plots(gp_object = base_all_fig, # change
+                 sub_folders, 
+                 file_name = paste0("base-pf-sa-pct-",sfy,".html"), # change
+                 gs_tab) }
+
+base_all_fig
+}
+```
+
 
 ## Base PF as percents
 
@@ -164,7 +218,7 @@ base_pf_pct <- pf %>%
   filter(!is.na(total_pf_amt))
 
 base_pf_pct <- base_pf_pct %>%
-  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_amt = (total_base-sum(base_pf_pct$total_pf_pct))) %>%
+  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_amt = (total_base-sum(base_pf_pct$total_pf_amt))) %>%
   mutate(pf_category = factor(pf_category, levels=c("Remaining Base Funds", "DAC", "Discretionary")))
 ```
 
@@ -174,12 +228,19 @@ base_pf_pct <- base_pf_pct %>%
 # greater than 1 because the add_row above will always make it at least 1
 if(nrow(base_pf_pct) >1) {
 
-base_pf_fig <- base_pf_pct %>% plot_ly(labels = ~pf_category, values = ~total_pf_amt) %>%
+base_pf_fig <- base_pf_pct %>% plot_ly(labels = ~pf_category, values = ~total_pf_amt,
+                                       hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_3)) %>% 
   layout(title = paste0("How are the base funds allocated as principal forgiveness?", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+if (save_plots) {
+  run_save_plots(gp_object = base_pf_fig, # change
+                 sub_folders, 
+                 file_name = paste0("base-pf-pct-",sfy,".html"), # change
+                 gs_tab) }
 
 base_pf_fig
 }
@@ -229,9 +290,11 @@ funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
                                     subtitle_str)))
 
 
-
-if (save_plots) { 
-save_to_aws(funds_comp_gp, paste0("compare-available-demand-expecting-", sfy), state_abbr) }
+if (save_plots) {
+  run_save_plots(gp_object = funds_comp_gp, # change
+                 sub_folders, 
+                 file_name = paste0("compare-available-demand-expecting-",sfy,".html"), # change
+                 gs_tab) }
 
 funds_comp_gp
 }
@@ -242,8 +305,11 @@ funds_comp_gp
 ### Lead
 
 ```{r}
+# no lead funds before year 0, skip data and plot
+if (sfy != "2022") {
 
 lead_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="LSLR"]
+
 
 lead_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
                          value=c(lead_funds_available,
@@ -254,15 +320,12 @@ lead_costs <- lead_costs %>%
          value_str = format_currency(value),
          pct_value = round(value / sum(lead_costs$value),2),
          pct_value_str = format_percent(pct_value))
-```
 
-
-
-```{r}
-
+# if we have lead data for given sfy, make plot
 if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
   
-lead_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value) %>%
+lead_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value,
+                                   hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
   layout(title = paste0("Unmet demand compared to available LSLR funds", "<br>", subtitle_str),  
          margin = list(t = 100),  
@@ -270,13 +333,27 @@ lead_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value) %>%
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
 
+if (save_plots) {
+  run_save_plots(gp_object = lead_fig, # change
+                 sub_folders, 
+                 file_name = paste0("compare-available-demand-lead-",sfy,".html"), # change
+                 gs_tab) }
+
+
 lead_fig
 
-}
+} # if lead_costs > 0, make plot
+
+} # if sfy!=2022, check for lead
+
+
 ```
 
 ### EC
 ```{r}
+
+# no ec funds in y0
+if (sfy != "2022") {
 
 ec_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="EC"]
 
@@ -290,18 +367,27 @@ ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
          pct_value = round(value / sum(ec_costs$value),2),
          pct_value_str = format_percent(pct_value))
 
-
+# if we have ec data for sfy, make plot
 if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
 
   
-ec_fig <- ec_costs %>% plot_ly(labels = ~name, values = ~value) %>%
+ec_fig <- ec_costs %>% plot_ly(labels = ~name, values = ~value,
+                                hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
   layout(title = paste0("Unmet demand compared to available EC funds", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+if (save_plots) {
+  run_save_plots(gp_object = ec_fig, # change
+                 sub_folders, 
+                 file_name = paste0("compare-available-demand-ec-",sfy,".html"), # change
+                 gs_tab) }
+
 ec_fig
-}
+} # end if we have ec data, make plot
+} # end if sfy !=2022
 ```
 
 # State-Level Data
@@ -329,12 +415,20 @@ dacs_df$name <- factor(dacs_df$name, levels=c("DACs Not Expecting Funding", "DAC
 
 if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
 
-dacs_ef_fig <- dacs_df %>% plot_ly(labels = ~name, values = ~value) %>%
+dacs_ef_fig <- dacs_df %>% plot_ly(labels = ~name, values = ~value,
+                                    hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
   layout(title = paste0("How many DACs could expect funding?", "<br>", subtitle_str),  
          margin = list(t = 100),
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+
+if (save_plots) {
+  run_save_plots(gp_object = dacs_ef_fig, # change
+                 sub_folders, 
+                 file_name = paste0("dacs-expecting-funding-",sfy,".html"), # change
+                 gs_tab) }
 
 dacs_ef_fig
 }
@@ -363,16 +457,24 @@ ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non
 
 if ( nrow(ef_df %>% filter(!is.na(amount))) == nrow(ef_df))  {
 
-ef_df_fig <- ef_df %>% plot_ly(labels = ~category, values = ~amount) %>%
+ef_df_fig <- ef_df %>% plot_ly(labels = ~category, values = ~amount,
+                               hovertemplate = '%{label}<br>%{value} projects<extra></extra>') %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
   layout(title = paste0("How many projects expected to receive funding are going to DACs?", "<br>", subtitle_str),
          margin = list(t = 100),
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
+if (save_plots) {
+  run_save_plots(gp_object = ef_df_fig, # change
+                 sub_folders, 
+                 file_name = paste0("expecting-funding-projects-dacs-",sfy,".html"), # change
+                 gs_tab) }
+
   ef_df_fig
 }
 ```
+
 
 X percent of SFY23 funding cycle applicants qualify as DACs, and X percent of projects designated for DWSRF anticipated awards qualify as DACs -- same as above, but for Lead specifically
 ```{r}

@@ -9,8 +9,21 @@ library(scales)
 library(plotly)
 options(scipen=999)
 
-source("../../ds-resources/shared-functions.R")
-run_code_from_file("../../local/aws.txt")
+
+
+
+### AWS Access ---- 
+
+run_code_from_file <- function(file_path) {
+  # Read the content of the file
+  code <- readLines(file_path)
+  
+  # Join lines into a single string
+  code <- paste(code, collapse = "\n")
+  
+  # Evaluate the code
+  eval(parse(text = code))
+}
 
 
 ### Data Viz Template Settings ----
@@ -122,14 +135,23 @@ get_set_asides <- function(state_name, years_list) {
            total_fcg = convert_to_numeric(total_fcg)
            ) %>%
     #TODO: Modify this as needed once water team updates naming conventions
-    mutate(allowance = case_when(
+    mutate(
+        max_set_aside = case_when(
+        allowance == "Administration and Technical Assistance (up to 4%)" ~ "Max 4%",
+        allowance == "Small System (<10,000 population) Technical Assistance (up to 2%)" ~ "Max 2%",
+        allowance == "State Program Management (10%)" ~ "Max 10%",
+        allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Max 15%",
+        allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Max 10%",
+        TRUE ~ "Missing Max"),
+      
+      allowance = case_when(
       allowance == "Administration and Technical Assistance (up to 4%)" ~ "Admin & TA",
       allowance == "Small System (<10,000 population) Technical Assistance (up to 2%)" ~ "Small System TA",
       allowance == "State Program Management (10%)" ~ "State Program Management",
       allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Local Assistance & Other",
       allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Local Assistance & Other",
       TRUE ~ "Missing Allowance"),
-      )
+      ) 
   
   return(set_asides)
 }

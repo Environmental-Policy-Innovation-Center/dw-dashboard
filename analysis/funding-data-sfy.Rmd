@@ -12,6 +12,7 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 
 ```{r, warning=FALSE}
 source("../resources.R")
+run_code_from_file("../aws.txt")
 
 state_name <- "Texas"
 state_abbr <- "TX"
@@ -32,10 +33,12 @@ sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
 ```{r}
 # when only comparing % of a single total
 donut_colors_2 <- c("#4ea324","lightgrey")
+donut_colors_2r <- c("lightgrey", "#4ea324")
 # when comparing 2 types of PF versus remaining grants
 donut_colors_3 <- c("#4ea324",  "#172f60","lightgrey")
 # when comparing 2 types of PF, 4 types of set asides, and remaining grant
 donut_colors_7 <- c("#4ea324", "#82AB6E",  "#172f60", "#1054a8", "#526489", "#527CAF", "lightgrey")
+donut_colors_6 <- c("#4ea324", "#172f60", "#1054a8", "#526489", "#527CAF", "lightgrey")
 
 ```
 
@@ -141,7 +144,7 @@ all_pf_p <- ggplot(total_pf_sfy, aes(x=value, y=reorder(name, value), text=forma
   epic_chart_theme
 
 all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How much of the Fed Cap Grants are Principal Forgiveness?",
+  layout(title = list(text = paste0("How much of the fed cap grants expected to be provided as principal forgiveness?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -178,14 +181,14 @@ base_distribution <- base_distribution %>%
           value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Local Assistance & Other"])
 
 base_distribution <- base_distribution %>%
-  add_row(name="Remaining Base Grant",
+  add_row(name="Remaining Funds Available as Loans",
           value = financial$total_fcg[financial$fed_cap_grant=="Base"] - sum(base_distribution$value)) %>%
   filter(name!="")
 
 ```
 
 ```{r}
-if (nrow(base_distribution) > 0) {
+if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
   
   base_all_fig <- base_distribution %>% plot_ly(labels = ~name, values = ~value,
                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
@@ -206,43 +209,142 @@ base_all_fig
 ```
 
 
-## Base PF as percents
+## Gen Supp, Set Asides, PF Percents
 
 ```{r}
 
-total_base <- sum(financial$total_fcg[financial$fed_cap_grant=="Base"], na.rm=TRUE)
+gensupp_distribution <-data.frame(name=c(""), value=c(0))
 
-base_pf_pct <- pf %>%
-  filter(fed_cap_grant == "Base") %>%
-  select(fed_cap_grant, pf_category, total_pf_amt) %>%
-  filter(!is.na(total_pf_amt))
+gensupp_distribution <- gensupp_distribution %>%
+  add_row(name="Princiapl Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="BIL Gen Supp"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="BIL Gen Supp" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="BIL Gen Supp" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="BIL Gen Supp" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="BIL Gen Supp" & set_asides$allowance == "Local Assistance & Other"])
 
-base_pf_pct <- base_pf_pct %>%
-  add_row(fed_cap_grant = "Base", pf_category = "Remaining Base Funds", total_pf_amt = (total_base-sum(base_pf_pct$total_pf_amt))) %>%
-  mutate(pf_category = factor(pf_category, levels=c("Remaining Base Funds", "DAC", "Discretionary")))
+gensupp_distribution <- gensupp_distribution %>%
+  add_row(name="Remaining Funds Available as Loans",
+          value = financial$total_fcg[financial$fed_cap_grant=="BIL Gen Supp"] - sum(gensupp_distribution$value, na.rm=TRUE)) %>%
+  filter(name!="")
+
 ```
 
-
 ```{r}
-
-# greater than 1 because the add_row above will always make it at least 1
-if(nrow(base_pf_pct) >1) {
-
-base_pf_fig <- base_pf_pct %>% plot_ly(labels = ~pf_category, values = ~total_pf_amt,
+if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0) {
+  
+  gensupp_all_fig <- gensupp_distribution %>% plot_ly(labels = ~name, values = ~value,
                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
-  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_3)) %>% 
-  layout(title = paste0("How are the base funds allocated as principal forgiveness?", "<br>", subtitle_str),  
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_6)) %>% 
+  layout(title = paste0("How are the BIL Gen Supp funds allocated?", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
 if (save_plots) {
-  run_save_plots(gp_object = base_pf_fig, # change
+  run_save_plots(gp_object = gensupp_all_fig, # change
                  sub_folders, 
-                 file_name = paste0("base-pf-pct-",sfy,".html"), # change
+                 file_name = paste0("bil-gen-supp-pf-sa-pct-",sfy,".html"), # change
                  gs_tab) }
 
-base_pf_fig
+gensupp_all_fig
+}
+```
+
+## Lead, Set Asides, PF Percents
+
+```{r}
+
+lead_distribution <-data.frame(name=c(""), value=c(0))
+
+lead_distribution <- lead_distribution %>%
+  add_row(name="Princiapl Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="BIL - LSLR"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Local Assistance & Other"])
+
+lead_distribution <- lead_distribution %>%
+  add_row(name="Remaining Funds Available as Loans",
+          value = financial$total_fcg[financial$fed_cap_grant=="LSLR"] - sum(lead_distribution$value, na.rm=TRUE)) %>%
+  filter(name!="")
+
+```
+
+```{r}
+if (nrow(lead_distribution %>% filter(!is.na(value))) > 0) {
+  
+  lead_all_fig <- lead_distribution %>% plot_ly(labels = ~name, values = ~value,
+                                       hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_6)) %>% 
+  layout(title = paste0("How are the LSLR funds allocated?", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+if (save_plots) {
+  run_save_plots(gp_object = lead_all_fig, # change
+                 sub_folders, 
+                 file_name = paste0("lead-pf-sa-pct-",sfy,".html"), # change
+                 gs_tab) }
+
+lead_all_fig
+}
+```
+
+
+## EC, Set Asides, PF Percents
+
+```{r}
+
+ec_distribution <-data.frame(name=c(""), value=c(0))
+
+ec_distribution <- ec_distribution %>%
+  add_row(name="Princiapl Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="BIL - EC"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Local Assistance & Other"])
+
+ec_distribution <- ec_distribution %>%
+  add_row(name="Remaining Funds Available as Loans",
+          value = financial$total_fcg[financial$fed_cap_grant=="EC"] - sum(ec_distribution$value, na.rm=TRUE)) %>%
+  filter(name!="")
+
+```
+
+```{r}
+if (nrow(ec_distribution %>% filter(!is.na(value))) > 0) {
+  
+  ec_all_fig <- ec_distribution %>% plot_ly(labels = ~name, values = ~value,
+                                       hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_6)) %>% 
+  layout(title = paste0("How are the EC funds allocated?", "<br>", subtitle_str),  
+         margin = list(t = 100),  
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+if (save_plots) {
+  run_save_plots(gp_object = ec_all_fig, # change
+                 sub_folders, 
+                 file_name = paste0("ec-pf-sa-pct-",sfy,".html"), # change
+                 gs_tab) }
+
+ec_all_fig
 }
 ```
 
@@ -447,19 +549,22 @@ state_data$disadvantaged_expecting_funding_percent_ef
 ef <- state_data$expecting_funding_projects
 ef_not_dacs <- ef - dacs_ef
 
+ef_dac_colors <- ifelse(dacs_ef > ef_not_dacs, list(donut_colors_2r), list(donut_colors_2))
+
+
 ef_df <- data.frame(category=c("Non-DACs Expecting Funding", "DACs Expecting Funding"),
                          amount=c(ef_not_dacs, dacs_ef),
                          amount_str=c(as.character(ef_not_dacs), as.character(dacs_ef)),
                          amount_pct=c(format_percent(ef_not_dacs / ef), format_percent(dacs_ef/ef)))
 #NOTE: Have to plot the bigger number first for it to appear intuitively
-ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
+ ef_df$category <- factor(ef_df$category, levels=c("DACs Expecting Funding", "Non-DACs Expecting Funding"))
 
 
 if ( nrow(ef_df %>% filter(!is.na(amount))) == nrow(ef_df))  {
 
 ef_df_fig <- ef_df %>% plot_ly(labels = ~category, values = ~amount,
                                hovertemplate = '%{label}<br>%{value} projects<extra></extra>') %>%
-  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=donut_colors_2)) %>% 
+  add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors=ef_dac_colors[1][[1]])) %>% 
   layout(title = paste0("How many projects expected to receive funding are going to DACs?", "<br>", subtitle_str),
          margin = list(t = 100),
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
@@ -473,6 +578,19 @@ if (save_plots) {
 
   ef_df_fig
 }
+```
+
+
+```{r}
+str_c <- c("one", "two")
+str_c2 <- c("three", "four")
+condition <- TRUE
+
+# Corrected ifelse statement
+my_variable <- ifelse(condition, list(str_c), list(str_c2))
+
+# Print the result
+print(my_variable[1])
 ```
 
 

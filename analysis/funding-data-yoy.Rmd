@@ -21,7 +21,7 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -43,24 +43,9 @@ subtitle_str <- paste0(state_name, ", ", years)
 ## Imports & Settings
 
 ```{r, echo=FALSE, warning=FALSE,message=FALSE}
-library(tidyverse)
-library(janitor)
-library(aws.s3)
-library(scales)
-library(lubridate)
-library(sysfonts)
-library(showtext)
-library(plotly)
-library(googledrive)
-library(googlesheets4)
 
-# bring in AWS credentials
-source("../../ds-resources/shared-functions.R")
-run_code_from_file("../../local/aws.txt")
-
-# bring in functions for cleaning numeric strings and data viz template code
 source("../resources.R")
-
+run_code_from_file("../aws.txt")
 ```
 
 
@@ -128,7 +113,7 @@ all_grants_p <- ggplot(all_grants, aes(x=state_fiscal_year, y=total_fcg, fill=fe
   epic_chart_theme
 
 all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Total Funds from Fed Cap Grant',
+  layout(title = list(text = paste0('Total Funds from Fed Cap Grants',
                                     '<br>',
                                     subtitle_str)))
 
@@ -149,18 +134,18 @@ all_grants_gp
 ```{r}
 all_grants_pf <- pf %>%
   mutate(total_pf_str = format_currency(total_pf_amt),
-         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+         plot_str = paste0(pf_category, ", ", state_fiscal_year, ':<br>',
                            total_pf_str))
 
 if(nrow(all_grants_pf) > 0 &
    nrow(all_grants_pf %>% filter(!is.na(total_pf_amt))) > 0
    ) {
 
-all_grants_pf_p <- ggplot(all_grants_pf, aes(x=state_fiscal_year, y=total_pf_amt, fill=fed_cap_grant, text=plot_str)) + 
+all_grants_pf_p <- ggplot(all_grants_pf, aes(x=state_fiscal_year, y=total_pf_amt, fill=pf_category, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title=" ", fill="", subtitle=subtitle_str) + 
-  scale_fill_manual(values=cat_palette(4)) + 
+  scale_fill_manual(values=cat_palette(5)) + 
   epic_chart_theme
 
 all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
@@ -347,13 +332,13 @@ base_pf_calc <- base_pf_combined %>%
   group_by(fed_cap_grant, state_fiscal_year) %>%
   summarize(combined_pf_amt = sum(total_pf_amt, na.rm=TRUE),
             total_fcg = max(total_fcg)) %>%
-  mutate(pf_category = "Remaining Grant",
+  mutate(pf_category = "Remaining Loans",
          total_pf_amt = total_fcg - combined_pf_amt) 
 
 base_pf_combined <- bind_rows(base_pf_combined, base_pf_calc) %>%
   select(-combined_pf_amt) %>%
   mutate(
-    pf_category = factor(pf_category, levels=c("Remaining Grant", "Discretionary", "DAC")),
+    pf_category = factor(pf_category, levels=c("Remaining Loans", "Discretionary", "DAC")),
     amt_value_str = format_currency(total_pf_amt),
     pct_value = total_pf_amt / total_fcg,
     pct_value_str = format_percent(pct_value),
@@ -439,7 +424,7 @@ set_asides_p <- ggplot(set_asides_fcg_group, aes(x=state_fiscal_year, y=total_sa
   epic_chart_theme
   
 set_asides_gp <- ggplotly(set_asides_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Set Asides, Fed Cap Grant',
+  layout(title = list(text = paste0('Total amount of set-asides taken per fed cap grant',
                                     '<br>',
                                     subtitle_str)))
 
@@ -471,7 +456,7 @@ set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_
   epic_chart_theme
 
 set_asides_pct_gp <- ggplotly(set_asides_pct_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Set Asides, Percent Utilized',
+  layout(title = list(text = paste0('Percent of set-asides taken per fed cap grant',
                                     '<br>',
                                     subtitle_str)))
 
@@ -489,56 +474,24 @@ set_asides_pct_gp
 ## By Allowances
 
 ```{r}
-set_asides_allowances_group <- set_asides %>%
-  group_by(allowance, state_fiscal_year) %>%
-  summarize(total_sa_amt_fcg = sum(total_sa_amt, na.rm=TRUE),
-            total_sa_amt_fcg_str = format_currency(total_sa_amt_fcg))
-
-if( sum(set_asides_allowances_group$total_sa_amt_fcg, na.rm=TRUE) > 0 ) {
-
-setasides_allowances_group_p <- ggplot(set_asides_allowances_group, aes(x=state_fiscal_year, y=total_sa_amt_fcg, fill=allowance, text=total_sa_amt_fcg_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
-    labs(x="", y="", title="Set Asides, Amount by Allowance", subtitle=subtitle_str,
-         fill="") + 
-  scale_y_continuous(label=label_currency()) + 
-  scale_fill_manual(values = cat_palette(5)) +  
-  epic_chart_theme
-
-
-setasides_allowances_group_gp <- ggplotly(setasides_allowances_group_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Set Asides, Amount by Allowance',
-                                    '<br>',
-                                    subtitle_str)))
-
-
-if (save_plots) {
-  run_save_plots(gp_object = setasides_allowances_group_gp, # change
-                 sub_folders, 
-                 file_name = "set-asides-amount-by-allowance.html", # change
-                 gs_tab) }
-
-setasides_allowances_group_gp
-}
-```
-  
-
-```{r}
 
 sa_pct_base <- set_asides %>%
-  filter(fed_cap_grant == "Base" & !is.na(total_sa_pct))
+  filter(fed_cap_grant == "Base" & !is.na(total_sa_pct)) %>%
+  mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
+                           total_sa_pct_str, " (", max_set_aside, ")"))
   
 if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
 
-sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
+sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent()) + 
-  labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
+  labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
 
 sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Base Percent Set Asides',
+  layout(title = list(text = paste0('Set aside percentage per category under base program',
                                     '<br>',
                                     subtitle_str)))
 
@@ -556,20 +509,22 @@ sa_pct_base_gp
 
 ```{r}
 sa_pct_bil <- set_asides %>%
-  filter(fed_cap_grant == "BIL Gen Supp" & !is.na(total_sa_pct))
+  filter(fed_cap_grant == "BIL Gen Supp" & !is.na(total_sa_pct)) %>%
+  mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
+                           total_sa_pct_str, " (", max_set_aside, ")"))
   
 if (sum(sa_pct_bil$total_sa_pct, na.rm=TRUE) >0 ) {
 
-sa_pct_bil_p <- ggplot(sa_pct_bil, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
+sa_pct_bil_p <- ggplot(sa_pct_bil, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent()) + 
-  labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
+  labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
 
 sa_pct_bil_gp <- ggplotly(sa_pct_bil_p, tooltip="text") %>%
-  layout(title = list(text = paste0('BIL Gen/Supp Percent Set Asides',
+  layout(title = list(text = paste0('Set aside percentage per category under Gen Supp program',
                                     '<br>',
                                     subtitle_str)))
 
@@ -588,12 +543,14 @@ sa_pct_bil_gp
 ```{r}
 
 sa_pct_lead <- set_asides %>%
-  filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct))
+  filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct)) %>%
+  mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
+                           total_sa_pct_str, " (", max_set_aside, ")"))
 
 if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
 
 
-sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
+sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent()) + 
@@ -602,7 +559,7 @@ sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, co
   epic_chart_theme
 
 sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
-  layout(title = list(text = paste0('LSLR Percent Set Asides',
+  layout(title = list(text = paste0('Set aside percentage per category under Lead program',
                                     '<br>',
                                     subtitle_str)))
 
@@ -620,11 +577,13 @@ sa_pct_lead_gp
 ```{r}
 
 sa_pct_ec <- set_asides %>%
-  filter(fed_cap_grant == "EC" & !is.na(total_sa_pct))
+  filter(fed_cap_grant == "EC" & !is.na(total_sa_pct)) %>%
+  mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
+                           total_sa_pct_str, " (", max_set_aside, ")"))
 
 if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
 
-sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=total_sa_pct_str)) + 
+sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent()) + 
@@ -633,7 +592,7 @@ sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=
   epic_chart_theme
 
 sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
-  layout(title = list(text = paste0('EC Percent Set Asides',
+  layout(title = list(text = paste0('Set aside percentage per category under EC program',
                                     '<br>',
                                     subtitle_str)))
 

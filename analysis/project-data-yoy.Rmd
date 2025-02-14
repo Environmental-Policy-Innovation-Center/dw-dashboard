@@ -19,7 +19,7 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -43,20 +43,8 @@ subtitle_str <- paste0(state_name, ", ", years)
 # Imports & Settings 
 
 ```{r}
-library(tidyverse)
-library(janitor)
-library(aws.s3)
-library(scales)
-library(lubridate)
-library(sysfonts)
-library(showtext)
-library(plotly)
-
-source("../../ds-resources/shared-functions.R")
-run_code_from_file("../../local/aws.txt")
-
-# bring in functions for cleaning numeric strings and data viz template code
 source("../resources.R")
+run_code_from_file("../aws.txt")
 ```
 
 # State-Level Data
@@ -153,7 +141,7 @@ tpc_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost, text=t
   epic_chart_theme
 
 tpc_gp <- ggplotly(tpc_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What's the total cost of submitted projects applications?",
+  layout(title = list(text = paste0("What are the total project costs of submitted applications?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -178,7 +166,7 @@ tfa_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount, text
   labs(title=" ",
        subtitle=subtitle_str,
        x="State Fiscal Year",
-       y="Expecting Funding Amount") + 
+       y="Expected Funding Amount") + 
   epic_chart_theme
 
 tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
@@ -255,7 +243,7 @@ efp_p <- ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fi
   epic_chart_theme
 
 efp_gp <- ggplotly(efp_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What proportion of projects could expect funding?",
+  layout(title = list(text = paste0("What proportion of projects expect funding?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -375,7 +363,7 @@ ef_dac_p <- ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expec
   epic_chart_theme
 
 ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many DAC projects could expect funding?",
+  layout(title = list(text = paste0("How many DAC projects expect funding?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -505,7 +493,7 @@ sc_pop_p <- ggplot(sc_df, aes(x=state_fiscal_year, y=value, fill=name, text=plot
   epic_chart_theme
 
 sc_pop_gp <- ggplotly(sc_pop_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many projects serve small communities (<10k)?",
+  layout(title = list(text = paste0("How many projects serve small communities (<10k population)?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -548,7 +536,7 @@ sc_ef_p <- ggplot(sc_df_ef, aes(x=state_fiscal_year, y=value, fill=name, text=pl
   epic_chart_theme
 
 sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many projects serving small communities (<10k) could expect funding?",
+  layout(title = list(text = paste0("How many projects serving small communities (<10k population) expect funding?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -661,7 +649,7 @@ tpc_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project
   epic_chart_theme
 
 tpc_pt_gp <- ggplotly(tpc_pt_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What's the total project cost for each type of project?",
+  layout(title = list(text = paste0("What are the total project cost for each type of project?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -725,7 +713,7 @@ tfa_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding
   epic_chart_theme
 
 tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What's the total funding amount for each type of project?",
+  layout(title = list(text = paste0("What's the total expected funding amount for each type of project?",
                                     '<br>',
                                     subtitle_str)))
 

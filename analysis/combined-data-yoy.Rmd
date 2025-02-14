@@ -16,7 +16,7 @@ state_abbr <- "TX"
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -46,23 +46,9 @@ subtitle_str <- paste0(state_name, ", ", years)
 ## Imports & Settings
 
 ```{r, echo=FALSE, warning=FALSE,message=FALSE}
-library(tidyverse)
-library(janitor)
-library(aws.s3)
-library(scales)
-library(lubridate)
-library(sysfonts)
-library(showtext)
-library(plotly)
-library(googledrive)
-library(googlesheets4)
 
-# bring in AWS credentials
-source("../../ds-resources/shared-functions.R")
-run_code_from_file("../../local/aws.txt")
-
-# bring in functions for cleaning numeric strings and data viz template code
 source("../resources.R")
+run_code_from_file("../aws.txt")
 
 ```
 
@@ -130,6 +116,7 @@ if (include_y0 == FALSE) {
 compare_available_funds <- state_stats %>%
   # keep cost and requested amount so we can try plotting one or the other
   select(state, state_fiscal_year, general_total_project_cost, general_total_requested_amount) %>%
+  filter(state_fiscal_year != "2022") %>%
   # join with only relevant columns from funding data
   left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available)) %>%
   # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
@@ -228,6 +215,7 @@ gen_ra_gp
 compare_available_funds_ec <- state_stats %>%
   # keep cost and requested amount so we can try plotting one or the other
   select(state, state_fiscal_year, ec_total_project_cost, ec_total_requested_amount) %>%
+  filter(state_fiscal_year != "2022") %>%
   # join with only relevant columns from funding data
   left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%
   # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
@@ -325,6 +313,7 @@ ec_ra_gp
 compare_available_funds_lead <- state_stats %>%
   # keep cost and requested amount so we can try plotting one or the other
   select(state, state_fiscal_year, lead_total_project_cost, lead_total_requested_amount) %>%
+  filter(state_fiscal_year != "2022") %>%
   # join with only relevant columns from funding data
   left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%
   # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots

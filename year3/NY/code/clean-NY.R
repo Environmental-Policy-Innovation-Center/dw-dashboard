@@ -67,7 +67,11 @@ clean_ny_y3 <- function() {
     filter(!project_number %in% c(lead_projects$project_number, 
                                   ec_projects$project_number)) %>%
     mutate(
-      project_type = "General",
+      project_type = case_when(
+        str_detect(tolower(description), "lead") ~ "Lead",
+        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
+        TRUE ~ "General"
+      ),
       disadvantaged = case_when(
         score == "H" | project_number %in% ny_gs$project_number ~ "Yes",
         TRUE ~ "No Information"

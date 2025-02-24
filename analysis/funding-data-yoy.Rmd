@@ -13,15 +13,15 @@ NOTE: These features in the datasets pulled from google sheets (financial, set a
 ## Local Variables
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "New York"
+state_abbr <- "NY"
 
 
 # include 2022?
 include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")

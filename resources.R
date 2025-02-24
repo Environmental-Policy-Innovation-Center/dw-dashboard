@@ -11,7 +11,6 @@ options(scipen=999)
 
 
 
-
 ### AWS Access ---- 
 
 run_code_from_file <- function(file_path) {
@@ -76,7 +75,7 @@ get_financial <- function(state_name, years_list) {
   financial <- financial %>%
     clean_names() %>%
     filter(state == state_name) %>%
-    select(-notes, -assignee) %>%
+    select(-notes, -assignee, -reviewed, -questions) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
     # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
@@ -96,6 +95,7 @@ get_financial <- function(state_name, years_list) {
            dw_transferred_to_cw = convert_to_numeric(dw_transferred_to_cw),
            unutilized_fcg = convert_to_numeric(unutilized_fcg),
            leveraged_funds = convert_to_numeric(leveraged_funds),
+           funds_reserved_leveraging = convert_to_numeric(funds_reserved_leveraging),
            total_funding_available = convert_to_numeric(total_funding_available),
            gpr_cost = convert_to_numeric(gpr_cost))
   
@@ -114,7 +114,7 @@ get_set_asides <- function(state_name, years_list) {
     # drop all total columns used by policy analysts
     filter(!grepl("Total", allowance)) %>%
     # drop policy analyst specific columns
-    select(-notes, -assignee) %>%
+    select(-notes, -assignee, -reviewed, -questions) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
     
@@ -165,7 +165,7 @@ get_pf <- function(state_name, years_list) {
     clean_names() %>%
     filter(state==state_name) %>%
     # drop policy analyst specific columns
-    select(-notes, -assignee) %>%
+    select(-notes, -assignee, -reviewed, -questions) %>%
     mutate(state_fiscal_year = as.character(state_fiscal_year),
            state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
     mutate(total_fcg = convert_to_numeric(total_fcg),

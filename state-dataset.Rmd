@@ -5,16 +5,9 @@ The generated features include status columns for each column in the project-lev
 The resulting dataset can answer a number of high-level questions for each state in a given state fiscal year, like "what percentage of DACs are expecting funding?" or the inverse - "how many projects expecting funding are supporting DACs?". The dataset is used extensively in `year-over-year.Rmd` to create the data visualizations used in the SRF Funding Tracker state landing pages.
 
 ```{r}
-options(scipen=999999999)
-
-library(tidyverse)
-library(janitor)
-library(aws.s3)
-
-source("../ds-resources/shared-functions.R")
-run_code_from_file("../local/aws.txt")
 
 source("resources.R")
+run_code_from_file("aws.txt")
 
 ```
 

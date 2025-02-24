@@ -27,6 +27,9 @@ library(googlesheets4)
 # remove any dfs in the environment before starting
 rm(list=ls())
 
+source("resources.R")
+run_code_from_file("aws.txt")
+
 ```
 
 
@@ -275,6 +278,10 @@ mi_clean_y2 <- clean_mi_y2()
 source("year2/MN/code/clean-MN.R")
 mn_clean_y2 <- clean_mn_y2()
 
+# New York
+source("year2/NY/code/clean-NY.R")
+ny_clean_y2 <- clean_ny_y2()
+
 # Texas
 source("year2/TX/code/clean-TX.R")
 tx_clean_y2 <- clean_tx_y2()
@@ -296,6 +303,10 @@ wa_clean_y2 <- clean_wa_y2()
 # Michigan
 source("year3/MI/code/clean-MI.R")
 mi_clean_y3 <- clean_mi_y3()
+
+# New York
+source("year3/NY/code/clean-NY.R")
+ny_clean_y3 <- clean_ny_y3()
 
 # Texas
 source("year3/TX/code/clean-TX.R")

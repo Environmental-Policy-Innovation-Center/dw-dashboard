@@ -22,7 +22,7 @@ subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 
 years_list <- c(sfy)
 
-save_plots <- FALSE
+save_plots <- TRUE
 
 gs_tab <- paste0("SFY", str_sub(sfy,-2,-1))
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -78,10 +78,11 @@ pf <- get_pf(state_name, years_list) %>%
 
 ```{r}
 grants <- financial %>%
-  select(fed_cap_grant, ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg) %>%
-  pivot_longer(cols=c(ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg)) %>%
+  select(fed_cap_grant, ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments) %>%
+  pivot_longer(cols=c(ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments)) %>%
   filter(!is.na(value) & value > 0) %>%
-  mutate(name = str_to_upper(str_remove(name, "_fcg")),
+  mutate(name = str_to_sentence(str_remove(name, "_fcg")),
+         name = str_replace(name, "Ffy", "FFY"),
          name = paste0(fed_cap_grant, ", ", name)
          )
 ```
@@ -89,6 +90,7 @@ grants <- financial %>%
 
 ```{r}
 
+# display fed cap grants by source
 if (sum(grants$value, na.rm=TRUE)>0) {
 
 grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
@@ -96,7 +98,7 @@ grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_curr
   labs(x="", y="", 
        title=" ", 
        subtitle=subtitle_str) + 
-  scale_x_continuous(labels=label_dollar(scale=.000001, suffix="M")) + 
+  scale_x_continuous(labels=label_dollar()) + 
   epic_chart_theme
 
 grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
@@ -114,6 +116,8 @@ if (save_plots) {
 grants_gp
 }
 ```
+
+
 
 ## Principal Forgiveness
 
@@ -663,19 +667,6 @@ if (save_plots) {
 
   ef_df_fig
 }
-```
-
-
-```{r}
-str_c <- c("one", "two")
-str_c2 <- c("three", "four")
-condition <- TRUE
-
-# Corrected ifelse statement
-my_variable <- ifelse(condition, list(str_c), list(str_c2))
-
-# Print the result
-print(my_variable[1])
 ```
 
 

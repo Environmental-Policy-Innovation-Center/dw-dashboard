@@ -19,7 +19,7 @@ state_abbr <- "NY"
 include_y0 <- FALSE
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")

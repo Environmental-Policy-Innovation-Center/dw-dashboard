@@ -18,7 +18,7 @@ state_abbr <- "NY"
 
 
 # include 2022?
-include_y0 <- TRUE
+include_y0 <- FALSE
 
 # export plots to AWS and Drive?
 save_plots <- TRUE

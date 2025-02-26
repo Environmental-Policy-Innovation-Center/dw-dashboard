@@ -3,7 +3,7 @@ Project #,County,System Name / Borrower,Description,Population,Project Cost,Scor
 18700,Ulster,ROSENDALE WATER DISTRICT,"Phase 2 of project 18111. Cost overrun. Upgrade treatment, storage, and distribution","2,200","$2,070,000.00",H,"$4,870,000.00",,
 18721,Onondaga,JORDAN VILLAGE,"Joint Water System Upgrades, Upgrade Storage, New System Consolidation","1,400","$3,500,000.00",H,"$8,370,000.00",,
 17560,Sullivan,THE CALLICOON WATER COMPANY INC,"Upgrade Water Treatment Plant, Upgrade Ground Water Source",854,$0.00,H,"$8,370,000.00",,
-17629,Essex,ESSEX WD,WTP Upgrades and New GW Source,300,$0.00,H,"$8,370,000.00",,
+17629,Essex,ESSEX WD,WTP Upgrades and New GW Source,300,1800000,H,"$8,370,000.00",,
 17504,Schoharie,CENTRAL BRIDGE WATER DISTRICT,Upgrade water treatment plant for DBP control and organics removal,"1,061","$1,000,000.00",H,"$9,370,000.00",,
 18596,Oneida,VERONA WATER DISTRICT NO. 3,"Extension of water distribution system, new pump station and storage tank","1,795",$0.00,H,"$9,370,000.00",,
 18275,Essex,KEESEVILLE V,"WTP, storage, and distribution improvements","2,300",$0.00,H,"$9,370,000.00",,

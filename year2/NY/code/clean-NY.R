@@ -56,7 +56,11 @@ clean_ny_y2 <- function() {
     filter(!project_number %in% c(lead_projects$project_number, 
                                   ec_projects$project_number)) %>%
     mutate(
-      project_type = "General",
+      project_type = case_when(
+        str_detect(tolower(description), "lead") ~ "Lead",
+        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
+        TRUE ~ "General"
+      ),
       disadvantaged = case_when(
         score == "H" | project_number %in% ny_gs$project_number ~ "Yes",
         TRUE ~ "No Information"
@@ -172,36 +176,12 @@ clean_ny_y2 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding,
            state, state_fiscal_year)
   
-  # cat("\n\nFinal shape checks:")
-  # cat("\nShape before removing zero costs:", dim(ny_clean)[1], "rows")
-  # 
+
   # # Remove zero-cost projects
   ny_clean <- ny_clean %>%
     filter(project_cost != "0" & project_cost != "0.0" &
              project_cost != "" & !is.na(project_cost))
-  # 
-  # # Final validation
-  # num_removed <- nrow(ny_clean) - nrow(ny_clean_nonzero)
-  # cat(paste0("\nRemoved ", num_removed, " zero/NA cost projects"))
-  # 
-  # cat("\n\nFinal Distribution Checks:")
-  # cat("\nProject Types:\n")
-  # print(table(ny_clean_nonzero$project_type))
-  # cat("\nDisadvantaged Status:\n")
-  # print(table(ny_clean_nonzero$disadvantaged))
-  # cat("\nExpecting Funding:\n")
-  # print(table(ny_clean_nonzero$expecting_funding))
-  # 
-  # # Check for any duplicates
-  # duplicates <- ny_clean_nonzero %>%
-  #   group_by(project_id) %>%
-  #   filter(n() > 1)
-  # 
-  # if(nrow(duplicates) > 0) {
-  #   cat("\nWARNING: Found", nrow(duplicates), "duplicate project IDs\n")
-  #   print(duplicates %>% select(project_id, project_type))
-  # }
-  
+
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

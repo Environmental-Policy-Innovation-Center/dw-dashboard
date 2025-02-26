@@ -24,8 +24,7 @@ clean_ny_y1 <- function() {
   ny_base <- fread("year1/NY/data/32-NewYork_base_ppl.csv",
                    colClass="character", na.strings="") %>%
     clean_names() %>%
-    mutate(project_type = "General",
-           # projects are expecting funding if they are above the Expanded Subsidized Interest Rate Funding Line
+    mutate(# projects are expecting funding if they are above the Expanded Subsidized Interest Rate Funding Line
            expecting_funding = ifelse(row_number() <= 148, "Yes", as.character(NA)))
   
   ## BIL

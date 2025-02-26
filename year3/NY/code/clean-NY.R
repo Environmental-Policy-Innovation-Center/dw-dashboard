@@ -46,8 +46,11 @@ clean_ny_y3 <- function() {
         dac == "DAC" ~ "Yes",
         TRUE ~ "No Information"
       ),
+      # all projects on lead list are expecting funding
       expecting_funding = "Yes"  
-    )
+    ) %>%
+    rename(county = project_county,
+           project_number = project)
   
   # Process EC projects second
   ec_projects <- ny_ec %>%
@@ -57,8 +60,10 @@ clean_ny_y3 <- function() {
         dac == "dac" ~ "Yes",
         TRUE ~ "No Information"
       ),
+      #TODO: Confirm. Expected interpretation, but waiting on further clarity from Janet.
       expecting_funding =  "No" 
-    )
+    ) %>%
+    rename(project_number = project)
 
   
   # Process Annual List projects (excluding those already in Lead/EC)
@@ -86,6 +91,7 @@ clean_ny_y3 <- function() {
   )
   
   multiyear_projects <- ny_multi_year %>%
+    # all projects not on annual, ec, or lead by project_number
     filter(!project_number %in% processed_numbers) %>%
     mutate(
       # For remaining projects, check descriptions
@@ -124,17 +130,10 @@ clean_ny_y3 <- function() {
       requested_amount = as.character(NA),
       funding_amount = as.character(NA),
       principal_forgiveness = as.character(NA),
-      project_rank = as.character(NA)
+      project_rank = as.character(NA),
     )
   
-  # Step 7: Implement Amendment 1
-  ny_clean <- ny_clean %>%
-    mutate(
-      project_cost = ifelse(project_id == "17629", "1800000", project_cost),
-      project_score = ifelse(project_id == "18854" & project_score == "40", "80", project_score)
-    )
-  
-  # Step 8: Final column selection and validation
+  # Step 7: Final column selection and validation
   ny_clean <- ny_clean %>%
     select(community_served, borrower, pwsid, project_id, project_name,
            project_type, project_cost, requested_amount, funding_amount,
@@ -142,10 +141,9 @@ clean_ny_y3 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding,
            state, state_fiscal_year)
   
-  # Remove zero-cost projects
+  # Remove zero-cost projects per Janet's instructions in data dictionary
   ny_clean <- ny_clean %>%
-    filter(project_cost != "0" & project_cost != "0.0" &
-             project_cost != "" & !is.na(project_cost))
+    filter(project_cost != "0")
   
   
   run_tests(ny_clean)

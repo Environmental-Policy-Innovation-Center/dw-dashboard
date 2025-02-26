@@ -13,7 +13,7 @@ state_name <- "New York"
 state_abbr <- "NY"
 
 # include 2022?
-include_y0 <- TRUE
+include_y0 <- FALSE
 
 # export plots to AWS and Drive?
 save_plots <- TRUE
@@ -358,7 +358,7 @@ lead_pc_p <- ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value,
   scale_y_continuous(labels=label_currency()) + 
   scale_fill_manual(values = cat_palette(2), 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+  labs(x="", y="", title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
   epic_chart_theme
 
 lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%

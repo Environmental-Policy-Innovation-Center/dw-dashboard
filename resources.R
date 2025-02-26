@@ -132,7 +132,8 @@ get_set_asides <- function(state_name, years_list) {
            ffy26_sa_pct = convert_to_numeric(ffy26_sa_pct),
            total_sa_amt = convert_to_numeric(total_sa_amt),
            total_sa_pct = convert_to_numeric(total_sa_pct),
-           total_fcg = convert_to_numeric(total_fcg)
+           total_fcg = convert_to_numeric(total_fcg),
+           unutilized_set_asides = convert_to_numeric(unutilized_set_asides),
            ) %>%
     #TODO: Modify this as needed once water team updates naming conventions
     mutate(
@@ -188,7 +189,8 @@ get_pf <- function(state_name, years_list) {
            ffy25_pct = convert_to_numeric(ffy25_pct),
            ffy26_fcg = convert_to_numeric(ffy26_fcg),
            ffy26_amt = convert_to_numeric(ffy26_amt),
-           ffy26_pct = convert_to_numeric(ffy26_pct)
+           ffy26_pct = convert_to_numeric(ffy26_pct),
+           unutilized_pf = convert_to_numeric(unutilized_pf),
             )
   
   
@@ -226,15 +228,13 @@ format_percent <- function(x) {
 
 ### Export Files ----
 
-## Vars
-
-## Store a GGPlotly object as HTML, store it on AWS, and store the results in Google Sheets
-## Takes the plotly object, the file's name, directories within a bucket where it should be stored,
-## and the tab within a google sheet where it should be stored.
-## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
-## Assumes file_name ends with file type (.html, .png)
 
 run_save_plots <- function(gp_object, sub_folders, file_name, gs_tab) {
+  ## Store a GGPlotly object as HTML, store it on AWS, and store the results in Google Sheets
+  ## Takes the plotly object, the file's name, directories within a bucket where it should be stored,
+  ## and the tab within a google sheet where it should be stored.
+  ## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
+  ## Assumes file_name ends with file type (.html, .png)
   
   object_url <- paste0(sub_folders, file_name)
   # aws url is aws bucket + state abbr + page folder + file name ie TX/overview/plot-1.html
@@ -250,6 +250,7 @@ run_save_plots <- function(gp_object, sub_folders, file_name, gs_tab) {
 
 
 save_to_aws <- function(gp_object, file_name, object_url) {
+  ## Take a HTML object, it's string name, and the intended URL and push to 
   
   htmlwidgets::saveWidget(partial_bundle(gp_object) %>%
                             config(displayModeBar = FALSE) %>%

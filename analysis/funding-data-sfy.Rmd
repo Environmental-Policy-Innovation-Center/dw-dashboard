@@ -17,12 +17,12 @@ run_code_from_file("../aws.txt")
 state_name <- "New York"
 state_abbr <- "NY"
 
-sfy <- "2023"
+sfy <- "2025"
 subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 
 years_list <- c(sfy)
 
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- paste0("SFY", str_sub(sfy,-2,-1))
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -47,7 +47,7 @@ donut_colors_6 <- c("#4ea324", "#172f60", "#1054a8", "#526489", "#527CAF", "ligh
 
 ```{r}
 # import project-level data
-all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
   clean_names() %>%
   filter(state == state_name & state_fiscal_year == sfy)
 
@@ -580,7 +580,7 @@ ec_fig
 # State-Level Data
 
 ```{r}
-pf_projects <- all_projects %>%
+pf_projects <- state_projects %>%
   filter(principal_forgiveness != "0" & principal_forgiveness != "No Information")
 ```
 
@@ -689,10 +689,35 @@ if (state_data$disadvantaged_status != "Complete" | state_data$disadvantaged_pro
 
 # Project-Level Data
 
+## Lead Project Details
+
+```{r}
+# categorize lead projects as Inventory or Replacement
+lead_projects <- state_projects %>%
+  filter(project_type == "Lead") %>%
+  mutate(lsl_category = case_when(
+    grepl("Inventory", project_description, TRUE) & grepl("Replacement", project_description, TRUE) ~ "Both",
+    grepl("Inventory", project_description, TRUE) ~ "Inventory",
+    grepl("Replacement", project_description, TRUE) ~ "Replacement",
+    TRUE ~ "Neither")
+  ) %>%
+  group_by(lsl_category) %>%
+  summarize(count=n(),
+            value = sum(as.numeric(project_cost), na.rm=TRUE)
+            ) %>%
+  rename(name = lsl_category)
+
+tibble(lead_projects)
+```
+
+
+
+## Project Score Range
+
 ```{r}
 # range of project scores for projects expecting funding
 tibble(
-all_projects %>%
+state_projects %>%
   filter(expecting_funding == "Yes") %>%
   mutate(score_numeric = as.numeric(project_score)) %>%
   group_by(state, state_fiscal_year) %>%

@@ -234,4 +234,17 @@ state_stats <- feature_coverage %>%
    bucket = "water-team-data",
    acl = "public-read"
  )
+ 
+
 ```
+
+```{r}
+
+state_stats_agg <- state_stats %>%
+  select(-ends_with("_status"))
+
+ write_sheet(feature_coverage, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Feature Coverage")
+ write_sheet(state_stats_agg, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Aggregated Stats")
+ 
+```
+

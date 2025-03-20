@@ -3,8 +3,6 @@ source("resources.R")
 clean_tn_y2 <- function() {
   
   # (70, 18) - gen PPL
-  # TODO - check to see how to handle the project with multiple pwsids listed 
-  # asked Lauren on 3/20 at 8:23am 
   gen_ppl <- fread("year2/TN/data/tn_ppl.csv",
                    colClasses = "character", na.strings = "") %>%
     clean_names() 

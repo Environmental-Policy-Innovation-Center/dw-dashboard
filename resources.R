@@ -237,7 +237,9 @@ run_save_plots <- function(gg_plot, gp_object, sub_folders, name, gs_tab) {
   ## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
   ## Assumes file_name ends with file type (.html, .png)
   
-  save_png(gg_plot, sub_folders, name)
+  if (!is.null(gg_plot)) {
+    save_png(gg_plot, sub_folders, name) 
+    }
   
   # object url is everything after the general aws url and bucket details
   # ie /TX/overview/name.html
@@ -259,6 +261,7 @@ save_png <- function(gg_plot, sub_folders, name) {
   ggsave(temp_png, plot = gg_plot, dpi = 300)
   put_object(file = temp_png,
              object = paste0(sub_folders, name, ".png"),
+             acl="public-read",
              bucket = "funding-tracker")
   unlink(temp_png)
 }
@@ -295,7 +298,8 @@ get_gs_urls <- function() {
     add_row(state="IN", url="https://docs.google.com/spreadsheets/d/1sV1SUmGlybQTw8VdfyOfw0xSqT8aX--_Tau3vMDgVDs") %>%
     add_row(state="MI", url="https://docs.google.com/spreadsheets/d/1cSYUzZgLUhN10ZMw7QJUtkBlTzMmPnjs5bLHJ17itYY") %>%
     add_row(state="OH", url="https://docs.google.com/spreadsheets/d/1NE0Pl4p1Yv_lXBSIoLS89KpqmIUBWtBPoLQzj2GH2F4") %>%
-    add_row(state="PA", url="https://docs.google.com/spreadsheets/d/1-MrH5VRuPABvovqz9fHBGufc-Zz2vpEqZcrPgQyNQzI")
+    add_row(state="PA", url="https://docs.google.com/spreadsheets/d/1-MrH5VRuPABvovqz9fHBGufc-Zz2vpEqZcrPgQyNQzI") %>%
+    add_row(state="TN", url="https://docs.google.com/spreadsheets/d/1mCDIMe41m4vJDnekpigRfB_sEvN74Z646J5a4VTvKKU")
   
   return(gs_urls)
 }
@@ -372,6 +376,14 @@ convert_to_numeric <- function(column, fill_na_0 = FALSE) {
   }
   
   return(column_numeric)
+}
+
+
+# takes a column and calculates the median without including 0s
+# since they can often be equivalent to 'null' responses for our purposes
+median_wo_zero <- function(col_name) {
+  non_zero <- col_name[col_name != 0]  # Filter out 0s
+  median(non_zero)  # Calculate median on the filtered data
 }
 
 ### Test Functions ---- 

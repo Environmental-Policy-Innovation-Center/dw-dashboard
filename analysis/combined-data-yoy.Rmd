@@ -9,14 +9,14 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "New York"
-state_abbr <- "NY"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 # include 2022?
-include_y0 <- FALSE
+include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -79,10 +79,10 @@ base <- financial %>%
   filter(fed_cap_grant == "Base")
 
 gen_supp <- financial %>%
-  filter(fed_cap_grant == "BIL Gen Supp")
+  filter(fed_cap_grant == "IIJA Gen Supp")
 
 base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & BIL Gen Supp")
+  filter(fed_cap_grant == "Base & IIJA Gen Supp")
 
 lead <- financial %>%
   filter(fed_cap_grant == "LSLR")
@@ -94,39 +94,38 @@ ec <- financial %>%
 
 
 ```{r}
-state_stats <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
+
+project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-types.csv") %>%
   clean_names() %>%
   filter(state == state_name) %>%
-  mutate(state_fiscal_year = factor(state_fiscal_year))
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
 
 if (include_y0 == FALSE) {
-# select single state and drop any Y0 data to only evaluate BIL years
-  state_stats <- state_stats %>%
+# select single state and drop any Y0 data to only evaluate IIJA years
+  project_type_df <- project_type_df %>%
     filter(state_fiscal_year != "2022")
  }
-
 ```
 
-## Base & BIL General Supplemental fed_cap_grant
+## Base & IIJA General Supplemental fed_cap_grant
 
 ### Comparing Project Costs & Funds Available
 
 ```{r}
 
-compare_available_funds <- state_stats %>%
-  # keep cost and requested amount so we can try plotting one or the other
-  select(state, state_fiscal_year, general_total_project_cost, general_total_requested_amount) %>%
-  filter(state_fiscal_year != "2022") %>%
-  # join with only relevant columns from funding data
-  left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available)) %>%
-  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = general_total_project_cost - total_funding_available,
+compare_general_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "General") %>%
+  left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = general_total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - total_funding_available,
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
 
+
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_project_cost <- compare_available_funds %>%
+compare_project_cost <- compare_general_funds %>%
   select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
   mutate(name = case_when(
@@ -137,7 +136,7 @@ compare_project_cost <- compare_available_funds %>%
     )
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_requested_amount <- compare_available_funds %>%
+compare_requested_amount <- compare_general_funds %>%
   select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
   mutate(name = case_when(
@@ -161,16 +160,17 @@ gen_pc_p <- ggplot(compare_project_cost, aes(x=state_fiscal_year, y=value, fill=
   epic_chart_theme
 
 gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & BIL Gen/Supp',
+  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
                                     '<br>',
                                     subtitle_str)))
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = gen_pc_gp, # change
+  run_save_plots(gg_plot = gen_pc_p,
+                 gp_object = gen_pc_gp, # change
                  sub_folders, 
-                 file_name = "compare-project-cost-available-funds-gen.html", # change
+                 name = "compare-project-cost-available-funds-gen", # change
                  gs_tab) }
 
 gen_pc_gp
@@ -193,16 +193,17 @@ gen_ra_p <- ggplot(compare_requested_amount, aes(x=state_fiscal_year, y=value, f
   epic_chart_theme
 
 gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & BIL Gen/Supp',
+  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
                                     '<br>',
                                     subtitle_str)))
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = gen_ra_gp, # change
+  run_save_plots(gg_plot = gen_ra_p,
+                 gp_object = gen_ra_gp, # change
                  sub_folders, 
-                 file_name = "compare-requested-amount-available-funds-gen.html", # change
+                 name = "compare-requested-amount-available-funds-gen", # change
                  gs_tab) }
 
 gen_ra_gp
@@ -214,20 +215,19 @@ gen_ra_gp
 ### Data Prep
 
 ```{r}
-compare_available_funds_ec <- state_stats %>%
-  # keep cost and requested amount so we can try plotting one or the other
-  select(state, state_fiscal_year, ec_total_project_cost, ec_total_requested_amount) %>%
-  filter(state_fiscal_year != "2022") %>%
-  # join with only relevant columns from funding data
-  left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%
-  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = ec_total_project_cost - total_funding_available,
+
+compare_ec_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "Emerging Contaminants") %>%
+  left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = ec_total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - total_funding_available,
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_project_cost_ec <- compare_available_funds_ec %>%
+compare_project_cost_ec <- compare_ec_funds %>%
   select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
   mutate(name = case_when(
@@ -238,7 +238,7 @@ compare_project_cost_ec <- compare_available_funds_ec %>%
   )
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_requested_amount_ec <- compare_available_funds_ec %>%
+compare_requested_amount_ec <- compare_ec_funds %>%
   select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
   mutate(name = case_when(
@@ -271,9 +271,10 @@ ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
 
 
 if (save_plots) {
-  run_save_plots(gp_object = ec_pc_gp, # change
+  run_save_plots(gg_plot = ec_pc_p,
+                 gp_object = ec_pc_gp, # change
                  sub_folders, 
-                 file_name = "compare-project-cost-available-funds-ec.html", # change
+                 name = "compare-project-cost-available-funds-ec", # change
                  gs_tab) }
 
 ec_pc_gp
@@ -301,9 +302,10 @@ ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
 
 
 if (save_plots) {
-  run_save_plots(gp_object = ec_ra_gp, # change
+  run_save_plots(gg_plot = ec_ra_p,
+                 gp_object = ec_ra_gp, # change
                  sub_folders, 
-                 file_name = "compare-requested-amount-available-funds-ec.html", # change
+                 name = "compare-requested-amount-available-funds-ec", # change
                  gs_tab) }
 
 ec_ra_gp
@@ -314,20 +316,19 @@ ec_ra_gp
 ### Data Prep
 
 ```{r}
-compare_available_funds_lead <- state_stats %>%
-  # keep cost and requested amount so we can try plotting one or the other
-  select(state, state_fiscal_year, lead_total_project_cost, lead_total_requested_amount) %>%
-  filter(state_fiscal_year != "2022") %>%
-  # join with only relevant columns from funding data
-  left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%
-  # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = lead_total_project_cost - total_funding_available,
+
+compare_lead_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "Lead") %>%
+  left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = lead_total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - total_funding_available,
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_project_cost_lead <- compare_available_funds_lead %>%
+compare_project_cost_lead <- compare_lead_funds %>%
   select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
   mutate(name = case_when(
@@ -338,7 +339,7 @@ compare_project_cost_lead <- compare_available_funds_lead %>%
     )
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
-compare_requested_amount_lead <- compare_available_funds_lead %>%
+compare_requested_amount_lead <- compare_lead_funds %>%
   select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
   mutate(name = case_when(
@@ -368,9 +369,10 @@ lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
 
 
 if (save_plots) {
-  run_save_plots(gp_object = lead_pc_gp, # change
+  run_save_plots(gg_plot = lead_pc_p,
+                 gp_object = lead_pc_gp, # change
                  sub_folders, 
-                 file_name = "compare-project-cost-available-funds-lead.html", # change
+                 name = "compare-project-cost-available-funds-lead", # change
                  gs_tab) }
 
 lead_pc_gp
@@ -402,9 +404,10 @@ lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
 #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
 
 if (save_plots) {
-  run_save_plots(gp_object = lead_ra_gp, # change
+  run_save_plots(gg_plot = lead_ra_p,
+                 gp_object = lead_ra_gp, # change
                  sub_folders, 
-                 file_name = "compare-requested-amount-available-funds-lead.html", # change
+                 name = "compare-requested-amount-available-funds-lead", # change
                  gs_tab) }
 
 lead_ra_gp

@@ -13,15 +13,15 @@ NOTE: These features in the datasets pulled from google sheets (financial, set a
 ## Local Variables
 
 ```{r}
-state_name <- "New York"
-state_abbr <- "NY"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 
 # include 2022?
-include_y0 <- FALSE
+include_y0 <- TRUE
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 gs_tab <- "Overview"
 sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
@@ -37,6 +37,8 @@ if (include_y0) {
 }
 
 subtitle_str <- paste0(state_name, ", ", years)
+# in some cases, 22 shouldn't be shown, even if included, ie for funding sources that didn't exist prior to 23
+subtitle_str_only_23 <- str_replace(subtitle_str, "22", "23")
 
 ```
 
@@ -58,7 +60,7 @@ financial <- get_financial(state_name, years_list)
 set_asides <- get_set_asides(state_name, years_list) %>%
   mutate(total_sa_amt_str = format_currency(total_sa_amt),
          total_sa_pct_str = format_percent(total_sa_pct)) %>%
-  filter(fed_cap_grant != "Base & BIL Gen Sup")
+  filter(fed_cap_grant != "Base & IIJA Gen Sup")
 
 pf <- get_pf(state_name, years_list)
 
@@ -76,10 +78,10 @@ base <- financial %>%
   filter(fed_cap_grant == "Base")
 
 gen_supp <- financial %>%
-  filter(fed_cap_grant == "BIL Gen Supp")
+  filter(fed_cap_grant == "IIJA Gen Supp")
 
 base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & BIL Gen Supp")
+  filter(fed_cap_grant == "Base & IIJA Gen Supp")
 
 lead <- financial %>%
   filter(fed_cap_grant == "Lead Service Line Replacement")
@@ -98,6 +100,7 @@ ec <- financial %>%
 
 all_grants <- financial %>%
   filter(total_fcg > 0) %>%
+  filter(fed_cap_grant != "Total") %>%
   mutate(plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
                            total_fcg_str))
 
@@ -108,22 +111,23 @@ if(nrow(all_grants) > 0 &
 all_grants_p <- ggplot(all_grants, aes(x=state_fiscal_year, y=total_fcg, fill=fed_cap_grant, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
-  labs(x="", y="", title="Total Funds", fill="", subtitle=subtitle_str) + 
+  labs(x="", y="", title="Total Funds from Fed Cap Grants", fill="", subtitle=subtitle_str) + 
   scale_fill_manual(values=cat_palette(4)) + 
   epic_chart_theme
 
 all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
   layout(title = list(text = paste0('Total Funds from Fed Cap Grants',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% all_grants$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = all_grants_gp, # change
+  run_save_plots(gg_plot = all_grants_p,
+                 gp_object = all_grants_gp, # change
                  sub_folders, 
-                 file_name = "total-funds-fed-cap-grant.html", # change
+                 name = "total-funds-fed-cap-grant", # change
                  gs_tab) }
 
 all_grants_gp
@@ -151,15 +155,16 @@ all_grants_pf_p <- ggplot(all_grants_pf, aes(x=state_fiscal_year, y=total_pf_amt
 all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
   layout(title = list(text = paste0('Principal Forgiveness from Fed Cap Grants',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% all_grants_pf$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = all_grants_pf_gp, # change
+  run_save_plots(gg_plot = all_grants_pf_p,
+                 gp_object = all_grants_pf_gp, # change
                  sub_folders, 
-                 file_name = "pf-from-fed-cap-grants.html", # change
+                 name = "pf-from-fed-cap-grants", # change
                  gs_tab) }
 
 all_grants_pf_gp
@@ -198,14 +203,15 @@ base_fed_cap_grants_p <- ggplot(base, aes(x=state_fiscal_year, y=total_fcg, text
 base_fed_cap_grants_gp <- ggplotly(base_fed_cap_grants_p, tooltip="text") %>%
   layout(title = list(text = paste0('Base DWSRF Federal Cap Grants',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% base$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = base_fed_cap_grants_gp, # change
+  run_save_plots(gg_plot = base_fed_cap_grants_p,
+                 gp_object = base_fed_cap_grants_gp, # change
                  sub_folders, 
-                 file_name = "base-fed-cap-grant.html", # change
+                 name = "base-fed-cap-grant", # change
                  gs_tab) }
 
 base_fed_cap_grants_gp
@@ -234,13 +240,14 @@ leveraged_p <- ggplot(leveraged, aes(x=state_fiscal_year, y=leveraged_funds, fil
 leveraged_gp <- ggplotly(leveraged_p, tooltip="text") %>%
   layout(title = list(text = paste0('Leveraged Funds',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% leveraged$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = leveraged_gp, # change
+  run_save_plots(gg_plot = leveraged_p,
+                 gp_object = leveraged_gp, # change
                  sub_folders, 
-                 file_name = "leveraged-funds.html", # change
+                 name = "leveraged-funds", # change
                  gs_tab) }
 
 
@@ -253,6 +260,7 @@ leveraged_gp
 ```{r}
 unutilized <- financial %>%
   filter(unutilized_fcg > 0 & !is.na(unutilized_fcg)) %>%
+  filter(fed_cap_grant != "Total") %>%
   mutate(unutilized_fcg_str = format_currency(unutilized_fcg))
 
 if (nrow(unutilized) > 0) {
@@ -260,20 +268,21 @@ if (nrow(unutilized) > 0) {
 unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, fill=fed_cap_grant, text=unutilized_fcg_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values=cat_palette(3)) + 
+  scale_fill_manual(values=cat_palette(length(unique(unutilized$fed_cap_grant)))) + 
   labs(x="", y="", title="Unutilized Funds (Carryover)", subtitle=subtitle_str, fill="") + 
   epic_chart_theme
 
 unutilized_gp <- ggplotly(unutilized_p, tooltip="text") %>%
   layout(title = list(text = paste0('Unutilized Funds (Carryover)',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% unutilized$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = unutilized_gp, # change
+  run_save_plots(gg_plot = unutilized_p,
+                 gp_object = unutilized_gp, # change
                  sub_folders, 
-                 file_name = "unutilized-funds.html", # change
+                 name = "unutilized-funds", # change
                  gs_tab) }
 
 unutilized_gp
@@ -305,13 +314,14 @@ base_pf_both_pct_p <- ggplot(base_pf_both_pct, aes(x=state_fiscal_year, y=total_
 base_pf_both_pct_gp <- ggplotly(base_pf_both_pct_p, tooltip="text") %>%
   layout(title = list(text = paste0('Percent of Base Fed Cap Grant reserved for DAC & Discretionary PF',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% base_pf_both_pct$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = base_pf_both_pct_gp, # change
+  run_save_plots(gg_plot = base_pf_both_pct_p,
+                 gp_object = base_pf_both_pct_gp, # change
                  sub_folders, 
-                 file_name = "base-pf-percent.html", # change
+                 name = "base-pf-percent", # change
                  gs_tab) }
 
 base_pf_both_pct_gp
@@ -357,20 +367,21 @@ base_pf_combined_p <- ggplot(base_pf_combined, aes(x=state_fiscal_year, y=total_
 base_pf_combined_gp <- ggplotly(base_pf_combined_p, tooltip="text") %>%
   layout(title = list(text = paste0('Base Grant Principal Forgiveness',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% base_pf_combined$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
   
 
 if (save_plots) {
-  run_save_plots(gp_object = base_pf_combined_gp, # change
+  run_save_plots(gg_plot = base_pf_combined_p,
+                 gp_object = base_pf_combined_gp, # change
                  sub_folders, 
-                 file_name = "base-pf-amount.html", # change
+                 name = "base-pf-amount", # change
                  gs_tab) }
 
 base_pf_combined_gp
 }
 ```
 
-#BIL Gen/Supp
+#IIJA Gen/Supp
 
 ```{r}
 
@@ -383,15 +394,16 @@ gensupp_fed_cap_grants_p <- ggplot(gen_supp, aes(x=state_fiscal_year, y=total_fc
   epic_chart_theme
 
 gensupp_fed_cap_grants_gp <- ggplotly(gensupp_fed_cap_grants_p, tooltip="text") %>%
-  layout(title = list(text = paste0('BIL Gen. Supp. Federal Cap Grants',
+  layout(title = list(text = paste0('IIJA Gen. Supp. Federal Cap Grants',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% gen_supp$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = gensupp_fed_cap_grants_gp, # change
+  run_save_plots(gg_plot = gensupp_fed_cap_grants_p,
+                 gp_object = gensupp_fed_cap_grants_gp, # change
                  sub_folders, 
-                 file_name = "gensupp-fed-cap-grant.html", # change
+                 name = "gensupp-fed-cap-grant", # change
                  gs_tab) }
 
 gensupp_fed_cap_grants_gp
@@ -426,13 +438,14 @@ set_asides_p <- ggplot(set_asides_fcg_group, aes(x=state_fiscal_year, y=total_sa
 set_asides_gp <- ggplotly(set_asides_p, tooltip="text") %>%
   layout(title = list(text = paste0('Total amount of set-asides taken per fed cap grant',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% set_asides_fcg_group$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = set_asides_gp, # change
+  run_save_plots(gg_plot = set_asides_p,
+                 gp_object = set_asides_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-fed-cap-grant-amount.html", # change
+                 name = "set-asides-fed-cap-grant-amount", # change
                  gs_tab) }
 
 
@@ -449,7 +462,7 @@ if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
 set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_sa_pct, color=fed_cap_grant, text=total_sa_pct_str)) + 
   geom_line(aes(group=fed_cap_grant), linewidth=1.5) + 
   geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent(), limits=c(0,.31)) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0, max(set_asides_percent$total_sa_pct)+.02 )) + 
   labs(x="", y="", title="Set Asides, Percent Utilized", subtitle=subtitle_str) + 
   scale_color_manual(values = cat_palette(4), 
                      guide="none") + 
@@ -458,13 +471,14 @@ set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_
 set_asides_pct_gp <- ggplotly(set_asides_pct_p, tooltip="text") %>%
   layout(title = list(text = paste0('Percent of set-asides taken per fed cap grant',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% set_asides_percent$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = set_asides_pct_gp, # change
+  run_save_plots(gg_plot = set_asides_pct_p,
+                 gp_object = set_asides_pct_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-percent-utilized.html", # change
+                 name = "set-asides-percent-utilized", # change
                  gs_tab) }
 
 set_asides_pct_gp
@@ -485,7 +499,7 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
 sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent()) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_base$total_sa_pct)+.02)) +
   labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
@@ -493,13 +507,14 @@ sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, co
 sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
   layout(title = list(text = paste0('Set aside percentage per category under base program',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% sa_pct_base$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = sa_pct_base_gp, # change
+  run_save_plots(gg_plot = sa_pct_base_p,
+                 gp_object = sa_pct_base_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-allowance-percent-base.html", # change
+                 name = "set-asides-allowance-percent-base", # change
                  gs_tab) }
 
 sa_pct_base_gp
@@ -508,35 +523,36 @@ sa_pct_base_gp
 ```
 
 ```{r}
-sa_pct_bil <- set_asides %>%
-  filter(fed_cap_grant == "BIL Gen Supp" & !is.na(total_sa_pct)) %>%
+sa_pct_iija <- set_asides %>%
+  filter(fed_cap_grant == "IIJA Gen Supp" & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
                            total_sa_pct_str, " (", max_set_aside, ")"))
   
-if (sum(sa_pct_bil$total_sa_pct, na.rm=TRUE) >0 ) {
+if (sum(sa_pct_iija$total_sa_pct, na.rm=TRUE) >0 ) {
 
-sa_pct_bil_p <- ggplot(sa_pct_bil, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
+sa_pct_iija_p <- ggplot(sa_pct_iija, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent()) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_iija$total_sa_pct)+.02)) + 
   labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
 
-sa_pct_bil_gp <- ggplotly(sa_pct_bil_p, tooltip="text") %>%
+sa_pct_iija_gp <- ggplotly(sa_pct_iija_p, tooltip="text") %>%
   layout(title = list(text = paste0('Set aside percentage per category under Gen Supp program',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% sa_pct_iija$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 
 if (save_plots) {
-  run_save_plots(gp_object = sa_pct_bil_gp, # change
+  run_save_plots(gg_plot = sa_pct_iija_p,
+                 gp_object = sa_pct_iija_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-allowance-percent-bil.html", # change
+                 name = "set-asides-allowance-percent-iija", # change
                  gs_tab) }
 
-sa_pct_bil_gp
+sa_pct_iija_gp
 }
 ```
 
@@ -553,7 +569,7 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
 sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent()) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_lead$total_sa_pct)+.02)) + 
   labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
@@ -561,13 +577,14 @@ sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, co
 sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
   layout(title = list(text = paste0('Set aside percentage per category under Lead program',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% sa_pct_lead$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = sa_pct_lead_gp, # change
+  run_save_plots(gg_plot = sa_pct_lead_p,
+                 gp_object = sa_pct_lead_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-allowance-percent-lead.html", # change
+                 name = "set-asides-allowance-percent-lead", # change
                  gs_tab) }
 
 sa_pct_lead_gp
@@ -586,7 +603,7 @@ if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
 sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=allowance, text=plot_str)) + 
   geom_line(aes(group=allowance), linewidth=1.5) + 
   geom_point(size=4) + 
-  scale_y_continuous(labels=label_percent()) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_ec$total_sa_pct)+.02)) + 
   labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
   scale_color_manual(values = cat_palette(4)) + 
   epic_chart_theme
@@ -594,13 +611,14 @@ sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=
 sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
   layout(title = list(text = paste0('Set aside percentage per category under EC program',
                                     '<br>',
-                                    subtitle_str)))
+                                    ifelse("2022" %in% sa_pct_ec$state_fiscal_year, subtitle_str, subtitle_str_only_23))))
 
 
 if (save_plots) {
-  run_save_plots(gp_object = sa_pct_ec_gp, # change
+  run_save_plots(gg_plot = sa_pct_ec_p,
+                 gp_object = sa_pct_ec_gp, # change
                  sub_folders, 
-                 file_name = "set-asides-allowance-percent-ec.html", # change
+                 name = "set-asides-allowance-percent-ec", # change
                  gs_tab) }
 
 sa_pct_ec_gp

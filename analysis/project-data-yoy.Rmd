@@ -6,17 +6,17 @@ date: "2024-11-08"
 
 This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on project- and state-level data gathered through the PPL/IUP scraping and cleaning process. The outputs focus on the "Project" sections of the state overview pages.
 
-Simply changing the `state_name` will subset the data and update the plot's subtitles along with the `years` variable. Setting `include_y0` to TRUE will include state fiscal year 2022 in the data and subsequent plots. Note that 2022 is not available for most states at this time, but may be retroactively added to compare pre-BIL to post-BIL results.
+Simply changing the `state_name` will subset the data and update the plot's subtitles along with the `years` variable. Setting `include_y0` to TRUE will include state fiscal year 2022 in the data and subsequent plots. Note that 2022 is not available for most states at this time, but may be retroactively added to compare pre-IIJA to post-IIJA results.
 
 # State Setup
 
 ```{r}
-state_name <- "New York"
-state_abbr <- "NY"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 
 # include 2022?
-include_y0 <- FALSE
+include_y0 <- TRUE
 
 # export plots to AWS and Drive?
 save_plots <- TRUE
@@ -50,23 +50,56 @@ run_code_from_file("../aws.txt")
 # State-Level Data
 
 ```{r}
-state_stats <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv") %>%
-  clean_names()
-
-state_yoy <- state_stats %>%
+project_counts <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-counts.csv") %>%
+  clean_names() %>%
   filter(state == state_name) %>%
-  mutate(state_fiscal_year = as.factor(state_fiscal_year)) %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+
+project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-types.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+
+small_community_df <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-small-community.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+
+feature_coverage <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-feature-coverage.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+
+project_dollars <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-dollars.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
   mutate(total_project_cost_str = format_currency(total_project_cost),
          total_requested_amount_str = format_currency(total_requested_amount),
          total_principal_forgiveness_str = format_currency(total_principal_forgiveness),
          total_funding_amount_str = format_currency(total_funding_amount))
 
+```
+
+
+```{r}
+
 if (include_y0 == FALSE) {
-# select single state and drop any Y0 data to only evaluate BIL years
-  state_yoy <- state_yoy %>%
+# select single state and drop any Y0 data to only evaluate IIJA years
+  project_counts <- project_counts %>%
+    filter(state_fiscal_year != "2022")
+  
+  project_type_df <- project_type_df %>%
+    filter(state_fiscal_year != "2022")
+  
+  small_community_df <- small_community_df %>%
+    filter(state_fiscal_year != "2022")
+  
+  feature_coverage <- feature_coverage %>%
+    filter(state_fiscal_year != "2022")
+  
+  project_dollars <- project_dollars %>%
     filter(state_fiscal_year != "2022")
  }
-
 
 ```
 
@@ -75,9 +108,9 @@ if (include_y0 == FALSE) {
 ### Single Variable Bar Plots
 
 ```{r}
-projects_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=projects, text=projects)) + 
+projects_p <- ggplot(project_counts, aes(x=state_fiscal_year, y=projects, text=projects)) + 
   geom_bar(stat="identity", fill="#526489") +
-  labs(title=" ",
+  labs(title="How many applicant projects per year?",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Projects") + 
@@ -89,9 +122,11 @@ projects_gp <- ggplotly(projects_p, tooltip="text") %>%
                                     subtitle_str)))
 
 if (save_plots) {
-  run_save_plots(gp_object = projects_gp, # change
+
+  run_save_plots(gg_plot = projects_p, #change
+                 gp_object = projects_gp, #change
                  sub_folders, 
-                 file_name = "applicant-projects-yoy.html", # change
+                 name = "applicant-projects-yoy", # change
                  gs_tab)
 }
 
@@ -100,10 +135,10 @@ projects_gp
 
 ```{r}
 
-if ( nrow(state_yoy %>% filter(!is.na(total_requested_amount)))  > 0 ) {
+if ( nrow(project_dollars %>% filter(!is.na(total_requested_amount)))  > 0 ) {
 
 
-tra_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_requested_amount, text=total_requested_amount_str)) + 
+tra_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_requested_amount, text=total_requested_amount_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title=" ",
@@ -119,19 +154,21 @@ tra_gp <- ggplotly(tra_p, tooltip="text") %>%
 
 tra_gp
  if (save_plots) {
-  run_save_plots(gp_object = tra_gp, # change
-                 sub_folders, 
-                 file_name = "total-requested-amount-yoy.html", # change
-                 gs_tab) }
-}
 
+     run_save_plots(gg_plot = tra_p, #change
+                    gp_object = tra_gp, #change
+                    sub_folders, 
+                    name = "total-requested-amount-yoy", # change
+                    gs_tab)
+   }
+}
 
 ```
 
 ```{r}
-if ( nrow(state_yoy %>% filter(!is.na(total_project_cost)))  > 0 ) {
+if ( nrow(project_dollars %>% filter(!is.na(total_project_cost)))  > 0 ) {
   
-tpc_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_project_cost, text=total_project_cost_str)) + 
+tpc_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_project_cost, text=total_project_cost_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title=" ",
@@ -146,10 +183,13 @@ tpc_gp <- ggplotly(tpc_p, tooltip="text") %>%
                                     subtitle_str)))
 
 if (save_plots) {
-    run_save_plots(gp_object = tpc_gp, # change
-                 sub_folders, 
-                 file_name = "total-project-cost-yoy.html", # change
-                 gs_tab) }
+  
+          run_save_plots(gg_plot = tpc_p, #change
+                         gp_object = tpc_gp, #change
+                         sub_folders, 
+                         name = "total-project-cost-yoy", # change
+                         gs_tab)
+  }
 
 tpc_gp
 }
@@ -158,9 +198,9 @@ tpc_gp
 
 
 ```{r}
-if ( nrow(state_yoy %>% filter(!is.na(total_funding_amount)))  > 0 ) {
+if ( nrow(project_dollars %>% filter(!is.na(total_funding_amount)))  > 0 ) {
 
-tfa_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_funding_amount, text=total_funding_amount_str)) + 
+tfa_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_funding_amount, text=total_funding_amount_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title=" ",
@@ -175,20 +215,23 @@ tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
                                     subtitle_str)))
 
  if (save_plots) {
-   run_save_plots(gp_object = tfa_gp, # change
-                 sub_folders, 
-                 file_name = "total-funding-amount-yoy.html", # change
-                 gs_tab) }
+   
+             run_save_plots(gg_plot = tfa_p, #change
+                            gp_object = tpfa_gp, #change
+                            sub_folders, 
+                            name = "total-funding-amount-yoy", # change
+                            gs_tab) 
+   }
 
 tfa_gp
 }
 ```
 
 ```{r}
-if ( nrow(state_yoy %>% filter(!is.na(total_principal_forgiveness)))  > 0 ) {
+if ( nrow(project_dollars %>% filter(!is.na(total_principal_forgiveness)))  > 0 ) {
 
 
-tpf_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=total_principal_forgiveness, text=total_principal_forgiveness_str)) + 
+tpf_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_principal_forgiveness, text=total_principal_forgiveness_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
   labs(title=" ",
@@ -204,10 +247,13 @@ tpf_gp <- ggplotly(tpf_p, tooltip="text") %>%
 
 
  if (save_plots) {
-     run_save_plots(gp_object = tpf_gp, # change
-                 sub_folders, 
-                 file_name = "total-principal-forgiveness-yoy.html", # change
-                 gs_tab) }
+   
+             run_save_plots(gg_plot = tpf_p, #change
+                            gp_object = tpf_gp, #change
+                            sub_folders, 
+                            name = "total-principal-forgiveness-yoy", # change
+                            gs_tab)
+                 }
 
 tpf_gp
 }
@@ -217,24 +263,24 @@ tpf_gp
 
 ```{r}
 
-if (nrow(state_yoy %>% filter(!is.na(expecting_funding_projects))) > 0) {
+if (nrow(project_counts %>% filter(!is.na(ef_projects))) > 0) {
 
-expecting_funding_projects <- state_yoy %>%
-  mutate(not_expecting_funding_projects = projects - expecting_funding_projects) %>%
-  select(state_fiscal_year, not_expecting_funding_projects, expecting_funding_projects, projects) %>%
-  pivot_longer(cols=c("not_expecting_funding_projects", "expecting_funding_projects")) %>%
-  mutate(expecting_funding = case_when(
-    name == "expecting_funding_projects" ~ "Yes",
-    name == "not_expecting_funding_projects" ~ "No"),
-    expecting_funding = factor(expecting_funding, levels=c("No", "Yes")),
-    project_percent = value / projects,
-    project_percent_str = format_percent(project_percent),
+  ef_project_comp <- project_counts %>%
+    select(state, state_fiscal_year, ef_projects, nef_projects, ef_ni_projects, projects) %>%
+    pivot_longer(cols=c("ef_projects", "nef_projects", "ef_ni_projects")) %>%
+    mutate(expecting_funding = case_when(
+      name == "ef_projects" ~ "Yes",
+      name == "nef_projects" ~ "No",
+      name == "ef_ni_projects" ~ "No Info"),
+      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      project_percent = value / projects,    project_percent_str = format_percent(project_percent),
     plot_str = paste0(expecting_funding, ": ", as.character(value), " (", project_percent_str, ")")
-  )
+    )
+  
 
-efp_p <- ggplot(expecting_funding_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
+efp_p <- ggplot(ef_project_comp, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") +
-  scale_fill_manual(values = cat_palette_pastel(2), 
+  scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Expecting Funding") + 
   labs(title=" ",
        subtitle=subtitle_str,
@@ -249,10 +295,11 @@ efp_gp <- ggplotly(efp_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = efp_gp, # change
-                 sub_folders, 
-                 file_name = "expecting-funding-applicant-comparison-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = efp_p,
+                   gp_object = efp_gp, # change
+                   sub_folders, 
+                   name = "expecting-funding-applicant-comparison-yoy", # change
+                   gs_tab) }
    
 
 efp_gp
@@ -264,52 +311,62 @@ efp_gp
 ### Disadvantaged Comps
 
 ```{r}
-if (nrow(state_yoy %>% filter(!is.na(disadvantaged_percent))) > 0) {
+if (nrow(project_counts %>% filter(!is.na(dac_projects))) > 0) {
+  
+    dac_project_comp <- project_counts %>%
+    select(state, state_fiscal_year, dac_projects, ndac_projects, dac_ni_projects, projects) %>%
+    pivot_longer(cols=c("dac_projects", "ndac_projects", "dac_ni_projects")) %>%
+    mutate(disadvantaged = case_when(
+      name == "dac_projects" ~ "Yes",
+      name == "ndac_projects" ~ "No",
+      name == "dac_ni_projects" ~ "No Info"),
+      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      project_percent = value / projects,    project_percent_str = format_percent(project_percent),
+    plot_str = paste0(disadvantaged, ": ", as.character(value), " (", project_percent_str, ")")
+    )
 
-dac_pct_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_percent, text=format_percent(disadvantaged_percent/100))) + 
-  geom_line(group=1, color=cat_palette_pastel(1), linewidth=1.5) + 
-  geom_point(color=cat_palette_pastel(1), size=4) + 
-  scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
-  labs(x="State Fiscal Year",
-       y="",
-       title=" ",
-       subtitle=subtitle_str) + 
+
+dcp_p <- ggplot(dac_project_comp, aes(x=state_fiscal_year, y=value, fill=disadvantaged, text=plot_str)) + 
+  geom_bar(stat="identity", position="stack") +
+  scale_fill_manual(values = cat_palette_pastel(3), 
+                      name = "Disadvantaged") + 
+  labs(title=" ",
+       subtitle=subtitle_str,
+       x="State Fiscal Year",
+       y="Projects") + 
   epic_chart_theme
 
-dac_pct_gp <- ggplotly(dac_pct_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What percent of all applicant projects serve DACs?",
+dcp_gp <- ggplotly(dcp_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What proportion of projects served DACs?",
                                     '<br>',
                                     subtitle_str)))
 
 
+
 if (save_plots) {
 
-    run_save_plots(gp_object = dac_pct_gp, # change
-                 sub_folders, 
-                 file_name = "dac-percent-applicants-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = dcp_p,
+                   gp_object = dcp_gp, # change
+                   sub_folders, 
+                   name = "dac-applicant-comparison-yoy", # change
+                   gs_tab) }
 
-dac_pct_gp
+dcp_gp
 }
 ```
 
 ```{r}
 
-if (nrow(state_yoy %>% filter(!is.na(disadvantaged_projects))) > 0) {
+if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
 
-dac_project_types <- state_yoy %>%
-  select(state_fiscal_year, dac_general_projects, dac_ec_projects, dac_lead_projects) %>%
-  pivot_longer(cols=c("dac_general_projects", "dac_ec_projects", "dac_lead_projects")) %>%
-  rename(project_type = name) %>%
-  mutate(project_type = case_when(
-    project_type == "dac_general_projects" ~ "General",
-    project_type == "dac_ec_projects" ~ "Emerging Contaminants",
-    project_type == "dac_lead_projects" ~ "Lead"),
-    plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", value, " projects")
+dac_project_types <- project_type_df %>%
+  select(state_fiscal_year, project_type, dac_projects) %>%
+  mutate(
+    plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", dac_projects, " projects")
   )
 
-dac_pt_p <- ggplot(dac_project_types, aes(x=state_fiscal_year, y=value, fill=project_type, text=plot_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+dac_pt_p <- ggplot(dac_project_types, aes(x=state_fiscal_year, y=dac_projects, fill=project_type, text=plot_str)) + 
+  geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
@@ -325,10 +382,11 @@ dac_pt_gp <- ggplotly(dac_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = dac_pt_gp, # change
-                 sub_folders, 
-                 file_name = "dac-project-types-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = dac_pt_p,
+                   gp_object = dac_pt_gp, # change
+                   sub_folders, 
+                   name = "dac-project-types-yoy", # change
+                   gs_tab) }
 
 dac_pt_gp
 
@@ -339,26 +397,28 @@ dac_pt_gp
 
 ```{r}
 
-if(nrow(state_yoy %>% filter(!is.na(disadvantaged_expecting_funding_projects))) > 0 &
-   nrow(state_yoy %>% filter(!is.na(disadvantaged_not_expecting_funding_projects))) > 0) {
-
-ef_dac_projects <- state_yoy %>%
-  select(state_fiscal_year, disadvantaged_expecting_funding_projects, disadvantaged_not_expecting_funding_projects) %>%
-  pivot_longer(cols=c("disadvantaged_expecting_funding_projects", "disadvantaged_not_expecting_funding_projects")) %>%
-  rename(expecting_funding = name) %>%
-  mutate(expecting_funding = case_when(
-    expecting_funding == "disadvantaged_expecting_funding_projects" ~ "Yes",
-    TRUE ~ "No"),
-         plot_str = paste0(expecting_funding, ": ", value, " projects")
+if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 &
+   nrow(project_counts %>% filter(!is.na(dac_nef_projects))) > 0) {
+  
+  ef_dac_comps <- project_counts %>%
+    select(state_fiscal_year, dac_ef_projects, dac_nef_projects, dac_ef_ni_projects) %>%
+    pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects")) %>%
+    rename(expecting_funding = name) %>%
+    mutate(expecting_funding = case_when(
+      expecting_funding == "dac_ef_projects" ~ "Yes",
+      expecting_funding == "dac_nef_projects" ~ "No",
+      TRUE ~ "No Info"),
+      plot_str = paste0(expecting_funding, ": ", value, " projects")
     )
 
-ef_dac_p <- ggplot(ef_dac_projects, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
+
+ef_dac_p <- ggplot(ef_dac_comps, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
        title=" ",
        subtitle=subtitle_str) + 
-    scale_fill_manual(values = cat_palette_pastel(2), 
+    scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Expecting Funding") + 
   epic_chart_theme
 
@@ -370,77 +430,108 @@ ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = ef_dac_gp, # change
-                 sub_folders, 
-                 file_name = "dacs-expecting-funding-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = ef_dac_p,
+                   gp_object = ef_dac_gp, # change
+                   sub_folders, 
+                   name = "dacs-expecting-funding-yoy", # change
+                   gs_tab) }
 
 ef_dac_gp
 }
 ```
 
 
+
 ```{r}
 
-if(nrow(state_yoy %>% filter(!is.na(disadvantaged_expecting_funding_percent_ef))) > 0) {
+if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
 
-ef_dac_pct_p <- ggplot(state_yoy, aes(x=state_fiscal_year, y=disadvantaged_expecting_funding_percent_ef,
-                                      text = format_percent(disadvantaged_expecting_funding_percent_ef/100))) + 
-  geom_line(group=1, color=cat_palette_pastel(1), size=1.5) + 
-  geom_point(color=cat_palette_pastel(1), size=4) + 
+    dac_ef_comps <- project_counts %>%
+    select(state_fiscal_year, dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects) %>%
+    pivot_longer(cols=c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects")) %>%
+    rename(disadvantaged = name) %>%
+    mutate(disadvantaged = case_when(
+      disadvantaged == "dac_ef_projects" ~ "Yes",
+      disadvantaged == "ndac_ef_projects" ~ "No",
+      TRUE ~ "No Info"),
+      plot_str = paste0(disadvantaged, ": ", value, " projects")
+    )
+  
+dac_ef_p <- ggplot(dac_ef_comps, aes(x=state_fiscal_year, y=value, fill=disadvantaged,
+                                      text = plot_str)) + 
+  geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
   labs(x="State Fiscal Year",
        y="",
-       title=" ?",
-       subtitle=subtitle_str) + 
+       title="How many projects expecting funding serve DACs?",
+       subtitle=subtitle_str) +
+  scale_fill_manual(values=cat_palette_pastel(3)) + 
   epic_chart_theme
 
-ef_dac_pct_gp <- ggplotly(ef_dac_pct_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What percent of projects expecting funding serve DACs?",
+dac_ef_gp <- ggplotly(dac_ef_p, tooltip="text") %>%
+  layout(title = list(text = paste0("How many projects expecting funding serve DACs?",
                                     '<br>',
                                     subtitle_str)))
 
 
-
+dac_ef_gp
 if (save_plots) {
 
-    run_save_plots(gp_object = ef_dac_pct_gp, # change
-                 sub_folders, 
-                 file_name = "percent-expecting-funding-dacs-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = dac_ef_p,
+                   gp_object = dac_ef_gp, # change
+                   sub_folders, 
+                   name = "expecting-funding-serving-dacs-yoy", # change
+                   gs_tab) }
 
-ef_dac_pct_gp
+
 }
 ```
 
+```{r}
+dac_ef_grid <- project_counts %>%
+  select(state_fiscal_year, 
+         dac_ef_projects, dac_nef_projects, dac_ef_ni_projects,
+         ndac_ef_projects, ndac_nef_projects, ndac_ef_ni_projects,
+         dac_ni_ef_projects, dac_ni_nef_projects, dac_ni_ef_ni_projects
+        ) %>%
+  pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects",
+         "ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects",
+         "dac_ni_ef_projects", "dac_ni_nef_projects", "dac_ni_ef_ni_projects")) %>%
+  mutate(dac = case_when(
+    name %in% c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects") ~ "Yes",
+    name %in% c("ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects") ~ "No",
+    TRUE ~ "No Info"),
+         expecting_funding = case_when(
+    name %in% c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects") ~ "Yes",
+    name %in% c("dac_nef_projects", "ndac_nef_projects", "dac_ni_nef_projects") ~ "No",
+    TRUE ~ "No Info") 
+    ) %>%
+  select(-name)
+  
+
+test <- ggplot(dac_ef_grid, aes(x=expecting_funding, y=dac, fill=value)) + 
+  geom_tile(color="white") + 
+  epic_chart_theme
+
+test + facet_wrap(~state_fiscal_year)
+  
+```
 
 ### Project Type
 
 ```{r}
-project_types <- state_yoy %>%
-  select(state_fiscal_year, general_projects, ec_projects, lead_projects) %>%
-  pivot_longer(cols=c("general_projects", "ec_projects", "lead_projects")) %>%
-  rename(project_type = name) %>%
-  mutate(project_type = case_when(
-    project_type == "general_projects" ~ "General",
-    project_type == "ec_projects" ~ "Emerging Contaminants",
-    project_type == "lead_projects" ~ "Lead"),
-    plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", value, " projects"))
-```
 
-```{r}
+if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
 
-if(nrow(project_types) > 0 &
-   sum(project_types$value, na.rm=TRUE) > 0) {
-
-all_pt_p <- ggplot(project_types, aes(x=state_fiscal_year, y=value, fill=project_type, text=plot_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+all_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year, y=projects, fill=project_type, 
+                                        text=paste0(project_type, ", ", state_fiscal_year, ":<br>", projects, " projects"))) + 
+  geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   labs(x="State Fiscal Year",
        y="Projects",
        title=" ",
-       subtitle=paste0(state_name, ", SFY23-25")) +
+       subtitle=subtitle_str) +
   epic_chart_theme
 
 all_pt_gp <- ggplotly(all_pt_p, tooltip="text") %>%
@@ -452,10 +543,11 @@ all_pt_gp <- ggplotly(all_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = all_pt_gp, # change
-                 sub_folders, 
-                 file_name = "project-types-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = all_pt_p,
+                   gp_object = all_pt_gp, # change
+                   sub_folders, 
+                   name = "project-types-yoy", # change
+                   gs_tab) }
 
 all_pt_gp
 }
@@ -468,42 +560,34 @@ How many applicants serve small communities?
 ```{r}
 
 
-if(nrow(state_yoy %>% filter(!is.na(sc_projects))) > 0) {
 
-  sc_df <- state_yoy %>%
-    select(state_fiscal_year, sc_projects, non_sc_projects, projects) %>%
-    pivot_longer(cols=c(-state_fiscal_year, -projects)) %>%
-    mutate(name = case_when(
-      name == "non_sc_projects" ~ "Other Projects",
-      name == "sc_projects" ~ "Small Community Projects"),
-      name = factor(name, levels=c("Other Projects", "Small Community Projects")),
-      pct_str = format_percent(value / projects),
-      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
-    )
+if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
+
   
-
-sc_pop_p <- ggplot(sc_df, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+sc_pop_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=projects, fill=small_community, 
+                              text=paste0(small_community, ", ", state_fiscal_year, ":<br>", projects, " projects"))) + 
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
        title=" ",
        subtitle=subtitle_str) + 
     scale_fill_manual(values = cat_palette_pastel(2), 
-                      name = "") + 
+                      name = "Population < 10k") + 
   epic_chart_theme
 
 sc_pop_gp <- ggplotly(sc_pop_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many projects serve small communities (<10k population)?",
+  layout(title = list(text = paste0("How many projects serve small communities?",
                                     '<br>',
                                     subtitle_str)))
 
 
 if (save_plots) {
 
-    run_save_plots(gp_object = sc_pop_gp, # change
-                 sub_folders, 
-                 file_name = "small-community-projects-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = sc_pop_p,
+                   gp_object = sc_pop_gp, # change
+                   sub_folders, 
+                   name = "small-community-projects-yoy", # change
+                   gs_tab) }
 
 sc_pop_gp
 }
@@ -511,84 +595,64 @@ sc_pop_gp
 ```
 
 ```{r}
-if(nrow(state_yoy %>% filter(!is.na(sc_ef_projects))) > 0) {
+if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
 
-  sc_df_ef <- state_yoy %>%
-    select(state_fiscal_year, sc_ef_projects, ef_non_sc, expecting_funding_projects) %>%
-    pivot_longer(cols=c(-state_fiscal_year, -expecting_funding_projects)) %>%
-    mutate(name = case_when(
-      name == "ef_non_sc" ~ "Other Projects Expecting Funding",
-      name == "sc_ef_projects" ~ "Small Community Projects Expecting Funding"),
-      name = factor(name, levels=c("Other Projects Expecting Funding", "Small Community Projects Expecting Funding")),
-      pct_str = format_percent(value / expecting_funding_projects),
-      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
-    )
-  
-
-sc_ef_p <- ggplot(sc_df_ef, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+sc_ef_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=ef_projects, fill=small_community, 
+                                          text=paste0(small_community, ", ", state_fiscal_year, ":<br>", ef_projects, " projects"))) + 
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
        title=" ",
        subtitle=subtitle_str) + 
     scale_fill_manual(values = cat_palette_pastel(2), 
-                      name = "") + 
+                      name = "Population < 10k") + 
   epic_chart_theme
 
 sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many projects serving small communities (<10k population) expect funding?",
+  layout(title = list(text = paste0("How many projects serving small communities expect funding?",
                                     '<br>',
                                     subtitle_str)))
 
 
 if (save_plots) {
 
-    run_save_plots(gp_object = sc_ef_gp, # change
-                 sub_folders, 
-                 file_name = "small-community-expecting-funding-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = sc_ef_p,
+                   gp_object = sc_ef_gp, # change
+                   sub_folders, 
+                   name = "small-community-expecting-funding-yoy", # change
+                   gs_tab) }
 
 sc_ef_gp
 }
 ```
 
 ```{r}
-if(nrow(state_yoy %>% filter(!is.na(sc_dac_projects))) > 0) {
+if(nrow(small_community_df %>% filter(!is.na(dac_projects))) > 0) {
 
-  sc_df_dac <- state_yoy %>%
-    select(state_fiscal_year, sc_dac_projects, dac_non_sc, disadvantaged_projects) %>%
-    pivot_longer(cols=c(-state_fiscal_year, -disadvantaged_projects)) %>%
-    mutate(name = case_when(
-      name == "dac_non_sc" ~ "Other DAC Projects",
-      name == "sc_dac_projects" ~ "Small Community DAC Projects"),
-      name = factor(name, levels=c("Other DAC Projects", "Small Community DAC Projects")),
-      pct_str = format_percent(value / disadvantaged_projects),
-      plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", value, " projects (", pct_str, ")")
-    )
-  
-
-sc_dac_p <- ggplot(sc_df_dac, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+sc_dac_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=dac_projects, fill=small_community, 
+                                  text=paste0(small_community, ", ", state_fiscal_year, ":<br>", ef_projects, " projects")))+ 
   geom_bar(stat="identity", position="stack") + 
   labs(x="State Fiscal Year",
        y="Projects",
        title=" ",
        subtitle=subtitle_str) + 
     scale_fill_manual(values = cat_palette_pastel(2), 
-                      name = "") + 
+                      name = "Population < 10k") + 
   epic_chart_theme
 
 sc_dac_gp <- ggplotly(sc_dac_p, tooltip="text") %>%
-  layout(title = list(text = paste0("How many projects serving small communities (<10k) serve DACs?",
+  layout(title = list(text = paste0("How many projects serving small communities serve DACs?",
                                     '<br>',
                                     subtitle_str)))
 
 
 if (save_plots) {
 
-    run_save_plots(gp_object = sc_dac_gp, # change
-                 sub_folders, 
-                 file_name = "small-community-dacs-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = sc_dac_p,
+                   gp_object = sc_dac_gp, # change
+                   sub_folders, 
+                   name = "small-community-dacs-yoy", # change
+                   gs_tab) }
 
 sc_dac_gp
 }
@@ -638,7 +702,7 @@ state_projects_type <- state_projects %>%
 if(sum(state_projects_type$total_project_cost > 0)) {
 
 tpc_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type, text=total_project_cost_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+  geom_bar(stat="identity", position="stack") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
@@ -657,10 +721,11 @@ tpc_pt_gp <- ggplotly(tpc_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = tpc_pt_gp, # change
-                 sub_folders, 
-                 file_name = "total-project-cost-project-type-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = tpc_pt_p,
+                   gp_object = tpc_pt_gp, # change
+                   sub_folders, 
+                   name = "total-project-cost-project-type-yoy", # change
+                   gs_tab) }
 
 tpc_pt_gp
 }
@@ -671,7 +736,7 @@ tpc_pt_gp
 if(sum(state_projects_type$total_requested_amount > 0)) {
 
 tra_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type, text=total_requested_amount_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+  geom_bar(stat="identity", position="stack") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
@@ -690,10 +755,11 @@ tra_pt_gp <- ggplotly(tra_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = tra_pt_gp, # change
-                 sub_folders, 
-                 file_name = "total-requested-amount-project-type-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = tra_pt_p,
+                   gp_object = tra_pt_gp, # change
+                   sub_folders, 
+                   name = "total-requested-amount-project-type-yoy", # change
+                   gs_tab) }
 tra_pt_gp
 }
 ```
@@ -702,7 +768,7 @@ tra_pt_gp
 if(sum(state_projects_type$total_funding_amount > 0)) {
 
 tfa_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_funding_amount, fill=project_type, text=total_funding_amount_str)) + 
-  geom_bar(stat="identity", position="dodge") + 
+  geom_bar(stat="identity", position="stack") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
@@ -721,10 +787,11 @@ tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = tfa_pt_gp, # change
-                 sub_folders, 
-                 file_name = "total-funding-amount-project-type-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = tfa_pt_p,
+                   gp_object = tfa_pt_gp, # change
+                   sub_folders, 
+                   name = "total-funding-amount-project-type-yoy", # change
+                   gs_tab) }
 tfa_pt_gp
 }
 ```
@@ -735,7 +802,7 @@ if(sum(state_projects_type$total_principal_forgiveness > 0)) {
 
 
 tpf_pt_p <- ggplot(state_projects_type, aes(x=state_fiscal_year, y=total_principal_forgiveness, fill=project_type)) + 
-  geom_bar(stat="identity", position="dodge") + 
+  geom_bar(stat="identity", position="stack") + 
       scale_fill_manual(values = cat_palette_pastel(3), 
                       name = "Project Type") + 
   scale_y_continuous(labels=label_dollar()) + 
@@ -753,10 +820,11 @@ tpf_pt_gp <- ggplotly(tpf_pt_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = tpf_pt_gp, # change
-                 sub_folders, 
-                 file_name = "total-principal-forgiveness-project-type-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = tpf_pt_p,
+                   gp_object = tpf_pt_gp, # change
+                   sub_folders, 
+                   name = "total-principal-forgiveness-project-type-yoy", # change
+                   gs_tab) }
 tpf_pt_gp
 }
 ```
@@ -794,7 +862,7 @@ avg_demand_p <- ggplot(sfy_project_cost, aes(x=state_fiscal_year, y=value, fill=
   epic_chart_theme
 
 avg_demand_gp <- ggplotly(avg_demand_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What's the average demand for funds per year?",
+  layout(title = list(text = paste0("What's the average demand for funds per project?",
                                     '<br>',
                                     subtitle_str)))
 
@@ -802,10 +870,11 @@ avg_demand_gp <- ggplotly(avg_demand_p, tooltip="text") %>%
 
 if (save_plots) {
 
-    run_save_plots(gp_object = efp_gp, # change
-                 sub_folders, 
-                 file_name = "average-median-project-cost-yoy.html", # change
-                 gs_tab) }
+    run_save_plots(gg_plot = efp_p,
+                   gp_object = efp_gp, # change
+                   sub_folders, 
+                   name = "average-median-project-cost-yoy", # change
+                   gs_tab) }
 avg_demand_gp
 }
 ```

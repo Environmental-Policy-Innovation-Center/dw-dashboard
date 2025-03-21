@@ -4,7 +4,7 @@ The generated features include status columns for each column in the project-lev
 
 The resulting dataset can answer a number of high-level questions for each state in a given state fiscal year, like "what percentage of DACs are expecting funding?" or the inverse - "how many projects expecting funding are supporting DACs?". The dataset is used extensively in `year-over-year.Rmd` to create the data visualizations used in the SRF Funding Tracker state landing pages.
 
-```{r}
+```{r, warning=FALSE}
 
 source("resources.R")
 run_code_from_file("aws.txt")
@@ -71,180 +71,293 @@ feature_coverage <- create_status_cols(all_projects, col_names=c("community_serv
 # NOTE: replacing NAs for math when calculating percents, 
 # but when this merges in, we need to go back and add "Missing" when it was actually NA in the project data
 # for project_type calculations, NA represents when we didn't have this data
-project_features <- all_projects %>%
+project_counts <- all_projects %>%
   group_by(state, state_fiscal_year) %>%
   summarize(projects = n(),
-            
-            general_projects = sum(project_type == "General"),
-            ec_projects = sum(project_type == "Emerging Contaminants"),
-            lead_projects = sum(project_type == "Lead"),
-            
-            # number of projects expecting funding and percent of all projects expecting funding
-            expecting_funding_projects = sum(expecting_funding == "Yes"),
-            expecting_funding_projects = replace_na(expecting_funding_projects, 0),
-            expecting_funding_percent = round(expecting_funding_projects / projects, 2)*100,
-            
-            ef_general_projects = sum(expecting_funding == "Yes" & project_type == "General"),
-            ef_ec_projects = sum(expecting_funding == "Yes" & project_type == "Emerging Contaminants"),
-            ef_lead_projects = sum(expecting_funding == "Yes" & project_type == "Lead"),
+
+            # number of projects expecting funding and percent of all projects expecting funding or not or where info is missing
+            ef_projects = replace_na(sum(expecting_funding == "Yes"),0),
+            nef_projects = replace_na(sum(expecting_funding == "No"),0),
+            ef_ni_projects = replace_na(sum(expecting_funding == "No Information"),0),
 
             # number of disadvantaged projects and percent of all projects that are DACs
-            disadvantaged_projects = sum(disadvantaged == "Yes"),
-            disadvantaged_projects = replace_na(disadvantaged_projects, 0),
-            disadvantaged_percent = round(disadvantaged_projects / projects, 2)*100,
+            dac_projects = replace_na(sum(disadvantaged == "Yes"),0),
+            ndac_projects = replace_na(sum(disadvantaged == "No"),0),
+            dac_ni_projects = replace_na(sum(disadvantaged == "No Information"),0),
             
-            dac_general_projects = sum(disadvantaged == "Yes" & project_type == "General"),
-            dac_ec_projects = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants"),
-            dac_lead_projects = sum(disadvantaged == "Yes" & project_type == "Lead"),
+            # dacs x expecting funding outcomes
+            dac_ef_projects = replace_na(sum(disadvantaged == "Yes" & expecting_funding == "Yes"),0),
+            dac_nef_projects = replace_na(sum(disadvantaged == "Yes" & expecting_funding=="No"),0),
+            dac_ef_ni_projects = replace_na(sum(disadvantaged=="Yes" & expecting_funding=="No Information"),0),
             
-            # projects by type & dacs & expecting funding
-            dac_general_ef_projects = sum(disadvantaged == "Yes" & project_type == "General" & expecting_funding == "Yes"),
-            dac_lead_ef_projects = sum(disadvantaged == "Yes" & project_type == "Lead" & expecting_funding == "Yes"),
-            dac_ec_ef_projects = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants" & expecting_funding == "Yes"),
+            # non-dacs x expecting funding outcomes
+            ndac_ef_projects = replace_na(sum(disadvantaged=="No" & expecting_funding=="Yes"),0),
+            ndac_nef_projects = replace_na(sum(disadvantaged=="No" & expecting_funding=="No"),0),
+            ndac_ef_ni_projects = replace_na(sum(disadvantaged=="No" & expecting_funding=="No Information"),0),
             
-            # number of projects that are both DACs and expecting funding
-            disadvantaged_expecting_funding_projects = sum(expecting_funding == "Yes" & disadvantaged == "Yes"),
-            disadvantaged_expecting_funding_projects = replace_na(disadvantaged_expecting_funding_projects, 0),
+            # no info dacs x expecting funding outcomes
+            dac_ni_ef_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="Yes"),0),
+            dac_ni_nef_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No"),0),
+            dac_ni_ef_ni_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No Information"),0),
             
-            # inverse: projects that are DACs and NOT expecting funding
-            disadvantaged_not_expecting_funding_projects = sum(expecting_funding == "No" & disadvantaged == "Yes"),
-            
-            # percent of all projects that are DACs expecting funding
-            disadvantaged_expecting_funding_percent_all = round(disadvantaged_expecting_funding_projects / projects, 2)*100,
-            
-            # percent of projects expecting funding that are DACs
-            disadvantaged_expecting_funding_percent_ef = round(disadvantaged_expecting_funding_projects / expecting_funding_projects, 2)*100,
-            
-            # percent of DACs that are expecting funding
-            disadvantaged_expecting_funding_percent_dac = round(disadvantaged_expecting_funding_projects / disadvantaged_projects, 2)*100,
-            
-            # number of projects serving small communities
-            sc_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000),
-            sc_ef_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & expecting_funding == "Yes"),
-            sc_dac_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & disadvantaged == "Yes"),
-            sc_ef_dac_projects = sum(convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 & expecting_funding == "Yes" & disadvantaged == "Yes"),
-            # inverse of above for plotting purposes
-            non_sc_projects = projects - sc_projects,
-            dac_non_sc = disadvantaged_projects - sc_dac_projects,
-            ef_non_sc = expecting_funding_projects - sc_ef_projects
-            )
-
+            lsli_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), "lsli|lead service line inventory|inventory"), 0)),
+            lslr_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), "lslr|lead service line replacement|replacing lead"), 0)),
+  )
 ```
+
+```{r}
+small_community_df <- all_projects %>%
+  mutate(small_community = case_when(
+    population == "No Information" ~ "No Information",
+    convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 ~ "Yes",
+    TRUE ~ "No"
+  )) %>%
+  group_by(state, state_fiscal_year, small_community) %>%
+  summarize(projects = n(),
+            dac_projects = sum(disadvantaged=="Yes", na.rm=TRUE),
+            ndac_projects = sum(disadvantaged=="No", na.rm=TRUE),
+            dac_ni_projects = sum(disadvantaged=="No Information", na.rm=TRUE),
+            
+            ef_projects = sum(expecting_funding=="Yes", na.rm=TRUE),
+            nef_projects = sum(expecting_funding=="No", na.rm=TRUE),
+            ef_ni_projects = sum(expecting_funding=="No Information", na.rm=TRUE),
+            
+            dac_ef_projects = sum(disadvantaged=="Yes" & expecting_funding=="Yes", na.rm=TRUE),
+            dac_nef_projects = sum(disadvantaged=="Yes" & expecting_funding=="No", na.rm=TRUE),
+            dac_ef_ni_projects = sum(disadvantaged=="Yes" & expecting_funding=="No Information", na.rm=TRUE),
+            
+            ndac_ef_projects = sum(disadvantaged=="No" & expecting_funding=="Yes", na.rm=TRUE),
+            ndac_nef_projects = sum(disadvantaged=="No" & expecting_funding=="No", na.rm=TRUE),
+            ndac_ef_ni_projects = sum(disadvantaged=="No" & expecting_funding=="No Information", na.rm=TRUE),
+            
+            dac_ni_ef_projects = sum(disadvantaged=="No Information" & expecting_funding=="Yes", na.rm=TRUE),
+            dac_ni_nef_projects = sum(disadvantaged=="No Information" & expecting_funding=="No", na.rm=TRUE),
+            dac_ni_ef_ni_projects = sum(disadvantaged=="No Information" & expecting_funding=="No Information", na.rm=TRUE),
+            )
+  
+```
+
+
+```{r}
+project_type_df <- all_projects %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(projects = n(),
+            dac_projects = sum(disadvantaged=="Yes", na.rm=TRUE),
+            ndac_projects = sum(disadvantaged=="No", na.rm=TRUE),
+            dac_ni_projects = sum(disadvantaged=="No Information", na.rm=TRUE),
+            
+            ef_projects = sum(expecting_funding=="Yes", na.rm=TRUE),
+            nef_projects = sum(expecting_funding=="No", na.rm=TRUE),
+            ef_ni_projects = sum(expecting_funding=="No Information", na.rm=TRUE),
+            
+            dac_ef_projects = sum(disadvantaged=="Yes" & expecting_funding=="Yes", na.rm=TRUE),
+            dac_nef_projects = sum(disadvantaged=="Yes" & expecting_funding=="No", na.rm=TRUE),
+            dac_ef_ni_projects = sum(disadvantaged=="Yes" & expecting_funding=="No Information", na.rm=TRUE),
+            
+            ndac_ef_projects = sum(disadvantaged=="No" & expecting_funding=="Yes", na.rm=TRUE),
+            ndac_nef_projects = sum(disadvantaged=="No" & expecting_funding=="No", na.rm=TRUE),
+            ndac_ef_ni_projects = sum(disadvantaged=="No" & expecting_funding=="No Information", na.rm=TRUE),
+            
+            dac_ni_ef_projects = sum(disadvantaged=="No Information" & expecting_funding=="Yes", na.rm=TRUE),
+            dac_ni_nef_projects = sum(disadvantaged=="No Information" & expecting_funding=="No", na.rm=TRUE),
+            dac_ni_ef_ni_projects = sum(disadvantaged=="No Information" & expecting_funding=="No Information", na.rm=TRUE),
+            )
+```
+
 
 ```{r}
 project_cost_aggregation <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
-  summarize(total_project_cost = sum(as.numeric(project_cost)))
+  summarize(total_project_cost = sum(as.numeric(project_cost)),
+            median_project_cost = median_wo_zero(as.numeric(project_cost)),
+            avg_project_cost = mean(as.numeric(project_cost)))
 
 pc_by_type <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
   group_by(state, state_fiscal_year, project_type) %>%
-  summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
-  pivot_wider(names_from=project_type, values_from=total_project_cost) %>%
-  rename(ec_total_project_cost = `Emerging Contaminants`,
-         lead_total_project_cost = `Lead`,
-         general_total_project_cost = `General`) %>%
-  select(state, state_fiscal_year, ec_total_project_cost, lead_total_project_cost, general_total_project_cost)
+  summarize(total_project_cost = sum(as.numeric(project_cost)))
 
-project_cost_aggregation <- project_cost_aggregation %>%
-  left_join(pc_by_type, by=c("state", "state_fiscal_year"))
+pc_by_ef <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
+  group_by(state, state_fiscal_year, expecting_funding) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
+  pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
+  rename(project_cost_ef = Yes,
+         project_cost_nef = No,
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`)
+
+pc_by_lsl <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
+  mutate(lead_type = case_when(
+   str_detect(tolower(project_description), "lsli|lead service line inventory|inventorying lead") ~ "lsli",
+   str_detect(tolower(project_description), "lslr|lead service line replacement|replacing lead") ~ "lslr",
+    TRUE ~ "neither"
+  )) %>%
+  group_by(state, state_fiscal_year, lead_type) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
+  pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
+  rename(project_cost_lslr = lslr,
+         project_cost_lsli = lsli,
+         project_cost_lsln = neither)
+
 ```
 
 ```{r}
 funding_amount_aggregation <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
-  summarize(total_funding_amount = sum(as.numeric(funding_amount)))
+  summarize(total_funding_amount = sum(as.numeric(funding_amount)),
+            median_funding_amount = median_wo_zero(as.numeric(funding_amount)),
+            avg_funding_amount = mean(as.numeric(funding_amount)))
 
 fa_by_type <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
   group_by(state, state_fiscal_year, project_type) %>%
-  summarize(total_funding_amount = sum(as.numeric(funding_amount))) %>%
-  pivot_wider(names_from=project_type, values_from=total_funding_amount) %>%
-  rename(ec_total_funding_amount = `Emerging Contaminants`,
-         lead_total_funding_amount = `Lead`,
-         general_total_funding_amount = `General`) %>%
-  select(state, state_fiscal_year, ec_total_funding_amount, lead_total_funding_amount, general_total_funding_amount)
+  summarize(total_funding_amount = sum(as.numeric(funding_amount)))
 
-funding_amount_aggregation <- funding_amount_aggregation %>%
-  left_join(fa_by_type, by=c("state", "state_fiscal_year"))
 ```
 
 ```{r}
 requested_amount_aggregation <- all_projects %>%
   filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
-  summarize(total_requested_amount = sum(as.numeric(requested_amount)))
+  summarize(total_requested_amount = sum(as.numeric(requested_amount)),
+            median_requested_amount = median_wo_zero(as.numeric(requested_amount)),
+            avg_requested_amount = mean(as.numeric(requested_amount)))
 
 ra_by_type <- all_projects %>%
   filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
   group_by(state, state_fiscal_year, project_type) %>%
-  summarize(total_requested_amount = sum(as.numeric(requested_amount))) %>%
-  pivot_wider(names_from=project_type, values_from=total_requested_amount) %>%
-  rename(ec_total_requested_amount = `Emerging Contaminants`,
-         lead_total_requested_amount = `Lead`,
-         general_total_requested_amount = `General`) %>%
-  select(state, state_fiscal_year, ec_total_requested_amount, lead_total_requested_amount, general_total_requested_amount)
+  summarize(total_requested_amount = sum(as.numeric(requested_amount)))
 
-requested_amount_aggregation <- requested_amount_aggregation %>%
-  left_join(ra_by_type, by=c("state", "state_fiscal_year"))
 ```
 
 ```{r}
-median_wo_zero <- function(col_name) {
-  non_zero <- col_name[col_name != 0]  # Filter out 0s
-  median(non_zero)  # Calculate median on the filtered data
-}
 
 principal_forgiveness_aggregation <- all_projects %>%
   filter(!is.na(principal_forgiveness) & principal_forgiveness != "No Information") %>%
   group_by(state, state_fiscal_year) %>%
   summarize(total_principal_forgiveness = sum(as.numeric(principal_forgiveness)),
-            projects_receiving_pf = sum(as.numeric(principal_forgiveness) > 0),
-            dacs_receiving_pf = sum(disadvantaged == "Yes" & as.numeric(principal_forgiveness) > 0),
-            dacs_general_pf = sum(disadvantaged == "Yes" & project_type == "General" & as.numeric(principal_forgiveness) > 0),
-            dacs_lead_pf = sum(disadvantaged == "Yes" & project_type == "Lead" & as.numeric(principal_forgiveness) > 0),
-            dacs_ec_pf = sum(disadvantaged == "Yes" & project_type == "Emerging Contaminants" & as.numeric(principal_forgiveness) > 0),
-            median_pf = median_wo_zero(as.numeric(principal_forgiveness))
+            median_principal_forgiveness = median_wo_zero(as.numeric(principal_forgiveness)),
+            avg_principal_forgiveness = mean(as.numeric(principal_forgiveness))
             )
+
+pf_projects <- all_projects %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(projects_receiving_pf = sum(as.numeric(principal_forgiveness > 0 )),
+            dac_receiving_pf = sum(disadvantaged == "Yes" & as.numeric(principal_forgiveness) > 0),
+            ndac_receiving_pf = sum(disadvantaged == "No" & as.numeric(principal_forgiveness) > 0),
+            dac_ni_receiving_pf = sum(disadvantaged == "No Information" & as.numeric(principal_forgiveness) > 0),
+            pf_ni = sum(principal_forgiveness == "No Information"),
+            pf_na = sum(is.na(principal_forgiveness))
+            )
+
+pf_by_type <- all_projects %>%
+  filter(!is.na(principal_forgiveness) & principal_forgiveness != "No Information") %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(total_principal_forgiveness = sum(as.numeric(principal_forgiveness)))
+  
 ```
 
 ```{r}
-
-state_stats <- feature_coverage %>%
-  left_join(project_features, by=c("state", "state_fiscal_year")) %>%
+# 14
+project_dollars <- feature_coverage %>%
+  select(state, state_fiscal_year) %>%
   left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
+  left_join(pc_by_ef, by=c("state", "state_fiscal_year")) %>%
+  left_join(pc_by_lsl, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
+
+# 27
+project_type_df <- project_type_df %>%
+  left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
+  left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
+  left_join(ra_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
+  left_join(pf_by_type, by=c("state", "state_fiscal_year", "project_type"))
   
+# 30
+project_counts <- project_counts %>%
+  left_join(pf_projects, by=c("state", "state_fiscal_year"))
+
 
 ```
 
 ```{r}
 
  # Writing to temp
- write.csv(state_stats, file.path(tempdir(), "dwsrf-funding-tracker-state-stats.csv"), row.names = FALSE)
+ write.csv(feature_coverage, file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"), row.names = FALSE)
 
  #Putting in Bucket
  put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-state-stats.csv"),
-   object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-state-stats.csv",
-   bucket = "water-team-data",
+   file = file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"),
+   object = "state-stats/dwsrf-funding-tracker-feature-coverage.csv",
+   bucket = "funding-tracker",
    acl = "public-read"
  )
+ 
+ 
+   # Writing to temp
+ write.csv(project_counts, file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ put_object(
+   file = file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"),
+   object = "state-stats/dwsrf-funding-tracker-project-counts.csv",
+   bucket = "funding-tracker",
+   acl = "public-read"
+ )
+ 
+ 
+ # Writing to temp
+ write.csv(project_type_df, file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ put_object(
+   file = file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"),
+   object = "state-stats/dwsrf-funding-tracker-project-types.csv",
+   bucket = "funding-tracker",
+   acl = "public-read"
+ )
+
+ 
+  # Writing to temp
+ write.csv(small_community_df, file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ put_object(
+   file = file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"),
+   object = "state-stats/dwsrf-funding-tracker-small-community.csv",
+   bucket = "funding-tracker",
+   acl = "public-read"
+ )
+ 
+ 
+   # Writing to temp
+ write.csv(project_dollars, file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"), row.names = FALSE)
+
+ #Putting in Bucket
+ put_object(
+   file = file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"),
+   object = "state-stats/dwsrf-funding-tracker-project-dollars.csv",
+   bucket = "funding-tracker",
+   acl = "public-read"
+ )
+ 
  
 
 ```
 
 ```{r}
 
-state_stats_agg <- state_stats %>%
-  select(-ends_with("_status"))
-
  write_sheet(feature_coverage, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Feature Coverage")
- write_sheet(state_stats_agg, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Aggregated Stats")
+ write_sheet(project_type_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Project Type")
+ write_sheet(small_community_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Small Community")
+ write_sheet(project_counts, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Counts")
+ write_sheet(project_dollars, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Dollars")
  
 ```
 

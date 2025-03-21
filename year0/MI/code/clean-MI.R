@@ -19,7 +19,8 @@ clean_mi_y0 <- function() {
            population = clean_numeric_string(population),
            project_description = str_squish(project_description),
           #TODO: Confirm whether the blank entries should be listed as No or No Info
-           disadvantaged = str_squish(disadvantaged_community),
+          disadvantaged = str_squish(disadvantaged_community),
+          disadvantaged = ifelse(disadvantaged=="", "No", disadvantaged),
           project_rank = str_squish(rank),
           project_score = str_squish(total_points),
           #TODO: Confirm this works based on clarified definition above

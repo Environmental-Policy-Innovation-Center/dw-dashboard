@@ -6,6 +6,8 @@ clean_tn_y3 <- function() {
   gen_ppl <- fread("year3/TN/data/basegen_supp_ppl.csv",
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
+    # manually remove projects found on lead/ec list already
+    filter(is.na(on_lead_ec)) %>%
     mutate(project_type = case_when(grepl("lead", project_description, ignore.case = TRUE) ~ "Lead", 
                                     grepl("PFAS|PFOS|Emerging.Contaminants", 
                                           project_description, ignore.case = TRUE) ~ "Emerging Contaminants",

@@ -77,8 +77,8 @@ clean_nv_y1 <- function() {
            project_type = "General",
            # manually update the two projects that are funded in project ranked 95, fill rest in as applicant
            expecting_funding = case_when(
-             project_rank == "93" ~ "Funded",
-             project_rank == "94" ~ "Funded",
+             project_rank == "93" ~ "Yes",
+             project_rank == "94" ~ "Yes",
              is.na(expecting_funding) ~ "No",
              TRUE ~ expecting_funding
            ),

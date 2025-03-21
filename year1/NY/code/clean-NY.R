@@ -2,84 +2,52 @@ source("resources.R")
 
 clean_ny_y1 <- function() {
   
-  ## Multi-year list
-  ny_multi <- fread("year1/NY/data/ny-multi-year-list.csv",
-                    colClass="character", na.strings="") %>%
-    clean_names() %>%
-    mutate(project_number = str_squish(project),
-           community_served = str_squish(county),
-           project_description = str_squish(description),
-           population = clean_numeric_string(pop),
-           project_cost = clean_numeric_string(project_cost),
-           project_score = clean_numeric_string(score)
-           ) %>%
-    select(project_number, community_served, system_name_borrower, project_description, 
-           population, project_cost, project_score, description)
   
-  
-  
-  
-  # project annual list, p33 of FFY 2023 Final IUP
-  # (558,10) -> (558,12)
-  ny_base <- fread("year1/NY/data/32-NewYork_base_ppl.csv",
-                   colClass="character", na.strings="") %>%
-    clean_names() %>%
-    mutate(# projects are expecting funding if they are above the Expanded Subsidized Interest Rate Funding Line
-           expecting_funding = ifelse(row_number() <= 148, "Yes", as.character(NA)))
-  
-  ## BIL
+## BIL PPL
   # (120,10) -> (120,11)
   ny_bil <- fread("year1/NY/data/32-NewYork_bil_ppl.csv",
                   colClass="character", na.strings="") %>%
     clean_names() %>%
     select(-v1) %>%
     mutate(project_type = "General",
-           # projects are dacs if on the bil list
-           disadvantaged = "Yes") %>%
-    select(project_number, disadvantaged)
+           # “H” in Score on Annual List or project is included on BIL-GS PPL.
+           disadvantaged = "Yes")
   
-
-  # all projects on BIL are also on base
-  ny_base_bil <- ny_base %>%
-    left_join(ny_bil, by="project_number") %>%
-    # from Base, if H, disadvantaged. if still NA, not disadvantaged, if it already wasn't NA, inherit "Yes" from BIL
-    mutate(disadvantaged = case_when(
-      # if NA from bil list and "H", DAC, otherwise not
-      score == "H" & is.na(disadvantaged) ~ "Yes",
-      is.na(disadvantaged) ~ "No",
-      TRUE ~ disadvantaged)
-      ) %>%
-    # drop 4 projects already on EC/lead list
-    filter(!project_number %in% c("18971", "19125", "19171", "19277"))
-  
-  
+## BIL AWARDS
   ny_bil_awards <- fread("year1/NY/data/ny-bil-gen-supp-awards.csv",
                          colClass="character", na.strings="") %>%
     clean_names() %>%
     rename(project_number = srf_number) %>%
-    mutate(expecting_funding = "Yes",
-           disadvantaged = "Yes") %>%
-    select(project_number, expecting_funding, disadvantaged)
+    mutate(funding_amount = convert_to_numeric(bil_gs_grant_award, TRUE) + convert_to_numeric(bil_gs_0_percent_loan_award, TRUE),
+           funding_amount = clean_numeric_string(funding_amount),
+           principal_forgiveness = clean_numeric_string(bil_gs_grant_award),
+           expecting_funding = "Yes") %>%
+    select(project_number, funding_amount, principal_forgiveness, expecting_funding)
   
-  # 554
-  ny_bil_combined <- ny_base_bil %>%
-    left_join(ny_bil_awards, by=c("project_number", "expecting_funding", "disadvantaged"))
+## Combine BIL
+  ny_bil_combined <- ny_bil %>%
+    left_join(ny_bil_awards, by=c("project_number")) %>%
+    # drop two projects that appear with more info on the EC funding list
+    filter(!project_number %in% c("19171", "18971")) %>%
+    mutate(population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost),
+           ) %>%
+    select(project_number, county, system_name, borrower, description, population, project_cost,
+           score, project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
   
   
-  ## Lead - Amendment 4
-  # (109,11) -> (109,12)
+  
+
+## Lead PPL
   ny_lslr <- fread("year1/NY/data/32-NewYork_lead.csv",
                    colClass="character", na.strings="") %>%
     clean_names() %>%
     select(-v1) %>%
     mutate(project_type = "Lead",
-           disadvantaged = case_when(
-             #NOTE: dac column extracted in scraping process
-             dac == "DAC" ~ "Yes",
-             TRUE ~ "No"
-           ))
+           # projects on lead iup are DAC is listed, confirmed No if not
+           disadvantaged = ifelse(dac == "DAC" & !is.na(dac), "Yes", "No"))
   
-  ## Lead Funding List
+## Lead Funding List
   ny_lslr_awards <- fread("year1/NY/data/ny-lslr-awards.csv",
                           colClass="character", na.strings="") %>%
     clean_names() %>%
@@ -91,133 +59,145 @@ clean_ny_y1 <- function() {
   
   # 109
   ny_lslr_combined <- ny_lslr %>%
-    left_join(ny_lslr_awards, by="project_number")
+    left_join(ny_lslr_awards, by="project_number") %>%
+    mutate(population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost)) %>%
+    select(project_number, county, system_name, borrower, description, project_cost, score, project_type,
+           population, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
   
   
-  ## Emerging Contaminants - Amendment 2
+## EC PPL
   # (37,10) -> (37,11)
   ny_ec <- fread("year1/NY/data/32-NewYork_ec.csv",
                  colClass="character", na.strings="") %>%
     clean_names() %>%
     select(-pfas) %>%
     mutate(project_type = "Emerging Contaminants",
-           disadvantaged = case_when(
-             dac == "DAC" ~ "Yes",
-             TRUE ~ "No"),
-           population = case_when(
-             # fix projects that are missing population from NY Base
-             project_number == "19171" ~ "14700",
-             project_number == "18971" ~ "28000",
-             project_number == "19125" ~ "621"
-           )
-    )
+           # projects on lead iup are DAC is listed, confirmed No if not
+           disadvantaged = ifelse(dac == "DAC" & !is.na(dac), "Yes", "No"))
   
-  ## Emerging Contaminants - Funding List
+## Emerging Contaminants - Funding List
   ny_ec_awards <- fread("year1/NY/data/ny-ec-awards.csv",
                         colClass="character", na.strings="") %>%
     clean_names() %>%
     rename(project_number = srf_number) %>%
-    mutate(funding_amount = clean_numeric_string(bil_ec_grant_award),
+    mutate(funding_amount = "No Information",
            principal_forgiveness = clean_numeric_string(bil_ec_grant_award),
            expecting_funding = "Yes",
-           ) %>%
+    ) %>%
     select(project_number, funding_amount, principal_forgiveness, expecting_funding)
   
   # 37
   ny_ec_combined <- ny_ec %>%
-    left_join(ny_ec_awards, by="project_number")
+    left_join(ny_ec_awards, by="project_number") %>%
+    mutate(population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost)) %>%
+    select(project_number, county, system_name, borrower, description, population, project_cost, score,
+           project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
+    
   
-  ## Combine & Clean
-  # -> (700, 13)
-  ny_combined <- bind_rows(ny_bil_combined, ny_lslr_combined, ny_ec_combined) %>%
-    mutate(system_name_borrower = paste0(system_name, " / ", borrower)) %>%
-    select(project_number, system_name_borrower, project_type, expecting_funding, 
-           disadvantaged, funding_amount, principal_forgiveness, pop, project_cost, 
-           county, score, description)
-  
-  
-  ny_all <- merge(ny_combined, ny_multi, all=TRUE, on="project_number") %>%
-    select(project_number) %>%
-    distinct()
+## BIL-GS, Lead, EC
+  #NOTE: more than half of these do not appear on the annual list by project number
+  ny_combined <- bind_rows(ny_bil_combined, ny_lslr_combined, ny_ec_combined)
   
   
-  ny_all <- ny_all %>%
-    left_join(ny_multi, by="project_number") %>%
-    left_join(ny_combined, by="project_number") %>%
-    # drop columns that didn't match but contain redundant information, fixing and dropping one by one to clean up the dataframe
-   
-     mutate(
-      population = case_when(
-        is.na(population) ~ clean_numeric_string(pop),
-        TRUE ~ population),
-    ) %>%
-    select(-pop) %>%
+## Annual List, p33 of FFY 2023 Final IUP
+  # (558,10) -> (558,12)
+  ny_annual <- fread("year1/NY/data/32-NewYork_base_ppl.csv",
+                     colClass="character", na.strings="") %>%
+    clean_names() %>%
+    mutate(population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost)) %>%
+    select(-pop)
+  
+  # for projects on the annual list, simplify which columns are appended on
+  ny_combined_on_annual <- ny_combined %>%
+    filter(project_number %in% ny_annual$project_number) %>%
+    select(project_number, project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
+  
+  # for projects NOT on annual list, keep all columns for binding rows
+  ny_combined_not_on_annual <- ny_combined %>%
+    filter(!project_number %in% ny_annual$project_number)
+  
+  ny_annual_combined <- ny_annual %>%
+    left_join(ny_combined_on_annual, by="project_number") %>%
+    # 148 is the funding line for annual list, all projects above funded, all below not 
+    # unless funding determined by gs/lead/ec funding lists
+    mutate(expecting_funding = case_when(
+      row_number() <= 148 & is.na(expecting_funding) ~ "Yes",
+      row_number() > 148 & is.na(expecting_funding) ~ "No",
+      TRUE ~ expecting_funding),
+      disadvantaged = case_when(
+        # projects with H are DACs, projects above line but not H are No, projects below line and only on annual list are No Info
+        score == "H" & is.na(disadvantaged) ~ "Yes",
+        expecting_funding == "Yes" & score != "H" & is.na(disadvantaged) ~ "No",
+        expecting_funding == "No" & is.na(disadvantaged) ~ "No Information",
+        TRUE ~ disadvantaged),
+      # projects that are on lead/gs/ec but not on annual list, plus those on annual list, all No Information
+      funding_amount = replace_na(funding_amount, "No Information"),
+      principal_forgiveness = replace_na(principal_forgiveness, "No Information"))
+  
+  # once the shared project_numbers are joined, bind the remaining rows from GS/EC/Lead with all included columns
+  ny_annual_combined <- bind_rows(ny_annual_combined, ny_combined_not_on_annual)
+  
+  ## Multi-year list - contains most, but not all of annual list, so repeat multi-step join process
+  ny_multi <- fread("year1/NY/data/ny-multi-year-list.csv",
+                    colClass="character", na.strings="") %>%
+    clean_names() %>%
+    mutate(project_number = str_squish(project),
+           population = clean_numeric_string(pop),
+           project_cost = clean_numeric_string(project_cost)) %>%
+    select(-project, -pop)
+  
+  # for projects on the multi-year list, keep the columns determined by other docs and append it
+  ny_annual_on_multi <- ny_annual_combined %>%
+    filter(project_number %in% ny_multi$project_number) %>%
+    select(project_number, project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
+  
+  # append projects that are on annual and multi-year list
+  ny_multi_annual_combined <- ny_multi %>%
+    left_join(ny_annual_on_multi, by="project_number")
+  
+  # for projects no on the multi-year list, keep all columns  
+  ny_annual_not_on_multi <- ny_annual_combined %>%
+    filter(!project_number %in% ny_multi$project_number)
+  
+  # append projects not on multi-year list
+  ny_multi_annual_combined <- bind_rows(ny_multi_annual_combined, ny_annual_not_on_multi)
     
-    mutate(
-      project_cost = case_when(
-        is.na(project_cost.x) ~ clean_numeric_string(project_cost.y),
-        is.na(project_cost.y) ~ project_cost.x,
-        TRUE ~ clean_numeric_string(project_cost.y))
-    ) %>%
-    select(-project_cost.x, -project_cost.y) %>%
     
-    mutate(project_description = case_when(
-      is.na(project_description) & is.na(description.x) ~ str_squish(description.y),
-      is.na(project_description) ~ str_squish(description.x),
-      TRUE ~ str_squish(project_description)
-    )) %>%
-    select(-description.x, -description.y) %>%
-    
-    mutate(community_served = case_when(
-      is.na(community_served) ~ str_squish(county),
-      TRUE ~ community_served
-    )) %>%
-    select(-county) %>%
-    
-    mutate(project_score = case_when(
-      is.na(project_score) ~ score,
-      TRUE ~ project_score
-    )) %>%
-    select(-score) %>%
-    
-    mutate(borrower = case_when(
-      is.na(system_name_borrower.y) ~ system_name_borrower.x,
-      TRUE ~ system_name_borrower.y
-    )) %>%
-    select(-system_name_borrower.x, -system_name_borrower.y) %>%
-    
-    mutate(project_type = case_when(
-      project_type == "General" | project_type == "Lead" | project_type == "Emerging Contaminants" ~ project_type,
-      is.na(project_type) & grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
-      is.na(project_type) & (grepl("PFAS", project_description, ignore.case=TRUE) | grepl("dioxane", project_description, ignore.case=TRUE) | 
-        grepl("cyanotoxins", project_description, ignore.case=TRUE) | grepl("Mn", project_description, ignore.case=FALSE)) ~ "Emerging Contaminants",
-      TRUE ~ "General")
-           )
-    
-  ny_clean <- ny_all %>%
-    # process text columns  
-    mutate(project_id = str_squish(project_number),
-           project_description = str_replace_all(project_description, " \\. , ", " "),
-           project_description = str_replace_all(project_description, " , ", ", "),
-           project_description = str_replace_all(project_description, " \\. ", "\\. "),
-           project_description = str_replace_all(project_description, " \\( ", " \\("),
-           project_description = str_replace_all(project_description, " \\) ", "\\) "),
-           project_description = str_replace_all(project_description, " \\)", "\\)"),
+  ny_clean <- ny_multi_annual_combined %>%  
+    mutate(system_name_borrower = ifelse(is.na(system_name_borrower), paste0(system_name, " / ", borrower), system_name_borrower),
+           borrower = str_squish(system_name_borrower),
+           community_served = str_squish(county),
+           project_id = str_squish(project_number),
+           project_description = str_squish(description),
+           project_score = str_squish(score),
+           project_type = case_when(
+             !is.na(project_type) ~ project_type,
+             str_detect(tolower(description), "lead") | code=="BLSLR" ~ "Lead",
+             str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") | code=="BEC" ~ "Emerging Contaminants",
+             TRUE ~ "General"),
+           # all remaining projects on multi-year list are no info for DAC
+           disadvantaged = replace_na(disadvantaged, "No Information"),
+           # all remaining projects on multi-year are not expecting funding
+           expecting_funding = replace_na(expecting_funding, "No"),
+           funding_amount = replace_na(funding_amount,"No Information"),
+           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
            state = "New York",
            state_fiscal_year = "2023",
            pwsid = as.character(NA),
            project_name = as.character(NA),
            requested_amount = as.character(NA),
            project_rank = as.character(NA),
-           funding_amount = replace_na(funding_amount, "No Information"),
-           principal_forgiveness = replace_na(principal_forgiveness, "No Information"),
-           expecting_funding = replace_na(expecting_funding, "No"),
-           disadvantaged = replace_na(disadvantaged, "No Information")
-           ) %>%
+           )  %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
-
+  
+  ny_clean <- ny_clean %>%
+    filter(project_cost != "0")
+           
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

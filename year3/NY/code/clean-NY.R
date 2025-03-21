@@ -13,109 +13,101 @@ clean_ny_y3 <- function() {
     clean_names()  %>%
     mutate(cumulative_total = convert_to_numeric(cumulative_total),
            # the expected subsidized interest rate funding line is now on 243
-           expecting_funding = ifelse(row_number() <= 243, "Yes", "No"),
+           expecting_funding = case_when(
+             row_number() <= 243 ~ "Yes",
+             # if one of the BEC/BLSLR/BGS codes are present, expecting_funding
+             !is.na(codes) ~ "Yes",
+             TRUE ~ "No"),
            cumulative_total = clean_numeric_string(cumulative_total))
-  
-  # Multi-year list: Contains all eligible projects submitted for SRF assistance
-  ny_multi_year <- fread(file.path(base_path, "ny-y3-multi-year-v2.csv"),
-                   colClass="character", na.strings="") %>%
-    clean_names()
-  
-  # Annual List/BIL PPL: Projects with reports
-  ny_gs <- fread(file.path(base_path, "ny-y3-bil-ppl-v2.csv"),
-                     colClass="character", na.strings="") %>%
-    clean_names()
+
   
   # Lead PPL: Lead service line projects
   ny_lead <- fread(file.path(base_path, "ny-y3-bil-lead-v2.csv"),
                    colClasses="character", na.strings=c("", "NA")) %>%
-    clean_names()
+    clean_names() %>%
+    mutate(project_type = "Lead",
+           list = "lead") %>%
+    rename(project_number = project) %>%
+    select(project_number, project_type, list, dac)
 
   
   # EC PPL: Projects addressing emerging contaminants (e.g., PFAS)
   ny_ec <- fread(file.path(base_path, "ny-y3-bil-ec-v2.csv"),
                  colClass="character", na.strings="") %>%
-    clean_names()
-  
-  
-  # Process Lead projects first
-  lead_projects <- ny_lead %>%
-    mutate(
-      project_type = "Lead",
-      disadvantaged = case_when(
-        dac == "DAC" ~ "Yes",
-        TRUE ~ "No Information"
-      ),
-      # all projects on lead list are expecting funding
-      expecting_funding = "Yes"  
+    clean_names() %>%
+    mutate(project_type = "Emerging Contaminants",
+           list = "ec"
     ) %>%
-    rename(county = project_county,
-           project_number = project)
+    rename(project_number = project) %>%
+    select(project_number, project_type, list, dac)
   
-  # Process EC projects second
-  ec_projects <- ny_ec %>%
-    mutate(
-      project_type = "Emerging Contaminants",
-      disadvantaged = case_when(
-        dac == "dac" ~ "Yes",
-        TRUE ~ "No Information"
-      ),
-      #TODO: Confirm. Expected interpretation, but waiting on further clarity from Janet.
-      expecting_funding =  "No" 
-    ) %>%
-    rename(project_number = project)
-
+  ny_ec_lead <- bind_rows(ny_ec, ny_lead)
   
-  # Process Annual List projects (excluding those already in Lead/EC)
-  annual_projects <- ny_annual %>%
-    # Exclude projects already in Lead or EC lists
-    filter(!project_number %in% c(lead_projects$project_number, 
-                                  ec_projects$project_number)) %>%
+  ny_annual <- ny_annual %>%
+    left_join(ny_ec_lead, by="project_number")
+  
+  
+  # Process Annual List
+  ny_annual <- ny_annual %>%
     mutate(
       project_type = case_when(
+        !is.na(project_type) ~ project_type,
         str_detect(tolower(description), "lead") ~ "Lead",
         str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
-        TRUE ~ "General"
-      ),
-      disadvantaged = case_when(
-        score == "H" | project_number %in% ny_gs$project_number ~ "Yes",
-        TRUE ~ "No Information"
-      ),
+        codes == "BEC" ~ "Emerging Contaminants",
+        codes == "BLSLR" ~ "Lead",
+        TRUE ~ "General"),
+      list = ifelse(is.na(list), "annual", list)
     )
-
-  # Process remaining Multi-year projects
-  processed_numbers <- c(
-    lead_projects$project_number,
-    ec_projects$project_number,
-    annual_projects$project_number
-  )
   
-  multiyear_projects <- ny_multi_year %>%
+  
+  # Multi-year list: Contains all eligible projects submitted for SRF assistance
+  ny_multi_year <- fread(file.path(base_path, "ny-y3-multi-year-v2.csv"),
+                         colClass="character", na.strings="") %>%
+    clean_names()
+  
+  # Only used for checking for General DAC status
+  ny_gs <- fread(file.path(base_path, "ny-y3-bil-ppl-v2.csv"),
+                 colClass="character", na.strings="") %>%
+    clean_names()
+
+  
+  ny_multi_year <- ny_multi_year %>%
     # all projects not on annual, ec, or lead by project_number
-    filter(!project_number %in% processed_numbers) %>%
+    filter(!project_number %in% ny_annual$project_number) %>%
     mutate(
       # For remaining projects, check descriptions
       project_type = case_when(
         str_detect(tolower(description), "lead") ~ "Lead",
         str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
-        TRUE ~ "General"
-      ),
-      disadvantaged = "No Information",  # Per data dictionary
+        TRUE ~ "General"),
+      list = "multi",
+      # disadvantaged = "No Information",  # Per data dictionary
       expecting_funding = "No"  # Not on any funding list
     )
 
   # Step 5: Combine all projects and check distributions
-  ny_clean <- bind_rows(
-    lead_projects %>% select(-dac),
-    ec_projects %>% select(-dac),
-    annual_projects,
-    multiyear_projects
+  ny_all <- bind_rows(
+    ny_annual,
+    ny_multi_year,
   )
   
   
+  
   # Step 6: Clean and standardize columns
-  ny_clean <- ny_clean %>%
+  ny_clean <- ny_all %>%
     mutate(
+      disadvantaged = case_when(
+        score == "H" ~ "Yes",
+        list == "annual" & expecting_funding == "Yes" & score != "H" ~ "No",
+        list == "lead" & dac=="Yes" ~ "Yes",
+        list == "lead" & dac=="No" ~ "No",
+        list == "ec" & dac=="dac" ~ "Yes",
+        list == "ec" & is.na(dac) ~ "No",
+        list == "annual" & expecting_funding == "No" ~ "No Information",
+        list == "multi" & expecting_funding == "No" ~ "No Information",
+        TRUE ~ "!missing"
+      ),
       population = clean_numeric_string(pop),
       project_cost = clean_numeric_string(project_cost),
       project_id = str_squish(project_number),
@@ -132,6 +124,23 @@ clean_ny_y3 <- function() {
       principal_forgiveness = as.character(NA),
       project_rank = as.character(NA),
     )
+  
+  # Amendment 1 update
+  ny_clean <- ny_clean %>%
+    mutate(project_cost = case_when(
+      project_id == "18596" ~ "45537145",
+      project_id == "17787" ~ "30000",
+      project_id == "18507" ~ "75000",
+      project_id == "18757" ~ "300000",
+      project_id == "18584" ~ "100000",
+      project_id == "18651" ~ "75000",
+      project_id == "18216" ~ "175000",
+      project_id == "18787" ~ "22000",
+      project_id == "19215" ~ "8300000",
+      project_id == "18854" ~ "2659853",
+      project_id == "18548" ~ "1500000",
+      TRUE ~ project_cost
+    ))
   
   # Step 7: Final column selection and validation
   ny_clean <- ny_clean %>%

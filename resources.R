@@ -6,6 +6,7 @@ library(googledrive)
 library(googlesheets4)
 library(aws.s3)
 library(scales)
+library(ggpubr)
 library(plotly)
 options(scipen=999)
 
@@ -50,14 +51,65 @@ epic_chart_theme <- theme_minimal() +
         axis.title.y = element_text(margin = margin(t = 0, r = 10, 
                                                     b = 0, l = 0))) 
 
-cont_palette <- colorRampPalette(c("#172f60","#4ea324"))
+# Funding YOY Colors
+fed_cap_grant_colors <- c("Base" = "#172f60",
+                          "EC" = "#791a7b",
+                          "LSLR" = "#4ea324",
+                          "IIJA Gen Supp" ="#1054a8",
+                          "Base & IIJA Gen Supp" = "#526489")
 
-cat_palette <- colorRampPalette(c("#172f60","#1054a8",
-                                  "#791a7b","#de9d29","#4ea324"))
+allowance_colors <- c("Admin & TA" ="#172f60",
+                      "Small System TA"= "#1054a8",
+                      "State Program Management"="#4ea324",
+                      "Local Assistance & Other"="#791a7b")
 
-cat_palette_pastel <- colorRampPalette(c("#526489","#527CAF",
-                                         "#B077B2","#E4BE7C",
-                                         "#b15712","#82AB6E"))
+pf_colors <- c("DAC"="#526489",
+               "Discretionary"="#172f60",
+               "IIJA - EC"="#791a7b",
+               "IIJA - LSLR"="#4ea324",
+               "IIJA Gen Supp"="#1054a8",
+               "Remaining Loans" = "lightgrey")
+
+# Project YOY Colors
+pt_colors <- c("General"="#526489",
+               "Lead"="#82AB6E",
+               "Emerging Contaminants"="#B077B2")
+
+ef_dac_sc_colors <- c("Yes"="#82AB6E",
+                      "No"="#526489",
+                      "No Info"="lightgrey")
+
+lead_colors <- c("Inventory"="#B077B2",
+                 "Replacement"="#82AB6E",
+                 "Neither"="#526489")
+
+# Combined Colors
+comp_colors <- c("Total Available"="#4ea324",
+                 "Available Funds"="#4ea324",
+                 "Unmet Demand"="#172f60")
+
+# Single SFY Colors
+distribution_colors <- c("Principal Forgiveness"="#4ea324",
+                              "DAC PF"="#4ea324",                              
+                              "Discretionary PF"="#82AB6E",                    
+                              "Admin & TA Set Asides"="#172f60",               
+                              "Small System TA Set Asides"="#1054a8",
+                              "State Program Management Set Asides"="#526489",
+                              "Local Assistance & Other Set Asides"="#527CAF",
+                              "Remaining Base Grant, for Loans"="lightgrey",
+                              "Remaining Gen Supp Grant, for Loans"="lightgrey",
+                              "Remaining LSLR Grant, for Loans"="lightgrey",
+                              "Remaining Base Grant, for Loans"="lightgrey")
+
+ef_dac_comp_colors <- c(
+  "DACs, No Info"="lightgrey", 
+  "DACs, Not Expecting Funding"="#172f60", 
+  "DACs, Expecting Funding"="#4ea324",
+  "Expecting Funding, DAC"="#4ea324", 
+  "Expecting Funding, Not DAC"="#172f60", 
+  "Expecting Funding, No Info"="lightgrey"
+)
+
 
 
 ### Drive Data Access Functions ----

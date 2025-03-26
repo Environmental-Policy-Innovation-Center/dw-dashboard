@@ -31,7 +31,7 @@ clean_tn_y1 <- function() {
            borrower = str_replace_all(borrower, "\\+", ""),
            project_rank = str_squish(rank_order),
            project_score = str_squish(priority_points),
-           expecting_funding = as.character(NA),
+           expecting_funding = ifelse(row_number() < 108, "Yes", "No"),
            state = "Tennessee",
            state_fiscal_year = "2023"
     ) %>%

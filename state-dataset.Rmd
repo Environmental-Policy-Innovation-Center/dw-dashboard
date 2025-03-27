@@ -9,6 +9,9 @@ The resulting dataset can answer a number of high-level questions for each state
 source("resources.R")
 run_code_from_file("aws.txt")
 
+lsli_str <- "lsli|lead service line inventory|inventory"
+lslr_str <- "lslr|lead service line replacement|replacing lead"
+
 ```
 
 ```{r}
@@ -100,8 +103,13 @@ project_counts <- all_projects %>%
             dac_ni_nef_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No"),0),
             dac_ni_ef_ni_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No Information"),0),
             
-            lsli_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), "lsli|lead service line inventory|inventory"), 0)),
-            lslr_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), "lslr|lead service line replacement|replacing lead"), 0)),
+            lsli_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), lsli_str), 0)),
+            lslr_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), lslr_str), 0)),
+            
+            lsli_ef_projects = replace_na(sum(project_type=="Lead" & expecting_funding=="Yes" & 
+                                                str_detect(tolower(project_description), lsli_str), 0)),
+            lslr_ef_projects = replace_na(sum(project_type=="Lead" & expecting_funding=="Yes" & 
+                                                str_detect(tolower(project_description), lslr_str), 0))
   )
 ```
 
@@ -178,6 +186,8 @@ pc_by_type <- all_projects %>%
   group_by(state, state_fiscal_year, project_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost)))
 
+
+# filter project costs by expecting funding for both tables
 pc_by_ef <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year, expecting_funding) %>%
@@ -188,19 +198,45 @@ pc_by_ef <- all_projects %>%
          project_cost_ef_ni = `No Information`,
          project_cost_ef_na = `NA`)
 
-pc_by_lsl <- all_projects %>%
+pc_by_ef_type <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost != "No Information") %>%
+  group_by(state, state_fiscal_year, project_type, expecting_funding) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
+  filter(expecting_funding == "Yes") %>%
+  select(-expecting_funding) %>%
+  rename(total_project_cost_ef = total_project_cost)
+
+
+# subset to Lead projects to identify inventory and replacement projects
+lsl_projects <- all_projects %>%
+  filter(project_type=="Lead") %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
   mutate(lead_type = case_when(
-   str_detect(tolower(project_description), "lsli|lead service line inventory|inventorying lead") ~ "lsli",
-   str_detect(tolower(project_description), "lslr|lead service line replacement|replacing lead") ~ "lslr",
+   str_detect(tolower(project_description), lsli_str) ~ "lsli",
+   str_detect(tolower(project_description), lslr_str) ~ "lslr",
     TRUE ~ "neither"
-  )) %>%
+  ))
+
+# group by lsl project type for project cost calculations
+pc_by_lsl <- lsl_projects %>%
   group_by(state, state_fiscal_year, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
   rename(project_cost_lslr = lslr,
          project_cost_lsli = lsli,
          project_cost_lsln = neither)
+
+# group by lsl project type AND whether they are expecting funding or not
+pc_by_lsl_ef <- lsl_projects %>%
+  group_by(state, state_fiscal_year, expecting_funding, lead_type) %>%
+  summarize(total_project_cost = sum(as.numeric(project_cost))) %>% 
+  filter(expecting_funding == "Yes") %>%
+  pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
+  rename(project_cost_ef_lslr = lslr,
+         project_cost_ef_lsli = lsli,
+         project_cost_ef_lsln = neither) %>%
+  ungroup() %>%
+  select(-expecting_funding)
 
 ```
 
@@ -262,7 +298,7 @@ pf_by_type <- all_projects %>%
 ```
 
 ```{r}
-# 14
+
 project_dollars <- feature_coverage %>%
   select(state, state_fiscal_year) %>%
   left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
@@ -270,16 +306,18 @@ project_dollars <- feature_coverage %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl, by=c("state", "state_fiscal_year")) %>%
+  left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
 
-# 27
+
 project_type_df <- project_type_df %>%
   left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
-  left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
+  left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>% 
+  left_join(pc_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(ra_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(pf_by_type, by=c("state", "state_fiscal_year", "project_type"))
   
-# 30
+
 project_counts <- project_counts %>%
   left_join(pf_projects, by=c("state", "state_fiscal_year"))
 

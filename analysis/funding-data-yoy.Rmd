@@ -6,8 +6,6 @@ date: "2024-11-08"
 
 This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on Funding & Finance data gathered by the Water policy team as they put together the data dictionaries and content for the website. The outputs focus on the "Funding" sections of the state overview pages.
 
-NOTE: These features in the datasets pulled from google sheets (financial, set asides, pf) are works in progress, so there ample opportunity for errors to appear due to changed formats, column names, etc.
-
 # Setup
 
 ## Local Variables
@@ -112,7 +110,7 @@ all_grants_p <- ggplot(all_grants, aes(x=state_fiscal_year, y=total_fcg, fill=fe
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title="Total Funds from Fed Cap Grants", fill="", subtitle=subtitle_str) + 
-  scale_fill_manual(values=cat_palette(4)) + 
+  scale_fill_manual(values=fed_cap_grant_colors) + 
   epic_chart_theme
 
 all_grants_gp <- ggplotly(all_grants_p, tooltip="text") %>%
@@ -149,7 +147,7 @@ all_grants_pf_p <- ggplot(all_grants_pf, aes(x=state_fiscal_year, y=total_pf_amt
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title=" ", fill="", subtitle=subtitle_str) + 
-  scale_fill_manual(values=cat_palette(5)) + 
+  scale_fill_manual(values=pf_colors) + 
   epic_chart_theme
 
 all_grants_pf_gp <- ggplotly(all_grants_pf_p, tooltip="text") %>%
@@ -194,8 +192,10 @@ tibble(all_grants_pf %>% group_by(state_fiscal_year) %>% summarize(total_all_fcg
 
 if(sum(base$total_fcg, na.rm=TRUE) > 0) {
 
-base_fed_cap_grants_p <- ggplot(base, aes(x=state_fiscal_year, y=total_fcg, text=total_fcg_str)) + 
-  geom_bar(stat="identity", fill="#172f60") + 
+base_fed_cap_grants_p <- ggplot(base, aes(x=state_fiscal_year, y=total_fcg, fill=fed_cap_grant, text=total_fcg_str)) + 
+  geom_bar(stat="identity") + 
+    scale_fill_manual(values=fed_cap_grant_colors) + 
+  guides(fill="none") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title="Base DWSRF Federal Capitlization Grants", subtitle=subtitle_str) + 
   epic_chart_theme
@@ -234,7 +234,7 @@ leveraged_p <- ggplot(leveraged, aes(x=state_fiscal_year, y=leveraged_funds, fil
   geom_bar(stat="identity") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title="Leveraged Funds", fill="", subtitle=subtitle_str) + 
-  scale_fill_manual(values=cat_palette(5)) + 
+  scale_fill_manual(values=fed_cap_grant_colors) + 
   epic_chart_theme
 
 leveraged_gp <- ggplotly(leveraged_p, tooltip="text") %>%
@@ -268,7 +268,7 @@ if (nrow(unutilized) > 0) {
 unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, fill=fed_cap_grant, text=unutilized_fcg_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values=cat_palette(length(unique(unutilized$fed_cap_grant)))) + 
+  scale_fill_manual(values=fed_cap_grant_colors) + 
   labs(x="", y="", title="Unutilized Funds (Carryover)", subtitle=subtitle_str, fill="") + 
   epic_chart_theme
 
@@ -295,19 +295,22 @@ unutilized_gp
 ```{r}
 base_pf_both_pct <- pf %>%
   filter(fed_cap_grant == "Base") %>%
-  mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", format_percent(total_pf_pct)))
+  select(state_fiscal_year, total_pf_pct, pf_category) %>%
+  mutate(max = case_when(
+    pf_category == "DAC" ~ "35%",
+    pf_category == "Discretionary" ~ "14%",
+    TRUE ~ ""
+  )) %>%
+  mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", format_percent(total_pf_pct),
+                           " (Max: ", max, ")"))
 
 if(sum(base_pf_both_pct$total_pf_pct, na.rm=TRUE) > 0) {
 
 base_pf_both_pct_p <- ggplot(base_pf_both_pct, aes(x=state_fiscal_year, y=total_pf_pct, color=pf_category, text=plot_str)) + 
   geom_line(aes(group=pf_category), linewidth=1.5) + 
   geom_point(size=4) + 
-  geom_hline(yintercept=.14) + 
-  annotate("text", x=.7, y=.16, label="Disc. PF Max") + 
-  geom_hline(yintercept=.35) + 
-  annotate("text", x=.7, y=.37, label="DAC PF Max") + 
-  scale_y_continuous(labels=label_percent(), limits=c(0,1)) + 
-  scale_color_manual(values = cont_palette(2)) + 
+  scale_y_continuous(labels=label_percent(), limits=c(0,.4)) + 
+  scale_color_manual(values = pf_colors) + 
   labs(x="", y="", color="", title=" ", subtitle=subtitle_str) + 
   epic_chart_theme
 
@@ -360,7 +363,7 @@ if(sum(base_pf_combined$total_pf_amt) > 0) {
 base_pf_combined_p <- ggplot(base_pf_combined, aes(x=state_fiscal_year, y=total_pf_amt, fill=pf_category, text=plot_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_dollar()) +
-  scale_fill_manual(values = cat_palette(3)) + 
+  scale_fill_manual(values = pf_colors) + 
   labs(x="", y="", fill="", title="Base Grant Principal Forgiveness", subtitle=subtitle_str) + 
   epic_chart_theme
 
@@ -387,8 +390,10 @@ base_pf_combined_gp
 
 if (sum(gen_supp$total_fcg > 0)) {
 
-gensupp_fed_cap_grants_p <- ggplot(gen_supp, aes(x=state_fiscal_year, y=total_fcg, text=format_currency(total_fcg))) + 
-  geom_bar(stat="identity", fill="#172f60") + 
+gensupp_fed_cap_grants_p <- ggplot(gen_supp, aes(x=state_fiscal_year, y=total_fcg, fill=fed_cap_grant, text=format_currency(total_fcg))) + 
+  geom_bar(stat="identity") +
+  scale_fill_manual(values=fed_cap_grant_colors) + 
+  guides(fill="none") + 
   scale_y_continuous(labels=label_currency()) + 
   labs(x="", y="", title=" ", subtitle=subtitle_str) + 
   epic_chart_theme
@@ -430,7 +435,7 @@ if(sum(set_asides_fcg_group$total_sa_amt, na.rm=TRUE) > 0) {
 set_asides_p <- ggplot(set_asides_fcg_group, aes(x=state_fiscal_year, y=total_sa_amt, fill=fed_cap_grant, text=total_sa_amt_str)) + 
   geom_bar(stat="identity", position="stack") + 
   scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = cat_palette(4), 
+  scale_fill_manual(values = fed_cap_grant_colors, 
                       name = "") + 
   labs(x="", y="", title="Set Asides, Fed Cap Grant", subtitle=subtitle_str) + 
   epic_chart_theme
@@ -464,7 +469,7 @@ set_asides_pct_p <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0, max(set_asides_percent$total_sa_pct)+.02 )) + 
   labs(x="", y="", title="Set Asides, Percent Utilized", subtitle=subtitle_str) + 
-  scale_color_manual(values = cat_palette(4), 
+  scale_color_manual(values = fed_cap_grant_colors, 
                      guide="none") + 
   epic_chart_theme
 
@@ -501,7 +506,7 @@ sa_pct_base_p <- ggplot(sa_pct_base, aes(x=state_fiscal_year, y=total_sa_pct, co
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_base$total_sa_pct)+.02)) +
   labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
-  scale_color_manual(values = cat_palette(4)) + 
+  scale_color_manual(values = allowance_colors) + 
   epic_chart_theme
 
 sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
@@ -535,7 +540,7 @@ sa_pct_iija_p <- ggplot(sa_pct_iija, aes(x=state_fiscal_year, y=total_sa_pct, co
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_iija$total_sa_pct)+.02)) + 
   labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
-  scale_color_manual(values = cat_palette(4)) + 
+  scale_color_manual(values = allowance_colors) + 
   epic_chart_theme
 
 sa_pct_iija_gp <- ggplotly(sa_pct_iija_p, tooltip="text") %>%
@@ -571,7 +576,7 @@ sa_pct_lead_p <- ggplot(sa_pct_lead, aes(x=state_fiscal_year, y=total_sa_pct, co
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_lead$total_sa_pct)+.02)) + 
   labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
-  scale_color_manual(values = cat_palette(4)) + 
+  scale_color_manual(values = allowance_colors) + 
   epic_chart_theme
 
 sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
@@ -605,7 +610,7 @@ sa_pct_ec_p <- ggplot(sa_pct_ec, aes(x=state_fiscal_year, y=total_sa_pct, color=
   geom_point(size=4) + 
   scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_ec$total_sa_pct)+.02)) + 
   labs(x="", y="", title="Set Asides by Allowance, Percent", subtitle=subtitle_str, color="") + 
-  scale_color_manual(values = cat_palette(4)) + 
+  scale_color_manual(values = allowance_colors) + 
   epic_chart_theme
 
 sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%

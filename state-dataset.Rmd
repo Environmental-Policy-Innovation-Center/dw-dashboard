@@ -6,7 +6,8 @@ The resulting dataset can answer a number of high-level questions for each state
 
 ```{r, warning=FALSE}
 
-source("resources.R")
+source("resources/inputs.R")
+source("resources/cleaning.R")
 run_code_from_file("aws.txt")
 
 lsli_str <- "lsli|lead service line inventory|inventory"
@@ -24,7 +25,7 @@ all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/s
 
 ```{r}
 
-
+# only used here for data creation once, no need to reference from resources
 create_status_cols <- function(df, col_names) {
   
   # create the returned dataframe of only state and SFY
@@ -53,17 +54,16 @@ create_status_cols <- function(df, col_names) {
   
   output_df <- output_df %>%
     left_join(new_df, by=c("state", "state_fiscal_year"))
-  
  }
-  
   return(output_df)
-
 }
 
 
-feature_coverage <- create_status_cols(all_projects, col_names=c("community_served", "borrower", "pwsid", "project_id", "project_name", "project_type",
-                                                     "project_cost", "requested_amount", "funding_amount", "principal_forgiveness", "population",
-                                                     "project_description", "disadvantaged", "project_rank", "project_score", "expecting_funding" ))
+feature_coverage <- create_status_cols(all_projects, col_names=c("community_served", "borrower", "pwsid", "project_id", 
+                                                                 "project_name", "project_type", "project_cost", 
+                                                                 "requested_amount", "funding_amount", "principal_forgiveness", 
+                                                                 "population", "project_description", "disadvantaged", 
+                                                                 "project_rank", "project_score", "expecting_funding" ))
   
 ```
 

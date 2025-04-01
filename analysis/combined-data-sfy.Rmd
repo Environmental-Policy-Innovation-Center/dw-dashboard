@@ -592,7 +592,7 @@ if (save_plots) {
                  gs_tab) }
 
 
-gen_fig
+gen_comp_fig
 
 } # if gen_costs > 0, make plot
 
@@ -669,7 +669,7 @@ if (save_plots) {
                  gs_tab) }
 
 
-lead_fig
+lead_comp_fig
 
 } # if lead_costs > 0, make plot
 
@@ -742,7 +742,7 @@ if (save_plots) {
                  name = paste0("compare-available-demand-ec-",sfy), # change
                  gs_tab) }
 
-ec_fig
+ec_comp_fig
 } # end if we have ec data, make plot
 } # end if sfy !=2022
 ```
@@ -817,7 +817,7 @@ ef_df <- data.frame(name=c("Expecting Funding, DAC",
          name = factor(name, levels=c("Expecting Funding, No Info", "Expecting Funding, Not DAC", "Expecting Funding, DAC")))
 
 
-if ( nrow(ef_df %>% filter(!is.na(amount))) == nrow(ef_df))  {
+if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df))  {
   
   ef_df_p <- ggdonutchart(ef_df,
              "value",
@@ -856,12 +856,55 @@ if (save_plots) {
 }
 ```
 
+### DAC/EF Heat Map
+```{r}
+dac_ef_hm <- project_counts %>%
+  select(state_fiscal_year, 
+         dac_ef_projects, dac_nef_projects, dac_ef_ni_projects,
+         ndac_ef_projects, ndac_nef_projects, ndac_ef_ni_projects,
+         dac_ni_ef_projects, dac_ni_nef_projects, dac_ni_ef_ni_projects
+        ) %>%
+  pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects",
+         "ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects",
+         "dac_ni_ef_projects", "dac_ni_nef_projects", "dac_ni_ef_ni_projects")) %>%
+  mutate(dac = case_when(
+    name %in% c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects") ~ "Yes",
+    name %in% c("ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects") ~ "No",
+    TRUE ~ "No Info"),
+         expecting_funding = case_when(
+    name %in% c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects") ~ "Yes",
+    name %in% c("dac_nef_projects", "ndac_nef_projects", "dac_ni_nef_projects") ~ "No",
+    TRUE ~ "No Info") 
+    ) %>%
+  mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
+                           value, " projects")) %>%
+  select(-name)
+  
+if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
 
-# Project-Level Data
+dac_ef_hm_p <- ggplot(dac_ef_hm, aes(x=expecting_funding, y=dac, fill=value, text=plot_str)) + 
+  geom_tile(color="white") + 
+  labs(title="Projects by DAC Status and Expecting Funding", subtitle=subtitle_str,
+       x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
+  scale_fill_gradientn(colours = ef_dac_hm_colors) +
+  theme_minimal()
+
+dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
+  layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding",
+                                    '<br>', subtitle_str)))
 
 
+if (save_plots) {
 
+    run_save_plots(gg_plot = dac_ef_hm_p,
+                   gp_object = dac_ef_hm_gp, # change
+                   sub_folders, 
+                   name = "dac-expecting-funding-heatmap-yoy", # change
+                   gs_tab) }
 
+dac_ef_hm_gp
+}
+```
 
 ## Project Score Range
 

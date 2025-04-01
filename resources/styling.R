@@ -107,3 +107,5 @@ ef_dac_comp_colors <- c(
   "Expecting Funding, Not DAC"="#172f60", 
   "Expecting Funding, No Info"="lightgrey"
 )
+
+ef_dac_hm_colors <- c("#162136", "#B9D1FF")

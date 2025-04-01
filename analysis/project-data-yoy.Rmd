@@ -10,6 +10,17 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 
 # State Setup
 
+## Imports & Settings
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+```
+
 ```{r}
 state_name <- "Tennessee"
 state_abbr <- "TN"
@@ -36,13 +47,6 @@ if (include_y0) {
 
 subtitle_str <- paste0(state_name, ", ", years)
 
-```
-
-# Imports & Settings 
-
-```{r}
-source("../resources.R")
-run_code_from_file("../aws.txt")
 ```
 
 # State-Level Data
@@ -517,23 +521,35 @@ dac_ef_hm <- project_counts %>%
     name %in% c("dac_nef_projects", "ndac_nef_projects", "dac_ni_nef_projects") ~ "No",
     TRUE ~ "No Info") 
     ) %>%
+  mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
+                           value, " projects in ", state_fiscal_year)) %>%
   select(-name)
   
+if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
 
-dac_ef_hm_p <- ggplot(dac_ef_grid, aes(x=expecting_funding, y=dac, fill=value, text=value)) + 
+dac_ef_hm_p <- ggplot(dac_ef_hm, aes(x=expecting_funding, y=dac, fill=value, text=plot_str)) + 
   geom_tile(color="white") + 
   labs(title="Projects based on DAC Status and Expecting Funding", subtitle=subtitle_str,
-       x="Expecting Funding", y="Disadvantaged", fill="") + 
-  epic_chart_theme
+       x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
+  scale_fill_gradientn(colours = ef_dac_hm_colors) +
+  theme_minimal() + 
+  facet_wrap(~state_fiscal_year)
 
-dac_ef_hm_p_facet <- dac_ef_hm_p + facet_wrap(~state_fiscal_year)
+dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
+  layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding, ",
+                                    subtitle_str)))
 
-ggplotly(dac_ef_hm_p_facet, tooltip="text") %>%
-  layout(title = list(text = paste0("Projects based on DAC Status and Expecting Funding",
-                                    '<br>',
-                                    subtitle_str))
-  )
-  
+
+if (save_plots) {
+
+    run_save_plots(gg_plot = dac_ef_hm_p,
+                   gp_object = dac_ef_hm_gp, # change
+                   sub_folders, 
+                   name = "dac-expecting-funding-heatmap-yoy", # change
+                   gs_tab) }
+
+dac_ef_hm_gp
+}
 ```
 
 ## Project Type

@@ -209,14 +209,14 @@ if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
         legend.direction = "vertical") +
   guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
          ) + 
-  labs(title="How are the Base grants allocated?",
+  labs(title="How is the Base grant allocated?",
        subtitle=subtitle_str)
 
   
   base_all_fig <- base_distribution %>% plot_ly(labels = ~name, values = ~value,
                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(base_distribution$name)])) %>% 
-  layout(title = paste0("How are the Base grants allocated?", "<br>", subtitle_str),  
+  layout(title = paste0("How is the Base grant allocated?", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -281,7 +281,7 @@ if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0) {
         legend.direction = "vertical") +
   guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
          ) + 
-  labs(title="How are the Gen Supp grants allocated?",
+  labs(title="How is the IIJA Gen Supp grant allocated?",
        subtitle=subtitle_str)
   
     
@@ -352,14 +352,14 @@ if (nrow(lead_distribution %>% filter(!is.na(value))) > 0) {
         legend.direction = "vertical") +
   guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
          ) + 
-  labs(title="How are the LSLR grants allocated?",
+  labs(title="How is the LSLR grant allocated?",
        subtitle=subtitle_str)
   
   
   lead_all_fig <- lead_distribution %>% plot_ly(labels = ~name, values = ~value,
                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(lead_distribution$name)])) %>% 
-  layout(title = paste0("How are the LSLR grants allocated?", "<br>", subtitle_str),  
+  layout(title = paste0("How is the LSLR grant allocated?", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -424,14 +424,14 @@ if (nrow(ec_distribution %>% filter(!is.na(value))) > 0) {
         legend.direction = "vertical") +
   guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
          ) + 
-  labs(title="How are the EC grants allocated?",
+  labs(title="How is the EC grant allocated?",
        subtitle=subtitle_str)
   
   
   ec_all_fig <- ec_distribution %>% plot_ly(labels = ~name, values = ~value,
                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
   add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(ec_distribution$name)])) %>% 
-  layout(title = paste0("How are the EC grants allocated?", "<br>", subtitle_str),  
+  layout(title = paste0("How is the EC grant allocated?", "<br>", subtitle_str),  
          margin = list(t = 100),  
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))

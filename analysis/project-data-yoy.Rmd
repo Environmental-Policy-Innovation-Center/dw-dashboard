@@ -499,7 +499,7 @@ if (save_plots) {
 
 ### DAC/EF Heat Map
 ```{r}
-dac_ef_grid <- project_counts %>%
+dac_ef_hm <- project_counts %>%
   select(state_fiscal_year, 
          dac_ef_projects, dac_nef_projects, dac_ef_ni_projects,
          ndac_ef_projects, ndac_nef_projects, ndac_ef_ni_projects,
@@ -520,15 +520,15 @@ dac_ef_grid <- project_counts %>%
   select(-name)
   
 
-test <- ggplot(dac_ef_grid, aes(x=expecting_funding, y=dac, fill=value, text=value)) + 
+dac_ef_hm_p <- ggplot(dac_ef_grid, aes(x=expecting_funding, y=dac, fill=value, text=value)) + 
   geom_tile(color="white") + 
   labs(title="Projects based on DAC Status and Expecting Funding", subtitle=subtitle_str,
        x="Expecting Funding", y="Disadvantaged", fill="") + 
   epic_chart_theme
 
-test_facet <- test + facet_wrap(~state_fiscal_year)
+dac_ef_hm_p_facet <- dac_ef_hm_p + facet_wrap(~state_fiscal_year)
 
-ggplotly(test_facet, tooltip="text") %>%
+ggplotly(dac_ef_hm_p_facet, tooltip="text") %>%
   layout(title = list(text = paste0("Projects based on DAC Status and Expecting Funding",
                                     '<br>',
                                     subtitle_str))

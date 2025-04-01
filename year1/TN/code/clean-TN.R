@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tn_y1 <- function() {
   
   # (143, 19) - this file has been updated with the correct one on 

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_wa_y1 <- function() {
   
   # import manually merged file (31,12) that combines appendix B and D

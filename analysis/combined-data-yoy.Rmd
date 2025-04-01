@@ -5,6 +5,18 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 # Setup
 
+## Imports & Settings
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+
+```
+
 ## Local Variables
 
 ```{r}
@@ -46,16 +58,6 @@ year_table <- data.frame(
 
 
 ```
-
-## Imports & Settings
-
-```{r, echo=FALSE, warning=FALSE,message=FALSE}
-
-source("../resources.R")
-run_code_from_file("../aws.txt")
-
-```
-
 
 ## Create Data Subsets
 

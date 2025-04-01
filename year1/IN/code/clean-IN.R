@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_in_y1 <- function() {
  
   ## PPL

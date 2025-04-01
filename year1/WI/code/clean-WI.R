@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_wi_y1 <- function() {
   
   # (54,17) -> (46,19)

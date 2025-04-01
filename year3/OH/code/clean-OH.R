@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_oh_y3 <- function() {
   base_path <- "year3/OH/data"
 

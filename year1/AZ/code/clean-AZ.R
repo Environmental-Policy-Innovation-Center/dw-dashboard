@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_az_y1 <- function() {
   
   # (54,9)

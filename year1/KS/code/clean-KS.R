@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ks_y1 <- function() {
   
   ## Base

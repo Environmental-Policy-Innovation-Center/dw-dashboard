@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_mo_y1 <- function() {
 
   # this is the initially scraped IUP from 10/11/22,

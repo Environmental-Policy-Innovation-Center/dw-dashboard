@@ -15,20 +15,14 @@ This notebook imports the individual cleaning functions for each state and each 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-options(scipen=999999999)
-
-library(tidyverse)
-library(data.table)
-library(janitor)
-library(aws.s3)
-library(googledrive)
-library(googlesheets4)
-
 # remove any dfs in the environment before starting
 rm(list=ls())
 
-source("resources.R")
+source("resources/inputs.R")
 run_code_from_file("aws.txt")
+
+source("resources/cleaning.R")
+source("resources/testing.R")
 
 ```
 

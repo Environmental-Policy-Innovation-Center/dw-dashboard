@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_sc_y1 <- function() {
   
   

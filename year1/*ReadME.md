@@ -1,6 +1,6 @@
 #### Year 1 
 
-In the context of tracking SRF and BIL spending, Year 1 represents Federal Fiscal Year (FFY) funds allocated in 2022. 
+In the context of tracking SRF and IIJA spending, Year 1 represents Federal Fiscal Year (FFY) funds allocated in 2022. 
 
 Because states release their Intended Use Plans (IUPs) and Project Priority Lists (PPLs) at different times and in different For most states, these funds will be allocated in State Fiscal Year (SFY) 2023, though some will include them in SFY 2022 or even in SFY 2024, depending on the state and how they distributed funds.
 

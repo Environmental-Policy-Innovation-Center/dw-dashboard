@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_pa_y1 <- function() {
   
   # (62,23)

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ny_y1 <- function() {
   
   

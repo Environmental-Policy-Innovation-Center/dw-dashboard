@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_wi_y2 <- function() {
     
     wi_ppl <- fread("year2/WI/data/wi-y2-ppl.csv",

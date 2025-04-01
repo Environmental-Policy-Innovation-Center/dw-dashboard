@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_wa_y2 <- function() {
   
   # (25, 13) --> (25, 14) 

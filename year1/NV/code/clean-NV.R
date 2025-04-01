@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_nv_y1 <- function() {
   
   # (172, 16)

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ky_y1 <- function() {
   
   # (139,13)

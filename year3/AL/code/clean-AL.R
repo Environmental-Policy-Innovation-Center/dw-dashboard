@@ -1,6 +1,3 @@
-source("resources.R")
-
-
 clean_al_y3 <- function() {
   base_path <- "year3/AL/data"
   

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ut_y1 <- function() {
   
   

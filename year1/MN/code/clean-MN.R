@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_mn_y1 <- function() {
   
   # (142, 16)

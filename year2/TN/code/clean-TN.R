@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tn_y2 <- function() {
   
   # (70, 18) - gen PPL

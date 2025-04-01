@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ga_y1 <- function() {
   
   

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ny_y3 <- function() {
   base_path <- file.path("year3", "NY", "data")
   

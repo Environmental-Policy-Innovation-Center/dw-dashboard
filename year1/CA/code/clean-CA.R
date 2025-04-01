@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ca_y1 <- function() {
   
   ### FUNDED LIST - Updated

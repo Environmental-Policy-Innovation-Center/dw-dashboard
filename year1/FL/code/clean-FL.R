@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_fl_y1 <- function() {
 
   fl_clean <- fread("year1/FL/data/9-Florida_ppl_fundable.csv",

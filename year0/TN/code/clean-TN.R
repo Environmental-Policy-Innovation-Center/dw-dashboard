@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tn_y0 <- function() {
   
 

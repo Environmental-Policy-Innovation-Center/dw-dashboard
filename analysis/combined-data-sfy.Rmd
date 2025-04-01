@@ -8,11 +8,20 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 
 # Setup
 
+```{r}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+```
+
+
 ## Set Variables
 
 ```{r, warning=FALSE}
-source("../resources.R")
-run_code_from_file("../aws.txt")
+
 
 state_name <- "New York"
 state_abbr <- "NY"

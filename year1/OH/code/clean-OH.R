@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_oh_y1 <- function() {
   
   ## Base, p25-35

@@ -8,6 +8,18 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 
 # Setup
 
+## Imports & Settings
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+```
+
+
 ## Local Variables
 
 ```{r}
@@ -39,15 +51,6 @@ subtitle_str <- paste0(state_name, ", ", years)
 subtitle_str_only_23 <- str_replace(subtitle_str, "22", "23")
 
 ```
-
-## Imports & Settings
-
-```{r, echo=FALSE, warning=FALSE,message=FALSE}
-
-source("../resources.R")
-run_code_from_file("../aws.txt")
-```
-
 
 # Prepare Data
 

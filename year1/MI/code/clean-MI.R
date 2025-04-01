@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_mi_y1 <- function() {
   
   # (112,24)

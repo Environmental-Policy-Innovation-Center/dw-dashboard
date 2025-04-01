@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ar_y1 <- function() {
 
   # the manually merged data from MDI includes fundable projects with columns from the comprehensive list

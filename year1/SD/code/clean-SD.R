@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_sd_y1 <- function() {
   
   

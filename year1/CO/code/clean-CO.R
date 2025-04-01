@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_co_y1 <- function() {
   
   

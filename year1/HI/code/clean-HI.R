@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_hi_y1 <- function() {
   
   # (33,8)

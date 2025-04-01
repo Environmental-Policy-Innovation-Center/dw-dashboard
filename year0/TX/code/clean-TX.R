@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tx_y0 <- function() {
   
   

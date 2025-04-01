@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ct_y1 <- function() {
   
   # 199, 16

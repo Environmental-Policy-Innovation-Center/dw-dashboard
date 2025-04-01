@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_vt_y1 <- function() {
   
   

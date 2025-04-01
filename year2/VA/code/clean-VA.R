@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_va_y2 <- function() {
   
   # (21, 14) -> (21, 18)

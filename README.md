@@ -2,7 +2,7 @@
 
 # EPIC'S DWSRF Funding Tracker
 
-This repository maintains the code and data powering the DWSRF Fucking Tracker. The website serves as an in-depth resource that monitors proposed funding and policies in the annual Intended Use Plans of **15** focus states. The data captured in this repository explores drinking water projects that states intend to fund in the next year through state revolving funds based on the type of project, the funding amount, which communities are impacted, and other features.
+This repository maintains the code and data powering the DWSRF Funding Tracker. The website serves as an in-depth resource that monitors proposed funding and policies in the annual Intended Use Plans of **15** focus states. The data captured in this repository explores drinking water projects that states intend to fund in the next year through state revolving funds based on the type of project, the funding amount, which communities are impacted, and other features.
 
 For important context and caveats regarding how to interpret and use this data, a glossary of terms used throughout the project, and data dictionaries for each included state, view the website's resources page (link forthcoming).
 

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ma_y1 <- function() {
   
   ## ALL PROJECTS

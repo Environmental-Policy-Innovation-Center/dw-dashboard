@@ -15,17 +15,14 @@ This notebook imports the individual cleaning functions for each state and each 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-options(scipen=999999999)
-
-library(tidyverse)
-library(data.table)
-library(janitor)
-library(aws.s3)
-library(googledrive)
-library(googlesheets4)
-
 # remove any dfs in the environment before starting
 rm(list=ls())
+
+source("resources/inputs.R")
+run_code_from_file("aws.txt")
+
+source("resources/cleaning.R")
+source("resources/testing.R")
 
 ```
 
@@ -47,6 +44,10 @@ in_clean_y0 <- clean_in_y0()
 # Michigan
 source("year0/MI/code/clean-MI.R")
 mi_clean_y0 <- clean_mi_y0()
+
+# Tennessee
+source("year0/TN/code/clean-TN.R")
+tn_clean_y0 <- clean_tn_y0()
 
 # Texas
 source("year0/TX/code/clean-TX.R")
@@ -275,6 +276,14 @@ mi_clean_y2 <- clean_mi_y2()
 source("year2/MN/code/clean-MN.R")
 mn_clean_y2 <- clean_mn_y2()
 
+# New York
+source("year2/NY/code/clean-NY.R")
+ny_clean_y2 <- clean_ny_y2()
+
+# Tennessee
+source("year2/TN/code/clean-TN.R")
+tn_clean_y2 <- clean_tn_y2()
+
 # Texas
 source("year2/TX/code/clean-TX.R")
 tx_clean_y2 <- clean_tx_y2()
@@ -296,6 +305,14 @@ wa_clean_y2 <- clean_wa_y2()
 # Michigan
 source("year3/MI/code/clean-MI.R")
 mi_clean_y3 <- clean_mi_y3()
+
+# New York
+source("year3/NY/code/clean-NY.R")
+ny_clean_y3 <- clean_ny_y3()
+
+# Tennessee
+source("year3/TN/code/clean-TN.R")
+tn_clean_y3 <- clean_tn_y3()
 
 # Texas
 source("year3/TX/code/clean-TX.R")
@@ -320,14 +337,14 @@ combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
 
 ```{r}
 
- # Writing to temp
- write.csv(combined_clean, file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"), row.names = FALSE)
+# Writing to temp
+write.csv(combined_clean, file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"), row.names = FALSE)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"),
-   object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv",
-   bucket = "water-team-data",
-   acl = "public-read"
- )
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"),
+  object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv",
+  bucket = "water-team-data",
+  acl = "public-read"
+)
 ```

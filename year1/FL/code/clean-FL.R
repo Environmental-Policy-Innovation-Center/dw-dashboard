@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_fl_y1 <- function() {
 
   fl_clean <- fread("year1/FL/data/9-Florida_ppl_fundable.csv",
@@ -15,6 +13,7 @@ clean_fl_y1 <- function() {
            project_description = str_squish(project_description),
            project_score = str_replace_all(priority_score,"[^0-9.]",""),
            expecting_funding = "Yes",
+           project_type = "General",
            state = "Florida",
            state_fiscal_year = "2023",
            project_name = as.character(NA),

@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_wv_y1 <- function() {
   
   # (163,36)
@@ -63,7 +61,7 @@ clean_wv_y1 <- function() {
            project_description = str_squish(project_description_x),
            project_name = str_squish(project_name),
            borrower = str_squish(system),
-           disadvantaged = str_squish(disadvan_taged),
+           disadvantaged = str_squish(str_replace(disadvan_taged, "TBD", "No Information")),
            community_served = str_squish(county),
            state = "West Virginia",
            state_fiscal_year = "2023",

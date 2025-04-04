@@ -1,7 +1,3 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-
 clean_dc_y1 <- function() {
 
   # 13,3

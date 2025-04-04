@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_mi_y3 <- function() {
   
   mi_raw <- fread("year3/MI/data/MI-FY2025-DWSRF-Final-IUP.csv",

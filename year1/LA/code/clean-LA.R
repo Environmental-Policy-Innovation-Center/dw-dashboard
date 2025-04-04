@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_la_y1 <- function() {
   
   # (40,9)

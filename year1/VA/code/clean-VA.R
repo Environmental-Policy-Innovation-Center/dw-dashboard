@@ -1,7 +1,3 @@
-source("resources.R")
-
-
-
 clean_va_y1 <- function() {
   
   ### Base, BIL Supplemental, Emerging Contaminants

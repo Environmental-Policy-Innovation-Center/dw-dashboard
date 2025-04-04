@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tx_y0 <- function() {
   
   
@@ -13,7 +11,7 @@ clean_tx_y0 <- function() {
       pwsid = str_squish(pws_id),
       project_id = str_squish(pif),
       project_name = as.character(NA),
-      project_type = as.character(NA),
+      project_type = "General",
       project_cost = clean_numeric_string(project_cost),
       requested_amount = as.character(NA),
       funding_amount = ifelse(invited == "Yes", project_cost, "No Information"),

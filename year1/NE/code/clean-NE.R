@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ne_y1 <- function() {
   
   

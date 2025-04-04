@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_il_y1 <- function() {
   
   ## Read in the manually separated versions of the PPL and lead data 

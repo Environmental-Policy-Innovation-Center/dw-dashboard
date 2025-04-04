@@ -1,9 +1,3 @@
-library(tidyverse)
-library(data.table)
-library(janitor)
-source("resources.R")
-
-
 clean_fl_y2 <- function() {
   
   

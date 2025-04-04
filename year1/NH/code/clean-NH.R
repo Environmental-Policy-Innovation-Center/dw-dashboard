@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_nh_y1 <- function() {
   
   # (190,32)

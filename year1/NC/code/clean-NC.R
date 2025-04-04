@@ -1,7 +1,4 @@
-source("resources.R")
-
 clean_nc_y1 <- function() {
-  
   
   # (222, 15)
   nc_raw <- fread("year1/NC/data/nc-comprehensive-ppl.csv",

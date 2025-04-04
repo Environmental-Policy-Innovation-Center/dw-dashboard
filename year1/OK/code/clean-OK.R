@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ok_y1 <- function() {
   
   

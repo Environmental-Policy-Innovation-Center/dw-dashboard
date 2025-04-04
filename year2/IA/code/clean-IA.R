@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ia_y2 <- function() {
   
   # (185, 15) -> (185, 18)

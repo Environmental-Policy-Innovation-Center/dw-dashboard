@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_sc_y1 <- function() {
   
   
@@ -101,9 +99,9 @@ clean_sc_y1 <- function() {
            project_type = case_when(
              is.na(project_type) & grepl("lead", project_description, ignore.case=TRUE) ~ "Lead",
              is.na(project_type) & grepl("lsl", project_description, ignore.case=TRUE) ~ "Lead",
-             is.na(project_type) & grepl("pfas", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
-             is.na(project_type) & grepl("pfoa", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
-             is.na(project_type) & grepl("pfos", project_description, ignore.case=TRUE) ~ "Emerging Contamninants",
+             is.na(project_type) & grepl("pfas", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+             is.na(project_type) & grepl("pfoa", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+             is.na(project_type) & grepl("pfos", project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
              is.na(project_type) ~ "General",
              TRUE ~ project_type),
            community_served = as.character(NA),

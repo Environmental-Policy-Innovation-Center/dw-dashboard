@@ -6,3 +6,11 @@
 *.pyc
 */temp-docs
 *.pdf
+*/analysis/output
+*.html
+*.js
+*.txt
+*.map
+*.css
+*.scss
+*.Rproj

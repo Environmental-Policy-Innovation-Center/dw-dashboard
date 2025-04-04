@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_de_y1 <- function() {
   
   ### APPLICANT

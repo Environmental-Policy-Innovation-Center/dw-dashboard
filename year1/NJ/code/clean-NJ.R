@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_nj_y1 <- function() {
   
   # (676, 19)

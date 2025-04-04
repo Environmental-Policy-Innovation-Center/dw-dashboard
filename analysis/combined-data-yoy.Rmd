@@ -1,0 +1,437 @@
+
+# Combined Funding + Projects
+
+This notebook combines data used in the `funding-data-yoy` and `project-data-yoy` notebooks and combines them for data viz and analysis where the two overlap. These include comparing the total funding available to requested amounts or project costs to consider oversubscription and other considerations.
+
+# Setup
+
+## Imports & Settings
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+
+```
+
+## Local Variables
+
+```{r}
+# filters data and changes plot names
+state_name <- "Tennessee"
+state_abbr <- "TN"
+
+# include 2022?
+include_y0 <- TRUE
+
+# export plots to AWS and Drive?
+save_plots <- FALSE
+
+gs_tab <- "Overview"
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
+
+
+if (include_y0) {
+  years <- "SFY22-25"
+  
+  # used in setting years as factor to display correctly in plots
+  years_list <- c("2022", "2023", "2024", "2025")
+
+} else {
+
+# only appears in subtitles
+  years <- "SFY23-25"
+  years_list <- c("2023", "2024", "2025")
+}
+
+subtitle_str <- paste0(state_name, ", ", years)
+# in some cases, 22 shouldn't be shown, even if included, ie for funding sources that didn't exist prior to 23
+subtitle_str_only_23 <- str_replace(subtitle_str, "22", "23")
+
+
+year_table <- data.frame(
+  state_fiscal_year = years_list
+)
+
+
+```
+
+## Create Data Subsets
+
+```{r, warning=FALSE}
+
+financial <- get_financial(state_name, years_list)
+
+base <- financial %>%
+  filter(fed_cap_grant == "Base")
+
+gen_supp <- financial %>%
+  filter(fed_cap_grant == "IIJA Gen Supp")
+
+base_gen_supp <- financial %>%
+  filter(fed_cap_grant == "Base & IIJA Gen Supp")
+
+base_gen_supp <- bind_rows(base, base_gen_supp)
+
+lead <- financial %>%
+  filter(fed_cap_grant == "LSLR")
+
+ec <- financial %>%
+  filter(fed_cap_grant == "EC")
+
+```
+
+
+```{r}
+
+project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-types.csv") %>%
+  clean_names() %>%
+  filter(state == state_name) %>%
+  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+
+if (include_y0 == FALSE) {
+# select single state and drop any Y0 data to only evaluate IIJA years
+  project_type_df <- project_type_df %>%
+    filter(state_fiscal_year != "2022")
+ }
+```
+
+# Base & IIJA General Supplemental fed_cap_grant
+
+## Comparing Project Costs & Funds Available
+
+```{r}
+
+compare_general_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "General") %>%
+  left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
+         cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
+         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+# make sure all years are present
+compare_general_funds <- year_table %>%
+  left_join(compare_general_funds, by="state_fiscal_year")
+
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_gen <- compare_general_funds %>%
+  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "cost_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    )
+
+
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_gen <- compare_general_funds %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "requested_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+
+# make sure all years are present
+compare_requested_amount_gen <- year_table %>%
+  left_join(compare_requested_amount_gen, by="state_fiscal_year")
+
+```
+
+```{r}
+
+if(sum(compare_project_cost_gen$value[compare_project_cost_gen$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  gen_pc_p <- ggplot(compare_project_cost_gen, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gen_pc_p,
+                   gp_object = gen_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-gen", # change
+                   gs_tab) }
+  
+  gen_pc_gp
+}
+```
+
+
+## Comparing Requested Amount & Funds Available
+
+```{r}
+
+if(sum(compare_requested_amount_gen$value[compare_requested_amount_gen$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  gen_ra_p <- ggplot(compare_requested_amount_gen, aes(x=state_fiscal_year, y=value, fill=name)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gen_ra_p,
+                   gp_object = gen_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-gen", # change
+                   gs_tab) }
+  
+  gen_ra_gp
+}
+```
+
+# EC
+
+## Data Prep
+
+```{r}
+
+compare_ec_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "Emerging Contaminants") %>%
+  left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
+         cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
+         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+# make sure all years are present for plotting, remove 2022 for lead specifically
+compare_ec_funds <- year_table %>%
+  left_join(compare_ec_funds, by="state_fiscal_year") %>%
+  filter(state_fiscal_year !="2022")
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_ec <- compare_ec_funds %>%
+  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "cost_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+  )
+
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_ec <- compare_ec_funds %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "requested_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    )
+
+
+```
+
+## Project Costs
+
+```{r}
+
+if(sum(compare_project_cost_ec$value[compare_project_cost_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  
+  ec_pc_p <- ggplot(compare_project_cost_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds, EC", subtitle=subtitle_str_only_23) + 
+    epic_chart_theme
+  
+  ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
+                                      '<br>',
+                                      subtitle_str_only_23)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_pc_p,
+                   gp_object = ec_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-ec", # change
+                   gs_tab) }
+  
+  ec_pc_gp
+}
+```
+
+## Requested Amount
+
+```{r}
+
+if(sum(compare_requested_amount_ec$value[compare_requested_amount_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  
+  ec_ra_p <- ggplot(compare_requested_amount_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds, EC", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_ra_p,
+                   gp_object = ec_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-ec", # change
+                   gs_tab) }
+  
+  ec_ra_gp
+}
+```
+
+# Lead
+
+## Data Prep
+
+```{r}
+
+compare_lead_funds <- project_type_df %>%
+  select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
+  filter(project_type == "Lead") %>%
+  left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - total_funding_available,
+         cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
+         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+# make sure all years are present for plotting, remove 2022 for lead specifically
+compare_lead_funds <- year_table %>%
+  left_join(compare_lead_funds, by="state_fiscal_year") %>%
+  filter(state_fiscal_year !="2022")
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_lead <- compare_lead_funds %>%
+  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "cost_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    )
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_lead <- compare_lead_funds %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
+  mutate(name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "requested_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+```
+
+### Project Cost
+
+```{r}
+if(sum(compare_project_cost_lead$value[compare_project_cost_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  lead_pc_p <- ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
+                                      '<br>',
+                                      subtitle_str_only_23)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_pc_p,
+                   gp_object = lead_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-lead", # change
+                   gs_tab) }
+  
+  lead_pc_gp
+}
+```
+
+### Requested Amount
+
+```{r}
+
+if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  lead_ra_p <- ggplot(compare_requested_amount_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  # if (save_plots) {
+  #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_ra_p,
+                   gp_object = lead_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-lead", # change
+                   gs_tab) }
+  
+  lead_ra_gp
+}
+```

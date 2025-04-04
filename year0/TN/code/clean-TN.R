@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_tn_y0 <- function() {
   
 
@@ -11,6 +9,8 @@ clean_tn_y0 <- function() {
     mutate(
            community_served = str_squish(county),
            borrower = str_squish(local_government),
+           borrower = str_replace_all(borrower, "\\*", ""),
+           borrower = str_replace_all(borrower, "\\+", ""),
            pwsid = str_squish(pwsid),
            project_cost = clean_numeric_string(total_project_amount),
            project_description = str_squish(project_description),
@@ -20,7 +20,10 @@ clean_tn_y0 <- function() {
            expecting_funding = "Yes",
            project_id = as.character(NA),
            project_name = as.character(NA),
-           project_type = as.character(NA),
+           project_type = case_when(grepl("lead", project_description, ignore.case = TRUE) ~ "Lead", 
+                                                   grepl("PFAS|PFOS|Emerging.Contaminants", 
+                                                         project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+                                                   TRUE ~ "General"),
            requested_amount = as.character(NA),
            funding_amount = as.character(NA),
            principal_forgiveness = as.character(NA),

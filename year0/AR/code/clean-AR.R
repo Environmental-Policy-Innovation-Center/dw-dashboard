@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ar_y0 <- function() {
   
   ar_ppl <- fread("year0/AR/data/ar-fy22-dwsrf-ppl.csv",

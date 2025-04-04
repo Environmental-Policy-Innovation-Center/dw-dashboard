@@ -1,0 +1,944 @@
+---
+title: "State Funding Pages"
+author: "Phil Cork"
+date: "2024-07-08"
+---
+
+This notebook is a draft of analysis for creating statistics and data viz for the SRF Funding Tracker's individual state funding pages (those which cover a single state fiscal year for a particular state.) It pulls data from both the project-level data and the pre-generated state-level aggregate data.
+
+# Setup
+
+```{r}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+```
+
+
+## Set Variables
+
+```{r, warning=FALSE}
+
+
+state_name <- "New York"
+state_abbr <- "NY"
+
+sfy <- "2025"
+subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
+
+years_list <- c(sfy)
+
+save_plots <- FALSE
+
+gs_tab <- paste0("SFY", str_sub(sfy,-2,-1))
+sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
+```
+
+## Imports
+
+### Import Projects & State Data
+
+```{r}
+# import project-level data
+state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
+
+project_counts <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-counts.csv") %>%
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
+
+project_dollars <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-dollars.csv") %>%
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
+
+project_types <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-types.csv") %>%
+  clean_names() %>%
+  filter(state == state_name & state_fiscal_year == sfy)
+
+```
+
+
+```{r}
+financial <- get_financial(state_name, years_list) %>%
+  filter(state_fiscal_year == sfy)
+
+set_asides <- get_set_asides(state_name, years_list) %>%
+  filter(state_fiscal_year == sfy)
+
+pf <- get_pf(state_name, years_list) %>%
+  filter(state_fiscal_year == sfy)
+```
+
+
+# Funding Data
+
+## Grants Allocated
+
+```{r}
+grants <- financial %>%
+  select(fed_cap_grant, ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments) %>%
+  pivot_longer(cols=c(ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments)) %>%
+  filter(!is.na(value) & value > 0) %>%
+  mutate(name = str_to_sentence(str_remove(name, "_fcg")),
+         name = str_replace(name, "Ffy", "FFY"),
+         name = paste0(fed_cap_grant, ", ", name)
+         )
+```
+
+
+```{r}
+
+# display fed cap grants by source
+if (sum(grants$value, na.rm=TRUE)>0) {
+  
+  grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
+    geom_bar(stat="identity", fill="#4ea324") +
+    labs(x="", y="", 
+         title="Federal Capitalization Grants", 
+         subtitle=subtitle_str) + 
+    scale_x_continuous(labels=label_dollar()) + 
+    epic_chart_theme
+  
+  grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Federal Capitalization Grants',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = grants_p,
+                   gp_object = grants_gp, # change
+                   sub_folders, 
+                   name = paste0("fed-cap-grant-amount-",sfy), # change
+                   gs_tab) }
+  
+  grants_gp
+}
+```
+
+
+
+## Principal Forgiveness
+
+```{r}
+total_pf_sfy <- pf %>%
+    filter(fed_cap_grant != "Base & IIJA General Supplemental") %>%
+    select(fed_cap_grant, ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt) %>%
+  pivot_longer(cols=c(ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt)) %>%
+  filter(!is.na(value) & value > 0) %>%
+  mutate(name = str_to_upper(str_remove(name, "_amt")),
+         name = paste0(fed_cap_grant, ", ", name)
+         ) %>%
+  group_by(name) %>%
+  summarize(value = sum(value, na.rm=TRUE))
+
+```
+
+
+```{r}
+
+if(sum(pf$total_pf_amt, na.rm=TRUE) > 0) {
+  
+  all_pf_p <- ggplot(pf, aes(x=total_pf_amt, y=reorder(pf_category, total_pf_amt), text=format_currency(total_pf_amt))) + 
+    geom_bar(stat="identity", fill="#4ea324") +
+    labs(x="", y="", title="Expected Principal Forgiveness from Fed Cap Grants", 
+         subtitle=subtitle_str) + 
+    scale_x_continuous(labels=label_dollar()) + 
+    epic_chart_theme
+  
+  all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
+    layout(title = list(text = paste0("Expected Principal Forgiveness from Fed Cap Grants",
+                                      "<br>",
+                                      subtitle_str)))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = all_pf_p,
+                   gp_object = all_pf_gp, # change
+                   sub_folders, 
+                   name = paste0("fed-cap-grant-pf-amount-",sfy), # change
+                   gs_tab) }
+  
+  all_pf_gp
+}
+```
+
+## Base, Set Asides, PF Percents
+
+```{r}
+
+base_distribution <-data.frame(name=c(""), value=c(0))
+
+base_distribution <- base_distribution %>%
+  add_row(name="DAC PF", 
+          value=pf$total_pf_amt[pf$pf_category=="DAC"]) %>%
+  add_row(name="Discretionary PF",
+          value=pf$total_pf_amt[pf$pf_category=="Discretionary"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Local Assistance & Other"])
+
+base_distribution <- base_distribution %>%
+  add_row(name="Remaining Base Grant, for Loans",
+          value = max(financial$total_fcg[financial$fed_cap_grant=="Base"] - sum(base_distribution$value),0)) %>%
+  filter(name!="") %>%
+  mutate(name = factor(name, levels=c("Remaining Base Grant, for Loans", "Local Assistance & Other Set Asides", 
+                                      "State Program Management Set Asides", "Small System TA Set Asides", 
+                                      "Admin & TA Set Asides",  "Discretionary PF", "DAC PF")),
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+
+```
+
+
+```{r}
+if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
+  
+  base_all_p <- ggdonutchart(base_distribution,
+                             "value",
+                             fill="name",
+                             color="white",
+                             palette=distribution_colors,
+                             label="plot_str",
+                             lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How is the Base grant allocated?",
+         subtitle=subtitle_str)
+  
+  
+  base_all_fig <- base_distribution %>% 
+    plot_ly(labels = ~name, values = ~value,
+            hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, 
+            marker=list(colors = distribution_colors[as.character(base_distribution$name)])) %>% 
+    layout(title = paste0("How is the Base grant allocated?", "<br>", subtitle_str),  
+           margin = list(t = 100, l = 10),  
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = base_all_p,
+                   gp_object = base_all_fig, # change
+                   sub_folders, 
+                   name = paste0("base-pf-sa-pct-",sfy), # change
+                   gs_tab) }
+  
+  base_all_fig
+}
+```
+
+
+## Gen Supp, Set Asides, PF Percents
+
+```{r}
+
+gensupp_distribution <-data.frame(name=c(""), value=c(0))
+
+gensupp_distribution <- gensupp_distribution %>%
+  add_row(name="Principal Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="IIJA Gen Supp"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="IIJA Gen Supp" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="IIJA Gen Supp" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="IIJA Gen Supp" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="IIJA Gen Supp" & set_asides$allowance == "Local Assistance & Other"])
+
+gensupp_distribution <- gensupp_distribution %>%
+  add_row(name="Remaining Gen Supp Grant, for Loans",
+          value = max(financial$total_fcg[financial$fed_cap_grant=="IIJA Gen Supp"] - sum(gensupp_distribution$value, na.rm=TRUE),0)) %>%
+  filter(name!="") %>%
+  mutate(name = factor(name, levels=c("Remaining Gen Supp Grant, for Loans", 
+                                      "Local Assistance & Other Set Asides", 
+                                      "State Program Management Set Asides", 
+                                      "Small System TA Set Asides", 
+                                      "Admin & TA Set Asides",  "Principal Forgiveness")),
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+
+```
+
+
+```{r}
+if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0) {
+  
+  gensupp_all_p <- ggdonutchart(gensupp_distribution,
+                                "value",
+                                fill="name",
+                                color="white",
+                                palette=distribution_colors,
+                                label="plot_str",
+                                lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How is the IIJA Gen Supp grant allocated?",
+         subtitle=subtitle_str)
+  
+  
+  gensupp_all_fig <- gensupp_distribution %>% 
+    plot_ly(labels = ~name, values = ~value,
+            hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(gensupp_distribution$name)])) %>% 
+    layout(title = paste0("How is the IIJA Gen Supp grant allocated?", "<br>", subtitle_str),  
+           margin = list(t = 100, l = 10),  
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gensupp_all_p,
+                   gp_object = gensupp_all_fig, # change
+                   sub_folders, 
+                   name = paste0("iija-gen-supp-pf-sa-pct-",sfy), # change
+                   gs_tab) }
+  
+  gensupp_all_fig
+}
+```
+
+## Lead, Set Asides, PF Percents
+
+```{r}
+
+lead_distribution <-data.frame(name=c(""), value=c(0))
+
+lead_distribution <- lead_distribution %>%
+  add_row(name="Principal Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="IIJA - LSLR"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="LSLR" & set_asides$allowance == "Local Assistance & Other"])
+
+lead_distribution <- lead_distribution %>%
+  add_row(name="Remaining LSLR Grant, for Loans",
+          value = max(financial$total_fcg[financial$fed_cap_grant=="LSLR"] - sum(lead_distribution$value, na.rm=TRUE),0)) %>%
+  filter(name!="") %>%
+  mutate(name = factor(name, levels=c("Remaining LSLR Grant, for Loans", 
+                                      "Local Assistance & Other Set Asides", 
+                                      "State Program Management Set Asides", 
+                                      "Small System TA Set Asides", 
+                                      "Admin & TA Set Asides", 
+                                      "Principal Forgiveness")),
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+
+```
+
+
+```{r}
+if (nrow(lead_distribution %>% filter(!is.na(value))) > 0) {
+  
+  lead_all_p <- ggdonutchart(lead_distribution,
+                             "value",
+                             fill="name",
+                             color="white",
+                             palette=distribution_colors,
+                             label="plot_str",
+                             lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How is the LSLR grant allocated?",
+         subtitle=subtitle_str)
+  
+  
+  lead_all_fig <- lead_distribution %>% 
+    plot_ly(labels = ~name, values = ~value,
+            hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(lead_distribution$name)])) %>% 
+    layout(title = paste0("How is the LSLR grant allocated?", "<br>", subtitle_str),  
+           margin = list(t = 100, l = 10),  
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_all_p,
+                   gp_object = lead_all_fig, # change
+                   sub_folders, 
+                   name = paste0("lead-pf-sa-pct-",sfy), # change
+                   gs_tab) }
+  
+  lead_all_fig
+}
+```
+
+
+## EC, Set Asides, PF Percents
+
+```{r}
+
+ec_distribution <-data.frame(name=c(""), value=c(0))
+
+ec_distribution <- ec_distribution %>%
+  add_row(name="Principal Forgiveness", 
+          value=pf$total_pf_amt[pf$pf_category=="IIJA - EC"]) %>%
+  add_row(name="Admin & TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Admin & TA"]) %>%
+  add_row(name="Small System TA Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Small System TA"]) %>%
+  add_row(name="State Program Management Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "State Program Management"]) %>%
+  add_row(name="Local Assistance & Other Set Asides", 
+          value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="EC" & set_asides$allowance == "Local Assistance & Other"])
+
+ec_distribution <- ec_distribution %>%
+  add_row(name="Remaining EC Grant, for Loans",
+          value = max(financial$total_fcg[financial$fed_cap_grant=="EC"] - sum(ec_distribution$value, na.rm=TRUE),0)) %>%
+  filter(name!="") %>%
+  mutate(name = factor(name, levels=c("Remaining EC Grant, for Loans", 
+                                      "Local Assistance & Other Set Asides", 
+                                      "State Program Management Set Asides", 
+                                      "Small System TA Set Asides", 
+                                      "Admin & TA Set Asides",  
+                                      "Principal Forgiveness")),
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+
+```
+
+
+```{r}
+if (nrow(ec_distribution %>% filter(!is.na(value))) > 0) {
+  
+  ec_all_p <- ggdonutchart(ec_distribution,
+                           "value",
+                           fill="name",
+                           color="white",
+                           palette=distribution_colors,
+                           label="plot_str",
+                           lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How is the EC grant allocated?",
+         subtitle=subtitle_str)
+  
+  
+  ec_all_fig <- ec_distribution %>% 
+    plot_ly(labels = ~name, values = ~value,
+            hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(ec_distribution$name)])) %>% 
+    layout(title = paste0("How is the EC grant allocated?", "<br>", subtitle_str),  
+           margin = list(t = 100, l = 10),  
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_all_p,
+                   gp_object = ec_all_fig, # change
+                   sub_folders, 
+                   name = paste0("ec-pf-sa-pct-",sfy), # change
+                   gs_tab) }
+  
+  ec_all_fig
+}
+```
+
+# Comparing Funding and Project Data
+
+## Funds by Process
+
+```{r}
+
+if (!is.na(project_dollars$total_project_cost)) {
+  
+  funds_process_comp <- data.frame(name=c("Available to Fund Projects", 
+                                          "Project Demand", "Expected Funding"),
+                                   value=c(sum(financial$total_funding_available, na.rm = TRUE),
+                                           project_dollars$total_project_cost,
+                                           project_dollars$total_funding_amount)) %>%
+    mutate(category = factor(name, levels=c("Expected Funding", 
+                                            "Available to Fund Projects", "Project Demand")))
+  
+} else {
+  
+  funds_process_comp <- data.frame(name=c("Available to Fund Projects", 
+                                          "Project Demand", "Expected Funding"),
+                                   value=c(sum(financial$total_funding_available, na.rm = TRUE),
+                                           project_dollars$total_requested_amount,
+                                           project_dollars$total_funding_amount)) %>%
+    mutate(category = factor(name, levels=c("Expected Funding", 
+                                            "Available to Fund Projects", "Project Demand"))) 
+  
+}
+```
+
+
+```{r}
+
+if(nrow(funds_process_comp %>% filter(!is.na(value))) == nrow(funds_process_comp)) {
+  
+  funds_comp_p <- ggplot(funds_process_comp, 
+                         aes(y=category, x=value, text=format_currency(value))) + 
+    geom_bar(stat="identity", fill="#4ea324") +
+    labs(x="", y="", 
+         title="How do available funds compare to demand and funding expectations?", 
+         subtitle=subtitle_str) + 
+    scale_x_continuous(labels=label_dollar()) + 
+    epic_chart_theme
+  
+  funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
+    layout(title = list(text = paste0("How do available funds compare to demand and funding expectations?", '<br>',subtitle_str)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = funds_comp_p,
+                   gp_object = funds_comp_gp, # change
+                   sub_folders, 
+                   name = paste0("compare-available-demand-expecting-",sfy), # change
+                   gs_tab) }
+  
+  funds_comp_gp
+}
+```
+
+## Project Costs & Available Funds
+
+### General
+
+```{r}
+# even though gen funds in 2022, not making plots
+if (sfy != "2022") {
+  
+  base_funds_available <- ifelse(is.na(financial$total_funding_available[financial$fed_cap_grant=="Base"]),
+                                 0,financial$total_funding_available[financial$fed_cap_grant=="Base"])
+  
+  iija_funds_available <- ifelse(is.na(financial$total_funding_available[financial$fed_cap_grant=="IIJA Gen Supp"]),
+                                 0,financial$total_funding_available[financial$fed_cap_grant=="IIJA Gen Supp"])
+  
+  base_iija_funds_available <- ifelse(is.na(financial$total_funding_available[financial$fed_cap_grant=="Base & IIJA Gen Supp"]),
+                                      0,financial$total_funding_available[financial$fed_cap_grant=="Base & IIJA Gen Supp"])
+  
+  
+  gen_funds_available <- max(base_iija_funds_available, base_funds_available+iija_funds_available)
+  
+  # if general project cost is missing, switch to requested amount
+  # NOTE may manually need to use Requested Amount instead when both are present but the latter is preferred
+  
+  general <- project_types %>%
+    filter(project_type == "General")
+  
+  if (!is.na(general$total_project_cost)) {
+    gen_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                            value=c(gen_funds_available,
+                                    max(general$total_project_cost - gen_funds_available,0)))
+  } else {
+    gen_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                            value=c(gen_funds_available,
+                                    max(general$total_requested_amount - gen_funds_available,0)))
+  }
+  
+  gen_costs <- gen_costs %>%
+    mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
+           value_str = format_currency(value),
+           pct_value = round(value / sum(gen_costs$value),2),
+           pct_value_str = format_percent(pct_value))
+  
+  # if we have gen data for given sfy, make plot
+  if ( nrow(gen_costs %>% filter(!is.na(value))) == nrow(gen_costs))  {
+    
+    gen_comp_p <- ggdonutchart(gen_costs,
+                               "value",
+                               fill="name",
+                               color="white",
+                               palette=comp_colors,
+                               label="value_str",
+                               lab.pos="out") + 
+      theme(
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_blank(), 
+        legend.position = "right",  
+        legend.direction = "vertical") +
+      guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+      ) + 
+      labs(title="Unmet demand compared to available Base & IIJA Gen Supp funds",
+           subtitle=subtitle_str)
+    
+    
+    gen_comp_fig <- gen_costs %>% plot_ly(labels = ~name, values = ~value,
+                                          hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+      add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = comp_colors[as.character(gen_costs$name)])) %>% 
+      layout(title = paste0("Unmet demand compared to available Base & IIJA Gen Supp funds", "<br>", subtitle_str),  
+             margin = list(t = 100, l = 10),  
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+    
+    if (save_plots) {
+      run_save_plots(gg_plot = gen_comp_p,
+                     gp_object = gen_comp_fig, # change
+                     sub_folders, 
+                     name = paste0("compare-available-demand-general-",sfy), # change
+                     gs_tab) }
+    
+    
+    gen_comp_fig
+    
+  } # if gen_costs > 0, make plot
+  
+} # if sfy!=2022
+```
+
+### Lead
+
+```{r}
+# no lead funds before year 0, skip data and plot
+if (sfy != "2022") {
+  
+  lead_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="LSLR"]
+  
+  # if project costs is NA, use Requested Amount instead
+  # NOTE: may need to manually change to requested amount if both are valid but the latter is more worth highlighting
+  
+  lead <- project_types %>%
+    filter(project_type == "Lead")
+  
+  if (!is.na(lead$total_project_cost)) {
+    
+    lead_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                             value=c(lead_funds_available,
+                                     max(lead$total_project_cost - lead_funds_available, 0)))
+  } else {
+    lead_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                             value=c(lead_funds_available,
+                                     max(lead$total_requested_amount - lead_funds_available, 0)))
+  }
+  
+  lead_costs <- lead_costs %>%
+    mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
+           value_str = format_currency(value),
+           pct_value = round(value / sum(lead_costs$value),2),
+           pct_value_str = format_percent(pct_value))
+  
+  # if we have lead data for given sfy, make plot
+  if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
+    
+    lead_comp_p <- ggdonutchart(lead_costs,
+                                "value",
+                                fill="name",
+                                color="white",
+                                palette=comp_colors,
+                                label="value_str",
+                                lab.pos="out") + 
+      theme(
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_blank(), 
+        legend.position = "right",  
+        legend.direction = "vertical") +
+      guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+      ) + 
+      labs(title="Unmet demand compared to available LSLR funds",
+           subtitle=subtitle_str)
+    
+    
+    lead_comp_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value,
+                                            hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+      add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = comp_colors[as.character(lead_costs$name)])) %>% 
+      layout(title = paste0("Unmet demand compared to available LSLR funds", "<br>", subtitle_str),  
+             margin = list(t = 100, l = 10),  
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+    
+    if (save_plots) {
+      run_save_plots(gg_plot = lead_comp_fig,
+                     gp_object = lead_fig, # change
+                     sub_folders, 
+                     name = paste0("compare-available-demand-lead-",sfy), # change
+                     gs_tab) }
+    
+    
+    lead_comp_fig
+    
+  } # if lead_costs > 0, make plot
+  
+} # if sfy!=2022, check for lead
+
+
+```
+
+### EC
+```{r}
+
+# no ec funds in y0
+if (sfy != "2022") {
+  
+  ec_funds_available <- financial$total_funding_available[financial$fed_cap_grant=="EC"]
+  
+  ec <- project_types %>%
+    filter(project_type == "Emerging Contaminants")
+  
+  if (!is.na(ec$total_project_cost)) {
+    ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                           value=c(ec_funds_available,
+                                   max(ec$total_project_cost - ec_funds_available,0)))
+  } else {
+    ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
+                           value=c(ec_funds_available,
+                                   max(ec$total_requested_amount - ec_funds_available,0)))
+  }
+  
+  ec_costs <- ec_costs %>%
+    mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
+           value_str = format_currency(value),
+           pct_value = round(value / sum(ec_costs$value),2),
+           pct_value_str = format_percent(pct_value))
+  
+  # if we have ec data for sfy, make plot
+  if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
+    
+    ec_comp_p <- ggdonutchart(ec_costs,
+                              "value",
+                              fill="name",
+                              color="white",
+                              palette=comp_colors,
+                              label="value_str",
+                              lab.pos="out") + 
+      theme(
+        text = element_text(size = 11, family = "Lato"), 
+        legend.text = element_text(size = 10, family = "Lato"), 
+        legend.title = element_blank(), 
+        legend.position = "right",  
+        legend.direction = "vertical") +
+      guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+      ) + 
+      labs(title="Unmet demand compared to available EC funds",
+           subtitle=subtitle_str)
+    
+    
+    ec_comp_fig <- ec_costs %>% plot_ly(labels = ~name, values = ~value,
+                                        hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
+      add_pie(hole = 0.6, direction="clockwise", sort=FALSE,marker=list(colors = comp_colors[as.character(ec_costs$name)])) %>% 
+      layout(title = paste0("Unmet demand compared to available EC funds", "<br>", subtitle_str),  
+             margin = list(t = 100, l = 10),  
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+    if (save_plots) {
+      run_save_plots(gg_plot = ec_comp_p,
+                     gp_object = ec_comp_fig, # change
+                     sub_folders, 
+                     name = paste0("compare-available-demand-ec-",sfy), # change
+                     gs_tab) }
+    
+    ec_comp_fig
+  } # end if we have ec data, make plot
+} # end if sfy !=2022
+```
+
+```{r}
+dacs_df <- data.frame(name=c("DACs, Expecting Funding", 
+                             "DACs, Not Expecting Funding", "DACs, No Info"),
+                      value=c(project_counts$dac_ef_projects, 
+                              project_counts$dac_nef_projects, 
+                              project_counts$dac_ef_ni_projects),
+                      value_str=c(as.character(project_counts$dac_ef_projects),
+                                  as.character(project_counts$dac_nef_projects), 
+                                  as.character(project_counts$dac_ef_ni_projects))) %>%
+  mutate(value_str = ifelse(value >0, value_str, ""),
+         name = factor(name, levels=c("DACs, No Info", 
+                                      "DACs, Not Expecting Funding", 
+                                      "DACs, Expecting Funding")))
+
+
+if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
+  
+  dacs_ef_p <- ggdonutchart(dacs_df,
+                            "value",
+                            fill="name",
+                            color="white",
+                            palette=ef_dac_comp_colors,
+                            label="value_str",
+                            lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How many DACs could expect funding?",
+         subtitle=subtitle_str)
+  
+  
+  dacs_ef_fig <- dacs_df %>% plot_ly(labels = ~name, values = ~value,
+                                     hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(dacs_df$name)])) %>% 
+    layout(title = paste0("How many DACs could expect funding?", "<br>", subtitle_str),  
+           margin = list(t = 100, l = 10),
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = dacs_ef_p,
+                   gp_object = dacs_ef_fig, # change
+                   sub_folders, 
+                   name = paste0("dacs-expecting-funding-",sfy), # change
+                   gs_tab) }
+  
+  dacs_ef_fig
+}
+```
+
+
+```{r}
+
+ef_df <- data.frame(name=c("Expecting Funding, DAC", 
+                               "Expecting Funding, Not DAC", 
+                               "Expecting Funding, No Info"),
+                         value=c(project_counts$dac_ef_projects,
+                                  project_counts$ndac_ef_projects,
+                                  project_counts$dac_ni_ef_projects),
+                         value_str=c(as.character(project_counts$dac_ef_projects),
+                                      as.character(project_counts$ndac_ef_projects),
+                                      as.character(project_counts$dac_ni_ef_projects))
+                                      ) %>%
+  mutate(value_str = ifelse(value >0, value_str, ""),
+         name = factor(name, levels=c("Expecting Funding, No Info",
+                                      "Expecting Funding, Not DAC", 
+                                      "Expecting Funding, DAC")))
+
+
+if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df))  {
+  
+  ef_df_p <- ggdonutchart(ef_df,
+                          "value",
+                          fill="name",
+                          color="white",
+                          palette=ef_dac_comp_colors,
+                          label="value_str",
+                          lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="How many projects expected to receive funding are for DACs",
+         subtitle=subtitle_str)
+  
+  ef_df_fig <- ef_df %>% plot_ly(labels = ~name, values = ~value,
+                                 hovertemplate = '%{label}<br>%{value} projects<extra></extra>') %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(ef_df$name)])) %>% 
+    layout(title = paste0("How many projects expected to receive funding are for DACs?", "<br>", subtitle_str),
+           margin = list(t = 100, l = 10),
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ef_df_p,
+                   gp_object = ef_df_fig, # change
+                   sub_folders, 
+                   name = paste0("expecting-funding-projects-dacs-",sfy), # change
+                   gs_tab) }
+  
+  ef_df_fig
+}
+```
+
+### DAC/EF Heat Map
+```{r}
+dac_ef_hm <- project_counts %>%
+  select(state_fiscal_year, 
+         dac_ef_projects, dac_nef_projects, dac_ef_ni_projects,
+         ndac_ef_projects, ndac_nef_projects, ndac_ef_ni_projects,
+         dac_ni_ef_projects, dac_ni_nef_projects, dac_ni_ef_ni_projects
+  ) %>%
+  pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects",
+                      "ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects",
+                      "dac_ni_ef_projects", "dac_ni_nef_projects", "dac_ni_ef_ni_projects")) %>%
+  mutate(dac = case_when(
+    name %in% c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects") ~ "Yes",
+    name %in% c("ndac_ef_projects", "ndac_nef_projects", "ndac_ef_ni_projects") ~ "No",
+    TRUE ~ "No Info"),
+    expecting_funding = case_when(
+      name %in% c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects") ~ "Yes",
+      name %in% c("dac_nef_projects", "ndac_nef_projects", "dac_ni_nef_projects") ~ "No",
+      TRUE ~ "No Info") 
+  ) %>%
+  mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
+                           value, " projects"),
+         dac = factor(dac, levels=c("Yes", "No", "No Info")),
+         expecting_funding = factor(expecting_funding, levels=c("Yes", "No", "No Info"))) %>%
+  select(-name)
+
+if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
+  
+  dac_ef_hm_p <- ggplot(dac_ef_hm, aes(x=expecting_funding, y=dac, fill=value, text=plot_str)) + 
+    geom_tile(color="white") + 
+    labs(title="Projects by DAC Status and Expecting Funding", subtitle=subtitle_str,
+         x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
+    scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
+    theme_minimal()
+  
+  dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
+    layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding",
+                                      '<br>', subtitle_str)))
+  
+  
+  if (save_plots) {
+    
+    run_save_plots(gg_plot = dac_ef_hm_p,
+                   gp_object = dac_ef_hm_gp, # change
+                   sub_folders, 
+                   name = "dac-expecting-funding-heatmap-yoy", # change
+                   gs_tab) }
+  
+  dac_ef_hm_gp
+}
+```
+
+## Project Score Range
+
+```{r}
+# range of project scores for projects expecting funding
+tibble(
+  state_projects %>%
+    filter(expecting_funding == "Yes") %>%
+    mutate(score_numeric = as.numeric(project_score)) %>%
+    group_by(state, state_fiscal_year) %>%
+    summarize(min_score = min(score_numeric),
+              max_score = max(score_numeric))
+)
+```

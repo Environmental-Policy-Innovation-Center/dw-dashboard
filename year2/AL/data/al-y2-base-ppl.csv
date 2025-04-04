@@ -1,0 +1,41 @@
+Project #,Applicant Name,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"FinancialRank",DW Ratio,"DisadvantgedRank","PriorityRankingPoints","DW SRFAmountGranted","DW SRFPrincipalForgiveness","DW SRF PrincipalForgiveness %","Applied forProject Amount",Fund
+FS010060-03,"Albertville, Municipal UtilitiesBoard of the City of","Albertville WTPImprovements",Albertville,Marshall,Yes,"22,268",1,1.08,3.08,85,"$2,000,000.00",$0.00,0%,"$6,790,000.00",SRF/ARPA
+FS010200-02,"Ashville, City of",Water System Improvements,Ashville,St. Clair,Yes,"2,096",0,1.07,3.07,185,"$1,853,785.00",$0.00,0%,"$3,707,570.00",SRF
+FS010425-01,Bessemer Water Services,"General Main/Service LineRehabilitation, Steel TankRehabilitation, and LakeshoreSecondary Supply Line and",Bessemer,Jefferson,Yes,"26,171",0,1.93,2.93,175,"$2,000,000.00",$0.00,0%,"$42,223,750.00",SRF
+FS010426-01,"Bessemer, GUSC of the City of","Raw Water Pump Upgradeand High Service PumpControl Valve Replacement",Bessemer,Jefferson,Yes,"26,171",0,1.93,2.93,50,"$1,199,501.00",$0.00,0%,"$2,399,002.00",SRF
+FS010132-03,"Chattahoochee Valley WaterSupply District",Water System Improvements,Valley,Chambers,,"6,037",0,0.20,1.20,105,"$1,100,000.00",$0.00,0%,"$12,072,900.00",SRF/ARPA
+FS010225-02,"Cherokee, Town of",Water System Improvements,Cherokee,Colbert,Yes,911,1,2.17,5.17,295,"$2,434,217.00","$1,000,000.00",41%,"$7,302,650.00",SRF
+FS010370-01,"Childersburg Water Works, S &G Board",Water System Improvements,Childersburg,Talladega,Yes,"4,768",1,1.35,4.35,60,"$369,500.00",$0.00,0%,"$739,000.00",SRF/ARPA
+FS010089-08,"Citronelle, Utilities Board of theTown of (dba South AlabamaUtilities)",Capital Improvements,Citronelle,Mobile,Yes,"3,940",0,0.57,2.57,330,"$1,700,000.00",$0.00,0%,"$6,415,320.00",SRF
+FS010530-01,Clayton WW&SB,Water Supply Well,Clayton,Barbour,,"2,512",1,1.63,3.63,180,"$1,230,000.00",$0.00,0%,"$2,460,000.00",SRF
+FS010260-02,"Cordova, City of; Water Works& Gas Board",Water System Improvements,Cordova,Walker,,"1,709",1,2.48,4.48,85,"$1,050,000.00",$0.00,0%,"$1,400,000.00",SRF/ARPA
+FS010141-02,"Daleville Water and SewerBoard","SRF Well, Tank, and Mains",Daleville,Dale,,"4,912",0,0.67,1.67,50,"$1,635,000.00",$0.00,0%,"$3,270,000.00",SRF/ARPA
+FS010377-02,"Dora, Town of",Supplemental,Dora,Lawrence,,"2,725",1,N/A,SUPP,SUPP,"$260,000.00",$0.00,0%,"$260,000.00",SRF
+FS010485-01,"Flomaton, Town of",Water Main Replacement,Flomaton,Escambia,,"1,728",0,1.28,2.28,90,"$1,072,600.00",$0.00,0%,"$1,072,600.00",SRF
+FS010168-05,"Florence, City of",Supplemental 2023,Florence,Lauderdale,,"39,709",0,1.50,1.50,55,"$5,333,764.00",$0.00,0%,"$7,500,000.00",SRF/BIL
+FS010332-01,"Ford's Valley & Hwy 278 WaterCooperative",Ford's Valley & Hwy 278,Piedmont,Etowah,Yes,"4,837",0,1.78,3.78,90,"$2,237,000.00",$0.00,0%,"$3,487,000.00",SRF/ARPA
+FS010378-01,Fosters-Ralph Water Authority,System Improvements,Ralph,Greene,Yes,"6,027",0,1.29,3.29,80,"$1,822,900.00",$0.00,0%,"$2,555,500.00",SRF/ARPA
+FS010227-03,"Gilbertown, The Utilities Boardof the Town of","Water Storage Improvementsand Installation of BackupGenerators",Gilbertown,Choctaw,Yes,666,1,N/A,SUPP,SUPP,"$500,000.00",$0.00,0%,"$2,451,000.00",SRF/ARPA
+FS010488-01,"Harpersville, Town of","Harpersville WaterlineReplacement Project 2022",Harpersville,Shelby,,"1,589",1,1.61,3.61,305,"$1,755,000.00",$0.00,0%,"$5,265,000.00",SRF
+FS010153-05,"**Huntsville Utilities (2023Supplemental)","HuntsvilleUtilitiesWaterSystem Improvements",Huntsville,Madison,No,"210,081",0,N/A,SUPP,SUPP,"$8,595,000.00",$0.00,0%,"$10,595,000.00",SRF/ARPA
+FS010489-01,"Kinston, Town of","Water Improvements - Source& Storage",Kinston,Coffee,Yes,793,1,1.91,4.91,180,"$1,123,612.00",$0.00,0%,"$2,247,224.00",SRF/ARPA
+FS010033-03,"Level Plains, City of","SRF Well, Tank, and Mains",Level Plains,Dale,,"1,826",1,0.50,2.50,180,"$1,875,000.00",$0.00,0%,"$3,750,000.00",SRF/ARPA
+FS010248-03,"Marion, City of","Marion DWSRF CriticalNeeds Water InfrastructureImprovements Project - Phase1",Marion,Perry,Yes,"3,273",0,1.47,3.47,395,"$750,000.00",$0.00,0%,"$2,030,000.00",SRF/ARPA
+FS010096-04,"Mobile, AL (MAWSS), Board ofWater and SewerCommissioners of the City of","Master Plan SRF WaterProjects Phase II - Years 20242028",Mobile,Mobile,Yes,"187,445",0,N/A,N/A,Supp,"$7,557,810.00",$0.00,0%,"$11,936,000.00",SRF/BIL
+FS010448-01,Montevallo WW&SB,"Water System LineReplacement",Montevallo,Shelby,No,"6,968",0,1.37,2.37,55,"$1,500,000.00",$0.00,0%,"$6,000,000.00",SRF/ARPA
+FS010230-04,North Marshall Utilities Board,Water System Improvements,Grant,Marshall,Yes,"1,524",1,1.20,4.20,240,"$2,500,000.00",$0.00,0%,"$20,227,650.00",SRF
+FS010381-01,"Oakman, Water Works Board ofthe Town of","Oakman Water SupplyImprovements",Oakman,Walker,Yes,814,-,1.77,3.77,80,"$1,525,400.00",$0.00,0%,"$1,525,400.00",SRF
+FS010365-02,"Odenville Utilities Board, Townof",Water Storage Tank Painting,Odenville,St. Clair,No,"4,800",1,0.99,2.99,85,"$1,583,074.00",$0.00,0%,"$2,183,074.00",SRF/ARPA
+FS010366-02,"Pell City, City of",Well A to Woodhill Tank,Pell City,St. Clair,,"12,923",0,1.26,1.26,140,"$2,205,072.00",$0.00,0%,"$3,205,072.00",SRF/ARPA
+FS010385-01,"Pinedale Water, Sewer and FireProtection Authority",Elevated Water Storage Tank,Ashville,St. Clair,Yes,"2,096",1,2.20,5.20,180,"$1,320,000.00","$1,320,000.00",100%,"$1,320,000.00",SRF
+FS010256-05,"Selma, The Waterworks andSewer Board of the","(Supplemental) 2019 WaterProduction, Treatment, andStorage Improvements",Selma,Dallas,Yes,"18,429",0,N/A,SUPP,Supp,"$640,000.00",$0.00,0%,"$640,000.00",SRF
+FS010256-03,"Selma, The Waterworks andSewer Board of the","Well and Water TreatmentPlant Improvements",Selma,Dallas,Yes,"18,429",0,2.72,3.72,110,"$2,891,942.00",$0.00,0%,"$5,783,885.00",SRF/ARPA
+FS010540-01,"Snowdown Water System, Inc.",Water Main Extension,Montgomery,Montgomery,,"1,000",1,0.96,2.96,215,"$1,800,000.00",$0.00,0%,"$1,800,000.00",SRF
+FS010045-02,"Sumiton, City of",Sumiton Water Improvements,Sumiton,Walker,,"2,676",0,1.22,2.22,140,"$675,000.00",$0.00,0%,"$900,000.00",SRF/ARPA
+FS010275-03,"Summerdale, Town of",Elevated Storage Tank,Summerdale,Baldwin,Yes,"1,512",0,1.04,3.04,55,"$1,045,425.00",$0.00,0%,"$2,090,850.00",SRF/ARPA
+FS010544-01,Talladega County Commission,Water System Imrpovements,Talladega,Talladega,,"15,782",1,0.70,1.70,155,"$3,391,075.00",$0.00,0%,"$6,782,150.00",SRF
+FS010322-01,"Tallassee, City of",WTP Filter Gallery Upgrades,Tallassee,Elmore,YES,"5,199",1,1.07,4.07,125,"$586,025.00",$0.00,0%,"$1,172,050.00",SRF/ARPA
+FS010133-04,Warrior River Authority,#1 of 4 WTP Improvements,Bessemer,Jefferson,No,"26,171",0,1.90,1.90,220,"$2,375,000.00",$0.00,0%,"$9,500,000.00",SRF/ARPA
+FS010247-02,"White Hall, Town of",Water System Improvements,White Hall,Lowndes,Yes,603,1,2.28,5.28,240,"$716,894.00","$716,894.00",100%,"$716,894.00",SRF
+FS010053-02,White House Water System,Water System Improvements,Bay Minette,Baldwin,,"7,824",0,1.76,1.76,40,"$3,296,000.00",$0.00,0%,"$4,944,000.00",SRF/ARPA
+FS010522-02,"York, City of","Proposed York Water SystemInfrastructure Project",York,Sumter,Yes,"2,371",0,2.09,4.09,215,"$1,124,000.00",$0.00,0%,"$2,248,000.00",SRF

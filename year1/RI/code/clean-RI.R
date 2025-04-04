@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_ri_y1 <- function() {
   
   # (129, 16)

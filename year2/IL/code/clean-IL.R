@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_il_y2 <- function() {
   base_path <- file.path("year2", "IL", "data")
 

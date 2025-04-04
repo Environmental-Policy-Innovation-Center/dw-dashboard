@@ -1,5 +1,3 @@
-source("resources.R")
-
 clean_or_y1 <- function() {
 
   # read in larger tables and clean up their column names for easier parsing

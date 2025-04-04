@@ -2,6 +2,7 @@
 
 # EPIC'S DWSRF Funding Tracker
 
+
 This repository maintains the code and data powering the DWSRF Funding Tracker. The website serves as an in-depth resource that monitors proposed funding and policies in the annual Intended Use Plans (IUPs) of 15 focus states.
 
 The datasets developed in this repo ("project data") explore which drinking water infrastructure projects apply for funds and which projects states intend to fund through state revolving funds in a given year. The information available about projects varies from state-to-state and year-to-year, but generally includes descriptions of the project, its costs or how much funding might be expected and whether it includes principal forgiveness, and details about the borrower and community served.

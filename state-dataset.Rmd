@@ -249,6 +249,28 @@ funding_amount_aggregation <- all_projects %>%
             median_funding_amount = median_wo_zero(as.numeric(funding_amount)),
             avg_funding_amount = mean(as.numeric(funding_amount)))
 
+
+# filter project costs by expecting funding
+fa_by_ef <- all_projects %>%
+  filter(!is.na(funding_amount) & funding_amount !="No Information") %>%
+  group_by(state, state_fiscal_year, expecting_funding) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount))) %>%
+  pivot_wider(names_from="expecting_funding", values_from="total_funding_amount") %>%
+  rename(funding_amount_ef = Yes,
+         funding_amount_nef = No)
+
+# filter funding amount by expecting funding and dac status
+fa_by_ef_dac <- all_projects %>%
+  filter(!is.na(funding_amount) & funding_amount !="No Information") %>%
+  group_by(state, state_fiscal_year, expecting_funding, disadvantaged) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount))) %>%
+  filter(expecting_funding == "Yes" & disadvantaged %in% c("Yes", "No")) %>%
+  pivot_wider(names_from="disadvantaged", values_from="total_funding_amount") %>%
+  rename(funding_amount_ef_dac = Yes,
+         funding_amount_ef_ndac = No) %>%
+  ungroup() %>%
+  select(state, state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac)
+
 fa_by_type <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
   group_by(state, state_fiscal_year, project_type) %>%
@@ -303,6 +325,8 @@ pf_by_type <- all_projects %>%
 project_dollars <- feature_coverage %>%
   select(state, state_fiscal_year) %>%
   left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
+  left_join(fa_by_ef, by=c("state", "state_fiscal_year")) %>%
+  left_join(fa_by_ef_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef, by=c("state", "state_fiscal_year")) %>%

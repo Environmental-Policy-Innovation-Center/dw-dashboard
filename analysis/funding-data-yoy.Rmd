@@ -151,7 +151,10 @@ if(nrow(all_grants_pf) > 0 &
                                                text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_y_continuous(labels=label_currency()) + 
-    labs(x="", y="", title=" ", fill="", subtitle=subtitle_str) + 
+    labs(x="", y="",
+         fill="",
+         title="Principal Forgiveness from Fed Cap Grants", 
+         subtitle=subtitle_str) + 
     scale_fill_manual(values=pf_colors) + 
     epic_chart_theme
   
@@ -320,7 +323,7 @@ base_pf_both_pct <- pf %>%
   )) %>%
   mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", 
                            format_percent(total_pf_pct),
-                           " (Max: ", max, ")"))
+                           " (Possible Max: ", max, ")"))
 
 if(sum(base_pf_both_pct$total_pf_pct, na.rm=TRUE) > 0) {
   
@@ -331,7 +334,9 @@ if(sum(base_pf_both_pct$total_pf_pct, na.rm=TRUE) > 0) {
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0,.4)) + 
     scale_color_manual(values = pf_colors) + 
-    labs(x="", y="", color="", title=" ", subtitle=subtitle_str) + 
+    labs(x="", y="", color="", 
+         title="Percent of Base Fed Cap Grant reserved for DAC & Discretionary PF",
+         subtitle=subtitle_str) + 
     epic_chart_theme
   
   base_pf_both_pct_gp <- ggplotly(base_pf_both_pct_p, tooltip="text") %>%
@@ -421,7 +426,8 @@ if (sum(gen_supp$total_fcg > 0)) {
     scale_fill_manual(values=fed_cap_grant_colors) + 
     guides(fill="none") + 
     scale_y_continuous(labels=label_currency()) + 
-    labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+    labs(x="", y="", 
+         title="IIJA Gen. Supp. Federal Cap Grants", subtitle=subtitle_str) + 
     epic_chart_theme
   
   gensupp_fed_cap_grants_gp <- ggplotly(gensupp_fed_cap_grants_p, tooltip="text") %>%
@@ -536,7 +542,9 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_base$total_sa_pct)+.02)) +
-    labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
+    labs(x="", y="", 
+         title="Set aside percentage per category under base program",
+         subtitle=subtitle_str, color="") + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
@@ -572,7 +580,10 @@ if (sum(sa_pct_iija$total_sa_pct, na.rm=TRUE) >0 ) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_iija$total_sa_pct)+.02)) + 
-    labs(x="", y="", title=" ", subtitle=subtitle_str, color="") + 
+    labs(x="", y="", 
+         color="",
+         title="Set aside percentage per category under Gen Supp program", 
+         subtitle=subtitle_str) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   

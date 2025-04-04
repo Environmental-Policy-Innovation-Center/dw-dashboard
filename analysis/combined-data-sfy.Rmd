@@ -98,13 +98,13 @@ if (sum(grants$value, na.rm=TRUE)>0) {
   grants_p <- ggplot(grants, aes(x=value, y=reorder(name, value), text=format_currency(value))) + 
     geom_bar(stat="identity", fill="#4ea324") +
     labs(x="", y="", 
-         title=" ", 
+         title="Federal Capitalization Grants", 
          subtitle=subtitle_str) + 
     scale_x_continuous(labels=label_dollar()) + 
     epic_chart_theme
   
   grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Federal Cap Grants',
+    layout(title = list(text = paste0('Federal Capitalization Grants',
                                       '<br>',
                                       subtitle_str)))
   
@@ -145,14 +145,14 @@ if(sum(pf$total_pf_amt, na.rm=TRUE) > 0) {
   
   all_pf_p <- ggplot(pf, aes(x=total_pf_amt, y=reorder(pf_category, total_pf_amt), text=format_currency(total_pf_amt))) + 
     geom_bar(stat="identity", fill="#4ea324") +
-    labs(x="", y="", title=" ", 
+    labs(x="", y="", title="Expected Principal Forgiveness from Fed Cap Grants", 
          subtitle=subtitle_str) + 
     scale_x_continuous(labels=label_dollar()) + 
     epic_chart_theme
   
   all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How much of the fed cap grants are expected to be provided as principal forgiveness?",
-                                      '<br>',
+    layout(title = list(text = paste0("Expected Principal Forgiveness from Fed Cap Grants",
+                                      "<br>",
                                       subtitle_str)))
   
   
@@ -898,7 +898,9 @@ dac_ef_hm <- project_counts %>%
       TRUE ~ "No Info") 
   ) %>%
   mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
-                           value, " projects")) %>%
+                           value, " projects"),
+         dac = factor(dac, levels=c("Yes", "No", "No Info")),
+         expecting_funding = factor(expecting_funding, levels=c("Yes", "No", "No Info"))) %>%
   select(-name)
 
 if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
@@ -907,7 +909,7 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
     geom_tile(color="white") + 
     labs(title="Projects by DAC Status and Expecting Funding", subtitle=subtitle_str,
          x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
-    scale_fill_gradientn(colours = ef_dac_hm_colors) +
+    scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
     theme_minimal()
   
   dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%

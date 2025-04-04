@@ -148,7 +148,7 @@ if ( nrow(project_dollars %>% filter(!is.na(total_requested_amount)))  > 0 ) {
   tra_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_requested_amount, text=total_requested_amount_str)) + 
     geom_bar(stat="identity", fill="#82AB6E") +
     scale_y_continuous(labels=label_dollar()) + 
-    labs(title=" ",
+    labs(title="Requested Funds",
          subtitle=subtitle_str,
          x="State Fiscal Year",
          y="Requested Funds") + 
@@ -180,7 +180,7 @@ if ( nrow(project_dollars %>% filter(!is.na(total_project_cost)))  > 0 ) {
 tpc_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_project_cost, text=total_project_cost_str)) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title=" ",
+  labs(title="What are the total project costs of submitted applications?",
        subtitle=subtitle_str,
        x="State Fiscal Year",
        y="Project Cost") + 
@@ -213,7 +213,7 @@ if ( nrow(project_dollars %>% filter(!is.na(total_funding_amount)))  > 0 ) {
   tfa_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_funding_amount, text=total_funding_amount_str)) + 
     geom_bar(stat="identity", fill="#82AB6E") +
     scale_y_continuous(labels=label_dollar()) + 
-    labs(title=" ",
+    labs(title="What's the total expected funding per year?",
          subtitle=subtitle_str,
          x="State Fiscal Year",
          y="Expected Funding Amount") + 
@@ -244,7 +244,7 @@ if ( nrow(project_dollars %>% filter(!is.na(total_principal_forgiveness)))  > 0 
   tpf_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_principal_forgiveness, text=total_principal_forgiveness_str)) + 
     geom_bar(stat="identity", fill="#82AB6E") +
     scale_y_continuous(labels=label_dollar()) + 
-    labs(title=" ",
+    labs(title="How much PF is expected each year?",
          subtitle=subtitle_str,
          x="State Fiscal Year",
          y="Expecting Principal Forgiveness") + 
@@ -292,7 +292,7 @@ if (nrow(project_counts %>% filter(!is.na(ef_projects))) > 0) {
     geom_bar(stat="identity", position="stack") +
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Expecting Funding") + 
-    labs(title=" ",
+    labs(title="What proportion of projects expect funding?",
          subtitle=subtitle_str,
          x="State Fiscal Year",
          y="Projects") + 
@@ -340,7 +340,7 @@ if (nrow(project_counts %>% filter(!is.na(dac_projects))) > 0) {
     geom_bar(stat="identity", position="stack") +
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Disadvantaged") + 
-    labs(title=" ",
+    labs(title="What proportion of projects served DACs?",
          subtitle=subtitle_str,
          x="State Fiscal Year",
          y="Projects") + 
@@ -382,7 +382,7 @@ if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
                       name = "Project Type") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="What type of projects serve DACs?",
          subtitle=subtitle_str) +
     epic_chart_theme
   
@@ -428,7 +428,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 & nrow(project_c
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="How many DAC projects expect funding?",
          subtitle=subtitle_str) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Expecting Funding") + 
@@ -475,6 +475,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
     scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
     labs(x="State Fiscal Year",
          y="",
+         fill="Disadvantaged",
          title="How many projects expecting funding serve DACs?",
          subtitle=subtitle_str) +
     scale_fill_manual(values=ef_dac_sc_colors) + 
@@ -519,7 +520,9 @@ dac_ef_hm <- project_counts %>%
       TRUE ~ "No Info") 
   ) %>%
   mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
-                           value, " projects in ", state_fiscal_year)) %>%
+                           value, " projects in ", state_fiscal_year),
+         dac = factor(dac, levels=c("Yes", "No", "No Info")),
+         expecting_funding = factor(expecting_funding, levels=c("Yes", "No", "No Info"))) %>%
   select(-name)
 
 if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
@@ -528,7 +531,7 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
     geom_tile(color="white") + 
     labs(title="Projects based on DAC Status and Expecting Funding", subtitle=subtitle_str,
          x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
-    scale_fill_gradientn(colours = ef_dac_hm_colors) +
+    scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
     theme_minimal() + 
     facet_wrap(~state_fiscal_year)
   
@@ -563,7 +566,7 @@ if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
                       name = "Project Type") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="Applicant Projects by Type",
          subtitle=subtitle_str) +
     epic_chart_theme
   
@@ -598,7 +601,7 @@ if(sum(project_type_df$total_project_cost, na.rm=TRUE) > 0) {
     scale_y_continuous(labels=label_dollar()) + 
     labs(x="State Fiscal Year",
          y="",
-         title=" ",
+         title="What are the total project costs for each type of project?",
          subtitle=subtitle_str) +
     epic_chart_theme
   
@@ -739,7 +742,7 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="How many projects serve small communities?",
          subtitle=subtitle_str) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
@@ -776,7 +779,7 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="How many projects serving small communities expect funding?",
          subtitle=subtitle_str) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
@@ -811,7 +814,7 @@ if(nrow(small_community_df %>% filter(!is.na(dac_projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title=" ",
+         title="How many projects serving small communities serve DACs?",
          subtitle=subtitle_str) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
@@ -858,7 +861,7 @@ if (sum(avg_med_project_cost$value) > 0) {
                       name = "") + 
     labs(x="State Fiscal Year",
          y="",
-         title=" ",
+         title="What's the average demand for funds per project?",
          subtitle=subtitle_str) +
     epic_chart_theme
   
@@ -903,7 +906,7 @@ if (sum(lead_project_cost$value, na.rm=TRUE) > 0) {
                       name = "") + 
     labs(x="State Fiscal Year",
          y="",
-         title=" ",
+         title="What's the project cost for lead service line projects?",
          subtitle=subtitle_str) +
     epic_chart_theme
   

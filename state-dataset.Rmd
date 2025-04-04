@@ -59,12 +59,13 @@ create_status_cols <- function(df, col_names) {
 }
 
 
-feature_coverage <- create_status_cols(all_projects, col_names=c("community_served", "borrower", "pwsid", "project_id", 
-                                                                 "project_name", "project_type", "project_cost", 
-                                                                 "requested_amount", "funding_amount", "principal_forgiveness", 
-                                                                 "population", "project_description", "disadvantaged", 
-                                                                 "project_rank", "project_score", "expecting_funding" ))
-  
+feature_coverage <- create_status_cols(all_projects,
+                                       col_names=c("community_served", "borrower", "pwsid", "project_id", 
+                                                   "project_name", "project_type", "project_cost", 
+                                                   "requested_amount", "funding_amount", "principal_forgiveness", 
+                                                   "population", "project_description", "disadvantaged", 
+                                                   "project_rank", "project_score", "expecting_funding" ))
+
 ```
 
 ## Create Numeric Columns
@@ -326,76 +327,76 @@ project_counts <- project_counts %>%
 
 ```{r}
 
- # Writing to temp
- write.csv(feature_coverage, file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"), row.names = FALSE)
+# Writing to temp
+write.csv(feature_coverage, file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"), row.names = FALSE)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"),
-   object = "state-stats/dwsrf-funding-tracker-feature-coverage.csv",
-   bucket = "funding-tracker",
-   acl = "public-read"
- )
- 
- 
-   # Writing to temp
- write.csv(project_counts, file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"), row.names = FALSE)
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-feature-coverage.csv"),
+  object = "state-stats/dwsrf-funding-tracker-feature-coverage.csv",
+  bucket = "funding-tracker",
+  acl = "public-read"
+)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"),
-   object = "state-stats/dwsrf-funding-tracker-project-counts.csv",
-   bucket = "funding-tracker",
-   acl = "public-read"
- )
- 
- 
- # Writing to temp
- write.csv(project_type_df, file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"), row.names = FALSE)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"),
-   object = "state-stats/dwsrf-funding-tracker-project-types.csv",
-   bucket = "funding-tracker",
-   acl = "public-read"
- )
+# Writing to temp
+write.csv(project_counts, file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"), row.names = FALSE)
 
- 
-  # Writing to temp
- write.csv(small_community_df, file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"), row.names = FALSE)
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"),
+  object = "state-stats/dwsrf-funding-tracker-project-counts.csv",
+  bucket = "funding-tracker",
+  acl = "public-read"
+)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"),
-   object = "state-stats/dwsrf-funding-tracker-small-community.csv",
-   bucket = "funding-tracker",
-   acl = "public-read"
- )
- 
- 
-   # Writing to temp
- write.csv(project_dollars, file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"), row.names = FALSE)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"),
-   object = "state-stats/dwsrf-funding-tracker-project-dollars.csv",
-   bucket = "funding-tracker",
-   acl = "public-read"
- )
- 
- 
+# Writing to temp
+write.csv(project_type_df, file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"), row.names = FALSE)
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"),
+  object = "state-stats/dwsrf-funding-tracker-project-types.csv",
+  bucket = "funding-tracker",
+  acl = "public-read"
+)
+
+
+# Writing to temp
+write.csv(small_community_df, file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"), row.names = FALSE)
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"),
+  object = "state-stats/dwsrf-funding-tracker-small-community.csv",
+  bucket = "funding-tracker",
+  acl = "public-read"
+)
+
+
+# Writing to temp
+write.csv(project_dollars, file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"), row.names = FALSE)
+
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"),
+  object = "state-stats/dwsrf-funding-tracker-project-dollars.csv",
+  bucket = "funding-tracker",
+  acl = "public-read"
+)
+
+
 
 ```
 
 ```{r}
 
- write_sheet(feature_coverage, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Feature Coverage")
- write_sheet(project_type_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Project Type")
- write_sheet(small_community_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Small Community")
- write_sheet(project_counts, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Counts")
- write_sheet(project_dollars, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Dollars")
- 
+write_sheet(feature_coverage, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Feature Coverage")
+write_sheet(project_type_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Project Type")
+write_sheet(small_community_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Small Community")
+write_sheet(project_counts, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Counts")
+write_sheet(project_dollars, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Project Dollars")
+
 ```
 

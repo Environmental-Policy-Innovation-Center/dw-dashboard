@@ -153,29 +153,29 @@ compare_requested_amount_gen <- year_table %>%
 
 if(sum(compare_project_cost_gen$value[compare_project_cost_gen$name=="Unmet Demand"], na.rm=TRUE) > 0) {
   
-gen_pc_p <- ggplot(compare_project_cost_gen, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  gen_pc_p <- ggplot(compare_project_cost_gen, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
-  epic_chart_theme
-
-gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
-                                    '<br>',
-                                    subtitle_str)))
-
-
-
-if (save_plots) {
-  run_save_plots(gg_plot = gen_pc_p,
-                 gp_object = gen_pc_gp, # change
-                 sub_folders, 
-                 name = "compare-project-cost-available-funds-gen", # change
-                 gs_tab) }
-
-gen_pc_gp
+    labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gen_pc_p,
+                   gp_object = gen_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-gen", # change
+                   gs_tab) }
+  
+  gen_pc_gp
 }
 ```
 
@@ -186,29 +186,29 @@ gen_pc_gp
 
 if(sum(compare_requested_amount_gen$value[compare_requested_amount_gen$name=="Unmet Demand"], na.rm=TRUE) > 0) {
   
-gen_ra_p <- ggplot(compare_requested_amount_gen, aes(x=state_fiscal_year, y=value, fill=name)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  gen_ra_p <- ggplot(compare_requested_amount_gen, aes(x=state_fiscal_year, y=value, fill=name)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
-  epic_chart_theme
-
-gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
-                                    '<br>',
-                                    subtitle_str)))
-
-
-
-if (save_plots) {
-  run_save_plots(gg_plot = gen_ra_p,
-                 gp_object = gen_ra_gp, # change
-                 sub_folders, 
-                 name = "compare-requested-amount-available-funds-gen", # change
-                 gs_tab) }
-
-gen_ra_gp
+    labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gen_ra_p,
+                   gp_object = gen_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-gen", # change
+                   gs_tab) }
+  
+  gen_ra_gp
 }
 ```
 
@@ -264,30 +264,30 @@ compare_requested_amount_ec <- compare_ec_funds %>%
 ```{r}
 
 if(sum(compare_project_cost_ec$value[compare_project_cost_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
-
-
-ec_pc_p <- ggplot(compare_project_cost_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  
+  
+  ec_pc_p <- ggplot(compare_project_cost_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str_only_23) + 
-  epic_chart_theme
-
-ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
-                                    '<br>',
-                                    subtitle_str_only_23)))
-
-
-if (save_plots) {
-  run_save_plots(gg_plot = ec_pc_p,
-                 gp_object = ec_pc_gp, # change
-                 sub_folders, 
-                 name = "compare-project-cost-available-funds-ec", # change
-                 gs_tab) }
-
-ec_pc_gp
+    labs(x="", y="", title=" ", subtitle=subtitle_str_only_23) + 
+    epic_chart_theme
+  
+  ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
+                                      '<br>',
+                                      subtitle_str_only_23)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_pc_p,
+                   gp_object = ec_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-ec", # change
+                   gs_tab) }
+  
+  ec_pc_gp
 }
 ```
 
@@ -296,30 +296,30 @@ ec_pc_gp
 ```{r}
 
 if(sum(compare_requested_amount_ec$value[compare_requested_amount_ec$name=="Unmet Demand"], na.rm=TRUE) > 0) {
-
-
-ec_ra_p <- ggplot(compare_requested_amount_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  
+  
+  ec_ra_p <- ggplot(compare_requested_amount_ec, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
-  epic_chart_theme
-
-ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
-                                    '<br>',
-                                    subtitle_str)))
-
-
-if (save_plots) {
-  run_save_plots(gg_plot = ec_ra_p,
-                 gp_object = ec_ra_gp, # change
-                 sub_folders, 
-                 name = "compare-requested-amount-available-funds-ec", # change
-                 gs_tab) }
-
-ec_ra_gp
+    labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_ra_p,
+                   gp_object = ec_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-ec", # change
+                   gs_tab) }
+  
+  ec_ra_gp
 }
 ```
 
@@ -370,29 +370,29 @@ compare_requested_amount_lead <- compare_lead_funds %>%
 
 ```{r}
 if(sum(compare_project_cost_lead$value[compare_project_cost_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
-
-lead_pc_p <- ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  
+  lead_pc_p <- ggplot(compare_project_cost_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
-  epic_chart_theme
-
-lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
-                                    '<br>',
-                                    subtitle_str_only_23)))
-
-
-if (save_plots) {
-  run_save_plots(gg_plot = lead_pc_p,
-                 gp_object = lead_pc_gp, # change
-                 sub_folders, 
-                 name = "compare-project-cost-available-funds-lead", # change
-                 gs_tab) }
-
-lead_pc_gp
+    labs(x="", y="", title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
+                                      '<br>',
+                                      subtitle_str_only_23)))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_pc_p,
+                   gp_object = lead_pc_gp, # change
+                   sub_folders, 
+                   name = "compare-project-cost-available-funds-lead", # change
+                   gs_tab) }
+  
+  lead_pc_gp
 }
 ```
 
@@ -401,32 +401,32 @@ lead_pc_gp
 ```{r}
 
 if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="Unmet Demand"], na.rm=TRUE) > 0) {
-
-lead_ra_p <- ggplot(compare_requested_amount_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-  geom_bar(stat="identity", position="stack") + 
-  scale_y_continuous(labels=label_currency()) + 
-  scale_fill_manual(values = comp_colors, 
+  
+  lead_ra_p <- ggplot(compare_requested_amount_lead, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
                       name = "") + 
-  labs(x="", y="", title=" ", subtitle=subtitle_str) + 
-  epic_chart_theme
-
-lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
-  layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
-                                    '<br>',
-                                    subtitle_str)))
-
-
-
-# if (save_plots) {
-#save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
-
-if (save_plots) {
-  run_save_plots(gg_plot = lead_ra_p,
-                 gp_object = lead_ra_gp, # change
-                 sub_folders, 
-                 name = "compare-requested-amount-available-funds-lead", # change
-                 gs_tab) }
-
-lead_ra_gp
+    labs(x="", y="", title=" ", subtitle=subtitle_str) + 
+    epic_chart_theme
+  
+  lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
+                                      '<br>',
+                                      subtitle_str)))
+  
+  
+  
+  # if (save_plots) {
+  #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_ra_p,
+                   gp_object = lead_ra_gp, # change
+                   sub_folders, 
+                   name = "compare-requested-amount-available-funds-lead", # change
+                   gs_tab) }
+  
+  lead_ra_gp
 }
 ```

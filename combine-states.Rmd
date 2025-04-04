@@ -337,14 +337,14 @@ combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
 
 ```{r}
 
- # Writing to temp
- write.csv(combined_clean, file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"), row.names = FALSE)
+# Writing to temp
+write.csv(combined_clean, file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"), row.names = FALSE)
 
- #Putting in Bucket
- put_object(
-   file = file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"),
-   object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv",
-   bucket = "water-team-data",
-   acl = "public-read"
- )
+#Putting in Bucket
+put_object(
+  file = file.path(tempdir(), "dwsrf-funding-tracker-all-projects.csv"),
+  object = "clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv",
+  bucket = "water-team-data",
+  acl = "public-read"
+)
 ```

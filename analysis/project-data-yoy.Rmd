@@ -22,8 +22,8 @@ run_code_from_file(here("aws.txt"))
 ```
 
 ```{r}
-state_name <- "Tennessee"
-state_abbr <- "TN"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 
 # include 2022?
@@ -61,12 +61,17 @@ project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-sta
   clean_names() %>%
   filter(state == state_name) %>%
   mutate(state_fiscal_year = as.factor(state_fiscal_year),
-         project_type = factor(project_type, levels=c("Emerging Contaminants", "Lead", "General")))
+         project_type = factor(project_type, levels=c("Emerging Contaminants", "Lead", "General")),
+         total_project_cost_str = format_currency(total_project_cost),
+         total_requested_amount_str = format_currency(total_requested_amount),
+         total_principal_forgiveness_str = format_currency(total_principal_forgiveness),
+         total_funding_amount_str = format_currency(total_funding_amount))
 
 small_community_df <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-small-community.csv") %>%
   clean_names() %>%
   filter(state == state_name) %>%
-  mutate(state_fiscal_year = as.factor(state_fiscal_year))
+  mutate(state_fiscal_year = as.factor(state_fiscal_year),
+         small_community = factor(small_community, levels=c("No Information", "No", "Yes")))
 
 feature_coverage <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-feature-coverage.csv") %>%
   clean_names() %>%
@@ -227,7 +232,7 @@ if ( nrow(project_dollars %>% filter(!is.na(total_funding_amount)))  > 0 ) {
   if (save_plots) {
     
     run_save_plots(gg_plot = tfa_p, #change
-                   gp_object = tpfa_gp, #change
+                   gp_object = tfa_gp, #change
                    sub_folders, 
                    name = "total-funding-amount-yoy", # change
                    gs_tab) 
@@ -533,7 +538,7 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
          x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
     scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
     theme_minimal() + 
-    facet_wrap(~state_fiscal_year)
+    facet_wrap(~state_fiscal_year, ncol=2)
   
   dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
     layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding, ",

@@ -26,7 +26,7 @@ run_code_from_file(here("aws.txt"))
 state_name <- "New York"
 state_abbr <- "NY"
 
-sfy <- "2025"
+sfy <- "2023"
 subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
 
 years_list <- c(sfy)
@@ -629,6 +629,8 @@ if (sfy != "2022") {
   lead <- project_types %>%
     filter(project_type == "Lead")
   
+  if (nrow(lead) > 0) {
+  
   if (!is.na(lead$total_project_cost)) {
     
     lead_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
@@ -678,8 +680,8 @@ if (sfy != "2022") {
     
     
     if (save_plots) {
-      run_save_plots(gg_plot = lead_comp_fig,
-                     gp_object = lead_fig, # change
+      run_save_plots(gg_plot = lead_comp_p,
+                     gp_object = lead_comp_fig, # change
                      sub_folders, 
                      name = paste0("compare-available-demand-lead-",sfy), # change
                      gs_tab) }
@@ -689,6 +691,7 @@ if (sfy != "2022") {
     
   } # if lead_costs > 0, make plot
   
+  } # if lead has length
 } # if sfy!=2022, check for lead
 
 
@@ -704,6 +707,8 @@ if (sfy != "2022") {
   
   ec <- project_types %>%
     filter(project_type == "Emerging Contaminants")
+  
+  if (nrow(ec) > 0) {
   
   if (!is.na(ec$total_project_cost)) {
     ec_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
@@ -760,6 +765,7 @@ if (sfy != "2022") {
     
     ec_comp_fig
   } # end if we have ec data, make plot
+  } # end if ec data
 } # end if sfy !=2022
 ```
 

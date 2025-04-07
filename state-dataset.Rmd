@@ -263,13 +263,14 @@ fa_by_ef <- all_projects %>%
 fa_by_ef_dac <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount !="No Information") %>%
   group_by(state, state_fiscal_year, expecting_funding, disadvantaged) %>%
-  summarize(total_funding_amount = sum(as.numeric(funding_amount))) %>%
-  filter(expecting_funding == "Yes" & disadvantaged %in% c("Yes", "No")) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE)) %>%
+  filter(expecting_funding == "Yes" & disadvantaged %in% c("Yes", "No", "No Information")) %>%
   pivot_wider(names_from="disadvantaged", values_from="total_funding_amount") %>%
   rename(funding_amount_ef_dac = Yes,
-         funding_amount_ef_ndac = No) %>%
+         funding_amount_ef_ndac = No,
+         funding_amount_ef_dac_ni = `No Information`) %>%
   ungroup() %>%
-  select(state, state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac)
+  select(state, state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac, funding_amount_ef_dac_ni)
 
 fa_by_type <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%

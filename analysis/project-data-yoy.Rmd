@@ -22,8 +22,8 @@ run_code_from_file(here("aws.txt"))
 ```
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 
 # include 2022?
@@ -84,7 +84,8 @@ project_dollars <- s3read_using(read.csv, object="s3://funding-tracker/state-sta
   mutate(total_project_cost_str = format_currency(total_project_cost),
          total_requested_amount_str = format_currency(total_requested_amount),
          total_principal_forgiveness_str = format_currency(total_principal_forgiveness),
-         total_funding_amount_str = format_currency(total_funding_amount))
+         total_funding_amount_str = format_currency(total_funding_amount),
+         state_fiscal_year = as.factor(state_fiscal_year))
 
 ```
 
@@ -477,7 +478,6 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
   dac_ef_p <- ggplot(dac_ef_comps, aes(x=state_fiscal_year, y=value, fill=disadvantaged,
                                        text = plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
-    scale_y_continuous(labels=label_number(suffix="%"), expand = c(0, 0), limits = c(0, 100)) + 
     labs(x="State Fiscal Year",
          y="",
          fill="Disadvantaged",
@@ -556,6 +556,56 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
   dac_ef_hm_gp
 }
 ```
+
+### Funding Amount EF & DAC
+
+```{r}
+
+if(nrow(project_dollars %>% filter(!is.na(funding_amount_ef_dac))) > 0) {
+  
+  fa_dac_ef_comps <- project_dollars %>%
+    select(state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac, funding_amount_ef_dac_ni) %>%
+    pivot_longer(cols=c("funding_amount_ef_dac", "funding_amount_ef_ndac", "funding_amount_ef_dac_ni")) %>%
+    rename(disadvantaged = name) %>%
+    mutate(disadvantaged = case_when(
+      disadvantaged == "funding_amount_ef_dac" ~ "Yes",
+      disadvantaged == "funding_amount_ef_ndac" ~ "No",
+      TRUE ~ "No Info"),
+      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      plot_str = paste0(disadvantaged, ": ", format_currency(value))
+    )
+  
+  fa_dac_ef_comps_p <- ggplot(fa_dac_ef_comps, aes(x=state_fiscal_year, y=value, fill=disadvantaged,
+                                       text = plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_dollar()) + 
+    labs(x="State Fiscal Year",
+         y="",
+         fill="Disadvantaged",
+         title="How much funding is expected to go to DACs?",
+         subtitle=subtitle_str) +
+    scale_fill_manual(values=ef_dac_sc_colors) + 
+    epic_chart_theme
+  
+  fa_dac_ef_comps_gp <- ggplotly(fa_dac_ef_comps_p, tooltip="text") %>%
+    layout(title = list(text = paste0("How much funding is expected to go to DACs?",
+                                      '<br>',
+                                      subtitle_str)))
+  
+  if (save_plots) {
+    
+    run_save_plots(gg_plot = fa_dac_ef_comps_p,
+                   gp_object = fa_dac_ef_comps_gp, # change
+                   sub_folders, 
+                   name = "funding-amount-by-dac-yoy", # change
+                   gs_tab) }
+  
+  fa_dac_ef_comps_gp
+  
+}
+
+```
+
 
 ## Project Type
 

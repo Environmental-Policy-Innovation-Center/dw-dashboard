@@ -370,7 +370,7 @@ if(sum(compare_project_cost_lead$value[compare_project_cost_lead$name=="Unmet De
   if (save_plots) {
     run_save_plots(gg_plot = lead_pc_p,
                    gp_object = lead_pc_gp,
-                   name = "compare-project-cost-available-funds-lead")
+                   name = "compare-project-cost-available-funds-lead-yoy")
     }
   
   lead_pc_gp

@@ -589,7 +589,7 @@ if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
     
     run_save_plots(gg_plot = all_pt_p,
                    gp_object = all_pt_gp,
-                   name = "project-types-yoy",)
+                   name = "project-types-yoy")
     }
   
   all_pt_gp
@@ -916,8 +916,8 @@ if (sum(avg_med_requested_amount$value, na.rm=TRUE) > 0) {
   
   if (save_plots) {
     
-    run_save_plots(gg_plot = avg_pc_p,
-                   gp_object = avg_pc_gp,
+    run_save_plots(gg_plot = avg_ra_p,
+                   gp_object = avg_ra_gp,
                    name = "average-median-project-cost-yoy")
     }
   avg_ra_gp

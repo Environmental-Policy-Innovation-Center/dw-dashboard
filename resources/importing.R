@@ -5,7 +5,7 @@ source(here("resources", "cleaning.R"))
 # can be fragile. As such, these functions exist to standardize pulling and cleaning the data in one location
 # so any changes to column names, types, or additional features can be handled here exclusively.
 
-get_financial <- function(state_name, years_list) {
+get_financial <- function(state_name) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   
@@ -14,9 +14,12 @@ get_financial <- function(state_name, years_list) {
   financial <- financial %>%
     clean_names() %>%
     filter(state == state_name) %>%
-    select(-notes, -assignee, -reviewed, -questions) %>%
-    mutate(state_fiscal_year = as.character(state_fiscal_year),
-           state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
+    filter(!grepl("total", ignore.case=TRUE, fed_cap_grant)) %>%
+    select(-notes, -assignee, -reviewed, -questions, -vlookup) %>%
+    # ensure state_fiscal_year is string, arrange the dataframe by year, then set it to factor, levels in ascending order
+    mutate(state_fiscal_year = as.character(state_fiscal_year)) %>%
+    arrange(state_fiscal_year) %>%
+    mutate(state_fiscal_year = factor(state_fiscal_year)) %>%
     # each of these are mutated individually because some rows come in as text, numerical or a list, depending on their contents
     # and mutating with across() produces errors or warnings depending on the context, here at least it is only warnings
     # that can be muted, but the resulting dataframe is still as intended
@@ -42,7 +45,7 @@ get_financial <- function(state_name, years_list) {
 }
 
 
-get_set_asides <- function(state_name, years_list) {
+get_set_asides <- function(state_name) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   set_asides <- data.frame(read_sheet(URL, "Set Asides", skip=1))
@@ -51,12 +54,14 @@ get_set_asides <- function(state_name, years_list) {
     clean_names() %>%
     filter(state==state_name) %>%
     # drop all total columns used by policy analysts
-    filter(!grepl("Total", allowance)) %>%
+    filter(!grepl("total", ignore.case=TRUE, allowance)) %>%
     # drop policy analyst specific columns
     select(-notes, -assignee, -reviewed, -questions) %>%
-    mutate(state_fiscal_year = as.character(state_fiscal_year),
-           state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
-    
+    # ensure state_fiscal_year is string, arrange the dataframe by year, then set it to factor, levels in ascending order
+    mutate(state_fiscal_year = as.character(state_fiscal_year)) %>%
+    arrange(state_fiscal_year) %>%
+    mutate(state_fiscal_year = factor(state_fiscal_year)) %>%
+    # convert strings to numeric
     mutate(total_sa_amt = convert_to_numeric(total_sa_amt),
            total_sa_pct = convert_to_numeric(total_sa_pct),
            ffy22_sa_amt = convert_to_numeric(ffy22_sa_amt),
@@ -74,7 +79,6 @@ get_set_asides <- function(state_name, years_list) {
            total_fcg = convert_to_numeric(total_fcg),
            unutilized_set_asides = convert_to_numeric(unutilized_set_asides),
     ) %>%
-    #TODO: Modify this as needed once water team updates naming conventions
     mutate(
       max_set_aside = case_when(
         allowance == "Administration and Technical Assistance (up to 4%)" ~ "Max 4%",
@@ -96,7 +100,7 @@ get_set_asides <- function(state_name, years_list) {
   return(set_asides)
 }
 
-get_pf <- function(state_name, years_list) {
+get_pf <- function(state_name) {
   
   URL <- "https://docs.google.com/spreadsheets/d/10NcgSJAZedRNDTq7_9-UJUefF6tQ6RYhvVSib_Dc-3Y/edit?usp=sharing"
   principal_forgiveness <- data.frame(read_sheet(URL, "Principal Forgiveness", skip=1))
@@ -106,8 +110,11 @@ get_pf <- function(state_name, years_list) {
     filter(state==state_name) %>%
     # drop policy analyst specific columns
     select(-notes, -assignee, -reviewed, -questions) %>%
-    mutate(state_fiscal_year = as.character(state_fiscal_year),
-           state_fiscal_year = factor(state_fiscal_year, levels=years_list)) %>%
+    # ensure state_fiscal_year is string, arrange the dataframe by year, then set it to factor, levels in ascending order
+    mutate(state_fiscal_year = as.character(state_fiscal_year)) %>%
+    arrange(state_fiscal_year) %>%
+    mutate(state_fiscal_year = factor(state_fiscal_year)) %>%
+    # convert strings to numeric
     mutate(total_fcg = convert_to_numeric(total_fcg),
            total_pf_amt = convert_to_numeric(total_pf_amt),
            total_pf_pct  = convert_to_numeric(total_pf_pct),

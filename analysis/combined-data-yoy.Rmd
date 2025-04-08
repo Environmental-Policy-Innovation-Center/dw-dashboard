@@ -5,6 +5,18 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 # Setup
 
+## Local Variables
+
+```{r}
+# filters data and changes plot names
+state_name <- "Alabama"
+state_abbr <- "AL"
+
+# export plots to AWS and Drive?
+save_plots <- FALSE
+
+```
+
 ## Imports & Settings
 
 ```{r, echo=FALSE, warning=FALSE,message=FALSE}
@@ -17,53 +29,11 @@ run_code_from_file(here("aws.txt"))
 
 ```
 
-## Local Variables
-
-```{r}
-# filters data and changes plot names
-state_name <- "New York"
-state_abbr <- "NY"
-
-# include 2022?
-include_y0 <- TRUE
-
-# export plots to AWS and Drive?
-save_plots <- FALSE
-
-gs_tab <- "Overview"
-sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
-
-
-if (include_y0) {
-  years <- "SFY22-25"
-  
-  # used in setting years as factor to display correctly in plots
-  years_list <- c("2022", "2023", "2024", "2025")
-
-} else {
-
-# only appears in subtitles
-  years <- "SFY23-25"
-  years_list <- c("2023", "2024", "2025")
-}
-
-subtitle_str <- paste0(state_name, ", ", years)
-# in some cases, 22 shouldn't be shown, even if included, ie for funding sources that didn't exist prior to 23
-subtitle_str_only_23 <- str_replace(subtitle_str, "22", "23")
-
-
-year_table <- data.frame(
-  state_fiscal_year = years_list
-)
-
-
-```
-
 ## Create Data Subsets
 
 ```{r, warning=FALSE}
 
-financial <- get_financial(state_name, years_list)
+financial <- get_financial(state_name)
 
 base <- financial %>%
   filter(fed_cap_grant == "Base")
@@ -93,12 +63,17 @@ project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-sta
   clean_names() %>%
   filter(state == state_name) %>%
   mutate(state_fiscal_year = as.factor(state_fiscal_year))
+```
 
-if (include_y0 == FALSE) {
-# select single state and drop any Y0 data to only evaluate IIJA years
-  project_type_df <- project_type_df %>%
-    filter(state_fiscal_year != "2022")
- }
+```{r}
+# combine all years included in both sets, using characters to preserve years rather than factor levels
+year_table <- as.vector(rbind(as.character(financial$state_fiscal_year), 
+                               as.character(project_type_df$state_fiscal_year)))
+# get rid of all duplicates
+year_table <- unique(year_table)
+# reset as factor
+year_table <- factor(year_table)
+year_table <- data.frame(state_fiscal_year=year_table)
 ```
 
 # Base & IIJA General Supplemental fed_cap_grant
@@ -161,22 +136,22 @@ if(sum(compare_project_cost_gen$value[compare_project_cost_gen$name=="Unmet Dema
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", subtitle=subtitle_str) + 
+         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", 
+         subtitle=get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
                                       '<br>',
-                                      subtitle_str)))
+                                      get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name))))
   
   
   
   if (save_plots) {
     run_save_plots(gg_plot = gen_pc_p,
-                   gp_object = gen_pc_gp, # change
-                   sub_folders, 
-                   name = "compare-project-cost-available-funds-gen", # change
-                   gs_tab) }
+                   gp_object = gen_pc_gp,
+                   name = "compare-project-cost-available-funds-gen-yoy") 
+    }
   
   gen_pc_gp
 }
@@ -189,28 +164,28 @@ if(sum(compare_project_cost_gen$value[compare_project_cost_gen$name=="Unmet Dema
 
 if(sum(compare_requested_amount_gen$value[compare_requested_amount_gen$name=="Unmet Demand"], na.rm=TRUE) > 0) {
   
-  gen_ra_p <- ggplot(compare_requested_amount_gen, aes(x=state_fiscal_year, y=value, fill=name)) + 
+  gen_ra_p <- ggplot(compare_requested_amount_gen, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_y_continuous(labels=label_currency()) + 
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", subtitle=subtitle_str) + 
+         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp",
+         subtitle=get_subtitle_str(compare_requested_amount_gen$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   gen_ra_gp <- ggplotly(gen_ra_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
                                       '<br>',
-                                      subtitle_str)))
+                                      get_subtitle_str(compare_requested_amount_gen$state_fiscal_year, state_name))))
   
   
   
   if (save_plots) {
     run_save_plots(gg_plot = gen_ra_p,
-                   gp_object = gen_ra_gp, # change
-                   sub_folders, 
-                   name = "compare-requested-amount-available-funds-gen", # change
-                   gs_tab) }
+                   gp_object = gen_ra_gp,
+                   name = "compare-requested-amount-available-funds-gen-yoy")
+    }
   
   gen_ra_gp
 }
@@ -276,21 +251,21 @@ if(sum(compare_project_cost_ec$value[compare_project_cost_ec$name=="Unmet Demand
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, EC", subtitle=subtitle_str_only_23) + 
+         title="Comparing Demand to Available Funds, EC", 
+         subtitle=get_subtitle_str(compare_project_cost_ec$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   ec_pc_gp <- ggplotly(ec_pc_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
                                       '<br>',
-                                      subtitle_str_only_23)))
+                                      get_subtitle_str(compare_project_cost_ec$state_fiscal_year, state_name))))
   
   
   if (save_plots) {
     run_save_plots(gg_plot = ec_pc_p,
                    gp_object = ec_pc_gp, # change
-                   sub_folders, 
-                   name = "compare-project-cost-available-funds-ec", # change
-                   gs_tab) }
+                   name = "compare-project-cost-available-funds-ec-yoy")
+                   }
   
   ec_pc_gp
 }
@@ -309,21 +284,21 @@ if(sum(compare_requested_amount_ec$value[compare_requested_amount_ec$name=="Unme
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, EC", subtitle=subtitle_str) + 
+         title="Comparing Demand to Available Funds, EC",
+         subtitle=get_subtitle_str(compare_requested_amount_ec$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   ec_ra_gp <- ggplotly(ec_ra_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, EC',
                                       '<br>',
-                                      subtitle_str)))
+                                      get_subtitle_str(compare_requested_amount_ec$state_fiscal_year, state_name))))
   
   
   if (save_plots) {
     run_save_plots(gg_plot = ec_ra_p,
-                   gp_object = ec_ra_gp, # change
-                   sub_folders, 
-                   name = "compare-requested-amount-available-funds-ec", # change
-                   gs_tab) }
+                   gp_object = ec_ra_gp,
+                   name = "compare-requested-amount-available-funds-ec-yoy")
+    }
   
   ec_ra_gp
 }
@@ -382,21 +357,21 @@ if(sum(compare_project_cost_lead$value[compare_project_cost_lead$name=="Unmet De
     scale_y_continuous(labels=label_currency()) + 
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
-    labs(x="", y="", title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
+    labs(x="", y="", title="Comparing Demand to Available Funds, Lead",
+         subtitle=get_subtitle_str(compare_project_cost_lead$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   lead_pc_gp <- ggplotly(lead_pc_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
                                       '<br>',
-                                      subtitle_str_only_23)))
+                                      get_subtitle_str(compare_project_cost_lead$state_fiscal_year, state_name))))
   
   
   if (save_plots) {
     run_save_plots(gg_plot = lead_pc_p,
-                   gp_object = lead_pc_gp, # change
-                   sub_folders, 
-                   name = "compare-project-cost-available-funds-lead", # change
-                   gs_tab) }
+                   gp_object = lead_pc_gp,
+                   name = "compare-project-cost-available-funds-lead")
+    }
   
   lead_pc_gp
 }
@@ -414,13 +389,14 @@ if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, Lead", subtitle=subtitle_str) + 
+         title="Comparing Demand to Available Funds, Lead",
+         subtitle=get_subtitle_str(compare_requested_amount_lead$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   lead_ra_gp <- ggplotly(lead_ra_p, tooltip="text") %>%
     layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
                                       '<br>',
-                                      subtitle_str)))
+                                      get_subtitle_str(compare_requested_amount_lead$state_fiscal_year, state_name))))
   
   
   
@@ -429,10 +405,9 @@ if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="
   
   if (save_plots) {
     run_save_plots(gg_plot = lead_ra_p,
-                   gp_object = lead_ra_gp, # change
-                   sub_folders, 
-                   name = "compare-requested-amount-available-funds-lead", # change
-                   gs_tab) }
+                   gp_object = lead_ra_gp,
+                   name = "compare-requested-amount-available-funds-lead-yoy")
+    }
   
   lead_ra_gp
 }

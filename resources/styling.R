@@ -1,5 +1,3 @@
-
-
 ## takes a numeric column and returns one formatted with dollar sign and commas
 ## IE 1000000 -> $1,000,000
 format_currency <- function(num_col) {
@@ -23,6 +21,23 @@ format_percent <- function(x) {
   
   return(formatted)
 }
+
+## takes the state_fiscal_year column from a given dataset
+## and the state_name provided at the top of the notebook
+## and formats the subtitle for a given plot
+get_subtitle_str <- function(sfy_column, state_name) {
+  # get the first and last two years of the first year in the list
+  first_year <- str_sub(as.character(head(sfy_column, n=1)), -2)
+  last_year <- str_sub(as.character(tail(sfy_column, n=1)), -2)
+  
+  subtitle_str <- ifelse(first_year == last_year, 
+                         paste0(state_name, ", SFY", first_year),
+                         paste0(state_name, ", SFY", first_year, "-", last_year))
+  
+  # return formated string of state name and years in the dataset
+  return(subtitle_str)
+}
+
 
 ### Data Viz Template Settings ----
 

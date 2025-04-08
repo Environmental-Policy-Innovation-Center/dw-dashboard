@@ -2,7 +2,7 @@
 ### Export Files ----
 
 
-run_save_plots <- function(gg_plot, gp_object, sub_folders, name, gs_tab) {
+run_save_plots <- function(gg_plot, gp_object, name) {
   ## Stores a ggplot object as a png and a ggplotly object as HTML
   ## Pushes both to AWS and the link to the HTML in Google Sheets
   ## Takes both data viz objects, the file's name, directories within a bucket where it should be stored,
@@ -10,9 +10,12 @@ run_save_plots <- function(gg_plot, gp_object, sub_folders, name, gs_tab) {
   ## Intuits the proper Sheet URL from which state abbreviation is included in the sub_folder structure
   ## Assumes file_name ends with file type (.html, .png)
   
-  if (!is.null(gg_plot)) {
-    save_png(gg_plot, sub_folders, name) 
-  }
+  gs_tab <- get_gs_tab(name)
+  
+  sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
+  
+  save_png(gg_plot, sub_folders, name) 
+
   
   # object url is everything after the general aws url and bucket details
   # ie /TX/overview/name.html
@@ -26,6 +29,13 @@ run_save_plots <- function(gg_plot, gp_object, sub_folders, name, gs_tab) {
   save_to_aws(gp_object, name, object_url)
   update_google_sheet(sheet_url, gs_tab, name, object_url)
 }
+
+
+get_gs_tab <- function(name) {
+  gs_tab <- ifelse(grepl("yoy", name), "Overview", 
+                             paste0("SFY", str_sub(name,-2)))
+  return(gs_tab)
+  }
 
 
 save_png <- function(gg_plot, sub_folders, name) {

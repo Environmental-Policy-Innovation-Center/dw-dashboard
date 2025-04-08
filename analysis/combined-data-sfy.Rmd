@@ -8,6 +8,21 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 
 # Setup
 
+## Set Variables
+
+```{r, warning=FALSE}
+
+state_name <- "Alabama"
+state_abbr <- "AL"
+
+sfy <- "2024"
+
+save_plots <- FALSE
+
+```
+
+## Imports
+
 ```{r}
 library(here)
 source(here("resources", "inputs.R"))
@@ -18,26 +33,6 @@ run_code_from_file(here("aws.txt"))
 ```
 
 
-## Set Variables
-
-```{r, warning=FALSE}
-
-
-state_name <- "New York"
-state_abbr <- "NY"
-
-sfy <- "2023"
-subtitle_str <- paste0(state_name, ", SFY", str_sub(sfy,-2,-1))
-
-years_list <- c(sfy)
-
-save_plots <- FALSE
-
-gs_tab <- paste0("SFY", str_sub(sfy,-2,-1))
-sub_folders <- paste0(state_abbr, "/", tolower(gs_tab), "/")
-```
-
-## Imports
 
 ### Import Projects & State Data
 
@@ -63,13 +58,13 @@ project_types <- s3read_using(read.csv, object="s3://funding-tracker/state-stats
 
 
 ```{r}
-financial <- get_financial(state_name, years_list) %>%
+financial <- get_financial(state_name) %>%
   filter(state_fiscal_year == sfy)
 
-set_asides <- get_set_asides(state_name, years_list) %>%
+set_asides <- get_set_asides(state_name) %>%
   filter(state_fiscal_year == sfy)
 
-pf <- get_pf(state_name, years_list) %>%
+pf <- get_pf(state_name) %>%
   filter(state_fiscal_year == sfy)
 ```
 
@@ -99,22 +94,21 @@ if (sum(grants$value, na.rm=TRUE)>0) {
     geom_bar(stat="identity", fill="#4ea324") +
     labs(x="", y="", 
          title="Federal Capitalization Grants", 
-         subtitle=subtitle_str) + 
+         subtitle=get_subtitle_str(c(sfy), state_name)) + 
     scale_x_continuous(labels=label_dollar()) + 
     epic_chart_theme
   
   grants_gp <-  ggplotly(grants_p, tooltip="text") %>%
     layout(title = list(text = paste0('Federal Capitalization Grants',
                                       '<br>',
-                                      subtitle_str)))
+                                      get_subtitle_str(c(sfy), state_name))))
   
   
   if (save_plots) {
     run_save_plots(gg_plot = grants_p,
-                   gp_object = grants_gp, # change
-                   sub_folders, 
-                   name = paste0("fed-cap-grant-amount-",sfy), # change
-                   gs_tab) }
+                   gp_object = grants_gp,
+                   name = paste0("fed-cap-grant-amount-",sfy))
+    }
   
   grants_gp
 }
@@ -146,23 +140,22 @@ if(sum(pf$total_pf_amt, na.rm=TRUE) > 0) {
   all_pf_p <- ggplot(pf, aes(x=total_pf_amt, y=reorder(pf_category, total_pf_amt), text=format_currency(total_pf_amt))) + 
     geom_bar(stat="identity", fill="#4ea324") +
     labs(x="", y="", title="Expected Principal Forgiveness from Fed Cap Grants", 
-         subtitle=subtitle_str) + 
+         subtitle=get_subtitle_str(c(sfy), state_name)) + 
     scale_x_continuous(labels=label_dollar()) + 
     epic_chart_theme
   
   all_pf_gp <-  ggplotly(all_pf_p, tooltip="text") %>%
     layout(title = list(text = paste0("Expected Principal Forgiveness from Fed Cap Grants",
                                       "<br>",
-                                      subtitle_str)))
+                                      get_subtitle_str(c(sfy), state_name))))
   
   
   
   if (save_plots) {
     run_save_plots(gg_plot = all_pf_p,
-                   gp_object = all_pf_gp, # change
-                   sub_folders, 
-                   name = paste0("fed-cap-grant-pf-amount-",sfy), # change
-                   gs_tab) }
+                   gp_object = all_pf_gp,
+                   name = paste0("fed-cap-grant-pf-amount-",sfy))
+    }
   
   all_pf_gp
 }
@@ -219,7 +212,7 @@ if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How is the Base grant allocated?",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   
   base_all_fig <- base_distribution %>% 
@@ -227,17 +220,16 @@ if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
             hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, 
             marker=list(colors = distribution_colors[as.character(base_distribution$name)])) %>% 
-    layout(title = paste0("How is the Base grant allocated?", "<br>", subtitle_str),  
+    layout(title = paste0("How is the Base grant allocated?", "<br>", get_subtitle_str(c(sfy), state_name)),  
            margin = list(t = 100, l = 10),  
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
   if (save_plots) {
     run_save_plots(gg_plot = base_all_p,
-                   gp_object = base_all_fig, # change
-                   sub_folders, 
-                   name = paste0("base-pf-sa-pct-",sfy), # change
-                   gs_tab) }
+                   gp_object = base_all_fig,
+                   name = paste0("base-pf-sa-pct-",sfy))
+    }
   
   base_all_fig
 }
@@ -295,24 +287,23 @@ if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0) {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How is the IIJA Gen Supp grant allocated?",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   
   gensupp_all_fig <- gensupp_distribution %>% 
     plot_ly(labels = ~name, values = ~value,
             hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(gensupp_distribution$name)])) %>% 
-    layout(title = paste0("How is the IIJA Gen Supp grant allocated?", "<br>", subtitle_str),  
+    layout(title = paste0("How is the IIJA Gen Supp grant allocated?", "<br>", get_subtitle_str(c(sfy), state_name)),  
            margin = list(t = 100, l = 10),  
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
   if (save_plots) {
     run_save_plots(gg_plot = gensupp_all_p,
-                   gp_object = gensupp_all_fig, # change
-                   sub_folders, 
-                   name = paste0("iija-gen-supp-pf-sa-pct-",sfy), # change
-                   gs_tab) }
+                   gp_object = gensupp_all_fig,
+                   name = paste0("iija-gen-supp-pf-sa-pct-",sfy))
+    }
   
   gensupp_all_fig
 }
@@ -370,24 +361,22 @@ if (nrow(lead_distribution %>% filter(!is.na(value))) > 0) {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How is the LSLR grant allocated?",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   
   lead_all_fig <- lead_distribution %>% 
     plot_ly(labels = ~name, values = ~value,
             hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(lead_distribution$name)])) %>% 
-    layout(title = paste0("How is the LSLR grant allocated?", "<br>", subtitle_str),  
+    layout(title = paste0("How is the LSLR grant allocated?", "<br>", get_subtitle_str(c(sfy), state_name)),  
            margin = list(t = 100, l = 10),  
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
   if (save_plots) {
     run_save_plots(gg_plot = lead_all_p,
-                   gp_object = lead_all_fig, # change
-                   sub_folders, 
-                   name = paste0("lead-pf-sa-pct-",sfy), # change
-                   gs_tab) }
+                   gp_object = lead_all_fig,
+                   name = paste0("lead-pf-sa-pct-",sfy)) }
   
   lead_all_fig
 }
@@ -446,24 +435,23 @@ if (nrow(ec_distribution %>% filter(!is.na(value))) > 0) {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How is the EC grant allocated?",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   
   ec_all_fig <- ec_distribution %>% 
     plot_ly(labels = ~name, values = ~value,
             hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = distribution_colors[as.character(ec_distribution$name)])) %>% 
-    layout(title = paste0("How is the EC grant allocated?", "<br>", subtitle_str),  
+    layout(title = paste0("How is the EC grant allocated?", "<br>", get_subtitle_str(c(sfy), state_name)),  
            margin = list(t = 100, l = 10),  
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
   if (save_plots) {
     run_save_plots(gg_plot = ec_all_p,
-                   gp_object = ec_all_fig, # change
-                   sub_folders, 
-                   name = paste0("ec-pf-sa-pct-",sfy), # change
-                   gs_tab) }
+                   gp_object = ec_all_fig,
+                   name = paste0("ec-pf-sa-pct-",sfy))
+    }
   
   ec_all_fig
 }
@@ -508,20 +496,18 @@ if(nrow(funds_process_comp %>% filter(!is.na(value))) == nrow(funds_process_comp
     geom_bar(stat="identity", fill="#4ea324") +
     labs(x="", y="", 
          title="How do available funds compare to demand and funding expectations?", 
-         subtitle=subtitle_str) + 
+         subtitle=get_subtitle_str(c(sfy), state_name)) + 
     scale_x_continuous(labels=label_dollar()) + 
     epic_chart_theme
   
   funds_comp_gp <- ggplotly(funds_comp_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How do available funds compare to demand and funding expectations?", '<br>',subtitle_str)))
+    layout(title = list(text = paste0("How do available funds compare to demand and funding expectations?", '<br>',get_subtitle_str(c(sfy), state_name))))
   
   
   if (save_plots) {
     run_save_plots(gg_plot = funds_comp_p,
-                   gp_object = funds_comp_gp, # change
-                   sub_folders, 
-                   name = paste0("compare-available-demand-expecting-",sfy), # change
-                   gs_tab) }
+                   gp_object = funds_comp_gp,
+                   name = paste0("compare-available-demand-expecting-",sfy)) }
   
   funds_comp_gp
 }
@@ -588,13 +574,13 @@ if (sfy != "2022") {
       guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
       ) + 
       labs(title="Unmet demand compared to available Base & IIJA Gen Supp funds",
-           subtitle=subtitle_str)
+           subtitle=get_subtitle_str(c(sfy), state_name))
     
     
     gen_comp_fig <- gen_costs %>% plot_ly(labels = ~name, values = ~value,
                                           hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
       add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = comp_colors[as.character(gen_costs$name)])) %>% 
-      layout(title = paste0("Unmet demand compared to available Base & IIJA Gen Supp funds", "<br>", subtitle_str),  
+      layout(title = paste0("Unmet demand compared to available Base & IIJA Gen Supp funds", "<br>", get_subtitle_str(c(sfy), state_name)),  
              margin = list(t = 100, l = 10),  
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -602,11 +588,9 @@ if (sfy != "2022") {
     
     if (save_plots) {
       run_save_plots(gg_plot = gen_comp_p,
-                     gp_object = gen_comp_fig, # change
-                     sub_folders, 
-                     name = paste0("compare-available-demand-general-",sfy), # change
-                     gs_tab) }
-    
+                     gp_object = gen_comp_fig,
+                     name = paste0("compare-available-demand-general-",sfy))
+      }
     
     gen_comp_fig
     
@@ -667,13 +651,13 @@ if (sfy != "2022") {
       guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
       ) + 
       labs(title="Unmet demand compared to available LSLR funds",
-           subtitle=subtitle_str)
+           subtitle=get_subtitle_str(c(sfy), state_name))
     
     
     lead_comp_fig <- lead_costs %>% plot_ly(labels = ~name, values = ~value,
                                             hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
       add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = comp_colors[as.character(lead_costs$name)])) %>% 
-      layout(title = paste0("Unmet demand compared to available LSLR funds", "<br>", subtitle_str),  
+      layout(title = paste0("Unmet demand compared to available LSLR funds", "<br>", get_subtitle_str(c(sfy), state_name)),  
              margin = list(t = 100, l = 10),  
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -681,10 +665,9 @@ if (sfy != "2022") {
     
     if (save_plots) {
       run_save_plots(gg_plot = lead_comp_p,
-                     gp_object = lead_comp_fig, # change
-                     sub_folders, 
-                     name = paste0("compare-available-demand-lead-",sfy), # change
-                     gs_tab) }
+                     gp_object = lead_comp_fig,
+                     name = paste0("compare-available-demand-lead-",sfy))
+      }
     
     
     lead_comp_fig
@@ -745,23 +728,22 @@ if (sfy != "2022") {
       guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
       ) + 
       labs(title="Unmet demand compared to available EC funds",
-           subtitle=subtitle_str)
+           subtitle=get_subtitle_str(c(sfy), state_name))
     
     
     ec_comp_fig <- ec_costs %>% plot_ly(labels = ~name, values = ~value,
                                         hovertemplate="%{label}<br>$%{value}<extra></extra>") %>%
       add_pie(hole = 0.6, direction="clockwise", sort=FALSE,marker=list(colors = comp_colors[as.character(ec_costs$name)])) %>% 
-      layout(title = paste0("Unmet demand compared to available EC funds", "<br>", subtitle_str),  
+      layout(title = paste0("Unmet demand compared to available EC funds", "<br>", get_subtitle_str(c(sfy), state_name)),  
              margin = list(t = 100, l = 10),  
              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
     
     if (save_plots) {
       run_save_plots(gg_plot = ec_comp_p,
-                     gp_object = ec_comp_fig, # change
-                     sub_folders, 
-                     name = paste0("compare-available-demand-ec-",sfy), # change
-                     gs_tab) }
+                     gp_object = ec_comp_fig,
+                     name = paste0("compare-available-demand-ec-",sfy))
+      }
     
     ec_comp_fig
   } # end if we have ec data, make plot
@@ -802,13 +784,13 @@ if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How many DACs could expect funding?",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   
   dacs_ef_fig <- dacs_df %>% plot_ly(labels = ~name, values = ~value,
                                      hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(dacs_df$name)])) %>% 
-    layout(title = paste0("How many DACs could expect funding?", "<br>", subtitle_str),  
+    layout(title = paste0("How many DACs could expect funding?", "<br>", get_subtitle_str(c(sfy), state_name)),  
            margin = list(t = 100, l = 10),
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -816,10 +798,9 @@ if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
   
   if (save_plots) {
     run_save_plots(gg_plot = dacs_ef_p,
-                   gp_object = dacs_ef_fig, # change
-                   sub_folders, 
-                   name = paste0("dacs-expecting-funding-",sfy), # change
-                   gs_tab) }
+                   gp_object = dacs_ef_fig,
+                   name = paste0("dacs-expecting-funding-",sfy))
+    }
   
   dacs_ef_fig
 }
@@ -862,22 +843,21 @@ if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df))  {
     guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
     ) + 
     labs(title="How many projects expected to receive funding are for DACs",
-         subtitle=subtitle_str)
+         subtitle=get_subtitle_str(c(sfy), state_name))
   
   ef_df_fig <- ef_df %>% plot_ly(labels = ~name, values = ~value,
                                  hovertemplate = '%{label}<br>%{value} projects<extra></extra>') %>%
     add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(ef_df$name)])) %>% 
-    layout(title = paste0("How many projects expected to receive funding are for DACs?", "<br>", subtitle_str),
+    layout(title = paste0("How many projects expected to receive funding are for DACs?", "<br>", get_subtitle_str(c(sfy), state_name)),
            margin = list(t = 100, l = 10),
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
   if (save_plots) {
     run_save_plots(gg_plot = ef_df_p,
-                   gp_object = ef_df_fig, # change
-                   sub_folders, 
-                   name = paste0("expecting-funding-projects-dacs-",sfy), # change
-                   gs_tab) }
+                   gp_object = ef_df_fig, 
+                   name = paste0("expecting-funding-projects-dacs-",sfy))
+    }
   
   ef_df_fig
 }
@@ -913,23 +893,22 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
   
   dac_ef_hm_p <- ggplot(dac_ef_hm, aes(x=expecting_funding, y=dac, fill=value, text=plot_str)) + 
     geom_tile(color="white") + 
-    labs(title="Projects by DAC Status and Expecting Funding", subtitle=subtitle_str,
+    labs(title="Projects by DAC Status and Expecting Funding", subtitle=get_subtitle_str(c(sfy), state_name),
          x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
     scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
     theme_minimal()
   
   dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
     layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding",
-                                      '<br>', subtitle_str)))
+                                      '<br>', get_subtitle_str(c(sfy), state_name))))
   
   
   if (save_plots) {
     
     run_save_plots(gg_plot = dac_ef_hm_p,
-                   gp_object = dac_ef_hm_gp, # change
-                   sub_folders, 
-                   name = "dac-expecting-funding-heatmap-yoy", # change
-                   gs_tab) }
+                   gp_object = dac_ef_hm_gp,
+                   name = paste("dac-expecting-funding-heatmap-",sfy))
+    }
   
   dac_ef_hm_gp
 }

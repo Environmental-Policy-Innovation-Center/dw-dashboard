@@ -23,8 +23,8 @@ run_code_from_file(here("aws.txt"))
 ## Local Variables
 
 ```{r}
-state_name <- "Tennessee"
-state_abbr <- "TN"
+state_name <- "New York"
+state_abbr <- "NY"
 
 
 # include 2022?

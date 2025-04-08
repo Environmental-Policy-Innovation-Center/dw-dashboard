@@ -21,8 +21,8 @@ run_code_from_file(here("aws.txt"))
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Tennessee"
-state_abbr <- "TN"
+state_name <- "New York"
+state_abbr <- "NY"
 
 # include 2022?
 include_y0 <- TRUE
@@ -74,7 +74,9 @@ gen_supp <- financial %>%
 base_gen_supp <- financial %>%
   filter(fed_cap_grant == "Base & IIJA Gen Supp")
 
-base_gen_supp <- bind_rows(base, base_gen_supp)
+base_gen_supp <- bind_rows(base, gen_supp, base_gen_supp) %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
 
 lead <- financial %>%
   filter(fed_cap_grant == "LSLR")

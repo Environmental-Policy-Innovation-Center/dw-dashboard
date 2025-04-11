@@ -1,34 +1,5 @@
 clean_al_y1 <- function() {
 
-  ### APPLICANT - Not included in dashboard, kept in case it becomes relevant
-  
-  # (364, 11)
-#  al_applicant <- fread("year1/AL/data/1-Alabama_ARPA_SRF_Combined_PPL.csv",
-#                        colClasses = "character", na.strings = "") %>%
-#    clean_names()
-#  
-#  al_app_clean <- al_applicant %>%
-#    select(-date_pre_app_or_supp_received, -project_award_date_when_grant_is_signed,
-#           -unfunded_mat_ch_portion) %>%
-#    # process numeric columns
-#    mutate(
-#      requested_amount = convert_to_numeric(applied_for_project_amount),
-#     funding_amount = convert_to_numeric(funded_portion),
-#      principal_forgiveness = convert_to_numeric(principal_forgiveness_and_or_grant),
-#    ) %>%
-#    # process text columns
-#   mutate(
-#      borrower = str_squish(applicant_name),
-#      project_description = str_squish(project_description),
-#      community_served = str_squish(county),
-#      expecting_funding = case_when(
-#        project_approved_yes_or_no == "Yes" ~ "Yes",
-#       TRUE ~ "No"),
-#    ) %>%
-#    select(borrower, community_served, project_description, requested_amount, funding_amount,
-#           principal_forgiveness, expecting_funding)
-  
-  
   ### FUNDABLE
   
   # (7,14)
@@ -46,16 +17,45 @@ clean_al_y1 <- function() {
                    colClasses = "character", na.strings = "") %>%
     clean_names()
   
-  # -> (29,14)
+
+  
+  # (1, )
+  al_ec <- fread("year1/AL/data/al-y1-ec-ppl-1.csv",
+                 colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    mutate(project_type = "Emerging Contaminants", 
+           funding_amount = clean_numeric_string(project_amount),
+           expecting_funding = "Yes",
+           community_served = str_squish(city_town),
+           borrower = str_squish(applicant_name),
+           pwsid = str_squish(permit_number),
+           principal_forgiveness = "No Information",
+           population = clean_numeric_string(population),
+           #NOTE: project_name was manually edited from the original 'project description' column
+           # to make room for the added project description from Attachment 2
+           project_name = str_squish(project_name),
+           project_id = "No Information",
+           project_description = str_squish(project_description),
+           project_id = "No Information",
+           project_score = str_squish(priority_ranking),
+           disadvantaged = case_when(
+             as.numeric(disadvantaged_ranking) > 0 ~ "Yes",
+             TRUE ~ "No"),
+           project_score = str_squish(disadvantaged_ranking)) %>%
+    select(community_served, borrower, pwsid, project_type, project_name, project_id,
+           funding_amount, principal_forgiveness, population, project_description,
+           project_score, expecting_funding, disadvantaged)
+  
+  
+  # -> (31,14)
   al_combined <- bind_rows(al_base, al_bil, al_lead) 
   
-  al_clean <- al_combined %>%
+  al_combined <- al_combined %>%
     select(-gpr_component_cost, -gpr_type, -gpr_project, -estimated_construction_start_date) %>%
     # process numeric columns
     mutate(funding_amount = clean_numeric_string(assistance_amount),
            principal_forgiveness = clean_numeric_string(additional_subsidization_principal_forgiveness),
            project_cost = as.character(NA),
-           requested_amount = as.character(NA)
     ) %>%
     # process text columns
     mutate(community_served = str_squish(county_served),
@@ -70,13 +70,20 @@ clean_al_y1 <- function() {
            project_name = str_squish(project_name),
            project_description = str_squish(project_description),
            project_description = str_replace(project_description, "Project Description: ", ""),
+           project_id = str_sub(project_name, 1, 11),
+           project_name = str_sub(project_name, 13, -1),
            project_type = case_when(
              grepl("LEAD", appropriation_fund_being_used, ignore.case=TRUE) ~ "Lead",
              TRUE ~ "General"),
            # ALL IUP projects are expected to be funded
            expecting_funding = "Yes",
-           project_id = as.character(NA),
+    )
+  
+  
+  al_clean <- bind_rows(al_combined, al_ec) %>%
+  mutate(
            project_rank = as.character(NA),
+           requested_amount = as.character(NA),
            state = "Alabama",
            state_fiscal_year = "2023"
     ) %>%

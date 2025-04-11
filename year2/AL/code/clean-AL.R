@@ -49,34 +49,19 @@ clean_al_y2 <- function() {
            funding_amount = as.character(funding_amount), 
            principal_forgiveness = as.character(principal_forgiveness))
   
-  # (1, 9)
-  al_ec_1 <- fread(file.path(base_path, "al-y2-ec-ppl-1.csv"),
-                   colClasses = "character", na.strings = "")
-  # (4, 16)
-  al_ec_2 <- fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
+
+  # (1, 16)
+  al_ec <- fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
                    colClasses = "character", na.strings = "") %>%
     # this is just one project that got duplicated over multiple rows
-    slice(1)
-  
-  # (5, )
-  al_ec <- bind_rows(al_ec_1, al_ec_2) %>%
+    slice(1) %>%
     clean_names() %>%
-    # replace NAs in non-matching columns to zero for math
-    mutate(across(.cols = c("project_amount", "dw_bil_ec_amount_granted"), 
-                  ~case_when(is.na(.) ~ "$0", 
-                             TRUE ~ . ))) %>%
     mutate(project_type = "Emerging Contaminants", 
-           funding_amount = convert_to_numeric(project_amount) + convert_to_numeric(dw_bil_ec_amount_granted), 
-           principal_forgiveness = convert_to_numeric(project_amount) + convert_to_numeric(dw_bil_ec_amount_granted), 
-           expecting_funding = case_when(convert_to_numeric(dw_bil_ec_amount_granted) > 0 ~ "Yes", 
-                                         TRUE ~ "No"),
-           project_number = case_when(is.na(project_number) ~ "No Information", 
-                                      TRUE ~ project_number), 
-           priority_ranking_points = case_when(is.na(priority_ranking_points) ~ "No Information", 
-                                               TRUE ~ priority_ranking_points)) %>%
-    # formatting: 
-    mutate(funding_amount = as.character(funding_amount), 
-           principal_forgiveness = as.character(principal_forgiveness))
+           funding_amount = clean_numeric_string(dw_bil_ec_amount_granted), 
+           principal_forgiveness = clean_numeric_string(dw_bil_ec_amount_granted), 
+           expecting_funding = "Yes",
+           project_number = str_squish(project_number), 
+           priority_ranking_points = str_squish(priority_ranking_points))
   
   
   # binding: 
@@ -91,7 +76,7 @@ clean_al_y2 <- function() {
            project_type = case_when(
              is.na(project_type) ~ "General", 
              TRUE ~ project_type), 
-           project_cost = as.character(NA), 
+           project_cost = as.character(NA),
            requested_amount = clean_numeric_string(requested_amount),
            funding_amount = clean_numeric_string(funding_amount), 
            principal_forgiveness = clean_numeric_string(principal_forgiveness),

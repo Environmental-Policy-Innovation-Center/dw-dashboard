@@ -36,10 +36,14 @@ clean_tx_y2 <- function() {
            principal_forgiveness = as.character(NA),
            population = clean_numeric_string(population),
            project_description = str_squish(project_description),
-           disadvantaged = ifelse(is.na(disadv_percent), "No", "Yes"),
            project_rank = str_squish(rank),
            project_score = str_squish(points),
            project_type = ifelse(is.na(project_type), "General", "Emerging Contaminants"),
+           disadvantaged = case_when(
+             project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
+             project_type == "Emerging Contaminants" ~ "Yes",
+             TRUE ~ "No Information"
+             ),
            expecting_funding = replace_na(expecting_funding, "No"),
            funding_amount = replace_na(funding_amount, "No Information"),
            pwsid = replace_na(pwsid, "No Information"),

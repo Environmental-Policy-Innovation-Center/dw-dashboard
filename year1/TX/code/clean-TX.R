@@ -57,12 +57,10 @@ clean_tx_y1 <- function() {
            project_description = str_squish(project_description),
            project_score = str_squish(points),
            project_rank = str_squish(rank),
-           disadvantaged = case_when(
-             !is.na(disadvantaged) ~ disadvantaged,
-             is.na(disadv_percent) ~ "No",
-             TRUE ~ "Yes"
-             ),
            project_type = replace_na(project_type, "General"),
+           disadvantaged = case_when(
+               project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
+               TRUE ~ "Yes"),
            expecting_funding = replace_na(expecting_funding, "No"),
            state = "Texas",
            state_fiscal_year = "2023",

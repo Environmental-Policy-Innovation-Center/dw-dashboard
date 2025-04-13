@@ -63,7 +63,7 @@ clean_tx_y3 <- function() {
            project_type = ifelse(is.na(project_type), "General", project_type),
            disadvantaged = case_when(
              project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
-             TRUE ~ "No Information"),
+             TRUE ~ "Yes"),
            project_id = replace_na(project_id, "No Information"),
            expecting_funding = replace_na(expecting_funding, "No"),
            funding_amount = as.character(NA),

@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -167,6 +167,38 @@ tpc_gp
 }
 
 ```
+
+### Project Cost - EF
+
+```{r}
+if ( nrow(project_dollars %>% filter(!is.na(project_cost_ef)))  > 0 ) {
+  
+tpc_ef_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=project_cost_ef, text=format_currency(project_cost_ef))) + 
+  geom_bar(stat="identity", fill="#82AB6E") +
+  scale_y_continuous(labels=label_dollar()) + 
+  labs(title="What are the total project costs of projects expecting funding?",
+       subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
+       x="State Fiscal Year",
+       y="Project Cost") + 
+  epic_chart_theme
+
+tpc_ef_gp <- ggplotly(tpc_ef_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What are the total project costs of projects expecting funding?",
+                                    '<br>',
+                                    get_subtitle_str(project_dollars$state_fiscal_year, state_name)
+                                    )))
+
+if (save_plots) {
+  
+          run_save_plots(gg_plot = tpc_ef_p,
+                         gp_object = tpc_ef_gp,
+                         name = "total-project-cost-expecting-funding-yoy")
+  }
+
+tpc_ef_gp
+}
+```
+
 
 ### Funding Amount
 
@@ -416,16 +448,17 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 & nrow(project_c
 if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
   
   dac_ef_comps <- project_counts %>%
-    select(state_fiscal_year, dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects) %>%
+    select(state_fiscal_year, dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects, dac_ef_projects, ef_projects) %>%
     pivot_longer(cols=c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects")) %>%
     rename(disadvantaged = name) %>%
     mutate(disadvantaged = case_when(
       disadvantaged == "dac_ef_projects" ~ "Yes",
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
+      pct = round(value/ef_projects,2)*100,
       disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
-      plot_str = paste0(disadvantaged, ": ", value, " projects")
-    )
+      plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
+
   
   dac_ef_p <- ggplot(dac_ef_comps, aes(x=state_fiscal_year, y=value, fill=disadvantaged,
                                        text = plot_str)) + 

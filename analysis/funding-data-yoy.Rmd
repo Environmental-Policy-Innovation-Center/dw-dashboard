@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -438,7 +438,8 @@ set_asides_fcg_group <- set_asides %>%
             total_fcg = max(total_fcg),
             total_sa_pct = total_sa_amt / total_fcg) %>%
   mutate(total_sa_amt_str = format_currency(total_sa_amt),
-         total_sa_pct_str = format_percent(total_sa_pct))
+         total_sa_pct_str = format_percent(total_sa_pct),
+         state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
 
 if(sum(set_asides_fcg_group$total_sa_amt, na.rm=TRUE) > 0) {
   
@@ -482,6 +483,8 @@ if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
     geom_line(aes(group=fed_cap_grant), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(set_asides_percent$total_sa_pct)+.02 )) + 
+    scale_x_continuous(breaks=seq(min(set_asides_percent$state_fiscal_year), 
+                                  max(set_asides_percent$state_fiscal_year))) + 
     labs(x="", y="",
          title="Set Asides, Percent Utilized",
          subtitle=get_subtitle_str(set_asides_percent$state_fiscal_year, state_name)) + 
@@ -513,7 +516,8 @@ if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
 sa_pct_base <- set_asides %>%
   filter(fed_cap_grant == "Base" & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
-                           total_sa_pct_str, " (", max_set_aside, ")"))
+                           total_sa_pct_str, " (", max_set_aside, ")"),
+         state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
 
 if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
   
@@ -522,6 +526,8 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_base$total_sa_pct)+.02)) +
+    scale_x_continuous(breaks=seq(min(sa_pct_base$state_fiscal_year), 
+                                  max(sa_pct_base$state_fiscal_year))) + 
     labs(x="", y="", color="",
          title="Set aside percentage per category under base program",
          subtitle=get_subtitle_str(sa_pct_base$state_fiscal_year, state_name)) + 
@@ -550,7 +556,8 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
 sa_pct_gen_supp <- set_asides %>%
   filter(fed_cap_grant == "IIJA Gen Supp" & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
-                           total_sa_pct_str, " (", max_set_aside, ")"))
+                           total_sa_pct_str, " (", max_set_aside, ")"),
+         state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
 
 if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
   
@@ -559,6 +566,8 @@ if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_gen_supp$total_sa_pct)+.02)) + 
+    scale_x_continuous(breaks=seq(min(sa_pct_gen_supp$state_fiscal_year), 
+                                  max(sa_pct_gen_supp$state_fiscal_year))) + 
     labs(x="", y="", color="",
          title="Set aside percentage per category under Gen Supp program", 
          subtitle=get_subtitle_str(sa_pct_gen_supp$state_fiscal_year, state_name)) + 
@@ -588,7 +597,8 @@ if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
 sa_pct_lead <- set_asides %>%
   filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
-                           total_sa_pct_str, " (", max_set_aside, ")"))
+                           total_sa_pct_str, " (", max_set_aside, ")"),
+         state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
 
 if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
   
@@ -599,6 +609,8 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_lead$total_sa_pct)+.02)) + 
+    scale_x_continuous(breaks=seq(min(sa_pct_lead$state_fiscal_year), 
+                                  max(sa_pct_lead$state_fiscal_year))) + 
     labs(x="", y="", color="",
          title="Set Asides by Allowance, Percent",
          subtitle=get_subtitle_str(sa_pct_lead$state_fiscal_year, state_name)) + 
@@ -626,7 +638,8 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
 sa_pct_ec <- set_asides %>%
   filter(fed_cap_grant == "EC" & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
-                           total_sa_pct_str, " (", max_set_aside, ")"))
+                           total_sa_pct_str, " (", max_set_aside, ")"),
+         state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
 
 if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
   
@@ -635,6 +648,8 @@ if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
     geom_line(aes(group=allowance), linewidth=1.5) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(sa_pct_ec$total_sa_pct)+.02)) + 
+    scale_x_continuous(breaks=seq(min(sa_pct_ec$state_fiscal_year), 
+                                  max(sa_pct_ec$state_fiscal_year))) + 
     labs(x="", y="", color="",
          title="Set Asides by Allowance, Percent",
          subtitle=get_subtitle_str(sa_pct_ec$state_fiscal_year, state_name)) + 

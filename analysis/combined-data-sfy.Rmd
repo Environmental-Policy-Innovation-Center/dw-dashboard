@@ -12,10 +12,10 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 
 ```{r, warning=FALSE}
 
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
-sfy <- "2024"
+sfy <- "2023"
 
 save_plots <- FALSE
 
@@ -53,6 +53,15 @@ project_dollars <- s3read_using(read.csv, object="s3://funding-tracker/state-sta
 project_types <- s3read_using(read.csv, object="s3://funding-tracker/state-stats/dwsrf-funding-tracker-project-types.csv") %>%
   clean_names() %>%
   filter(state == state_name & state_fiscal_year == sfy)
+
+general <- project_types %>%
+    filter(project_type == "General")
+
+lead <- project_types %>%
+    filter(project_type == "Lead")
+
+ec <- project_types %>%
+    filter(project_type == "Emerging Contaminants")
 
 ```
 
@@ -536,9 +545,6 @@ if (sfy != "2022") {
   # if general project cost is missing, switch to requested amount
   # NOTE may manually need to use Requested Amount instead when both are present but the latter is preferred
   
-  general <- project_types %>%
-    filter(project_type == "General")
-  
   if (!is.na(general$total_project_cost)) {
     gen_costs <- data.frame(name=c("Available Funds", "Unmet Demand"),
                             value=c(gen_funds_available,
@@ -609,9 +615,6 @@ if (sfy != "2022") {
   
   # if project costs is NA, use Requested Amount instead
   # NOTE: may need to manually change to requested amount if both are valid but the latter is more worth highlighting
-  
-  lead <- project_types %>%
-    filter(project_type == "Lead")
   
   if (nrow(lead) > 0) {
   
@@ -751,6 +754,10 @@ if (sfy != "2022") {
 } # end if sfy !=2022
 ```
 
+## DAC & EF Comparisons
+
+### DACs EF / All DACs
+
 ```{r}
 dacs_df <- data.frame(name=c("DACs, Expecting Funding", 
                              "DACs, Not Expecting Funding", "DACs, No Info"),
@@ -806,6 +813,8 @@ if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
 }
 ```
 
+
+### DACs / All EF
 
 ```{r}
 
@@ -907,12 +916,198 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
     
     run_save_plots(gg_plot = dac_ef_hm_p,
                    gp_object = dac_ef_hm_gp,
-                   name = paste("dac-expecting-funding-heatmap-",sfy))
+                   name = paste0("dac-expecting-funding-heatmap-",sfy))
     }
   
   dac_ef_hm_gp
 }
 ```
+
+## DAC by Project Type
+
+### General
+
+```{r}
+
+if (nrow(general) > 0) {
+
+ gen_dacs_df <- data.frame(name=c("DACs, Expecting Funding", 
+                             "DACs, Not Expecting Funding", "DACs, No Info"),
+                      value=c(general$dac_ef_projects, 
+                              general$dac_nef_projects, 
+                              general$dac_ef_ni_projects),
+                      value_str=c(as.character(general$dac_ef_projects),
+                                  as.character(general$dac_nef_projects), 
+                                  as.character(general$dac_ef_ni_projects))) %>%
+  mutate(value_str = ifelse(value >0, value_str, ""),
+         name = factor(name, levels=c("DACs, No Info", 
+                                      "DACs, Not Expecting Funding", 
+                                      "DACs, Expecting Funding")))
+
+
+if ( nrow(gen_dacs_df %>% filter(!is.na(name))) == nrow(gen_dacs_df))  {
+  
+  gen_dacs_ef_p <- ggdonutchart(gen_dacs_df,
+                            "value",
+                            fill="name",
+                            color="white",
+                            palette=ef_dac_comp_colors,
+                            label="value_str",
+                            lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="DACs Expecting Funding, General Projects",
+         subtitle=get_subtitle_str(c(sfy), state_name))
+  
+  
+  gen_dacs_ef_fig <- gen_dacs_df %>% plot_ly(labels = ~name, values = ~value,
+                                     hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(gen_dacs_df$name)])) %>% 
+    layout(title = paste0("DACs Expecting Funding, General Projects", "<br>", get_subtitle_str(c(sfy), state_name)),  
+           margin = list(t = 100, l = 10),
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = gen_dacs_ef_p,
+                   gp_object = gen_dacs_ef_fig,
+                   name = paste0("dacs-expecting-funding-general-",sfy))
+    }
+  
+  gen_dacs_ef_fig
+}
+}
+```
+
+### Lead
+
+```{r}
+
+if (nrow(lead) > 0) {
+
+ lead_dacs_df <- data.frame(name=c("DACs, Expecting Funding", 
+                             "DACs, Not Expecting Funding", "DACs, No Info"),
+                      value=c(lead$dac_ef_projects, 
+                              lead$dac_nef_projects, 
+                              lead$dac_ef_ni_projects),
+                      value_str=c(as.character(lead$dac_ef_projects),
+                                  as.character(lead$dac_nef_projects), 
+                                  as.character(lead$dac_ef_ni_projects))) %>%
+  mutate(value_str = ifelse(value >0, value_str, ""),
+         name = factor(name, levels=c("DACs, No Info", 
+                                      "DACs, Not Expecting Funding", 
+                                      "DACs, Expecting Funding")))
+
+
+if ( nrow(lead_dacs_df %>% filter(!is.na(name))) == nrow(lead_dacs_df))  {
+  
+  lead_dacs_ef_p <- ggdonutchart(lead_dacs_df,
+                            "value",
+                            fill="name",
+                            color="white",
+                            palette=ef_dac_comp_colors,
+                            label="value_str",
+                            lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="DACs Expecting Funding, Lead Projects",
+         subtitle=get_subtitle_str(c(sfy), state_name))
+  
+  
+  lead_dacs_ef_fig <- lead_dacs_df %>% plot_ly(labels = ~name, values = ~value,
+                                     hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(lead_dacs_df$name)])) %>% 
+    layout(title = paste0("DACs Expecting Funding, Lead Projects", "<br>", get_subtitle_str(c(sfy), state_name)),  
+           margin = list(t = 100, l = 10),
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_dacs_ef_p,
+                   gp_object = lead_dacs_ef_fig,
+                   name = paste0("dacs-expecting-funding-lead-",sfy))
+    }
+  
+  lead_dacs_ef_fig
+}
+}
+```
+
+### EC
+
+```{r}
+
+if (nrow(ec) > 0) {
+
+ ec_dacs_df <- data.frame(name=c("DACs, Expecting Funding", 
+                             "DACs, Not Expecting Funding", "DACs, No Info"),
+                      value=c(ec$dac_ef_projects, 
+                              ec$dac_nef_projects, 
+                              ec$dac_ef_ni_projects),
+                      value_str=c(as.character(ec$dac_ef_projects),
+                                  as.character(ec$dac_nef_projects), 
+                                  as.character(ec$dac_ef_ni_projects))) %>%
+  mutate(value_str = ifelse(value >0, value_str, ""),
+         name = factor(name, levels=c("DACs, No Info", 
+                                      "DACs, Not Expecting Funding", 
+                                      "DACs, Expecting Funding")))
+
+
+if ( nrow(ec_dacs_df %>% filter(!is.na(name))) == nrow(ec_dacs_df))  {
+  
+  ec_dacs_ef_p <- ggdonutchart(ec_dacs_df,
+                            "value",
+                            fill="name",
+                            color="white",
+                            palette=ef_dac_comp_colors,
+                            label="value_str",
+                            lab.pos="out") + 
+    theme(
+      text = element_text(size = 11, family = "Lato"), 
+      legend.text = element_text(size = 10, family = "Lato"), 
+      legend.title = element_blank(), 
+      legend.position = "right",  
+      legend.direction = "vertical") +
+    guides(fill = guide_legend(ncol = 1, byrow = TRUE, reverse=TRUE),
+    ) + 
+    labs(title="DACs Expecting Funding, EC Projects",
+         subtitle=get_subtitle_str(c(sfy), state_name))
+  
+  
+  ec_dacs_ef_fig <- ec_dacs_df %>% plot_ly(labels = ~name, values = ~value,
+                                     hovertemplate="%{label}<br>%{value} projects<extra></extra>") %>%
+    add_pie(hole = 0.6, direction="clockwise", sort=FALSE, marker=list(colors = ef_dac_comp_colors[as.character(ec_dacs_df$name)])) %>% 
+    layout(title = paste0("DACs Expecting Funding, EC Projects", "<br>", get_subtitle_str(c(sfy), state_name)),  
+           margin = list(t = 100, l = 10),
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = ec_dacs_ef_p,
+                   gp_object = ec_dacs_ef_fig,
+                   name = paste0("dacs-expecting-funding-ec-",sfy))
+    }
+  
+  ec_dacs_ef_fig
+}
+}
+```
+
 
 ## Project Score Range
 

@@ -44,7 +44,7 @@ clean_tx_y2 <- function() {
              project_type == "Emerging Contaminants" ~ "Yes",
              TRUE ~ "No Information"
              ),
-           expecting_funding = replace_na(expecting_funding, "No"),
+           expecting_funding = replace_na(expecting_funding, "No Information"),
            funding_amount = replace_na(funding_amount, "No Information"),
            pwsid = replace_na(pwsid, "No Information"),
            project_id = replace_na(project_id, "No Information"),

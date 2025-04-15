@@ -15,13 +15,7 @@ clean_tx_y3 <- function() {
   
   tx_ppl <- tx_ppl %>%
     left_join(tx_invite, by="pif_number")
-  
-  # projects not on appendix j that are EC projects
-  tx_ec <- fread(file.path(base_path, "tx-y3-appendix-j-ec.csv"),
-                 colClasses = "character", na.strings = "") %>%
-    clean_names() %>%
-    mutate(project_type = "Emerging Contaminants",
-           expecting_funding = "No Information")
+
   
   # lead applicant list
   tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl.csv"),
@@ -43,7 +37,7 @@ clean_tx_y3 <- function() {
   
   
   # combine general, lead, and ec
-  tx_all <- bind_rows(tx_ppl, tx_ec, tx_lsl)
+  tx_all <- bind_rows(tx_ppl, tx_lsl)
   
 
   # join invited by project id and then process for output

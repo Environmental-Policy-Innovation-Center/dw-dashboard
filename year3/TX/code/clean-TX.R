@@ -21,7 +21,8 @@ clean_tx_y3 <- function() {
   tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl.csv"),
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "Lead")
+    mutate(project_type = "Lead",
+           disadvantaged = "Yes")
   
   tx_lsl_invite <- fread(file.path(base_path, "tx-y3-appendix-j-lsl.csv"),
                           colClasses = "character", na.strings = "") %>%
@@ -54,10 +55,15 @@ clean_tx_y3 <- function() {
            project_description = str_squish(project_description),
            project_rank = str_squish(rank),
            project_score = str_squish(points),
-           project_type = ifelse(is.na(project_type), "General", project_type),
-           disadvantaged = case_when(
-             project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
-             TRUE ~ "Yes"),
+           project_type = case_when(
+             # ec and led docs already defined
+             !is.na(project_type) ~ project_type,
+             # search for keywords from full PPL, otherwise General project
+             grepl(lead_str, project_description) ~ "Lead",
+             grepl(ec_str, project_description) ~ "Emerging Contaminants",
+             TRUE ~ "General"),
+           # lead docs already defined - if still NA and disavd_percent from PPL is NA, Not DAC
+           disadvantaged = ifelse(is.na(disadv_percent) & is.na(disadvantaged), "No", "Yes"),
            project_id = replace_na(project_id, "No Information"),
            expecting_funding = replace_na(expecting_funding, "No"),
            funding_amount = as.character(NA),

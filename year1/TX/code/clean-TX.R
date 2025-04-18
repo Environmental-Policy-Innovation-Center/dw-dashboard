@@ -30,7 +30,7 @@ clean_tx_y1 <- function() {
                    colClasses = "character", na.strings = "") %>% 
     clean_names() %>%
     mutate(project_type = "Lead",
-           disadvantaged = "No Information",
+           disadvantaged = "Yes",
            funding_amount = "No Information",
            expecting_funding = "No Information") %>%
     rename(project_cost = total_project_cost) %>%
@@ -41,7 +41,7 @@ clean_tx_y1 <- function() {
                  colClasses = "character", na.strings = "") %>% 
     clean_names()  %>%
     mutate(project_type = "Emerging Contaminants",
-           disadvantaged = "No Information",
+           disadvantaged = "Yes",
            funding_amount = "No Information",
            expecting_funding = "No Information") %>%
     rename(project_cost = total_project_cost) %>%
@@ -57,10 +57,16 @@ clean_tx_y1 <- function() {
            project_description = str_squish(project_description),
            project_score = str_squish(points),
            project_rank = str_squish(rank),
-           project_type = replace_na(project_type, "General"),
-           disadvantaged = case_when(
-               project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
-               TRUE ~ "Yes"),
+           project_type = case_when(
+             # ec and led docs already defined
+             !is.na(project_type) ~ project_type,
+             # search for keywords from full PPL, otherwise General project
+             grepl(lead_str, project_description) ~ "Lead",
+             grepl(ec_str, project_description) ~ "Emerging Contaminants",
+             TRUE ~ "General"
+           ),
+           # ec and lead docs already defined - if still NA and disavd_percent from PPL is NA, Not DAC
+           disadvantaged = ifelse(is.na(disadv_percent) & is.na(disadvantaged), "No", "Yes"),
            expecting_funding = replace_na(expecting_funding, "No"),
            state = "Texas",
            state_fiscal_year = "2023",

@@ -10,15 +10,16 @@ clean_tx_y2 <- function() {
   tx_invite <- fread(file.path(base_path, "tx-y2-appendix-k.csv"),
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(funding_amount = clean_numeric_string(project_cost),
-           expecting_funding = "Yes") %>%
-    select(pif_number, funding_amount, expecting_funding)
+    mutate(expecting_funding = "Yes") %>%
+    select(pif_number, expecting_funding)
   
   # projects not on appendix j that are EC projects
   tx_ec <- fread(file.path(base_path, "tx-y2-appendix-j-ec.csv"),
                  colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "Emerging Contaminants")
+    mutate(project_type = "Emerging Contaminants",
+           disadvantaged = "Yes",
+           list="ec")
   
   tx_ppl <- bind_rows(tx_ppl, tx_ec)
   
@@ -38,14 +39,21 @@ clean_tx_y2 <- function() {
            project_description = str_squish(project_description),
            project_rank = str_squish(rank),
            project_score = str_squish(points),
-           project_type = ifelse(is.na(project_type), "General", "Emerging Contaminants"),
-           disadvantaged = case_when(
-             project_type == "General" ~ ifelse(is.na(disadv_percent), "No", "Yes"),
-             project_type == "Emerging Contaminants" ~ "Yes",
-             TRUE ~ "No Information"
-             ),
-           expecting_funding = replace_na(expecting_funding, "No Information"),
-           funding_amount = replace_na(funding_amount, "No Information"),
+           project_type = case_when(
+             # ec and led docs already defined
+             !is.na(project_type) ~ project_type,
+             # search for keywords from full PPL, otherwise General project
+             grepl(lead_str, project_description) ~ "Lead",
+             grepl(ec_str, project_description) ~ "Emerging Contaminants",
+             TRUE ~ "General"),
+           # ec docs already defined - if still NA and disavd_percent from PPL is NA, Not DAC
+           disadvantaged = ifelse(is.na(disadv_percent) & is.na(disadvantaged), "No", "Yes"),
+           # ec list is No Info, invitation list is already Yes, anything on General PPL that's NA is No
+           expecting_funding = case_when(
+             is.na(expecting_funding) & list=="ec" ~ "No Information",
+             is.na(expecting_funding) ~ "No",
+             TRUE ~ expecting_funding),
+           funding_amount = as.character(NA),
            pwsid = replace_na(pwsid, "No Information"),
            project_id = replace_na(project_id, "No Information"),
            state = "Texas",
@@ -56,8 +64,6 @@ clean_tx_y2 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
 
-
-  # Run validation tests
   run_tests(tx_clean)
   rm(list=setdiff(ls(), "tx_clean"))
   

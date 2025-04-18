@@ -7,13 +7,15 @@ run_tests <- function(df) {
   check_na_warnings(df)
   check_required_columns(df)
   check_column_types(df)
+  check_project_type(df)
+  check_yesno_columns(df)
 }
 
 
 
 # Returns whether any columns are not 0/100% NA
 check_na_warnings <- function(df) {
-  
+
   # calculate % NA for each column in the data frame
   na_summary <- percent_na_per_column(df)
   
@@ -23,7 +25,7 @@ check_na_warnings <- function(df) {
   
   # Issue warnings if there are any problematic columns
   if (nrow(problematic_columns) > 0) {
-    warning("FAIL: The following columns have NA percentages that are neither 0% nor 100%:\n",
+    message("FAIL: The following columns have NA percentages that are neither 0% nor 100%:\n",
             paste0(problematic_columns$Column, ": ", problematic_columns$Percent_NA, "%", collapse = "\n"))
   } else {
     message("PASS: All columns have NA percentages of either 0% or 100%.")
@@ -63,8 +65,6 @@ check_required_columns <- function(df) {
 
 
 
-
-
 # Define the test function
 check_column_types <- function(df) {
   # Define vectors of column names to be checked
@@ -86,5 +86,28 @@ check_column_types <- function(df) {
   }
   else {
     message("PASS: All text columns of correct type.")
+  }
+}
+
+
+check_project_type <- function(df) {
+  if (any(!df$project_type %in% c("General", "Lead", "Emerging Contaminants", "No Information", as.character(NA)))) {
+    warning("FAIL: Invalid 'project_type' value found.")
+  }
+  else {
+  message("PASS: project_type checked.") 
+    }
+}
+
+check_yesno_columns <- function(df) {
+  valid <- c("Yes", "No", "No Information", as.character(NA))
+  if (any(!df$disadvantaged %in% valid)) {
+    warning("FAIL: Invalid 'disadvantaged' value found.")
+  }
+  if (any(!df$expecting_funding %in% valid)) {
+    warning("FAIL: Invalid 'expecting_funding' value found.")
+  }
+  else {
+  message("PASS: yes/no columns checked.")
   }
 }

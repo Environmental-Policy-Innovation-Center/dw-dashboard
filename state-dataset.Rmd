@@ -8,10 +8,8 @@ The resulting dataset can answer a number of high-level questions for each state
 
 source("resources/inputs.R")
 source("resources/cleaning.R")
+source("resources/testing.R")
 run_code_from_file("aws.txt")
-
-lsli_str <- "lsli|lead service line inventory|inventory"
-lslr_str <- "lslr|lead service line replacement|replacing lead"
 
 ```
 

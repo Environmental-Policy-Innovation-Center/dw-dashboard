@@ -37,3 +37,14 @@ median_wo_zero <- function(col_name) {
   non_zero <- col_name[col_name != 0]  # Filter out 0s
   median(non_zero)  # Calculate median on the filtered data
 }
+
+### Project Type Lists
+
+# create keywords to search for identifying inventorying and replacement efforts
+lsli_str <- "lsli|lead service line inventory|inventory"
+lslr_str <- "lslr|lead service line replacement|replacing lead"
+
+# create keywords for determining project types when extracting info from project descriptions
+lead_str <- paste0(lsli_str, "|", lslr_str, "|lead")
+ec_str <- "cyanotoxins|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|
+           PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule"

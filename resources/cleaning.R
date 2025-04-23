@@ -47,4 +47,4 @@ lslr_str <- "lslr|lead service line replacement|replacing lead"
 # create keywords for determining project types when extracting info from project descriptions
 lead_str <- paste0(lsli_str, "|", lslr_str, "|lead")
 ec_str <- "cyanotoxins|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|
-           PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule"
+           PFPeA|PFAS|PFOA|PFOS|trihalomethane|THM|Unregulated Contaminant Monitoring Rule"

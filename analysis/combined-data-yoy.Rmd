@@ -87,38 +87,48 @@ compare_general_funds <- project_type_df %>%
   filter(project_type == "General") %>%
   left_join(base_gen_supp %>% select(state, state_fiscal_year, total_funding_available)) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = total_project_cost - total_funding_available,
+  mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+totals_by_year <- compare_general_funds %>%
+  group_by(state_fiscal_year) %>%
+  summarize(cost_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(cost_less_available, na.rm=TRUE),
+            requested_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(requested_less_available, na.rm=TRUE))
 
 # make sure all years are present
 compare_general_funds <- year_table %>%
-  left_join(compare_general_funds, by="state_fiscal_year")
+  left_join(compare_general_funds, by="state_fiscal_year") %>%
+  left_join(totals_by_year, by="state_fiscal_year")
 
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_project_cost_gen <- compare_general_funds %>%
-  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+  select(state, state_fiscal_year, total_funding_available, cost_less_available, cost_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/cost_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "cost_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)")
     )
 
 
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_requested_amount_gen <- compare_general_funds %>%
-  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available, requested_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/requested_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "requested_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)"))
 
 # make sure all years are present
 compare_requested_amount_gen <- year_table %>%
@@ -202,38 +212,48 @@ compare_ec_funds <- project_type_df %>%
   filter(project_type == "Emerging Contaminants") %>%
   left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = total_project_cost - total_funding_available,
+  mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+
+totals_by_year_ec <- compare_ec_funds %>%
+  group_by(state_fiscal_year) %>%
+  summarize(cost_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(cost_less_available, na.rm=TRUE),
+            requested_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(requested_less_available, na.rm=TRUE))
 
 # make sure all years are present for plotting, remove 2022 for lead specifically
 compare_ec_funds <- year_table %>%
   left_join(compare_ec_funds, by="state_fiscal_year") %>%
+  left_join(totals_by_year_ec, by="state_fiscal_year") %>%
   filter(state_fiscal_year !="2022")
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_project_cost_ec <- compare_ec_funds %>%
-  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+select(state, state_fiscal_year, total_funding_available, cost_less_available, cost_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/cost_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "cost_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)")
   )
 
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_requested_amount_ec <- compare_ec_funds %>%
-  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available, requested_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/requested_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "requested_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
-    )
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)"))
 
 
 ```
@@ -315,36 +335,46 @@ compare_lead_funds <- project_type_df %>%
   filter(project_type == "Lead") %>%
   left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
-  mutate(cost_less_available = total_project_cost - total_funding_available,
+  mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = total_requested_amount - total_funding_available,
+         requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+totals_by_year_lead <- compare_lead_funds %>%
+  group_by(state_fiscal_year) %>%
+  summarize(cost_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(cost_less_available, na.rm=TRUE),
+            requested_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(requested_less_available, na.rm=TRUE))
 
 # make sure all years are present for plotting, remove 2022 for lead specifically
 compare_lead_funds <- year_table %>%
   left_join(compare_lead_funds, by="state_fiscal_year") %>%
+  left_join(totals_by_year_lead, by="state_fiscal_year") %>%
   filter(state_fiscal_year !="2022")
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_project_cost_lead <- compare_lead_funds %>%
-  select(state, state_fiscal_year, total_funding_available, cost_less_available) %>%
+select(state, state_fiscal_year, total_funding_available, cost_less_available, cost_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/cost_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "cost_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value))
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)")
     )
 
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_requested_amount_lead <- compare_lead_funds %>%
-  select(state, state_fiscal_year, total_funding_available, requested_less_available) %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available, requested_available_combined) %>%
   pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
-  mutate(name = case_when(
+  mutate(pct_str = as.character(round((value/requested_available_combined),3)*100),
+    name = case_when(
     name == "total_funding_available" ~ "Total Available",
     name == "requested_less_available" ~ "Unmet Demand"),
     name = factor(name, levels=c("Unmet Demand", "Total Available")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)"))
 ```
 
 ### Project Cost

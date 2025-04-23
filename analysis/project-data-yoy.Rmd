@@ -276,7 +276,8 @@ if (nrow(project_counts %>% filter(!is.na(ef_projects))) > 0) {
       name == "nef_projects" ~ "No",
       name == "ef_ni_projects" ~ "No Info"),
       expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
-      project_percent = value / projects,    project_percent_str = format_percent(project_percent),
+      project_percent = value / projects,
+      project_percent_str = format_percent(project_percent),
       plot_str = paste0(expecting_funding, ": ", as.character(value), " (", project_percent_str, ")")
     )
   
@@ -357,15 +358,22 @@ if (nrow(project_counts %>% filter(!is.na(dac_projects))) > 0) {
 }
 ```
 
+#### Project Type
+
 ```{r}
 
 if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
   
   dac_project_types <- project_type_df %>%
     select(state_fiscal_year, project_type, dac_projects) %>%
+    # create column for calculating percent of bar plot total
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(dac_projects_combined = sum(dac_projects, na.rm=TRUE))) %>%
     mutate(
       project_type = factor(project_type, levels=c("Emerging Contaminants", "Lead", "General")),
-      plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", dac_projects, " projects")
+      pct_str = as.character(round(dac_projects/dac_projects_combined,3)*100),
+      plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", dac_projects, " projects (", pct_str, "%)")
     )
   
   dac_pt_p <- ggplot(dac_project_types, aes(x=state_fiscal_year, y=dac_projects, fill=project_type, text=plot_str)) + 
@@ -404,14 +412,18 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 & nrow(project_c
   
   ef_dac_comps <- project_counts %>%
     select(state_fiscal_year, dac_ef_projects, dac_nef_projects, dac_ef_ni_projects) %>%
+    left_join(project_counts %>%
+                group_by(state_fiscal_year) %>%
+                summarize(dacs_combined = sum(dac_projects))) %>%
     pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects")) %>%
     rename(expecting_funding = name) %>%
     mutate(expecting_funding = case_when(
       expecting_funding == "dac_ef_projects" ~ "Yes",
       expecting_funding == "dac_nef_projects" ~ "No",
       TRUE ~ "No Info"),
+      pct_str = as.character(round(value/dacs_combined,3)*100),
       expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
-      plot_str = paste0(expecting_funding, ": ", value, " projects")
+      plot_str = paste0(expecting_funding, ": ", value, " projects (", pct_str, "%)")
     )
   
   
@@ -455,7 +467,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
       disadvantaged == "dac_ef_projects" ~ "Yes",
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
-      pct = round(value/ef_projects,2)*100,
+      pct = round(value/ef_projects,3)*100,
       disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
       plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
 
@@ -549,7 +561,7 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
 if(nrow(project_dollars %>% filter(!is.na(funding_amount_ef_dac))) > 0) {
   
   fa_dac_ef_comps <- project_dollars %>%
-    select(state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac, funding_amount_ef_dac_ni) %>%
+    select(state_fiscal_year, funding_amount_ef_dac, funding_amount_ef_ndac, funding_amount_ef_dac_ni, funding_amount_ef) %>%
     pivot_longer(cols=c("funding_amount_ef_dac", "funding_amount_ef_ndac", "funding_amount_ef_dac_ni")) %>%
     rename(disadvantaged = name) %>%
     mutate(disadvantaged = case_when(
@@ -557,7 +569,8 @@ if(nrow(project_dollars %>% filter(!is.na(funding_amount_ef_dac))) > 0) {
       disadvantaged == "funding_amount_ef_ndac" ~ "No",
       TRUE ~ "No Info"),
       disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
-      plot_str = paste0(disadvantaged, ": ", format_currency(value))
+      pct_str = as.character(round(value/funding_amount_ef,3)*100),
+      plot_str = paste0(disadvantaged, ": ", format_currency(value), " (", pct_str, "%)")
     )
   
   fa_dac_ef_comps_p <- ggplot(fa_dac_ef_comps, aes(x=state_fiscal_year, y=value, fill=disadvantaged,
@@ -599,8 +612,17 @@ if(nrow(project_dollars %>% filter(!is.na(funding_amount_ef_dac))) > 0) {
 
 if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
   
-  all_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year, y=projects, fill=project_type, 
-                                          text=paste0(project_type, ", ", state_fiscal_year, ":<br>", projects, " projects"))) + 
+  pt_applicants <- project_type_df %>%
+    select(state_fiscal_year, project_type, projects) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(projects_combined = sum(projects, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(projects/projects_combined,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", projects, " projects (",
+                                                      pct_str, "%)"))
+  
+  all_pt_p <- ggplot(pt_applicants, aes(x=state_fiscal_year, y=projects, fill=project_type, 
+                                          text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
@@ -633,8 +655,17 @@ if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
 ```{r}
 if(sum(project_type_df$total_project_cost, na.rm=TRUE) > 0) {
   
-  tpc_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type, 
-                                          text=format_currency(total_project_cost))) + 
+    pt_project_cost <- project_type_df %>%
+    select(state_fiscal_year, project_type, total_project_cost) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(project_cost_combined = sum(total_project_cost, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(total_project_cost/project_cost_combined,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", format_currency(total_project_cost), " (",
+                                                      pct_str, "%)"))
+  
+  tpc_pt_p <- ggplot(pt_project_cost, aes(x=state_fiscal_year, y=total_project_cost, fill=project_type, 
+                                          text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
@@ -663,12 +694,66 @@ if(sum(project_type_df$total_project_cost, na.rm=TRUE) > 0) {
 }
 ```
 
+### Project Cost - EF
+
+```{r}
+if (sum(project_type_df$total_project_cost_ef, na.rm=TRUE) > 0) {
+  
+    pt_project_cost_ef <- project_type_df %>%
+    select(state_fiscal_year, project_type, total_project_cost_ef) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(project_cost_ef_combined = sum(total_project_cost_ef, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(total_project_cost_ef/project_cost_ef_combined,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", format_currency(total_project_cost_ef), " (",
+                                                      pct_str, "%)"))
+  
+tpc_ef_pt_p <- ggplot(pt_project_cost_ef, aes(x=state_fiscal_year, y=total_project_cost_ef, 
+                                        fill=project_type, text=plot_str)) + 
+  geom_bar(stat="identity") +
+  scale_y_continuous(labels=label_dollar()) + 
+  scale_fill_manual(values = pt_colors, 
+                      name = "Project Type") + 
+  labs(title="What are the total project costs of projects expecting funding?",
+       subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
+       x="State Fiscal Year",
+       y="Project Cost") + 
+  epic_chart_theme
+
+tpc_ef_pt_gp <- ggplotly(tpc_ef_pt_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What are the total project costs of projects expecting funding?",
+                                    '<br>',
+                                    get_subtitle_str(project_dollars$state_fiscal_year, state_name)
+                                    )))
+
+if (save_plots) {
+  
+          run_save_plots(gg_plot = tpc_ef_pt_p,
+                         gp_object = tpc_ef_pt_gp,
+                         name = "total-project-cost-expecting-funding-project-type-yoy")
+  }
+
+tpc_ef_pt_gp
+}
+```
+
+
 ### Requested Amount
 ```{r}
 
 if(sum(project_type_df$total_requested_amount, na.rm=TRUE) > 0)  {
   
-  tra_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type, text=format_currency(total_requested_amount))) + 
+    pt_requested_amount <- project_type_df %>%
+    select(state_fiscal_year, project_type, total_requested_amount) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(requested_amount_combined = sum(total_requested_amount, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(total_requested_amount/requested_amount_combined ,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", format_currency(total_requested_amount), " (",
+                                                      pct_str, "%)"))
+  
+  tra_pt_p <- ggplot(pt_requested_amount, aes(x=state_fiscal_year, y=total_requested_amount, fill=project_type,
+                                              text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
@@ -700,8 +785,17 @@ if(sum(project_type_df$total_requested_amount, na.rm=TRUE) > 0)  {
 ```{r}
 if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
   
-  tfa_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year, y=total_funding_amount, 
-                                          fill=project_type, text=total_funding_amount_str)) + 
+    pt_funding_amount <- project_type_df %>%
+    select(state_fiscal_year, project_type, total_funding_amount) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(funding_amount_combined = sum(total_funding_amount, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(total_funding_amount/funding_amount_combined ,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", format_currency(total_funding_amount), " (",
+                                                      pct_str, "%)"))
+  
+  tfa_pt_p <- ggplot(pt_funding_amount, aes(x=state_fiscal_year, y=total_funding_amount, 
+                                          fill=project_type, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
@@ -735,10 +829,19 @@ if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
 
 if(sum(project_type_df$total_principal_forgiveness, na.rm=TRUE) > 0) {
   
+    pt_principal_forgivness <- project_type_df %>%
+    select(state_fiscal_year, project_type, total_principal_forgiveness) %>%
+    left_join(project_type_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(principal_forgiveness_combined = sum(total_principal_forgiveness, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(total_principal_forgiveness/principal_forgiveness_combined ,3)*100),
+           plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", format_currency(total_principal_forgiveness), " (",
+                                                      pct_str, "%)"))
   
-  tpf_pt_p <- ggplot(project_type_df, aes(x=state_fiscal_year,
+  tpf_pt_p <- ggplot(pt_principal_forgivness, aes(x=state_fiscal_year,
                                           y=total_principal_forgiveness, 
-                                          fill=project_type)) + 
+                                          fill=project_type,
+                                          text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
@@ -775,9 +878,17 @@ if(sum(project_type_df$total_principal_forgiveness, na.rm=TRUE) > 0) {
 
 if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
   
+    sc_projects <- small_community_df %>%
+    select(state_fiscal_year, projects, small_community) %>%
+    left_join(small_community_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(projects_combined = sum(projects, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(projects/projects_combined ,3)*100),
+           plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", projects, " projects", " (",
+                                                      pct_str, "%)"))
   
-  sc_pop_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=projects, fill=small_community, 
-                                             text=paste0(small_community, ", ", state_fiscal_year, ":<br>", projects, " projects"))) + 
+  sc_pop_p <- ggplot(sc_projects, aes(x=state_fiscal_year, y=projects, fill=small_community, 
+                                             text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
@@ -810,10 +921,17 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
 ```{r}
 if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
   
-  sc_ef_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=ef_projects, fill=small_community, 
-                                            text=paste0(small_community, ", ", 
-                                                        state_fiscal_year, ":<br>", 
-                                                        ef_projects, " projects"))) + 
+      sc_ef_projects <- small_community_df %>%
+    select(state_fiscal_year, ef_projects, small_community) %>%
+    left_join(small_community_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(ef_projects_combined = sum(ef_projects, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(ef_projects/ef_projects_combined ,3)*100),
+           plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", ef_projects, " projects", " (",
+                                                      pct_str, "%)"))
+  
+  sc_ef_p <- ggplot(sc_ef_projects, aes(x=state_fiscal_year, y=ef_projects, fill=small_community, 
+                                            text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
@@ -844,9 +962,17 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
 ```{r}
 if(nrow(small_community_df %>% filter(!is.na(dac_projects))) > 0) {
   
-  sc_dac_p <- ggplot(small_community_df, aes(x=state_fiscal_year, y=dac_projects, fill=small_community, 
-                                             text=paste0(small_community, ", ", 
-                                                         state_fiscal_year, ":<br>", ef_projects, " projects")))+ 
+    sc_dac_projects <- small_community_df %>%
+    select(state_fiscal_year, dac_projects, small_community) %>%
+    left_join(small_community_df %>% 
+                group_by(state_fiscal_year) %>%
+                summarize(dac_projects_combined = sum(dac_projects, na.rm=TRUE))) %>%
+    mutate(pct_str = as.character(round(dac_projects/dac_projects_combined ,3)*100),
+           plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", dac_projects, " projects", " (",
+                                                      pct_str, "%)"))
+  
+  sc_dac_p <- ggplot(sc_dac_projects, aes(x=state_fiscal_year, y=dac_projects, fill=small_community, 
+                                             text=plot_str))+ 
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
@@ -963,13 +1089,18 @@ if (sum(avg_med_requested_amount$value, na.rm=TRUE) > 0) {
 
 lead_project_cost <- project_dollars %>%
   select(state_fiscal_year, project_cost_lsli, project_cost_lslr, project_cost_lsln) %>%
+  left_join(project_dollars %>%
+              select(state_fiscal_year, project_cost_lsli, project_cost_lslr, project_cost_lsln) %>%
+              group_by(state_fiscal_year) %>%
+              summarize(project_cost_combined = sum(project_cost_lsli, project_cost_lslr, project_cost_lsln, na.rm=TRUE))) %>%
   pivot_longer(cols=c("project_cost_lsli", "project_cost_lslr", "project_cost_lsln")) %>%
   mutate(name = case_when(
     name == "project_cost_lsli" ~ "Inventory",
     name == "project_cost_lslr" ~ "Replacement",
     TRUE ~ "Neither"),
     name = factor(name, levels=c("Replacement", "Inventory", "Neither")),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+    pct_str = as.character(round(value/project_cost_combined,3)*100),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)"))
 
 if (sum(lead_project_cost$value, na.rm=TRUE) > 0) {
   

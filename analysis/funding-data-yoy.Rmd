@@ -68,6 +68,11 @@ lead <- financial %>%
 ec <- financial %>%
   filter(fed_cap_grant == "Emerging Contaminants")
 
+# get annual totals for calculating percentages for plot display
+grants_yoy <- financial %>%
+  group_by(state_fiscal_year) %>%
+  summarize(combined_fcg = sum(total_fcg, na.rm=TRUE),
+            combined_tfa = sum(total_funding_available, na.rm=TRUE))
 ```
 
 
@@ -78,9 +83,12 @@ ec <- financial %>%
 ```{r}
 
 all_grants <- financial %>%
+  select(state_fiscal_year, fed_cap_grant, total_fcg, total_fcg_str) %>%
   filter(total_fcg > 0) %>%
-  mutate(plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
-                           total_fcg_str))
+  left_join(grants_yoy %>% select(state_fiscal_year, combined_fcg)) %>%
+  mutate(pct_str = as.character(round((total_fcg/combined_fcg),3)*100),
+         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+                           total_fcg_str, " (", pct_str, "%)"))
 
 if(nrow(all_grants) > 0 &
    nrow(all_grants %>% filter(!is.na(total_fcg))) > 0) {
@@ -115,11 +123,68 @@ if(nrow(all_grants) > 0 &
 }
 ```
 
+## Total Funds Available
+
 ```{r}
+
+available_funds <- financial %>%
+  filter(total_funding_available > 0) %>%
+  left_join(grants_yoy %>% select(state_fiscal_year, combined_tfa)) %>%
+  mutate(pct_str = as.character(round((total_funding_available/combined_tfa),3)*100),
+         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+                           format_currency(total_funding_available), " (", pct_str, "%)"))
+
+if(nrow(available_funds) > 0 &
+   nrow(available_funds %>% filter(!is.na(total_funding_available))) > 0) {
+  
+  available_funds_p <- ggplot(available_funds, aes(x=state_fiscal_year, y=total_funding_available, 
+                                         fill=fed_cap_grant, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    labs(x="", y="", fill="",
+         title="Total Available Funding from Fed Cap Grants",
+         subtitle=get_subtitle_str(all_grants$state_fiscal_year, state_name)) + 
+    scale_fill_manual(values=fed_cap_grant_colors) + 
+    epic_chart_theme
+  
+  available_funds_gp <- ggplotly(available_funds_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Total Available Funding from Fed Cap Grants',
+                                      '<br>',
+                                      get_subtitle_str(all_grants$state_fiscal_year, state_name)
+                                      )))
+  
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = available_funds_p,
+                   gp_object = available_funds_gp,
+                   name = "total-available-funds-fed-cap-grant-yoy")
+    }
+  
+  available_funds_gp
+  
+}
+
+```
+
+
+
+
+```{r}
+
+# get annual totals for calculating percent strings
+pf_yoy <- pf %>%
+  group_by(state_fiscal_year) %>%
+  summarize(combined_pf_amt = sum(total_pf_amt, na.rm=TRUE))
+
 all_grants_pf <- pf %>%
+  select(state_fiscal_year, total_pf_amt, pf_category) %>%
+  left_join(pf_yoy, by="state_fiscal_year") %>%
   mutate(total_pf_str = format_currency(total_pf_amt),
+         pct_str = as.character(round((total_pf_amt/combined_pf_amt),3)*100),
          plot_str = paste0(pf_category, ", ", state_fiscal_year, ':<br>',
-                           total_pf_str))
+                           total_pf_str, " (", pct_str, "%)"))
 
 if(nrow(all_grants_pf) > 0 &
    nrow(all_grants_pf %>% filter(!is.na(total_pf_amt))) > 0) {
@@ -153,23 +218,6 @@ if(nrow(all_grants_pf) > 0 &
   all_grants_pf_gp
   
 }
-```
-
-### Stats
-
-These tables inform the Year by Year section on each state's overview page.
-
-```{r}
-tibble(all_grants_pf %>% 
-         group_by(state_fiscal_year) %>% 
-         summarize(total_all_pf = format_currency(sum(total_pf_amt, na.rm=TRUE))))
-```
-
-```{r}
-tibble(all_grants_pf %>% 
-         group_by(state_fiscal_year) %>%
-         summarize(total_all_fcg = sum(total_fcg, na.rm=TRUE)))
-
 ```
 
 
@@ -212,7 +260,7 @@ if(sum(base$total_fcg, na.rm=TRUE) > 0) {
 ```
 
 ### Leveraged Funds
-
+  
 ```{r}
 
 
@@ -223,8 +271,18 @@ if(sum(financial$leveraged_funds, na.rm=TRUE) > 0) {
     filter(!is.na(leveraged_funds) & leveraged_funds > 0) %>%
     mutate(leveraged_funds_str = format_currency(leveraged_funds))
   
+  leveraged_yoy <- leveraged %>%
+    group_by(state_fiscal_year) %>%
+    summarize(combined_leveraged = sum(leveraged_funds))
+  
+  leveraged <- leveraged %>%
+    left_join(leveraged_yoy, by="state_fiscal_year") %>%
+    mutate(pct_str = as.character(round((leveraged_funds/combined_leveraged),3)*100),
+         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+                           leveraged_funds_str, " (", pct_str, "%)"))
+  
   leveraged_p <- ggplot(leveraged, aes(x=state_fiscal_year, y=leveraged_funds, 
-                                       fill=fed_cap_grant, text=leveraged_funds_str)) + 
+                                       fill=fed_cap_grant, text=plot_str)) + 
     geom_bar(stat="identity") + 
     scale_y_continuous(labels=label_currency()) + 
     labs(x="", y="", fill="",
@@ -260,8 +318,19 @@ unutilized <- financial %>%
 
 if (nrow(unutilized) > 0) {
   
+  unutilized_yoy <- unutilized %>%
+    group_by(state_fiscal_year) %>%
+    summarize(combined_unutilized = sum(unutilized_fcg))
+  
+  unutilized <- unutilized %>%
+    left_join(unutilized_yoy, by="state_fiscal_year") %>%
+    mutate(pct_str = as.character(round((unutilized_fcg/combined_unutilized),3)*100),
+         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+                           unutilized_fcg_str, " (", pct_str, "%)"))
+  
+  
   unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, 
-                                         fill=fed_cap_grant, text=unutilized_fcg_str)) + 
+                                         fill=fed_cap_grant, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_y_continuous(labels=label_currency()) + 
     scale_fill_manual(values=fed_cap_grant_colors) + 

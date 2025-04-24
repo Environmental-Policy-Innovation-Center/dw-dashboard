@@ -604,7 +604,7 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
     epic_chart_theme
   
   sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category under base program',
+    layout(title = list(text = paste0('Set aside percentage per category, Base',
                                       '<br>',
                                       get_subtitle_str(sa_pct_base$state_fiscal_year, state_name)
                                       )))
@@ -638,13 +638,13 @@ if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
     scale_x_continuous(breaks=seq(min(sa_pct_gen_supp$state_fiscal_year), 
                                   max(sa_pct_gen_supp$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set aside percentage per category under Gen Supp program", 
+         title="Set aside percentage per category, Gen Supp", 
          subtitle=get_subtitle_str(sa_pct_gen_supp$state_fiscal_year, state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
   sa_pct_gen_supp_gp <- ggplotly(sa_pct_gen_supp_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category under Gen Supp program',
+    layout(title = list(text = paste0('Set aside percentage per category, Gen Supp',
                                       '<br>',
                                       get_subtitle_str(sa_pct_gen_supp$state_fiscal_year, state_name)
                                       )))
@@ -681,13 +681,13 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
     scale_x_continuous(breaks=seq(min(sa_pct_lead$state_fiscal_year), 
                                   max(sa_pct_lead$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set Asides by Allowance, Percent",
+         title="Set aside percentage per category, Lead",
          subtitle=get_subtitle_str(sa_pct_lead$state_fiscal_year, state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
   sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category under Lead program',
+    layout(title = list(text = paste0('Set aside percentage per category, Lead',
                                       '<br>',
                                       get_subtitle_str(sa_pct_lead$state_fiscal_year, state_name))))
   
@@ -720,13 +720,13 @@ if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
     scale_x_continuous(breaks=seq(min(sa_pct_ec$state_fiscal_year), 
                                   max(sa_pct_ec$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set Asides by Allowance, Percent",
+         title="Set aside percentage per category, EC",
          subtitle=get_subtitle_str(sa_pct_ec$state_fiscal_year, state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
   sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category under EC program',
+    layout(title = list(text = paste0('Set aside percentage per category, EC',
                                       '<br>',
                                       get_subtitle_str(sa_pct_ec$state_fiscal_year, state_name)
                                       )))

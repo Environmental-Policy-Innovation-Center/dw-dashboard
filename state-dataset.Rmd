@@ -213,7 +213,7 @@ lsl_projects <- all_projects %>%
   mutate(lead_type = case_when(
    str_detect(tolower(project_description), lsli_str) ~ "lsli",
    str_detect(tolower(project_description), lslr_str) ~ "lslr",
-    TRUE ~ "neither"
+    TRUE ~ "uncategorized"
   ))
 
 # group by lsl project type for project cost calculations
@@ -223,7 +223,7 @@ pc_by_lsl <- lsl_projects %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
   rename(project_cost_lslr = lslr,
          project_cost_lsli = lsli,
-         project_cost_lsln = neither)
+         project_cost_lslu = uncategorized)
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
@@ -233,7 +233,7 @@ pc_by_lsl_ef <- lsl_projects %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
   rename(project_cost_ef_lslr = lslr,
          project_cost_ef_lsli = lsli,
-         project_cost_ef_lsln = neither) %>%
+         project_cost_ef_lslu = uncategorized) %>%
   ungroup() %>%
   select(-expecting_funding)
 

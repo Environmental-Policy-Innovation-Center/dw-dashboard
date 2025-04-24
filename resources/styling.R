@@ -94,7 +94,7 @@ ef_dac_sc_colors <- c("Yes"="#82AB6E",
 
 lead_colors <- c("Inventory"="#B077B2",
                  "Replacement"="#82AB6E",
-                 "Neither"="#526489")
+                 "Uncategorized"="#526489")
 
 # Combined Colors
 comp_colors <- c("Total Available"="#4ea324",

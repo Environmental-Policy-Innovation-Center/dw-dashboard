@@ -197,7 +197,8 @@ base_distribution <- base_distribution %>%
   mutate(name = factor(name, levels=c("Remaining Base Grant, for Loans", "Local Assistance & Other Set Asides", 
                                       "State Program Management Set Asides", "Small System TA Set Asides", 
                                       "Admin & TA Set Asides",  "Discretionary PF", "DAC PF")),
-         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), "")) %>%
+  filter(value > 0)
 
 ```
 
@@ -272,7 +273,8 @@ gensupp_distribution <- gensupp_distribution %>%
                                       "State Program Management Set Asides", 
                                       "Small System TA Set Asides", 
                                       "Admin & TA Set Asides",  "Principal Forgiveness")),
-         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), "")) %>%
+  filter(value > 0)
 
 ```
 
@@ -346,7 +348,8 @@ lead_distribution <- lead_distribution %>%
                                       "Small System TA Set Asides", 
                                       "Admin & TA Set Asides", 
                                       "Principal Forgiveness")),
-         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), "")) %>%
+  filter(value > 0)
 
 ```
 
@@ -420,7 +423,8 @@ ec_distribution <- ec_distribution %>%
                                       "Small System TA Set Asides", 
                                       "Admin & TA Set Asides",  
                                       "Principal Forgiveness")),
-         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), ""))
+         plot_str = ifelse(value > 0, paste0("$", as.character(round(value/1000000,2)), "M"), "")) %>%
+  filter(value > 0)
 
 ```
 
@@ -559,7 +563,8 @@ if (sfy != "2022") {
     mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
            value_str = format_currency(value),
            pct_value = round(value / sum(gen_costs$value),2),
-           pct_value_str = format_percent(pct_value))
+           pct_value_str = format_percent(pct_value)) %>%
+  filter(value > 0)
   
   # if we have gen data for given sfy, make plot
   if ( nrow(gen_costs %>% filter(!is.na(value))) == nrow(gen_costs))  {
@@ -633,7 +638,8 @@ if (sfy != "2022") {
     mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
            value_str = format_currency(value),
            pct_value = round(value / sum(lead_costs$value),2),
-           pct_value_str = format_percent(pct_value))
+           pct_value_str = format_percent(pct_value)) %>%
+  filter(value > 0)
   
   # if we have lead data for given sfy, make plot
   if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
@@ -710,7 +716,8 @@ if (sfy != "2022") {
     mutate(name = factor(name, levels=c("Unmet Demand", "Available Funds")),
            value_str = format_currency(value),
            pct_value = round(value / sum(ec_costs$value),2),
-           pct_value_str = format_percent(pct_value))
+           pct_value_str = format_percent(pct_value)) %>%
+  filter(value > 0)
   
   # if we have ec data for sfy, make plot
   if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
@@ -770,7 +777,8 @@ dacs_df <- data.frame(name=c("DACs, Expecting Funding",
   mutate(value_str = ifelse(value >0, value_str, ""),
          name = factor(name, levels=c("DACs, No Info", 
                                       "DACs, Not Expecting Funding", 
-                                      "DACs, Expecting Funding")))
+                                      "DACs, Expecting Funding"))) %>%
+  filter(value > 0)
 
 
 if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
@@ -831,7 +839,8 @@ ef_df <- data.frame(name=c("Expecting Funding, DAC",
   mutate(value_str = ifelse(value >0, value_str, ""),
          name = factor(name, levels=c("Expecting Funding, No Info",
                                       "Expecting Funding, Not DAC", 
-                                      "Expecting Funding, DAC")))
+                                      "Expecting Funding, DAC"))) %>%
+  filter(value > 0)
 
 
 if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df))  {
@@ -942,7 +951,8 @@ if (nrow(general) > 0) {
   mutate(value_str = ifelse(value >0, value_str, ""),
          name = factor(name, levels=c("DACs, No Info", 
                                       "DACs, Not Expecting Funding", 
-                                      "DACs, Expecting Funding")))
+                                      "DACs, Expecting Funding"))) %>%
+  filter(value > 0)
 
 
 if ( nrow(gen_dacs_df %>% filter(!is.na(name))) == nrow(gen_dacs_df))  {
@@ -1003,7 +1013,8 @@ if (nrow(lead) > 0) {
   mutate(value_str = ifelse(value >0, value_str, ""),
          name = factor(name, levels=c("DACs, No Info", 
                                       "DACs, Not Expecting Funding", 
-                                      "DACs, Expecting Funding")))
+                                      "DACs, Expecting Funding"))) %>%
+  filter(value > 0)
 
 
 if ( nrow(lead_dacs_df %>% filter(!is.na(name))) == nrow(lead_dacs_df))  {
@@ -1064,7 +1075,8 @@ if (nrow(ec) > 0) {
   mutate(value_str = ifelse(value >0, value_str, ""),
          name = factor(name, levels=c("DACs, No Info", 
                                       "DACs, Not Expecting Funding", 
-                                      "DACs, Expecting Funding")))
+                                      "DACs, Expecting Funding"))) %>%
+  filter(value > 0)
 
 
 if ( nrow(ec_dacs_df %>% filter(!is.na(name))) == nrow(ec_dacs_df))  {

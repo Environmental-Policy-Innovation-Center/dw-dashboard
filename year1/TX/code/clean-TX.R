@@ -42,7 +42,6 @@ clean_tx_y1 <- function() {
     clean_names()  %>%
     mutate(project_type = "Emerging Contaminants",
            disadvantaged = "Yes",
-           funding_amount = "No Information",
            expecting_funding = "No Information") %>%
     rename(project_cost = total_project_cost) %>%
     select(-requested_phase_s)
@@ -73,10 +72,11 @@ clean_tx_y1 <- function() {
            community_served = as.character(NA),
            project_name = as.character(NA),
            requested_amount = as.character(NA),
+           funding_amount = as.character(NA),
            principal_forgiveness = as.character(NA),
            pwsid = replace_na(pwsid, "No Information"),
-           project_id = replace_na(project_id, "No Information"),
-           funding_amount = replace_na(funding_amount, "0"),
+           project_id = replace_na(project_id, "No Information")
+
     ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,

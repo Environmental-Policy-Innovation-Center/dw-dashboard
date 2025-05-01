@@ -18,7 +18,7 @@ clean_tx_y3 <- function() {
 
   
   # lead applicant list
-  tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl.csv"),
+  tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl-update.csv"),
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Lead",

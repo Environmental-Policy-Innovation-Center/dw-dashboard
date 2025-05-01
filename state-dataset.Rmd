@@ -197,6 +197,14 @@ pc_by_ef <- all_projects %>%
          project_cost_ef_ni = `No Information`,
          project_cost_ef_na = `NA`)
 
+pc_by_ef_dac <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
+  group_by(state, state_fiscal_year, expecting_funding, disadvantaged) %>%
+  filter(expecting_funding == "Yes" & disadvantaged == "Yes") %>%
+  summarize(project_cost_ef_dac = sum(as.numeric(project_cost))) %>%
+  ungroup() %>%
+  select(state, state_fiscal_year, project_cost_ef_dac)
+
 pc_by_ef_type <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
   group_by(state, state_fiscal_year, project_type, expecting_funding) %>%
@@ -213,7 +221,7 @@ lsl_projects <- all_projects %>%
   mutate(lead_type = case_when(
    str_detect(tolower(project_description), lsli_str) ~ "lsli",
    str_detect(tolower(project_description), lslr_str) ~ "lslr",
-    TRUE ~ "uncategorized"
+    TRUE ~ "other"
   ))
 
 # group by lsl project type for project cost calculations
@@ -223,7 +231,7 @@ pc_by_lsl <- lsl_projects %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
   rename(project_cost_lslr = lslr,
          project_cost_lsli = lsli,
-         project_cost_lslu = uncategorized)
+         project_cost_lslu = other)
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
@@ -233,7 +241,7 @@ pc_by_lsl_ef <- lsl_projects %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
   rename(project_cost_ef_lslr = lslr,
          project_cost_ef_lsli = lsli,
-         project_cost_ef_lslu = uncategorized) %>%
+         project_cost_ef_lslu = other) %>%
   ungroup() %>%
   select(-expecting_funding)
 
@@ -329,6 +337,7 @@ project_dollars <- feature_coverage %>%
   left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef, by=c("state", "state_fiscal_year")) %>%
+  left_join(pc_by_ef_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))

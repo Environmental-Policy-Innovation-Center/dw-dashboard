@@ -1097,8 +1097,8 @@ lead_project_cost <- project_dollars %>%
   mutate(name = case_when(
     name == "project_cost_lsli" ~ "Inventory",
     name == "project_cost_lslr" ~ "Replacement",
-    TRUE ~ "Uncategorized"),
-    name = factor(name, levels=c("Replacement", "Inventory", "Uncategorized")),
+    TRUE ~ "Other"),
+    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
     pct_str = as.character(round(value/project_cost_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)"))
 

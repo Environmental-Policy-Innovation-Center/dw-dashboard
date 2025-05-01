@@ -15,7 +15,7 @@ This notebook is a draft of analysis for creating statistics and data viz for th
 state_name <- "Texas"
 state_abbr <- "TX"
 
-sfy <- "2023"
+sfy <- "2025"
 
 save_plots <- FALSE
 
@@ -128,23 +128,8 @@ if (sum(grants$value, na.rm=TRUE)>0) {
 ## Principal Forgiveness
 
 ```{r}
-total_pf_sfy <- pf %>%
-    filter(fed_cap_grant != "Base & IIJA General Supplemental") %>%
-    select(fed_cap_grant, ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt) %>%
-  pivot_longer(cols=c(ffy21_amt, ffy22_amt, ffy23_amt, ffy24_amt, ffy25_amt, ffy26_amt)) %>%
-  filter(!is.na(value) & value > 0) %>%
-  mutate(name = str_to_upper(str_remove(name, "_amt")),
-         name = paste0(fed_cap_grant, ", ", name)
-         ) %>%
-  group_by(name) %>%
-  summarize(value = sum(value, na.rm=TRUE))
 
-```
-
-
-```{r}
-
-if(sum(pf$total_pf_amt, na.rm=TRUE) > 0) {
+if(sum(pf$total_pf_amt, na.rm=TRUE) > 0) { 
   
   all_pf_p <- ggplot(pf, aes(x=total_pf_amt, y=reorder(pf_category, total_pf_amt), text=format_currency(total_pf_amt))) + 
     geom_bar(stat="identity", fill="#4ea324") +
@@ -204,7 +189,7 @@ base_distribution <- base_distribution %>%
 
 
 ```{r}
-if (nrow(base_distribution %>% filter(!is.na(value))) > 0) {
+if (nrow(base_distribution %>% filter(!is.na(value))) > 0  & sum(base_distribution$value, na.rm=TRUE)>0) {
   
   base_all_p <- ggdonutchart(base_distribution,
                              "value",
@@ -280,7 +265,7 @@ gensupp_distribution <- gensupp_distribution %>%
 
 
 ```{r}
-if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0) {
+if (nrow(gensupp_distribution %>% filter(!is.na(value))) > 0  & sum(gensupp_distribution$value, na.rm=TRUE)>0) {
   
   gensupp_all_p <- ggdonutchart(gensupp_distribution,
                                 "value",
@@ -355,7 +340,7 @@ lead_distribution <- lead_distribution %>%
 
 
 ```{r}
-if (nrow(lead_distribution %>% filter(!is.na(value))) > 0) {
+if (nrow(lead_distribution %>% filter(!is.na(value))) > 0  & sum(lead_distribution$value, na.rm=TRUE)>0) {
   
   lead_all_p <- ggdonutchart(lead_distribution,
                              "value",
@@ -430,7 +415,7 @@ ec_distribution <- ec_distribution %>%
 
 
 ```{r}
-if (nrow(ec_distribution %>% filter(!is.na(value))) > 0) {
+if (nrow(ec_distribution %>% filter(!is.na(value) & sum(ec_distribution$value, na.rm=TRUE)>0)) > 0) {
   
   ec_all_p <- ggdonutchart(ec_distribution,
                            "value",
@@ -502,7 +487,7 @@ if (!is.na(project_dollars$total_project_cost)) {
 
 ```{r}
 
-if(nrow(funds_process_comp %>% filter(!is.na(value))) == nrow(funds_process_comp)) {
+if(sum(funds_process_comp$value, na.rm=TRUE)>0) {
   
   funds_comp_p <- ggplot(funds_process_comp, 
                          aes(y=category, x=value, text=format_currency(value))) + 
@@ -567,7 +552,7 @@ if (sfy != "2022") {
   filter(value > 0)
   
   # if we have gen data for given sfy, make plot
-  if ( nrow(gen_costs %>% filter(!is.na(value))) == nrow(gen_costs))  {
+  if ( nrow(gen_costs %>% filter(!is.na(value))) == nrow(gen_costs)  & sum(gen_costs$value, na.rm=TRUE)>0)  {
     
     gen_comp_p <- ggdonutchart(gen_costs,
                                "value",
@@ -642,7 +627,7 @@ if (sfy != "2022") {
   filter(value > 0)
   
   # if we have lead data for given sfy, make plot
-  if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs))  {
+  if ( nrow(lead_costs %>% filter(!is.na(value))) == nrow(lead_costs) & sum(lead_costs$value, na.rm=TRUE)>0)  {
     
     lead_comp_p <- ggdonutchart(lead_costs,
                                 "value",
@@ -720,7 +705,7 @@ if (sfy != "2022") {
   filter(value > 0)
   
   # if we have ec data for sfy, make plot
-  if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs))  {
+  if ( nrow(ec_costs %>% filter(!is.na(value))) == nrow(ec_costs)  & sum(ec_costs$value, na.rm=TRUE)>0)  {
     
     ec_comp_p <- ggdonutchart(ec_costs,
                               "value",
@@ -781,7 +766,7 @@ dacs_df <- data.frame(name=c("DACs, Expecting Funding",
   filter(value > 0)
 
 
-if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df))  {
+if ( nrow(dacs_df %>% filter(!is.na(name))) == nrow(dacs_df)  & sum(dacs_df$value, na.rm=TRUE)>0)  {
   
   dacs_ef_p <- ggdonutchart(dacs_df,
                             "value",
@@ -843,7 +828,7 @@ ef_df <- data.frame(name=c("Expecting Funding, DAC",
   filter(value > 0)
 
 
-if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df))  {
+if ( nrow(ef_df %>% filter(!is.na(value))) == nrow(ef_df)  & sum(ef_df$value)>0)  {
   
   ef_df_p <- ggdonutchart(ef_df,
                           "value",
@@ -955,7 +940,7 @@ if (nrow(general) > 0) {
   filter(value > 0)
 
 
-if ( nrow(gen_dacs_df %>% filter(!is.na(name))) == nrow(gen_dacs_df))  {
+if ( nrow(gen_dacs_df %>% filter(!is.na(name))) == nrow(gen_dacs_df)  & sum(gen_dacs_df$value, na.rm=TRUE)>0)  {
   
   gen_dacs_ef_p <- ggdonutchart(gen_dacs_df,
                             "value",
@@ -1017,7 +1002,7 @@ if (nrow(lead) > 0) {
   filter(value > 0)
 
 
-if ( nrow(lead_dacs_df %>% filter(!is.na(name))) == nrow(lead_dacs_df))  {
+if ( nrow(lead_dacs_df %>% filter(!is.na(name))) == nrow(lead_dacs_df) & sum(lead_dacs_df$value, na.rm=TRUE)>0)  {
   
   lead_dacs_ef_p <- ggdonutchart(lead_dacs_df,
                             "value",
@@ -1079,7 +1064,7 @@ if (nrow(ec) > 0) {
   filter(value > 0)
 
 
-if ( nrow(ec_dacs_df %>% filter(!is.na(name))) == nrow(ec_dacs_df))  {
+if ( nrow(ec_dacs_df %>% filter(!is.na(name))) == nrow(ec_dacs_df) & sum(ec_dacs_df$value, na.rm=TRUE)>0)  {
   
   ec_dacs_ef_p <- ggdonutchart(ec_dacs_df,
                             "value",

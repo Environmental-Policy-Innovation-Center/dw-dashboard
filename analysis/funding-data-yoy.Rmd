@@ -142,13 +142,13 @@ if(nrow(available_funds) > 0 &
     geom_bar(stat="identity", position="stack") + 
     scale_y_continuous(labels=label_currency()) + 
     labs(x="", y="", fill="",
-         title="Total Available Funding from Fed Cap Grants",
+         title="Total Funding Available for Projects",
          subtitle=get_subtitle_str(all_grants$state_fiscal_year, state_name)) + 
     scale_fill_manual(values=fed_cap_grant_colors) + 
     epic_chart_theme
   
   available_funds_gp <- ggplotly(available_funds_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Total Available Funding from Fed Cap Grants',
+    layout(title = list(text = paste0('Total Funding Available for Projects',
                                       '<br>',
                                       get_subtitle_str(all_grants$state_fiscal_year, state_name)
                                       )))
@@ -159,7 +159,7 @@ if(nrow(available_funds) > 0 &
   if (save_plots) {
     run_save_plots(gg_plot = available_funds_p,
                    gp_object = available_funds_gp,
-                   name = "total-available-funds-fed-cap-grant-yoy")
+                   name = "total-funding-available-for-projects-yoy")
     }
   
   available_funds_gp

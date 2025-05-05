@@ -11,7 +11,11 @@ clean_tx_y0 <- function() {
       pwsid = str_squish(pws_id),
       project_id = str_squish(pif),
       project_name = as.character(NA),
-      project_type = "General",
+      project_type = case_when(
+        # search for keywords from full PPL, otherwise General project
+        grepl(lead_str, project_description) ~ "Lead",
+        grepl(ec_str, project_description) ~ "Emerging Contaminants",
+        TRUE ~ "General"),
       project_cost = clean_numeric_string(project_cost),
       requested_amount = as.character(NA),
       funding_amount = ifelse(invited == "Yes", project_cost, "No Information"),

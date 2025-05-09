@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -76,7 +76,7 @@ year_table <- factor(year_table)
 year_table <- data.frame(state_fiscal_year=year_table)
 ```
 
-# Base & IIJA General Supplemental fed_cap_grant
+# Base & IIJA General Supplemental
 
 ## Comparing Project Costs & Funds Available
 
@@ -146,12 +146,12 @@ if(sum(compare_project_cost_gen$value[compare_project_cost_gen$name=="Unmet Dema
     scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds, Base & IIJA Gen Supp", 
+         title="Comparing Demand to Available Funds, General", 
          subtitle=get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name)) + 
     epic_chart_theme
   
   gen_pc_gp <- ggplotly(gen_pc_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Comparing Demand to Available Funds, Base & IIJA Gen Supp',
+    layout(title = list(text = paste0('Comparing Demand to Available Funds, General',
                                       '<br>',
                                       get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name))))
   

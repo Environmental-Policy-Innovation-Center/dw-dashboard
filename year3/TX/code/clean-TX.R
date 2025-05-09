@@ -35,10 +35,26 @@ clean_tx_y3 <- function() {
     rename(pif_number = pif_no,
            population = population_served)
   
+  # ec applicant list
+  tx_ec <- fread(file.path(base_path, "tx-y3-appendix-j-ec.csv"),
+                  colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    mutate(project_type = "Emerging Contaminants",
+           disadvantaged = "Yes")
+  
+  tx_ec_invite <- fread(file.path(base_path, "tx-y3-appendix-k-ec.csv"),
+                         colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    mutate(expecting_funding = "Yes") %>%
+    select(rank, expecting_funding)
+  
+  tx_ec <- tx_ec %>%
+    left_join(tx_ec_invite, by="rank")
+  
   
   
   # combine general, lead, and ec
-  tx_all <- bind_rows(tx_ppl, tx_lsl)
+  tx_all <- bind_rows(tx_ppl, tx_lsl, tx_ec)
   
 
   # join invited by project id and then process for output

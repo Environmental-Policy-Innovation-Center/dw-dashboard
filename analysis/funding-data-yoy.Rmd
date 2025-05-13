@@ -168,7 +168,7 @@ if(nrow(available_funds) > 0 &
 
 ```
 
-
+## Total PF
 
 
 ```{r}
@@ -220,6 +220,57 @@ if(nrow(all_grants_pf) > 0 &
 }
 ```
 
+### Unutilized PF
+
+```{r}
+# get annual totals for calculating percent strings
+unutilized_pf_yoy <- pf %>%
+  group_by(state_fiscal_year) %>%
+  summarize(combined_unutilized_pf = sum(unutilized_pf, na.rm=TRUE)) %>%
+  filter(combined_unutilized_pf > 0)
+
+all_unutilized_pf <- pf %>%
+  select(state_fiscal_year, unutilized_pf, pf_category) %>%
+  left_join(unutilized_pf_yoy, by="state_fiscal_year") %>%
+  mutate(unutilized_pf_str = format_currency(unutilized_pf),
+         pct_str = as.character(round((unutilized_pf/combined_unutilized_pf),3)*100),
+         plot_str = paste0(pf_category, ", ", state_fiscal_year, ':<br>',
+                           unutilized_pf_str, " (", pct_str, "%)")) %>%
+  filter(unutilized_pf > 0)
+
+if(nrow(all_unutilized_pf) > 0 &
+   nrow(all_unutilized_pf %>% filter(!is.na(unutilized_pf))) > 0) {
+  
+  unutilized_pf_p <- ggplot(all_unutilized_pf, aes(x=state_fiscal_year, 
+                                               y=unutilized_pf, fill=pf_category,
+                                               text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    labs(x="", y="", fill="",
+         title="Unutilized Principal Forgiveness from Fed Cap Grants", 
+         subtitle=get_subtitle_str(all_unutilized_pf$state_fiscal_year, state_name)) + 
+    scale_fill_manual(values=pf_colors) + 
+    epic_chart_theme
+  
+  unutilized_pf_gp <- ggplotly(unutilized_pf_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Unutilized Principal Forgiveness from Fed Cap Grants',
+                                      '<br>',
+                                      get_subtitle_str(all_unutilized_pf$state_fiscal_year, state_name)
+                                      )))
+  
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = unutilized_pf_p,
+                   gp_object = unutilized_pf_gp,
+                   name = "unutilized-pf-yoy")
+    }
+  
+  unutilized_pf_gp
+  
+}
+```
 
 ## Base 
 

@@ -64,18 +64,13 @@ get_set_asides <- function(state_name) {
     # convert strings to numeric
     mutate(total_sa_amt = convert_to_numeric(total_sa_amt),
            total_sa_pct = convert_to_numeric(total_sa_pct),
+           allowance_pct = convert_to_numeric(allowance_pct),
            ffy22_sa_amt = convert_to_numeric(ffy22_sa_amt),
-           ffy22_sa_pct = convert_to_numeric(ffy22_sa_pct),
            ffy23_sa_amt = convert_to_numeric(ffy23_sa_amt),
-           ffy23_sa_pct = convert_to_numeric(ffy23_sa_pct),
            ffy24_sa_amt = convert_to_numeric(ffy24_sa_amt),
-           ffy24_sa_pct = convert_to_numeric(ffy24_sa_pct),
            ffy25_sa_amt = convert_to_numeric(ffy25_sa_amt),
-           ffy25_sa_pct = convert_to_numeric(ffy25_sa_pct),
            ffy26_sa_amt = convert_to_numeric(ffy26_sa_amt),
-           ffy26_sa_pct = convert_to_numeric(ffy26_sa_pct),
            total_sa_amt = convert_to_numeric(total_sa_amt),
-           total_sa_pct = convert_to_numeric(total_sa_pct),
            total_fcg = convert_to_numeric(total_fcg),
            unutilized_set_asides = convert_to_numeric(unutilized_set_asides),
     ) %>%
@@ -109,7 +104,7 @@ get_pf <- function(state_name) {
     clean_names() %>%
     filter(state==state_name) %>%
     # drop policy analyst specific columns
-    select(-notes, -assignee, -reviewed, -questions) %>%
+    select(-notes, -assignee, -reviewed, -questions, -complete_action_items) %>%
     # ensure state_fiscal_year is string, arrange the dataframe by year, then set it to factor, levels in ascending order
     mutate(state_fiscal_year = as.character(state_fiscal_year)) %>%
     arrange(state_fiscal_year) %>%
@@ -118,24 +113,12 @@ get_pf <- function(state_name) {
     mutate(total_fcg = convert_to_numeric(total_fcg),
            total_pf_amt = convert_to_numeric(total_pf_amt),
            total_pf_pct  = convert_to_numeric(total_pf_pct),
-           ffy21_fcg = convert_to_numeric(ffy21_fcg),
            ffy21_amt = convert_to_numeric(ffy21_amt),
-           ffy21_pct = convert_to_numeric(ffy21_pct),
-           ffy22_fcg = convert_to_numeric(ffy22_fcg),
            ffy22_amt = convert_to_numeric(ffy22_amt),
-           ffy22_pct = convert_to_numeric(ffy22_pct),
-           ffy23_fcg = convert_to_numeric(ffy23_fcg),
            ffy23_amt = convert_to_numeric(ffy23_amt),
-           ffy23_pct = convert_to_numeric(ffy23_pct),
-           ffy24_fcg = convert_to_numeric(ffy24_fcg),
            ffy24_amt = convert_to_numeric(ffy24_amt),
-           ffy24_pct = convert_to_numeric(ffy24_pct),
-           ffy25_fcg = convert_to_numeric(ffy25_fcg),
            ffy25_amt = convert_to_numeric(ffy25_amt),
-           ffy25_pct = convert_to_numeric(ffy25_pct),
-           ffy26_fcg = convert_to_numeric(ffy26_fcg),
            ffy26_amt = convert_to_numeric(ffy26_amt),
-           ffy26_pct = convert_to_numeric(ffy26_pct),
            unutilized_pf = convert_to_numeric(unutilized_pf),
     )
   

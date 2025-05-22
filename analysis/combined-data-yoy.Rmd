@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Louisiana"
+state_abbr <- "LA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -117,7 +117,6 @@ compare_project_cost_gen <- compare_general_funds %>%
     )
 
 
-
 # from the simplified dataset above, generate the longer dataframe for plotting stacked
 compare_requested_amount_gen <- compare_general_funds %>%
   select(state, state_fiscal_year, total_funding_available, requested_less_available, requested_available_combined) %>%
@@ -132,7 +131,9 @@ compare_requested_amount_gen <- compare_general_funds %>%
 
 # make sure all years are present
 compare_requested_amount_gen <- year_table %>%
-  left_join(compare_requested_amount_gen, by="state_fiscal_year")
+  left_join(compare_requested_amount_gen, by="state_fiscal_year") %>%
+  # if 2022 is missing, drop it, but keep all others even if empty
+  filter(!is.na(state) & state_fiscal_year != "2022")
 
 ```
 
@@ -216,7 +217,6 @@ compare_ec_funds <- project_type_df %>%
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
          requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
-
 
 totals_by_year_ec <- compare_ec_funds %>%
   group_by(state_fiscal_year) %>%

@@ -82,7 +82,8 @@ get_gs_urls <- function() {
     add_row(state="MI", url="https://docs.google.com/spreadsheets/d/1cSYUzZgLUhN10ZMw7QJUtkBlTzMmPnjs5bLHJ17itYY") %>%
     add_row(state="OH", url="https://docs.google.com/spreadsheets/d/1NE0Pl4p1Yv_lXBSIoLS89KpqmIUBWtBPoLQzj2GH2F4") %>%
     add_row(state="PA", url="https://docs.google.com/spreadsheets/d/1-MrH5VRuPABvovqz9fHBGufc-Zz2vpEqZcrPgQyNQzI") %>%
-    add_row(state="TN", url="https://docs.google.com/spreadsheets/d/1mCDIMe41m4vJDnekpigRfB_sEvN74Z646J5a4VTvKKU")
+    add_row(state="TN", url="https://docs.google.com/spreadsheets/d/1mCDIMe41m4vJDnekpigRfB_sEvN74Z646J5a4VTvKKU") %>%
+    add_row(state="LA", url="https://docs.google.com/spreadsheets/d/17jeMqu1AznH8ns52A5ZbdYQou39u7PLCC_s2DS5i44c")
   
   return(gs_urls)
 }

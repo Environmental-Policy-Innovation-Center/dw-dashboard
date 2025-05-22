@@ -273,6 +273,10 @@ al_clean_y2 <- clean_al_y2()
 source("year2/IA/code/clean-IA.R")
 ia_clean_y2 <- clean_ia_y2()
 
+# Louisiana
+source("year2/LA/code/clean-LA.R")
+la_clean_y2 <- clean_la_y2()
+
 # Michigan
 source("year2/MI/code/clean-MI.R")
 mi_clean_y2 <- clean_mi_y2()
@@ -310,6 +314,10 @@ wa_clean_y2 <- clean_wa_y2()
 # Alabama
 source("year3/AL/code/clean-AL.R")
 al_clean_y3 <- clean_al_y3()
+
+# Louisiana
+source("year3/LA/code/clean-LA.R")
+la_clean_y3 <- clean_la_y3()
 
 # Michigan
 source("year3/MI/code/clean-MI.R")

@@ -76,6 +76,142 @@ year_table <- factor(year_table)
 year_table <- data.frame(state_fiscal_year=year_table)
 ```
 
+# All Sources & Projects
+
+## Comparing Project Costs & Funds Available
+
+```{r}
+
+all_funds <- financial %>%
+  select(state, state_fiscal_year, total_funding_available) %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
+
+compare_all_funds <- project_type_df %>%
+  select(state, state_fiscal_year, total_project_cost, total_requested_amount) %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(total_project_cost = sum(total_project_cost, na.rm=TRUE),
+            total_requested_amount = sum(total_requested_amount, na.rm=TRUE)) %>%
+  left_join(all_funds, by=c("state","state_fiscal_year")) %>%   
+# create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
+  mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
+         cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
+         requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
+         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+
+# calculate for totals in percentages in table
+totals_by_year_all <- compare_all_funds %>%
+  group_by(state, state_fiscal_year) %>%
+  summarize(cost_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(cost_less_available, na.rm=TRUE),
+            requested_available_combined = sum(total_funding_available, na.rm=TRUE) + sum(requested_less_available, na.rm=TRUE))
+
+# make sure all years are present
+compare_all_funds <- year_table %>%
+  left_join(compare_all_funds, by=c("state_fiscal_year")) %>%
+  left_join(totals_by_year_all, by=c("state", "state_fiscal_year")) %>%
+  # if 2022 is missing, drop it, but keep all others even if empty
+  filter(!is.na(state) & state_fiscal_year != "2022")
+
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_project_cost_all <- compare_all_funds %>%
+  select(state, state_fiscal_year, total_funding_available, cost_less_available, cost_available_combined) %>%
+  pivot_longer(cols=c(total_funding_available, cost_less_available)) %>%
+  mutate(pct_str = as.character(round((value/cost_available_combined),3)*100),
+    name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "cost_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)")
+    )
+
+
+# from the simplified dataset above, generate the longer dataframe for plotting stacked
+compare_requested_amount_all <- compare_all_funds %>%
+  select(state, state_fiscal_year, total_funding_available, requested_less_available, requested_available_combined) %>%
+  pivot_longer(cols=c(total_funding_available, requested_less_available)) %>%
+  mutate(pct_str = as.character(round((value/requested_available_combined),3)*100),
+    name = case_when(
+    name == "total_funding_available" ~ "Total Available",
+    name == "requested_less_available" ~ "Unmet Demand"),
+    name = factor(name, levels=c("Unmet Demand", "Total Available")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value),
+                      " (", pct_str, "%)"))
+
+# make sure all years are present
+compare_requested_amount_all <- year_table %>%
+  left_join(compare_requested_amount_all, by="state_fiscal_year") %>%
+  # if 2022 is missing, drop it, but keep all others even if empty
+  filter(!is.na(state) & state_fiscal_year != "2022")
+
+```
+
+```{r}
+
+if(sum(compare_project_cost_all$value[compare_project_cost_all$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  all_pc_p <- ggplot(compare_project_cost_all, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds", 
+         subtitle=get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name)) + 
+    epic_chart_theme
+  
+  all_pc_gp <- ggplotly(all_pc_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds',
+                                      '<br>',
+                                      get_subtitle_str(compare_project_cost_gen$state_fiscal_year, state_name))))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = all_pc_p,
+                   gp_object = all_pc_gp,
+                   name = "compare-project-cost-available-funds-all-yoy") 
+    }
+  
+  all_pc_gp
+}
+```
+
+
+## Comparing Requested Amount & Funds Available
+
+```{r}
+
+if(sum(compare_requested_amount_all$value[compare_requested_amount_all$name=="Unmet Demand"], na.rm=TRUE) > 0) {
+  
+  all_ra_p <- ggplot(compare_requested_amount_all, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds",
+         subtitle=get_subtitle_str(compare_requested_amount_all$state_fiscal_year, state_name)) + 
+    epic_chart_theme
+  
+  all_ra_gp <- ggplotly(all_ra_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds',
+                                      '<br>',
+                                      get_subtitle_str(compare_requested_amount_all$state_fiscal_year, state_name))))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = all_ra_p,
+                   gp_object = all_ra_gp,
+                   name = "compare-requested-amount-available-funds-all-yoy")
+    }
+  
+  all_ra_gp
+}
+```
+
 # Base & IIJA General Supplemental
 
 ## Comparing Project Costs & Funds Available

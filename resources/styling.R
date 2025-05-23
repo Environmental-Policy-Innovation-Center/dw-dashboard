@@ -69,7 +69,10 @@ fed_cap_grant_colors <- c("Base" = "#172f60",
                           "EC" = "#791a7b",
                           "LSLR" = "#4ea324",
                           "IIJA Gen Supp" ="#1054a8",
-                          "Base & IIJA Gen Supp" = "#526489")
+                          "Base & IIJA Gen Supp" = "#526489",
+                          "Base, IIJA Gen Supp, and EC" = "#B077B2",
+                          "Base, IIJA Gen Supp, LSLR, and EC" = "#82AB6E",
+                          "IIJA Gen Supp, LSLR, and EC" = "#527CAF")
 
 allowance_colors <- c("Admin & TA" ="#172f60",
                       "Small System TA"= "#1054a8",

@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Louisiana"
+state_abbr <- "LA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -233,9 +233,8 @@ all_unutilized_pf <- pf %>%
   select(state_fiscal_year, unutilized_pf, pf_category) %>%
   left_join(unutilized_pf_yoy, by="state_fiscal_year") %>%
   mutate(unutilized_pf_str = format_currency(unutilized_pf),
-         pct_str = as.character(round((unutilized_pf/combined_unutilized_pf),3)*100),
          plot_str = paste0(pf_category, ", ", state_fiscal_year, ':<br>',
-                           unutilized_pf_str, " (", pct_str, "%)")) %>%
+                           unutilized_pf_str)) %>%
   filter(unutilized_pf > 0)
 
 if(nrow(all_unutilized_pf) > 0 &
@@ -375,9 +374,9 @@ if (nrow(unutilized) > 0) {
   
   unutilized <- unutilized %>%
     left_join(unutilized_yoy, by="state_fiscal_year") %>%
-    mutate(pct_str = as.character(round((unutilized_fcg/combined_unutilized),3)*100),
+    mutate(
          plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
-                           unutilized_fcg_str, " (", pct_str, "%)"))
+                           unutilized_fcg_str))
   
   
   unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, 

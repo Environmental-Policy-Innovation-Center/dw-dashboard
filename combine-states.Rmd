@@ -41,6 +41,10 @@ ar_clean_y0 <- clean_ar_y0()
 source("year0/IN/code/clean-IN.R")
 in_clean_y0 <- clean_in_y0()
 
+# Louisiana
+source("year0/LA/code/clean-LA.R")
+la_clean_y0 <- clean_la_y0()
+
 # Michigan
 source("year0/MI/code/clean-MI.R")
 mi_clean_y0 <- clean_mi_y0()

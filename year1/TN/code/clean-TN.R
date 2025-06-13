@@ -1,5 +1,9 @@
 clean_tn_y1 <- function() {
   
+  # there were a few new additions to the EC string on June 12th 2025 to include
+  # various new strings 
+  ec_str_tn <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethane|THM|Unregulated Contaminant Monitoring Rule|DBP|disinfection byproduct|HAA5|haloacetic acid"
+  
   # (143, 19) - this file has been updated with the correct one on 
   # March 19th 2025
   tn_ppl <- fread("year1/TN/data/sfy_23_basegen_supp_ppl.csv",
@@ -16,7 +20,9 @@ clean_tn_y1 <- function() {
            pwsid = str_squish(pwsid_number),
            project_id = as.character(NA),
            project_name = as.character(NA), 
-           project_type = "General",
+           project_type = case_when(grepl(ec_str_tn, project_description, ignore.case = T) ~ "Emerging Contaminants", 
+                                    grepl("lead|LSL", project_description, ignore.case = T) ~ "Lead",
+                                    TRUE ~ "General"),
            requested_amount = as.character(NA), 
            funding_amount = as.character(NA),
            principal_forgiveness = as.character(NA), 

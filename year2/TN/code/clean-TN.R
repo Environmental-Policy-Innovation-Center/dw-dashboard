@@ -1,10 +1,14 @@
 clean_tn_y2 <- function() {
   
+  # there were a few new additions to the EC string on June 12th 2025 to include
+  # various new strings 
+  ec_str_tn <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethane|THM|Unregulated Contaminant Monitoring Rule|DBP|disinfection byproduct|HAA5|haloacetic acid"
+  
   # (70, 18) - gen PPL
   gen_ppl <- fread("year2/TN/data/tn_ppl.csv",
                    colClasses = "character", na.strings = "") %>%
     clean_names() 
-  
+
   # (70, 18)
   tn_clean <- gen_ppl %>%
     mutate(community_served = str_squish(county),
@@ -15,9 +19,8 @@ clean_tn_y2 <- function() {
            pwsid = str_squish(pwsid_number), 
            project_id = as.character(NA),
            project_name = as.character(NA), 
-           project_type = case_when(grepl("lead", project_description, ignore.case = TRUE) ~ "Lead", 
-                                    grepl("PFAS|PFOS|Emerging.Contaminants", 
-                                          project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+           project_type = case_when(grepl("lead|LSL", project_description, ignore.case = TRUE) ~ "Lead", 
+                                    grepl(ec_str_tn, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
                                     TRUE ~ "General"),            
            project_cost = clean_numeric_string(total_project_amount), 
            requested_amount = as.character(NA), 

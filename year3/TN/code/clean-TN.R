@@ -10,8 +10,8 @@ clean_tn_y3 <- function() {
     clean_names() %>%
     # manually remove projects found on lead/ec list already
     filter(is.na(on_lead_ec)) %>%
-    mutate(project_type = case_when(grepl("lead|LSL", project_description, ignore.case = TRUE) ~ "Lead", 
-                                    grepl(ec_str_tn, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+    mutate(project_type = case_when(grepl(lead_str, project_description, ignore.case = TRUE) ~ "Lead", 
+                                    grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
                                     TRUE ~ "General"),
            # these rows are blank for projects below the ranking line & not 
            # expecting funding

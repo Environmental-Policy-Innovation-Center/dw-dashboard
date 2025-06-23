@@ -1,8 +1,23 @@
-Project #,Applicant Name,Project Description,City/Town,County,"Justice 40 MapCoverage",Population,"DisadvantagedScore","PriorityRankingPoints","DW BIL-ECAmount Granted",DW BIL-EC PF,"DW BIL ECPF %","Applied forProject Amount",Fund
-FS010091-03,"Shelby County WaterSystem",South Shelby WTP - PFAS Removal,Columbiana,Shelby,Yes,"4,197",2.72,310,"$3,199,196.00","$3,199,196.00",100%,"$7,298,392.00",DWBIL EC
-FS010264-04,"Colbert CountyCommission","Preliminary Design for Connection to Cherokee, HawkPride, Town of Leighton, and Legrange - Reverse OsmosisEC (Emerging Contaminants)",Multiple,Colbert,Yes,231,3.06,265,"$450,000.00","$450,000.00",100%,"$450,000.00",DWBIL EC
-FS010345-02,"Irondale, City of",PFAS Removal,Irondale,Jefferson,Yes,"13,457",1.22,225,"$5,351,460.00","$5,351,460.00",100%,"$5,351,460.00",DWBIL EC
-FS010168-06,"Florence, City of",PFAS Treatment,Florence,Lauderdale,Yes,"39,709",1.07,215,"$477,600.00","$477,600.00",100%,"$477,600.00",DWBIL EC
-FS010395-02,"Muscle Shoals UtilitiesBoard",PFAS Treatment,Muscle Shoals,Colbert,N/A,"15,969",0.96,215,"$370,000.00","$370,000.00",100%,"$370,000.00",DWBIL EC
-FS010118-04,Decatur Utilities,PFAS Study and Pilot Testing,Decatur,Morgan,N/A,"57,303",0.48,50,"$1,500,000.00","$1,500,000.00",100%,"$1,500,000.00",DWBIL EC
-FS010459-05,North Baldwin Utilities,PFAS Removal Upgrade,Bay Minette,Baldwin,N/A,"40,000",0.55,50,"$2,141,744.00","$2,141,744.00",100%,"$15,000,000.00",DWBIL EC
+Project #,Applicant Name,Project Name,Project Description Attachment,Project Description,City/Town,County,"Justice 40 MapCoverage",Population,"DisadvantagedScore","PriorityRankingPoints","DW BIL-ECAmount Granted",DW BIL-EC PF,"DW BIL ECPF %","Applied forProject Amount",Fund
+FS010091-03,"Shelby County WaterSystem",Shelby County Water System - South Shelby WTP - PFAS Removal Pilot Study,"The Shelby County Water System proposes to perform pilot testing on treatment of PFAS
+throughout the system.  The proposed project would ensure the correct method is chosen in order
+to meet and/or exceed the proposed MCL limit (4 ppt).",South Shelby WTP - PFAS Removal,Columbiana,Shelby,Yes,"4,197",2.72,310,"$3,199,196.00","$3,199,196.00",100%,"$7,298,392.00",DWBIL EC
+FS010264-04,"Colbert CountyCommission","Colbert County Commission - Preliminary Design for Connection to Cherokee, Hawk Pride,
+Town of Leighton, and Legrange - Reverse Osmosis EC (Emerging Contaminants)","The Colbert County Commission proposes to perform the preliminary engineering for connection of
+the existing reverse osmosis system to the communities of the Town of Cherokee, Hawk Pride Water
+System, Town of Leighton, and the Town of Legrange.","Preliminary Design for Connection to Cherokee, HawkPride, Town of Leighton, and Legrange - Reverse OsmosisEC (Emerging Contaminants)",Multiple,Colbert,Yes,231,3.06,265,"$450,000.00","$450,000.00",100%,"$450,000.00",DWBIL EC
+FS010345-02,"Irondale, City of","Irondale, City of - PFAS Removal","The City of Irondale proposes to remove PFAS from finished  water by utilizing Granulated
+Activated Carbon (GAC).  The proposed project would improve water quality and remove PFAS to
+levels that meet and/or exceed the proposed MCL (4 ppt).",PFAS Removal,Irondale,Jefferson,Yes,"13,457",1.22,225,"$5,351,460.00","$5,351,460.00",100%,"$5,351,460.00",DWBIL EC
+FS010168-06,"Florence, City of","Florence, City of - PFAS Treatment Pilot Study","The City of Florences proposes to perform pilot testing on treatment of PFAS throughout the
+system.  The proposed project would ensure the correct method is chosen in order to meet and/or
+exceed the proposed MCL limit (4 ppt).",PFAS Treatment,Florence,Lauderdale,Yes,"39,709",1.07,215,"$477,600.00","$477,600.00",100%,"$477,600.00",DWBIL EC
+FS010395-02,"Muscle Shoals UtilitiesBoard",Muscle Shoals Utilities Board - PFAS Treatment Pilot Study,"The Muscle Shoals Utilities Board proposes to perform pilot testing on treatment of PFAS
+throughout the system.  The proposed project would ensure the correct method is chosen in order
+to meet and/or exceed the proposed MCL limit (4 ppt).",PFAS Treatment,Muscle Shoals,Colbert,N/A,"15,969",0.96,215,"$370,000.00","$370,000.00",100%,"$370,000.00",DWBIL EC
+FS010118-04,Decatur Utilities,Decatur Utilities - PFAS Study and Pilot Testing,"Decatur Utilities proposes to perform pilot testing on treatment of PFAS throughout the system.
+The proposed project would ensure the correct method is chosen in order to meet and/or exceed
+the proposed MCL limit (4 ppt).",PFAS Study and Pilot Testing,Decatur,Morgan,N/A,"57,303",0.48,50,"$1,500,000.00","$1,500,000.00",100%,"$1,500,000.00",DWBIL EC
+FS010459-05,North Baldwin Utilities,North Baldwin Utilities - PFAS Removal Upgrade Pilot Study,"North Baldwin Utilities proposes to pilot testing on treatment of PFAS throughout the system.  The
+proposed project would ensure the correct method is chosen in order to meet and/or exceed the
+proposed MCL limit (4 ppt).",PFAS Removal Upgrade,Bay Minette,Baldwin,N/A,"40,000",0.55,50,"$2,141,744.00","$2,141,744.00",100%,"$15,000,000.00",DWBIL EC

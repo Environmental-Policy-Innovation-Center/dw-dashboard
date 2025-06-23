@@ -1,12 +1,31 @@
-Project #,Applicant Name,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"DisadvantagedScore","PriorityRankingPoints","DW BIL-LeadAmount Granted","DW BIL LSLAmount of PF","DW BIL LSLPF %","Applied for ProjectAmount",Fund
-FS010488-02,"Harpersville, Town of","Lead Service Line and Lead JointReplacement",Harpersville,Shelby,Yes,"1,589",2.65,305,"$1,200,000.00","$1,200,000.00",100%,"$5,265,000.00","DWSRF/DWBILLSL"
-FS010445-02,"Fort Payne, Water Worksof the City of","Downtown Lead Service Line andLead Joint Replacement",Fort Payne,DeKalb,Yes,"14,730",2.40,150,"$4,078,896.00","$1,166,587.00",29%,"$4,078,896.00",DWBIL LSL
-FS010307-03,"Hawk Pride MountainWater System",Lead Service Line Replacement,Tuscumbia,Colbert,No,"8,977",1.90,150,"$1,145,625.00","$1,145,625.00",100%,"$695,625.00",DWBIL LSL
-FS010248-04,"Marion, City of",Lead Service Line Inventory,Marion,Perry,Yes,"3,273",3.67,100,"$26,400.00","$26,400.00",100%,"$31,900.00",DWBIL LSL
-FS010356-02,"Mexia Water System, Inc.",Lead Service Line Inventory,Frisco City,Monroe,yes,"1,668",3.73,80,"$22,100.00","$22,100.00",100%,"$27,600.00",DWBIL LSL
-FS010429-01,"Elba Water and ElectricBoard, City of","Lead Service Line and Lead JointReplacement",Elba,Coffee,Yes,"3,449",2.61,65,"$2,395,725.00","$2,395,725.00",100%,"$2,395,725.00",DWBIL LSL
-FS010337-01,"Phil Campbell, WaterWorks & Sewer Board ofthe Town of",Lead Service Line Replacement,Phil Campbell,Franklin,Yes,725,3.08,60,"$1,281,763.00","$1,281,763.00",100%,"$1,281,763.00",DWBIL LSL
-FS010423-01,"Lanett, City of","Lead Service Line and Lead JointReplacement",Lanett,Chambers,Yes,"6,821",2.93,55,"$16,479,091.00","$5,121,000.00",31%,"$20,117,300.00",DWBIL LSL
-FS010315-02,"Luverne, City of","6th Street Lead Service Line and LeadJoint  Replacement",Luverne,Crenshaw,Yes,"2,716",2.52,40,"$1,341,100.00","$1,000,000.00",75%,"$1,341,100.00",DWBIL LSL
-FS010522-06,"York, City of",Lead Service Line Inventory,York,Sumter,Yes,"2,371",3.56,35,"$19,800.00","$19,800.00",100%,"$25,300.00",DWBIL LSL
-FS010447-02,"Moundville, City of","Market Street Lead Service Lineand Lead Joint Replacement",Moundville,Hale,Yes,"2,774",3.13,10,"$659,500.00","$659,500.00",100%,"$659,500.00",DWBIL LSL
+Project #,Applicant Name,Project Name,Project Description Attachment,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"DisadvantagedScore","PriorityRankingPoints","DW BIL-LeadAmount Granted","DW BIL LSLAmount of PF","DW BIL LSLPF %","Applied for ProjectAmount",Fund
+FS010488-02,"Harpersville, Town of","Harpersville, Town of - Lead Service Line and Lead Joint Replacement","The Town of Harpersville proposes to replace the lead service line and lead joints/galvanized piping
+downstream of lead joints in the downtown area.  The proposed project should improve water
+quality and remove lead throughout the system.","Lead Service Line and Lead JointReplacement",Harpersville,Shelby,Yes,"1,589",2.65,305,"$1,200,000.00","$1,200,000.00",100%,"$5,265,000.00","DWSRF/DWBILLSL"
+FS010445-02,"Fort Payne, Water Worksof the City of","Fort Payne, Water Works of the City of - Downtown Lead Service Line and Lead Joint Replacement","The Waterworks of the City of Fort Payne proposes to replace the lead joints and lead service lines
+along the main in the downtown area.  The proposed project should improve water quality and
+remove lead throughout the system.","Downtown Lead Service Line andLead Joint Replacement",Fort Payne,DeKalb,Yes,"14,730",2.40,150,"$4,078,896.00","$1,166,587.00",29%,"$4,078,896.00",DWBIL LSL
+FS010307-03,"Hawk Pride MountainWater System",Hawk Pride Mountain Water System - Lead Service Line Replacement,"The Hawk Pride Mountain Water System proposes to remove the lead service lines found during the
+lead service line inventory.  The project would also remove any lead joints along the main service
+line.  The proposed project should improve water quality and remove lead throughout the system.",Lead Service Line Replacement,Tuscumbia,Colbert,No,"8,977",1.90,150,"$1,145,625.00","$1,145,625.00",100%,"$695,625.00",DWBIL LSL
+FS010248-04,"Marion, City of","Marion, City of -Lead Service Line Inventory","The City of Marion proposes to perform the lead service line inventory for the entire system.  The
+proposed project would identify necessary replacements throughout the system.",Lead Service Line Inventory,Marion,Perry,Yes,"3,273",3.67,100,"$26,400.00","$26,400.00",100%,"$31,900.00",DWBIL LSL
+FS010356-02,"Mexia Water System, Inc.","Mexia Water System, Inc. -Lead Service Line Inventory","The Mexia Water System, Inc. proposes to perform the lead service line inventory for the entire
+system.  The proposed project would identify necessary replacements throughout the system.",Lead Service Line Inventory,Frisco City,Monroe,yes,"1,668",3.73,80,"$22,100.00","$22,100.00",100%,"$27,600.00",DWBIL LSL
+FS010429-01,"Elba Water and ElectricBoard, City of","Elba Water and Electric Board, City of - Lead Service Line and Lead Joint Replacement","The Water and Electric Board of the City of Elba proposes to replace the lead joints, service lines,
+and galvanized service lines throughout the system.  The proposed project should improve water
+quality and remove lead throughout the system.","Lead Service Line and Lead JointReplacement",Elba,Coffee,Yes,"3,449",2.61,65,"$2,395,725.00","$2,395,725.00",100%,"$2,395,725.00",DWBIL LSL
+FS010337-01,"Phil Campbell, WaterWorks & Sewer Board ofthe Town of","Phil Campbell, Water Works & Sewer Board of the Town of - Lead Service Line Replacement","The Waterworks and Sewer Board of the Town of Phil Campbell proposes to replace the lead
+service lines throughout the system.  The proposed project should improve water quality and
+remove lead throughout the system.",Lead Service Line Replacement,Phil Campbell,Franklin,Yes,725,3.08,60,"$1,281,763.00","$1,281,763.00",100%,"$1,281,763.00",DWBIL LSL
+FS010423-01,"Lanett, City of","Lanett, City of - Lead Service Line and Lead Joint Replacement","The City of Lanett proposes to replace the lead joints, service lines, and galvanized service lines
+throughout the system.  The proposed project should improve water quality and remove lead
+throughout the system.","Lead Service Line and Lead JointReplacement",Lanett,Chambers,Yes,"6,821",2.93,55,"$16,479,091.00","$5,121,000.00",31%,"$20,117,300.00",DWBIL LSL
+FS010315-02,"Luverne, City of","Luverne, City of - 6th Street Lead Service Line and Lead Joint  Replacement","The City of Luverne proposes to replace the lead joints, service lines, and galvanized service lines
+on 6th Street.  The proposed project should improve water quality and remove lead throughout the
+system.","6th Street Lead Service Line and LeadJoint  Replacement",Luverne,Crenshaw,Yes,"2,716",2.52,40,"$1,341,100.00","$1,000,000.00",75%,"$1,341,100.00",DWBIL LSL
+FS010522-06,"York, City of","York, City of - Lead Service Line Inventory","The City of York proposes to perform the lead service line inventory for the entire system.  The
+proposed project would identify necessary replacements throughout the system.",Lead Service Line Inventory,York,Sumter,Yes,"2,371",3.56,35,"$19,800.00","$19,800.00",100%,"$25,300.00",DWBIL LSL
+FS010447-02,"Moundville, City of","Moundville, City of - Market Street Lead Service Line and Lead Joint Replacement","The City of Moundville proposes to replace the lead joints, service lines, and galvanized lines on
+Market Street.  The proposed project should improve water quality and remove lead throughout the
+system.","Market Street Lead Service Lineand Lead Joint Replacement",Moundville,Hale,Yes,"2,774",3.13,10,"$659,500.00","$659,500.00",100%,"$659,500.00",DWBIL LSL

@@ -1,24 +1,79 @@
-Project #,Applicant Name,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"FinancialRank",DW Ratio,Disadvantged Rank,"PriorityRankingPoints","DW BIL-Lead FY","DW BIL-LeadAmount Granted","DW BIL LSL Amountof PF","DW BIL-Lead % ofPF","Applied for ProjectAmount"
-FS010122-18,Birmingham Water Works Board,"Lead Service LineReplacement (Supplemental)",Birmingham,Jefferson,Yes,"202,234",-,N/A,N/A,SUPP,2023,"$9,925,186.00",$0.00,0%,"$9,925,186.00"
-FS010325-01,"Brewton, City of","Water SystemImprovements - LeadService Lines Replacement",Brewton,Escambia,No,"5,288",1,1.36,2.36,170,2023,"$3,937,875.00","$1,575,150.00",40%,"$3,937,875.00"
-FS010455-01,"Camden, City of","2022 Lead Service LineInventory and Replacement",Camden,Wilcox,Yes,"2,128",1,1.22,3.22,35,2023,"$2,027,323.00","$2,027,323.00",100%,"$2,027,323.00"
-FS010177-02,"Centreville Water Works andSewer Board","Lead Service LineReplacement",Centreville,Bibb,No,"2,789",-,1.44,2.44,45,2023,"$1,295,641.00","$1,295,641.00",100%,"$1,295,641.00"
-FS010444-03,"Eutaw, City of",Lead Service Line Inventory,Eutaw,Greene,Yes,"1,480",-,0.91,1.91,25,2023,"$101,669.00","$101,669.00",100%,"$101,669.00"
-FS010401-01,Florala Utilities Board,"Water Main Replacement -Lead Service Line",Florala,Covington,,"1,779",-,1.74,2.74,70,2023,"$1,270,515.00","$653,943.00",51%,"$1,694,020.00"
-FS010413-01,"Gadsden Water Works & SewerBoard",Lead Service Line Inventory,Gadsden,Etowah,Yes,"34,317",-,2.22,2.22,45,2023,"$955,000.00","$955,000.00",100%,"$955,000.00"
-FS010187-03,"Haleyville Water Works andSewer Board","Lead Service LineReplacement",Haleyville,Winston,Yes,"4,343",-,2.84,3.84,50,2023,"$894,641.00","$894,641.00",100%,"$894,641.00"
-FS010427-01,"Hartford, City of","Water Improvements - LeadService Line",Hartford,Geneva,No,"2,630",-,0.55,1.55,65,2023,"$3,588,950.00","$1,256,133.00",35%,"$3,588,950.00"
-FS010552-01,"Jasper, City of",Lead Service Line Inventory,Jasper,Walker,,"14,370",1,0.99,0.99,25,2023,"$100,000.00","$100,000.00",100%,"$100,000.00"
-FS010489-02,"Kinston, Town of","Water Improvements -Distribution - Lead ServiceLine",Kinston,Coffee,Yes,793,1,1.91,3.91,55,2023,"$1,945,016.00","$1,945,016.00",100%,"$1,945,016.00"
-FS010423-01,"Lanett, City of","Water SystemImprovements - Lead ServiceLine",Lanett,Chambers,Yes,"6,821",-,1.83,2.83,55,2023,"$3,000,000.00","$1,206,990.00",25%,"$3,000,000.00"
-FS010406-01,"Louisville, Town of","Water SystemImprovements - Lead ServiceLine",Louisville,Barbour,No,562,1,1.10,3.10,70,2023,"$1,221,700.00","$1,221,700.00",100%,"$1,221,700.00"
-FS010006-02,Marbury Water System,"Water SystemImprovements - Lead ServiceLine",Marbury,Autauga,No,"1,893",-,1.51,2.51,75,2023,"$500,000.00","$500,000.00",100%,"$500,000.00"
-FS010006-03,Marbury Water System,Lead Service Line Inventory,Marbury,Autauga,,"1,893",-,-,1.00,25,2023,"$150,000.00","$150,000.00",100%,"$150,000.00"
-FS010002-05,"Northport, City of",Lead Service Line Inventory,Northport,Tuscaloosa,No,"30,334",-,1.19,1.19,25,2023,"$235,082.00","$235,082.00",100%,"$235,082.00"
-FS010558-01,"Phenix City, City of",Lead Service Line Inventory,Phenix City,Lee/Russell,,"38,216",1,0.64,0.64,25,2023,"$34,000.00","$34,000.00",100%,"$34,000.00"
-FS010559-01,"Pine Hill, Town of",Lead Service Line Inventory,Pine Hill,Wilcox,Yes,865,-,1.59,2.59,25,2023,"$100,000.00","$100,000.00",100%,"$100,000.00"
-FS010393-01,"Samson, City of",Lead Service Line Inventory,Samson,Geneva,,"1,567",1,1.53,3.53,70,2023,"$1,000,000.00","$700,000.00",70%,"$2,210,774.00"
-FS010057-05,"Thorsby, Town of",Lead Service Line Inventory,Thorsby,Chilton,Yes,"2,483",-,0.86,1.86,70,2023,"$84,008.00","$84,008.00",100%,"$84,008.00"
-FS010600-01,"Uniontown, The Waterworks andSewer Board of the City of",Lead Service Line Inventory,Uniontown,Perry,Yes,"2,045",1,1.88,3.88,25,2023,"$1,400,000.00","$1,400,000.00",100%,"$1,400,000.00"
-FS010519-04,"Wilcox County Water and SewerDistrict",Lead Service Line Inventory,Camden,Wilcox,Yes,"2,128",1,0.83,1.83,25,2023,"$165,850.00","$165,850.00",100%,"$165,850.00"
-FS010601-01,"Wilsonville, Town of",Lead Service Line Inventory,Wilsonville,Shelby,,"2,167",-,1.15,2.15,25,2023,"$48,544.00","$48,544.00",100%,"$48,544.00"
+Project #,Applicant Name,Project Name,Project Description Attachment,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"FinancialRank",DW Ratio,Disadvantged Rank,"PriorityRankingPoints","DW BIL-Lead FY","DW BIL-LeadAmount Granted","DW BIL LSL Amountof PF","DW BIL-Lead % ofPF","Applied for ProjectAmount"
+FS010122-18,Birmingham Water Works Board,Birmingham Water Works and Sewer Board – Birmingham Lead Service Line Repair,"The Birmingham Water Works Board proposes to replace all the known lead and/or unknown
+service lines in the entire distribution system.  Completion of this project would improve water
+quality for all affected customers and improve compliance with the Lead and Copper Rule.","Lead Service LineReplacement (Supplemental)",Birmingham,Jefferson,Yes,"202,234",-,N/A,N/A,SUPP,2023,"$9,925,186.00",$0.00,0%,"$9,925,186.00"
+FS010325-01,"Brewton, City of",City of Brewton – Lead Service Line Replacement,"The City of Brewton proposes to eliminate approximately 6,000 linear feet of galvanized service
+lines downstream of lead goose necks.  This project would improve water quality for affected
+customers and improve compliance with the Lead and Copper Rule.","Water SystemImprovements - LeadService Lines Replacement",Brewton,Escambia,No,"5,288",1,1.36,2.36,170,2023,"$3,937,875.00","$1,575,150.00",40%,"$3,937,875.00"
+FS010455-01,"Camden, City of",Cit of Camden – Lead Service Line Inventory,"The City of Camden proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.","2022 Lead Service LineInventory and Replacement",Camden,Wilcox,Yes,"2,128",1,1.22,3.22,35,2023,"$2,027,323.00","$2,027,323.00",100%,"$2,027,323.00"
+FS010177-02,"Centreville Water Works andSewer Board","Centreville Water Works and Sewer Board – 2022 Cast Iron Water Main/Lead Service Line
+Replacement","The Centreville Water Works and Sewer Board has proposed eliminating known galvanized
+service lines that contain lead goosenecks downstream from the main and replace with new
+copper service lines.","Lead Service LineReplacement",Centreville,Bibb,No,"2,789",-,1.44,2.44,45,2023,"$1,295,641.00","$1,295,641.00",100%,"$1,295,641.00"
+FS010444-03,"Eutaw, City of",City of Eutaw – Lead Service Line Inventory,"The City of Eutaw proposes to conduct a lead service line inventory.  The inventory will identify
+service lines made of lead and/or any service lines made of galvanized steel downstream of lead
+goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Eutaw,Greene,Yes,"1,480",-,0.91,1.91,25,2023,"$101,669.00","$101,669.00",100%,"$101,669.00"
+FS010401-01,Florala Utilities Board,Florala Utilities Board – Lead Service Line Replacement,"Florala Utilities Board proposes to replace service lines downstream of galvanized main line and
+lead goosenecks.  The project would improve water quality for affected customers and improve
+compliance with the Lead and Copper Rule.","Water Main Replacement -Lead Service Line",Florala,Covington,,"1,779",-,1.74,2.74,70,2023,"$1,270,515.00","$653,943.00",51%,"$1,694,020.00"
+FS010413-01,"Gadsden Water Works & SewerBoard",Gadsden Water Works and Sewer Board – Lead Service Line Inventory,"The Gadsden Waterworks and Sewer Board proposes to conduct a lead service line inventory.
+The inventory will identify service lines made of lead and/or any service lines made of
+galvanized steel downstream of lead goose necks.  The inventory is required to be submitted by
+October 16, 2024.",Lead Service Line Inventory,Gadsden,Etowah,Yes,"34,317",-,2.22,2.22,45,2023,"$955,000.00","$955,000.00",100%,"$955,000.00"
+FS010187-03,"Haleyville Water Works andSewer Board",Haleyville Water Works and Sewer Board – Lead Service Line Replacement,"The Haleyville Water Works and Sewer Board proposes to replace known service lines with lead
+goosenecks downstream of galvanized main line with copper service lines.  The project would
+improve water quality for all affected customers and improve compliance with the Lead and
+Copper Rule.","Lead Service LineReplacement",Haleyville,Winston,Yes,"4,343",-,2.84,3.84,50,2023,"$894,641.00","$894,641.00",100%,"$894,641.00"
+FS010427-01,"Hartford, City of",City of Hartford – Lead Service Line Replacement,"The City of Hartford proposes to remove and replace lead service lines downstream of cast iron
+and galvanized mains with lead joints and lead “gooseneck” connections throughout the City.
+This project would improve water quality for all affected customers and improve compliance
+with the Lead and Copper Rule.","Water Improvements - LeadService Line",Hartford,Geneva,No,"2,630",-,0.55,1.55,65,2023,"$3,588,950.00","$1,256,133.00",35%,"$3,588,950.00"
+FS010552-01,"Jasper, City of",Jasper Waterworks and Sewer Board – Lead Service Line Inventory,"The Jasper Waterworks and Sewer Board proposes to conduct a lead service line inventory.  The
+inventory will identify service lines made of lead and/or any service lines made of galvanized
+steel downstream of lead goose necks.  The inventory is required to be submitted by October 16,
+2024",Lead Service Line Inventory,Jasper,Walker,,"14,370",1,0.99,0.99,25,2023,"$100,000.00","$100,000.00",100%,"$100,000.00"
+FS010489-02,"Kinston, Town of",Town of Kinston – Lead Service Line Replacement,"The Town of Kinston proposes to replace service lines downstream of galvanized main line and
+lead goosenecks.  The project would improve water quality for affected customers and improve
+compliance with the Lead and Copper Rule.","Water Improvements -Distribution - Lead ServiceLine",Kinston,Coffee,Yes,793,1,1.91,3.91,55,2023,"$1,945,016.00","$1,945,016.00",100%,"$1,945,016.00"
+FS010423-01,"Lanett, City of",City of Lanett – Lead Service Line Replacement,"The City of Lanett proposes to replace existing lead service lines downstream of lead and
+galvanized mains with lead goosenecks.  The project would improve water quality for all
+affected customers and improve compliance with the Lead and Copper Rule.","Water SystemImprovements - Lead ServiceLine",Lanett,Chambers,Yes,"6,821",-,1.83,2.83,55,2023,"$3,000,000.00","$1,206,990.00",25%,"$3,000,000.00"
+FS010406-01,"Louisville, Town of",Town of Louisville – Lead Service Line Replacement,"The Town of Louisville proposes to replace service lines downstream of galvanized main line
+and lead goosenecks.  The project would improve water quality for affected customers and
+improve compliance with the Lead and Copper Rule.","Water SystemImprovements - Lead ServiceLine",Louisville,Barbour,No,562,1,1.10,3.10,70,2023,"$1,221,700.00","$1,221,700.00",100%,"$1,221,700.00"
+FS010006-02,Marbury Water System,Marbury Water System – Lead Service Line Replacement,"The Marbury Water System proposes to replace service lines downstream of galvanized main
+line and lead goosenecks.  The project would improve water quality for affected customers and
+improve compliance with the Lead and Copper Rule.","Water SystemImprovements - Lead ServiceLine",Marbury,Autauga,No,"1,893",-,1.51,2.51,75,2023,"$500,000.00","$500,000.00",100%,"$500,000.00"
+FS010006-03,Marbury Water System,Marbury Water System – Lead Service Line Inventory,"The Marbury Water System proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Marbury,Autauga,,"1,893",-,-,1.00,25,2023,"$150,000.00","$150,000.00",100%,"$150,000.00"
+FS010002-05,"Northport, City of",City of Northport – Lead Service Line Inventory,"The City of Northport proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Northport,Tuscaloosa,No,"30,334",-,1.19,1.19,25,2023,"$235,082.00","$235,082.00",100%,"$235,082.00"
+FS010558-01,"Phenix City, City of",City of Phenix City – Lead Service Line Inventory,"The City of Phenix City proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Phenix City,Lee/Russell,,"38,216",1,0.64,0.64,25,2023,"$34,000.00","$34,000.00",100%,"$34,000.00"
+FS010559-01,"Pine Hill, Town of",Town of Pine Hill – Lead Service Line Inventory,"The Town of Pine Hill proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Pine Hill,Wilcox,Yes,865,-,1.59,2.59,25,2023,"$100,000.00","$100,000.00",100%,"$100,000.00"
+FS010393-01,"Samson, City of",City of Samson – Lead Service Line Replacement,"The City of Samson proposes to replace service lines downstream of galvanized main line and
+lead goosenecks.  The project would improve water quality for affected customers and improve
+compliance with the Lead and Copper Rule.",Lead Service Line Inventory,Samson,Geneva,,"1,567",1,1.53,3.53,70,2023,"$1,000,000.00","$700,000.00",70%,"$2,210,774.00"
+FS010057-05,"Thorsby, Town of",Town of Thorsby – Lead Service Line Inventory and Replacement,"The Town of Thorsby proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.
+The Town of Thorsby proposes  to eliminate known galvanized service lines downstream of
+galvanized main line with lead goosenecks and replace with copper service lines.",Lead Service Line Inventory,Thorsby,Chilton,Yes,"2,483",-,0.86,1.86,70,2023,"$84,008.00","$84,008.00",100%,"$84,008.00"
+FS010600-01,"Uniontown, The Waterworks andSewer Board of the City of",The Waterworks and Sewer Board of the City of Uniontown – Lead Service Line Inventory,"The Waterworks and Sewer Board of the city of Uniontown proposes to conduct a lead service
+line inventory.  The inventory will identify service lines made of lead and/or any service lines
+made of galvanized steel downstream of lead goose necks.  The inventory is required to be
+submitted by October 16, 2024.",Lead Service Line Inventory,Uniontown,Perry,Yes,"2,045",1,1.88,3.88,25,2023,"$1,400,000.00","$1,400,000.00",100%,"$1,400,000.00"
+FS010519-04,"Wilcox County Water and SewerDistrict",Wilcox County Water and Sewer District – Lead Service Line Inventory,"The Wilcox County Water and Sewer District proposes to conduct a lead service line inventory.
+The inventory will identify service lines made of lead and/or any service lines made of
+galvanized steel downstream of lead goose necks.  The inventory is required to be submitted by
+October 16, 2024.",Lead Service Line Inventory,Camden,Wilcox,Yes,"2,128",1,0.83,1.83,25,2023,"$165,850.00","$165,850.00",100%,"$165,850.00"
+FS010601-01,"Wilsonville, Town of","Wilsonville, Town of – Lead Service Line Inventory","The Town of Wilsonville proposes to conduct a lead service line inventory.  The inventory will
+identify service lines made of lead and/or any service lines made of galvanized steel downstream
+of lead goose necks.  The inventory is required to be submitted by October 16, 2024.",Lead Service Line Inventory,Wilsonville,Shelby,,"2,167",-,1.15,2.15,25,2023,"$48,544.00","$48,544.00",100%,"$48,544.00"

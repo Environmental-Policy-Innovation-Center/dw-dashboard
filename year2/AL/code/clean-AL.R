@@ -26,15 +26,16 @@ clean_al_y2 <- function() {
     mutate(across(.cols = c("dw_bil_amount_granted", "dw_srf_amount_granted", 
                             "dw_srf_principal_forgiveness", "dw_bil_principal_forgiveness"), 
                   ~case_when(is.na(.) ~ "$0", 
-                             TRUE ~ .))) %>%
-    # calculating requested amount, funding amount, and PF:
-    mutate(requested_amount = case_when(is.na(applied_for_project_amount.x) ~ clean_numeric_string(applied_for_project_amount.y), 
-                                        TRUE ~ clean_numeric_string(applied_for_project_amount.x)),
-           funding_amount = convert_to_numeric(dw_srf_amount_granted) + convert_to_numeric(dw_bil_amount_granted), 
-           principal_forgiveness = convert_to_numeric(dw_srf_principal_forgiveness) + convert_to_numeric(dw_bil_principal_forgiveness)) %>%
-    # formatting: 
-    mutate(funding_amount = as.character(funding_amount), 
-           principal_forgiveness = as.character(principal_forgiveness))
+                             TRUE ~ .)),
+           project_name = ifelse(is.na(project_name.x), project_name.y, project_name.x),
+           project_description_attachment = ifelse(is.na(project_description_attachment.x),
+                                                   project_description_attachment.y, project_description_attachment.x),
+           requested_amount = ifelse(is.na(applied_for_project_amount.x), 
+                                     clean_numeric_string(applied_for_project_amount.y),
+                                     clean_numeric_string(applied_for_project_amount.x)),
+           funding_amount = ifelse(is.na(dw_srf_amount_granted), dw_bil_amount_granted, dw_srf_amount_granted),
+           principal_forgiveness = ifelse(is.na(dw_srf_principal_forgiveness), dw_bil_principal_forgiveness, dw_srf_principal_forgiveness)
+           )
   
   # (23, 16)
   al_lsl <- fread(file.path(base_path, "al-y2-lsl-ppl.csv"),
@@ -43,46 +44,44 @@ clean_al_y2 <- function() {
     mutate(project_type = "Lead", 
            requested_amount = clean_numeric_string(applied_for_project_amount), 
            funding_amount = clean_numeric_string(dw_bil_lead_amount_granted), 
-           principal_forgiveness = clean_numeric_string(dw_bil_lsl_amount_of_pf)) %>%
-    # formatting: 
-    mutate(requested_amount = as.character(requested_amount),
-           funding_amount = as.character(funding_amount), 
-           principal_forgiveness = as.character(principal_forgiveness))
+           principal_forgiveness = clean_numeric_string(dw_bil_lsl_amount_of_pf))
   
 
-  # (1, 16)
+  # (4, 16)
   al_ec <- fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
                    colClasses = "character", na.strings = "") %>%
-    # this is just one project that got duplicated over multiple rows
-    slice(1) %>%
     clean_names() %>%
     mutate(project_type = "Emerging Contaminants", 
            funding_amount = clean_numeric_string(dw_bil_ec_amount_granted), 
            principal_forgiveness = clean_numeric_string(dw_bil_ec_amount_granted), 
            expecting_funding = "Yes",
+           project_name = "No Information",
            project_number = str_squish(project_number), 
-           priority_ranking_points = str_squish(priority_ranking_points))
+           priority_ranking_points = str_squish(priority_ranking_points),
+           # create variable from other tables for matching below
+           project_description_attachment = project_description)
   
   
   # binding: 
   # (75, )
-  al_clean <- bind_rows(al_gen, al_lsl) %>%
-    bind_rows(., al_ec) %>%
+  al_clean <- bind_rows(al_gen, al_lsl, al_ec) %>%
     mutate(community_served = str_squish(city_town), 
            borrower = str_squish(applicant_name), 
            pwsid = as.character(NA),
            project_id = str_squish(project_number), 
-           project_name = as.character(NA),
            project_type = case_when(
-             is.na(project_type) ~ "General", 
-             TRUE ~ project_type), 
+             !is.na(project_type) ~ project_type,
+             grepl(lead_str, project_description_attachment, ignore.case=TRUE) ~ "Lead",
+             grepl(ec_str, project_description_attachment, ignore.case=TRUE) ~ "Emerging Contaminants",
+             TRUE ~ "General"), 
            project_cost = as.character(NA),
            requested_amount = clean_numeric_string(requested_amount),
            funding_amount = clean_numeric_string(funding_amount), 
            principal_forgiveness = clean_numeric_string(principal_forgiveness),
            population = clean_numeric_string(population), 
-           project_description = str_squish(project_description), 
+           project_description = str_squish(project_description_attachment), 
            disadvantaged = case_when(
+             disadvantged_rank == "SUPP" | disadvantged_rank == "N/A" ~ "No Information",
              convert_to_numeric(disadvantged_rank) < 1 ~ "No", 
              TRUE ~ "Yes"), 
            project_rank = as.character(NA),

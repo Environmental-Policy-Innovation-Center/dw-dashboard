@@ -1,10 +1,50 @@
-Project #,Applicant Name,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"FinancialRank",DW Ratio,"DisadvantgedRank","PriorityRankingPoints",DW BIL FY,"DW BIL AmountGranted","DW BILPrincipalForgiveness","DW BILPrincipalForgiveness %","Applied forProject Amount",Fund
-FS010483-01,"DeKalb-Jackson Water SupplyDistrict","Contact Clarifiers for theDJWSD",Ider,Jackson,Yes,"5,500",0,2.28,4.28,305,2023,"$3,602,274.00","$3,602,274.00",100%,"$3,602,274.00",BIL
-FS010168-05,"Florence, City of",Supplemental 2023,Florence,Lauderdale,,"39,709",0,1.50,1.50,55,2023,"$2,166,236.00",$0.00,0%,"$7,500,000.00",SRF/BIL
-FS010206-02,"Heflin Water Works and SewerBoard",Water System Improvements,Heflin,Cleburne,Yes,"3,416",1,1.53,4.53,130,2023,"$7,590,200.00","$7,237,082.00",95%,"$9,090,200.00",BIL/ARPA
-FS010068-02,Hale County Water Authority,Water System Improvements,Greensboro,Hale,Yes,"2,484",0,2.74,4.74,165,2023,"$5,184,375.00","$4,321,739.00",83%,"$5,184,375.00",BIL
-FS010096-04,"Mobile, AL (MAWSS), Board ofWater and SewerCommissioners of the City of","Master Plan SRF WaterProjects Phase II - Years 20242028",Mobile,Mobile,Yes,"187,445",0,N/A,N/A,Supp,2023,"$4,378,190.00",$0.00,0%,"$11,936,000.00",SRF/BIL
-FS010364-01,"Northwest St. Clair WaterSystem",Water System Upgrades,Steele,St. Clair,Yes,"1,299",1,1.71,4.71,125,2023,"$1,251,000.00","$612,990.00",49%,"$1,251,000.00",BIL
-FS010392-01,Old Line Water Authority,New Water Supply Well,Jackson,Clarke,Yes,"4,774",1,1.85,4.85,290,2023,"$2,442,645.00","$2,442,645.00",100%,"$2,442,645.00",BIL
-FS010055-03,"Oneonta Utilities Board, City of","Water Treatment Plant AndDistribution System Upgrades",Oneonta,Blount,,"6,778",0,2.02,3.02,190,2023,"$7,875,000.00",$0.00,0%,"$10,500,000.00",BIL/ARPA
-FS010199-04,"Red Bay, Water Works and GasBoard of the City of","Red Bay Water SystemProposed DWSRF WaterImprovements Project",Red Bay,Franklin,Yes,"3,187",0,N/A,N/A,SUPP,2023,"$1,200,000.00",$0.00,0%,"$2,400,000.00",BIL/ARPA
+Project #,Applicant Name,Project Name,Project Description Attachment,Project Description,City/Town,County,"Justice 40MapCoverage",Population,"FinancialRank",DW Ratio,"DisadvantgedRank","PriorityRankingPoints",DW BIL FY,"DW BIL AmountGranted","DW BILPrincipalForgiveness","DW BILPrincipalForgiveness %","Applied forProject Amount",Fund
+FS010483-01,"DeKalb-Jackson Water SupplyDistrict",Dekalb-Jackson Water Supply District – Contact Clarifiers for the DJWSD,"Dekalb-Jackson Water Supply District proposes to install a new concrete solid contact clarifier
+for additional pretreatment. The new solids contact clarifier would improve water quality for all
+customers.","Contact Clarifiers for theDJWSD",Ider,Jackson,Yes,"5,500",0,2.28,4.28,305,2023,"$3,602,274.00","$3,602,274.00",100%,"$3,602,274.00",BIL
+FS010168-05,"Florence, City of","Florence, City of – 2023 Supplemental","The City of Florence proposes a long-range project to upgrade the existing water
+treatment plants and distribution system. The project will be completed in four phases and
+consist of replacing aerator, flocculator drives, lime feeder, upgrading the effluent troughs and
+installing continuous sludge removal equipment at Wilson Lake Water Treatment Plant;
+improving intake, rapid mixing and settling basins, install static screens, replacing raw water
+pumps, media, underdrains and lime feeder, upgrade treatment building, upgrade flocculators,
+upgrading filter pipe gallery and installing a generator at Cypress Creek Water Treatment Plant;
+replace and upgrade water lines throughout the distribution system; replace and upgrade booster
+pump stations; abandon, replace and construct water storage tanks throughout the distribution
+system. Completion of this proposed project will reduce leaks and unaccounted for water loss,
+resolve pressure issues, provide redundancy in the distribution system and increase the City of
+Florence ability to meet current and future demands of the water system.",Supplemental 2023,Florence,Lauderdale,,"39,709",0,1.50,1.50,55,2023,"$2,166,236.00",$0.00,0%,"$7,500,000.00",SRF/BIL
+FS010206-02,"Heflin Water Works and SewerBoard",Heflin Water Works and Sewer Board – Water System Improvements,"The Heflin Water Works and Sewer Board proposes to construct a new water treatment plant and
+water intake. The proposed project would improve water quality and reliability for all
+customers.",Water System Improvements,Heflin,Cleburne,Yes,"3,416",1,1.53,4.53,130,2023,"$7,590,200.00","$7,237,082.00",95%,"$9,090,200.00",BIL/ARPA
+FS010068-02,Hale County Water Authority,Hale County Water Authority – Water System Improvements,"Hale County Water Authority proposes to replace pressure relief valves, upgrade the booster
+pumps station, bring the CR 21 storage tank back into service, and develop a new well and
+transmission water main on the west side of the County. The proposed project would result in
+stabilized water pressure and additional reliability for affected customers.",Water System Improvements,Greensboro,Hale,Yes,"2,484",0,2.74,4.74,165,2023,"$5,184,375.00","$4,321,739.00",83%,"$5,184,375.00",BIL
+FS010096-04,"Mobile, AL (MAWSS), Board ofWater and SewerCommissioners of the City of","Mobile AL (MAWSS), Board of the Water and Sewer Commissioners of the City of –
+Master Plan SRF Water Project Phase II","The Mobile Board of Water and Sewer Commissioners (MAWSS) proposes improvements to
+Stickney WTP which include installation of VFD and actuator pumps, improvements to
+Operations Building, HVAC improvements to blower and sludge pump buildings, replacement of
+six (6) MCCs, new emergency generator, new main electrical and generator building, repairs and
+renovations to reservoirs, new finished water line to clearwells, new laboratory, security
+upgrades, new flammable storage building, and sludge removal; solids handling and SCADA
+improvements at Myers WTP; DC to AC conversion study and emergency by-pass connection at
+Big Creek Pump Station; development of SCADA change management processes and
+procedures; design and implementation support of Wide Area Network (WAN) SCADA;
+development of updated radio telemetry; cybersecurity program design: structural, mechanical,
+and electrical upgrades to various booster pump stations; and implementation of permanent spill
+isolation and contamination prevention BMPS at Big Creek Lake. These improvements will
+ensure continued provision of safe drinking water to all service area customers.","Master Plan SRF WaterProjects Phase II - Years 20242028",Mobile,Mobile,Yes,"187,445",0,N/A,N/A,Supp,2023,"$4,378,190.00",$0.00,0%,"$11,936,000.00",SRF/BIL
+FS010364-01,"Northwest St. Clair WaterSystem",Northwest St. Clair Water System – Water System Upgrades,"Northwest St. Clair Water System proposes to upgrade the existing booster pump station as well
+as piping to the existing ground storage tank. The proposed project would result in increased
+capacity, reliability, and pressure for existing customers.",Water System Upgrades,Steele,St. Clair,Yes,"1,299",1,1.71,4.71,125,2023,"$1,251,000.00","$612,990.00",49%,"$1,251,000.00",BIL
+FS010392-01,Old Line Water Authority,Old Line Water Authority – New Water Supply Well,"Old Line Water Authority proposes to install a new water supply well, identify and repair water
+loss sources, and upgrade SCADA. The project would result in improved water quality and
+reduced water loss.",New Water Supply Well,Jackson,Clarke,Yes,"4,774",1,1.85,4.85,290,2023,"$2,442,645.00","$2,442,645.00",100%,"$2,442,645.00",BIL
+FS010055-03,"Oneonta Utilities Board, City of","Oneonta Utilities Board of the City of – Water Treatment Plant and Distribution System
+Upgrades","The Utilities Board of the City of Oneonta proposes to upgrade the Calvert Prong Water
+Treatment Plant by replacing filers and to replace existing water lines along U.S. Route 231. The
+proposed project will improve capacity and reliability for the system for all customers.","Water Treatment Plant AndDistribution System Upgrades",Oneonta,Blount,,"6,778",0,2.02,3.02,190,2023,"$7,875,000.00",$0.00,0%,"$10,500,000.00",BIL/ARPA
+FS010199-04,"Red Bay, Water Works and GasBoard of the City of","Red Bay, Waterworks and Gas Board of the City of – DWSRF Water Improvements","The Waterworks and Gas Board of the City of Red Bay proposes to construct a new water
+storage tank and appurtenances. The proposed project would reduce water loss and increase
+reliability for all customers within the system.","Red Bay Water SystemProposed DWSRF WaterImprovements Project",Red Bay,Franklin,Yes,"3,187",0,N/A,N/A,SUPP,2023,"$1,200,000.00",$0.00,0%,"$2,400,000.00",BIL/ARPA

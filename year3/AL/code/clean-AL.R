@@ -12,8 +12,6 @@ clean_al_y3 <- function() {
       project_number == "FS010096-11" ~ paste0(applicant_name, "**"), 
       TRUE ~ applicant_name)) %>%
     rename(disadvantaged_score = disadva_ntaged_score) %>%
-    # we don't need these columns, and they duplicate project numbers 
-    # in the merge
     select(-c(fund, justice_40_map_coverage))
   
   # bil gen sup ppl (15, 14)
@@ -76,16 +74,17 @@ clean_al_y3 <- function() {
   
   # (55, ) - none of the ec project names are in al_gen, so we can bind
   al_clean <- bind_rows(al_gen, al_ec) %>%
-    # in prep for identifying disadvantaged flag: 
-    mutate(disadvantaged_score = convert_to_numeric(disadvantaged_score)) %>%
     mutate(community_served = str_squish(city_town), 
            borrower = str_squish(applicant_name), 
            pwsid = as.character(NA),
            project_id = str_squish(project_number), 
-           project_name = as.character(NA),
+           project_name = str_squish(project_name),
+           project_description = str_squish(project_description_attachment),
            project_type = case_when(
-             is.na(project_type) ~ "General", 
-             TRUE ~ project_type
+             !is.na(project_type) ~ project_type,
+             grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+             TRUE ~ "General"
            ), 
            project_cost = as.character(NA),
            requested_amount = clean_numeric_string(applied_for_project_amount),
@@ -93,7 +92,8 @@ clean_al_y3 <- function() {
            project_description = str_squish(project_description),
            population = clean_numeric_string(population), 
            disadvantaged = case_when(
-             disadvantaged_score > 1 ~ "Yes", 
+             disadvantaged_score == "SUPP" | disadvantaged_score == "N/A" ~ "No Information",
+             convert_to_numeric(disadvantaged_score) > 1 ~ "Yes", 
              TRUE ~ "No"), 
            project_rank = as.character(NA),
            project_score = str_squish(priority_ranking_points), 

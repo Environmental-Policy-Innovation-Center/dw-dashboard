@@ -342,6 +342,12 @@ tx_clean_y3 <- clean_tx_y3()
 
 ```
 
+## Year 4 
+```{r}
+# Tennessee
+source("year4/TN/code/clean-TN.R")
+tn_clean_y4 <- clean_tn_y4()
+```
 
 
 # Post-Process

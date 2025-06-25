@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Louisiana"
-state_abbr <- "LA"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -90,16 +90,19 @@ all_funds <- financial %>%
   summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
 
 compare_all_funds <- project_type_df %>%
-  select(state, state_fiscal_year, total_project_cost, total_requested_amount) %>%
+  select(state, state_fiscal_year, total_project_cost, total_requested_amount, total_funding_amount) %>%
   group_by(state, state_fiscal_year) %>%
   summarize(total_project_cost = sum(total_project_cost, na.rm=TRUE),
-            total_requested_amount = sum(total_requested_amount, na.rm=TRUE)) %>%
+            total_requested_amount = sum(total_requested_amount, na.rm=TRUE),
+            total_funding_amount = sum(total_funding_amount, na.rm=TRUE)) %>%
   left_join(all_funds, by=c("state","state_fiscal_year")) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
   mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
          requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
-         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available))
+         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available),
+         # assume unmet demand is project cost, otherwise use requested amount
+         unmet_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost))
 
 # calculate for totals in percentages in table
 totals_by_year_all <- compare_all_funds %>%
@@ -156,6 +159,61 @@ compare_requested_amount_all <- year_table %>%
   left_join(compare_requested_amount_all, by="state_fiscal_year")
 
 ```
+
+# Comparing Available, Costs, and Funding
+
+- Could recreate above plots, but with 3 features, risk some being so small as to be absent or calculations to be negative, and create gaps.
+- Also have to consider missing years or partially missing data (policy team will only use complete plots for clarity)
+- Requested, stacked positon, but consider dodge instead, to show each more equally? But then depicting ~ 15 bars, might consider faceting as well
+
+```{r}
+
+  
+  # unmet demand - project cost or requested amount from projects
+  # total_available_funding from financial
+  # expecting_funding from projects
+  compare_demand_available_funding <- compare_all_funds %>%
+    select(state, state_fiscal_year, unmet_demand, total_funding_available, total_funding_amount) %>%
+    pivot_longer(cols=c(unmet_demand, total_funding_available, total_funding_amount)) %>%
+    mutate(name=case_when(
+      name == "total_funding_available" ~ "Total Available",
+      name == "total_funding_amount" ~ "Expected Funding",
+      name == "unmet_demand" ~ "Unmet Demand"),
+      name = factor(name, levels=c("Expected Funding", "Total Available", "Unmet Demand")),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
+
+
+if (sum(compare_demand_available_funding$value) > 0) {
+    
+  
+  comp_dem_avail_fund_p <- ggplot(compare_demand_available_funding, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="dodge") + 
+    scale_y_continuous(labels=label_currency()) + 
+    scale_fill_manual(values = comp_colors, 
+                      name = "") + 
+    labs(x="", y="", 
+         title="Comparing Demand to Available Funds and Expected Funding", 
+         subtitle=get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)) + 
+    epic_chart_theme + 
+    theme(legend.position="bottom")
+  
+  comp_dem_avail_fund_gp <- ggplotly(comp_dem_avail_fund_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Comparing Demand to Available Funds and Expected Funding',
+                                      '<br>',
+                                      get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)))
+           )
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot=comp_dem_avail_fund_p,
+                   gp_object=comp_dem_avail_fund_gp,
+                   name="compare-unmet-demand-available-funds-expected-funds-yoy")
+  }
+  
+  comp_dem_avail_fund_gp
+}
+```
+
 
 ```{r}
 
@@ -581,11 +639,7 @@ if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="
     layout(title = list(text = paste0('Comparing Demand to Available Funds, Lead',
                                       '<br>',
                                       get_subtitle_str(compare_requested_amount_lead$state_fiscal_year, state_name))))
-  
-  
-  
-  # if (save_plots) {
-  #save_to_aws(lead_ra_gp, "compare-demand-available-funds-lead", state_abbr) }
+
   
   if (save_plots) {
     run_save_plots(gg_plot = lead_ra_p,
@@ -596,3 +650,5 @@ if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="
   lead_ra_gp
 }
 ```
+
+

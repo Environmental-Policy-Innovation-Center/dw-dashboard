@@ -21,7 +21,7 @@ clean_numeric_string <- function(column) {
 # but note that those columns will likely then need to be processed as strings separately
 convert_to_numeric <- function(column, fill_na_0 = FALSE) {
   
-  column_numeric <- as.numeric(str_replace_all(column, "[^0-9.]", ""))
+  column_numeric <- as.numeric(str_replace_all(column, "[^0-9.-]", ""))
   
   if (fill_na_0 == TRUE) {
     column_numeric <- replace_na(column_numeric, 0)

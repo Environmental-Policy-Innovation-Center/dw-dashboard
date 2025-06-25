@@ -102,7 +102,8 @@ lead_colors <- c("Inventory"="#B077B2",
 # Combined Colors
 comp_colors <- c("Total Available"="#4ea324",
                  "Available Funds"="#4ea324",
-                 "Unmet Demand"="#172f60")
+                 "Unmet Demand"="#172f60",
+                 "Expected Funding"="#791a7b")
 
 # Single SFY Colors
 distribution_colors <- c("Principal Forgiveness"="#4ea324",

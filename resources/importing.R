@@ -120,6 +120,7 @@ get_pf <- function(state_name) {
            ffy25_amt = convert_to_numeric(ffy25_amt),
            ffy26_amt = convert_to_numeric(ffy26_amt),
            unutilized_pf = convert_to_numeric(unutilized_pf),
+           unutilized_pf_pct = convert_to_numeric(unutilized_pf_pct)
     )
   
   

@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -102,7 +102,7 @@ compare_all_funds <- project_type_df %>%
          requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
          requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available),
          # assume unmet demand is project cost, otherwise use requested amount
-         unmet_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost))
+         total_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost))
 
 # calculate for totals in percentages in table
 totals_by_year_all <- compare_all_funds %>%
@@ -173,13 +173,13 @@ compare_requested_amount_all <- year_table %>%
   # total_available_funding from financial
   # expecting_funding from projects
   compare_demand_available_funding <- compare_all_funds %>%
-    select(state, state_fiscal_year, unmet_demand, total_funding_available, total_funding_amount) %>%
-    pivot_longer(cols=c(unmet_demand, total_funding_available, total_funding_amount)) %>%
+    select(state, state_fiscal_year, total_demand, total_funding_available, total_funding_amount) %>%
+    pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) %>%
     mutate(name=case_when(
       name == "total_funding_available" ~ "Total Available",
       name == "total_funding_amount" ~ "Expected Funding",
-      name == "unmet_demand" ~ "Unmet Demand"),
-      name = factor(name, levels=c("Expected Funding", "Total Available", "Unmet Demand")),
+      name == "total_demand" ~ "Total Demand"),
+      name = factor(name, levels=c("Expected Funding", "Total Available", "Total Demand")),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
 
 

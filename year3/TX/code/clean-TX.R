@@ -18,22 +18,23 @@ clean_tx_y3 <- function() {
 
   
   # lead applicant list
-  tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl-update.csv"),
+  tx_lsl <- fread(file.path(base_path, "tx-y3-appendix-i-lsl-625-ammendment.csv"),
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Lead",
            disadvantaged = "Yes")
   
-  tx_lsl_invite <- fread(file.path(base_path, "tx-y3-appendix-j-lsl.csv"),
+  tx_lsl_invite <- fread(file.path(base_path, "tx-y3-appendix-j-lsl-625-ammendment.csv"),
                           colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(expecting_funding = "Yes") %>%
-    select(pif_no, expecting_funding)
+    select(rank, pif_no, expecting_funding)
   
   tx_lsl <- tx_lsl %>%
-    left_join(tx_lsl_invite, by="pif_no") %>%
+    left_join(tx_lsl_invite, by=c("pif_no", "rank")) %>%
     rename(pif_number = pif_no,
-           population = population_served)
+           population = population_served,
+           pws_id = pws_id_no)
   
   # ec applicant list
   tx_ec <- fread(file.path(base_path, "tx-y3-appendix-j-ec.csv"),

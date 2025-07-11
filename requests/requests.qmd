@@ -1,0 +1,54 @@
+---
+title: "Data Analyses and Visualization Requests"
+title-block-banner: "#DBDBDB"
+format: 
+    html:
+        linkcolor:  "#086c35"
+        toc: true
+        toc-title: "Requests"
+        theme: cosmo
+        embed-resources: true
+        smooth-scroll: true
+mainfont: Lato
+css: styles.css
+extensions: 
+    - request
+---
+
+Document last modified: {{< modified >}}
+
+::: {.callout-note appearance="simple"}
+The purpose of this document is to memorialize data analyses requests. The objective is to clarify the request and to maintain a log of who did what, when, and why.
+
+To include a new request, follow this template using the shortcode `request` with positional arguments {TAG}{DATE}{SOURCE} {REQUESTED_BY} {SUMMARY} {RESOLUTION}. The {SUMMARY} and {RESOLUTION} arguments can handle lists[^1].
+:::
+
+[^1]: See initial request source code.
+
+------------------------------------------------------------------------
+
+{{< request 
+"Lead and DAC viz" 
+"2025-07-07" 
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1751909873324029)" 
+"Danielle" 
+"Three additional columns to Project Dollars in Funding tracker State Data workseet and four new visualizations. {{PARA}} For state level data spreadsheet 
+{{PARA}} 
+{{LIST}} 
+{{LI}}Total_funding_LSLI 
+{{LI}} Total_funding_LSLR 
+{{LI}} Total_project_costs_DAC 
+{{PARA}} Following data viz: 
+{{PARA}} 
+{{LIST}} 
+{{LI}}Total funding amounts LSLI yoy 
+{{LI}} Total funding amounts LSLR yoy 
+{{LI}} Total project costs for DACs (DAC demand yoy) 
+{{LI}} Total DAC demand (aka project costs) vs. available funding 
+" 
+"[2025-07-11] Final changes approved. ??? 
+{{PARA}}[2025-07-10] Maria checked in with Janet regarding Lead designations. 
+{{PARA}}[2025-07-09] Async conversations regarding adding the word survey for lead_type designation of lead lsli projects.
+{{PARA}}[2025-07-08] Alignment call Danielle + Maria.
+{{PARA}}[2025-07-07] Initial request reviewed by Maria. Preliminary data summaries have been generated and initial visualizations have been created, but no changes have been pushed to the project dollars sheet or the by state viz sheet." 
+>}}

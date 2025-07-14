@@ -79,8 +79,8 @@ allowance_colors <- c("Admin & TA" ="#172f60",
                       "State Program Management"="#4ea324",
                       "Local Assistance & Other"="#791a7b")
 
-pf_colors <- c("DAC"="#526489",
-               "Discretionary"="#172f60",
+pf_colors <- c("DAC PF"="#526489",
+               "Discretionary PF"="#172f60",
                "IIJA - EC"="#791a7b",
                "IIJA - LSLR"="#4ea324",
                "IIJA Gen Supp"="#1054a8",

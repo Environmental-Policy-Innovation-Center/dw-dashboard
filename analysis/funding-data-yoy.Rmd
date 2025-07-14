@@ -458,8 +458,8 @@ base_pf_both_pct <- pf %>%
   filter(fed_cap_grant == "Base") %>%
   select(state_fiscal_year, total_pf_pct, pf_category) %>%
   mutate(max = case_when(
-    pf_category == "DAC" ~ "35%",
-    pf_category == "Discretionary" ~ "14%",
+    pf_category == "DAC PF" ~ "35%",
+    pf_category == "Discretionary PF" ~ "14%",
     TRUE ~ ""
   )) %>%
   mutate(plot_str = paste0(pf_category, ", ", state_fiscal_year, "<br>", 
@@ -517,7 +517,7 @@ base_pf_calc <- base_pf_combined %>%
 base_pf_combined <- bind_rows(base_pf_combined, base_pf_calc) %>%
   select(-combined_pf_amt) %>%
   mutate(
-    pf_category = factor(pf_category, levels=c("Remaining Loans", "Discretionary", "DAC")),
+    pf_category = factor(pf_category, levels=c("Remaining Loans", "Discretionary PF", "DAC PF")),
     amt_value_str = format_currency(total_pf_amt),
     pct_value = total_pf_amt / total_fcg,
     pct_value_str = format_percent(pct_value),

@@ -41,7 +41,7 @@ median_wo_zero <- function(col_name) {
 ### Project Type Lists
 
 # create keywords to search for identifying inventorying and replacement efforts
-lsli_str <- "lsli|lead service line inventory|inventory"
+lsli_str <- "lsli|lead service line inventory|inventory|survey"
 lslr_str <- "lslr|lead service line replacement|replacing lead"
 
 # create keywords for determining project types when extracting info from project descriptions

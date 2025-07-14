@@ -163,9 +163,9 @@ base_distribution <-data.frame(name=c(""), value=c(0))
 
 base_distribution <- base_distribution %>%
   add_row(name="DAC PF", 
-          value=pf$total_pf_amt[pf$pf_category=="DAC"]) %>%
+          value=pf$total_pf_amt[pf$pf_category=="DAC PF"]) %>%
   add_row(name="Discretionary PF",
-          value=pf$total_pf_amt[pf$pf_category=="Discretionary"]) %>%
+          value=pf$total_pf_amt[pf$pf_category=="Discretionary PF"]) %>%
   add_row(name="Admin & TA Set Asides", 
           value=set_asides$total_sa_amt[set_asides$fed_cap_grant=="Base" & set_asides$allowance == "Admin & TA"]) %>%
   add_row(name="Small System TA Set Asides", 

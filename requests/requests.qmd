@@ -26,29 +26,68 @@ To include a new request, follow this template using the shortcode `request` wit
 [^1]: See initial request source code.
 
 ------------------------------------------------------------------------
+{{< request 
+"Additional columns"
+"2025-07-14"
+"Danielle"
+"Slack DM"
+"In the project type tab: 
+{{PARA}} 
+{{LIST}} 
+{{LI}} Total_project_costs_DAC
+{{LI}} Total_Funding_Amount_DAC
+{{PARA}} 
+In the small community tab:
+{{PARA}} 
+{{LIST}} 
+{{LI}} Total_project_cost
+{{LI}} Total_funding_amount
+{{LI}} Total_project_cost_ef
+{{LI}} Total_funding_amount_ef
+{{LI}} Total_project_costs_DAC
+{{LI}} Total_Funding_Amount_DAC
+{{LI}} Total_project_costs_DAC_ef
+{{LI}} Total_Funding_Amount_DAC_ef
+"
+"[2025-07-14] Completed"
+>}}
+
 
 {{< request 
 "Lead and DAC viz" 
 "2025-07-07" 
 "[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1751909873324029)" 
 "Danielle" 
-"Three additional columns to Project Dollars in Funding tracker State Data workseet and four new visualizations. {{PARA}} For state level data spreadsheet 
+"Three additional columns to Project Dollars in Funding tracker State Data workseet and four new visualizations. 
+{{PARA}} 
+For state level data spreadsheet 
 {{PARA}} 
 {{LIST}} 
-{{LI}}Total_funding_LSLI 
+{{LI}} Total_funding_LSLI 
 {{LI}} Total_funding_LSLR 
 {{LI}} Total_project_costs_DAC 
 {{PARA}} Following data viz: 
 {{PARA}} 
 {{LIST}} 
-{{LI}}Total funding amounts LSLI yoy 
+{{LI}} Total funding amounts LSLI yoy 
 {{LI}} Total funding amounts LSLR yoy 
 {{LI}} Total project costs for DACs (DAC demand yoy) 
-{{LI}} Total DAC demand (aka project costs) vs. available funding 
-" 
-"[2025-07-11] Final changes approved. ??? 
+{{LI}} Total DAC demand (aka project costs) vs. available funding "
+"[2025-07-14] Plots forthcoming.
+Included ***survey*** in the keyword search for lead service line inventory. Added the following columns: 
+{{PARA}}
+{{LIST}}
+{{LI}}**funding_amount_lslr**
+{{LI}}**funding_amount_lsli** 
+{{LI}}**funding_amount_lslu**
+{{LI}}**funding_amount_ef_lslr**
+{{LI}}**funding_amount_ef_lsli**
+{{LI}}**funding_amount_ef_lslu**
+{{LI}}**project_cost_dac**
+{{PARA}}[2025-07-11] Final changes approved. 
 {{PARA}}[2025-07-10] Maria checked in with Janet regarding Lead designations. 
 {{PARA}}[2025-07-09] Async conversations regarding adding the word survey for lead_type designation of lead lsli projects.
-{{PARA}}[2025-07-08] Alignment call Danielle + Maria.
-{{PARA}}[2025-07-07] Initial request reviewed by Maria. Preliminary data summaries have been generated and initial visualizations have been created, but no changes have been pushed to the project dollars sheet or the by state viz sheet." 
+{{PARA}}[2025-07-08] Alignment call Danielle + Maria, viz for project costs instead of funding amounts.
+{{PARA}}[2025-07-07] Initial request reviewed by Maria. Preliminary data summaries have been generated and initial visualizations have been created, but no changes have been pushed to the project dollars sheet or the by state viz sheet.
+" 
 >}}

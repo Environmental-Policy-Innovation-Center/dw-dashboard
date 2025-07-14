@@ -4,8 +4,8 @@ The generated features include status columns for each column in the project-lev
 
 The resulting dataset can answer a number of high-level questions for each state in a given state fiscal year, like "what percentage of DACs are expecting funding?" or the inverse - "how many projects expecting funding are supporting DACs?". The dataset is used extensively in `year-over-year.Rmd` to create the data visualizations used in the SRF Funding Tracker state landing pages.
 
+## Source scripts
 ```{r, warning=FALSE}
-
 source("resources/inputs.R")
 source("resources/cleaning.R")
 source("resources/testing.R")
@@ -13,6 +13,7 @@ run_code_from_file("aws.txt")
 
 ```
 
+## Read Clean Data (All Projects)
 ```{r}
 # import project-level data
 all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
@@ -20,9 +21,7 @@ all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/s
 ```
 
 ## Create Column Status Features
-
 ```{r}
-
 # only used here for data creation once, no need to reference from resources
 create_status_cols <- function(df, col_names) {
   
@@ -68,8 +67,8 @@ feature_coverage <- create_status_cols(all_projects,
 
 ## Create Numeric Columns
 
+### Project Counts
 ```{r}
-
 # NOTE: replacing NAs for math when calculating percents, 
 # but when this merges in, we need to go back and add "Missing" when it was actually NA in the project data
 # for project_type calculations, NA represents when we didn't have this data
@@ -112,6 +111,7 @@ project_counts <- all_projects %>%
   )
 ```
 
+### Small Community
 ```{r}
 small_community_df <- all_projects %>%
   mutate(small_community = case_when(
@@ -144,7 +144,7 @@ small_community_df <- all_projects %>%
   
 ```
 
-
+### Project Type
 ```{r}
 project_type_df <- all_projects %>%
   group_by(state, state_fiscal_year, project_type) %>%
@@ -167,11 +167,11 @@ project_type_df <- all_projects %>%
             
             dac_ni_ef_projects = sum(disadvantaged=="No Information" & expecting_funding=="Yes", na.rm=TRUE),
             dac_ni_nef_projects = sum(disadvantaged=="No Information" & expecting_funding=="No", na.rm=TRUE),
-            dac_ni_ef_ni_projects = sum(disadvantaged=="No Information" & expecting_funding=="No Information", na.rm=TRUE),
-            )
+            dac_ni_ef_ni_projects = sum(disadvantaged=="No Information" & expecting_funding=="No Information", na.rm=TRUE)) 
+
 ```
 
-
+### Project Cost
 ```{r}
 project_cost_aggregation <- all_projects %>%
   filter(!is.na(project_cost) & project_cost != "No Information") %>%
@@ -186,6 +186,61 @@ pc_by_type <- all_projects %>%
   summarize(total_project_cost = sum(as.numeric(project_cost)))
 
 
+sc_projects <- all_projects %>%
+  dplyr::mutate(small_community = case_when(
+    population == "No Information" ~ "No Information",
+    convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 ~ "Yes",
+    TRUE ~ "No"
+  ))
+
+pc_by_sc <-  sc_projects |>
+  dplyr::filter(!is.na(project_cost) & project_cost != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community) |>
+  dplyr::summarize(total_project_cost = sum(as.numeric(project_cost)))
+
+
+pc_by_ef_sc <- sc_projects |>
+  dplyr::filter(!is.na(project_cost) & project_cost != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, expecting_funding) |>
+  dplyr::summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
+  tidyr::pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
+  rename(project_cost_ef = Yes,
+         project_cost_nef = No,
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`)
+
+
+pc_by_dac_sc <- sc_projects |>
+  dplyr::filter(!is.na(project_cost) & project_cost != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, disadvantaged) |>
+  dplyr::summarize(total_project_cost = sum(as.numeric(project_cost))) |>
+  tidyr::pivot_wider(names_from="disadvantaged", values_from="total_project_cost") %>%
+  rename(project_costs_dac = Yes,
+         project_costs_ndac = No,
+         project_costs_dac_ni = `No Information`,
+         project_costs_dac_na = `NA`
+         ) 
+ 
+pc_by_dac_ef_sc <- sc_projects |>
+  dplyr::filter(!is.na(project_cost) & project_cost != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, disadvantaged, expecting_funding) |>
+  dplyr::summarize(total_project_cost = sum(as.numeric(project_cost))) |>
+  tidyr::pivot_wider(names_from=c("expecting_funding", "disadvantaged"), values_from="total_project_cost")|> 
+  dplyr::rename(
+    project_costs_ef_dac = Yes_Yes,
+    project_costs_ef_ndac = Yes_No,
+    project_costs_ef_dac_ni = `Yes_No Information`,
+    project_costs_ef_dac_na = `Yes_NA`,
+
+    project_costs_nef_dac = No_Yes,
+    project_costs_nef_ndac = No_No,
+    project_costs_nef_dac_ni = `No_No Information`,
+    project_costs_nef_dac_na = `No_NA`,
+
+    project_costs_ef_ni_dac = `No Information_Yes`,
+    project_costs_ef_NA_dac_na = `NA_NA`
+    ) 
+
 # filter project costs by expecting funding for both tables
 pc_by_ef <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
@@ -196,6 +251,23 @@ pc_by_ef <- all_projects %>%
          project_cost_nef = No,
          project_cost_ef_ni = `No Information`,
          project_cost_ef_na = `NA`)
+
+pc_by_dac <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
+  group_by(state, state_fiscal_year,disadvantaged) %>%
+  summarize(project_cost_dac = sum(as.numeric(project_cost)), .groups = "drop") |>
+  tidyr::pivot_wider(names_from="disadvantaged", values_from="project_cost_dac") %>%
+  rename(project_cost_dac = Yes,
+         project_cost_ndac = No,
+         project_cost_dac_ni = `No Information`,
+         project_cost_dac_na = `NA`)
+
+pc_by_dac_type <- all_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
+  group_by(state, state_fiscal_year,disadvantaged, project_type) %>%
+  summarize(project_cost_dac = sum(as.numeric(project_cost))) %>%
+  ungroup() %>%
+  select(state, state_fiscal_year, project_cost_dac, project_type)
 
 pc_by_ef_dac <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
@@ -215,9 +287,10 @@ pc_by_ef_type <- all_projects %>%
 
 
 # subset to Lead projects to identify inventory and replacement projects
+# 2025-07-11: added survey to lead_type designation for lsli
+# see: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752240945744229?thread_ts=1752092342.154789&cid=C08LXGF02AE
 lsl_projects <- all_projects %>%
   filter(project_type=="Lead") %>%
-  filter(!is.na(project_cost) & project_cost !="No Information") %>%
   mutate(lead_type = case_when(
    str_detect(tolower(project_description), lsli_str) ~ "lsli",
    str_detect(tolower(project_description), lslr_str) ~ "lslr",
@@ -226,6 +299,7 @@ lsl_projects <- all_projects %>%
 
 # group by lsl project type for project cost calculations
 pc_by_lsl <- lsl_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
@@ -235,6 +309,7 @@ pc_by_lsl <- lsl_projects %>%
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
+  filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year, expecting_funding, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>% 
   filter(expecting_funding == "Yes") %>%
@@ -247,6 +322,7 @@ pc_by_lsl_ef <- lsl_projects %>%
 
 ```
 
+### Project Funding
 ```{r}
 funding_amount_aggregation <- all_projects %>%
   filter(!is.na(funding_amount) & funding_amount != "No Information") %>%
@@ -254,7 +330,6 @@ funding_amount_aggregation <- all_projects %>%
   summarize(total_funding_amount = sum(as.numeric(funding_amount)),
             median_funding_amount = median_wo_zero(as.numeric(funding_amount)),
             avg_funding_amount = mean(as.numeric(funding_amount)))
-
 
 # filter project costs by expecting funding
 fa_by_ef <- all_projects %>%
@@ -283,6 +358,80 @@ fa_by_type <- all_projects %>%
   group_by(state, state_fiscal_year, project_type) %>%
   summarize(total_funding_amount = sum(as.numeric(funding_amount)))
 
+fa_by_type_dac <- all_projects %>%
+  filter(!is.na(funding_amount) & funding_amount !="No Information") %>%
+  group_by(state, state_fiscal_year, disadvantaged, project_type) %>%
+  summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE)) %>%
+  filter(disadvantaged %in% c("Yes", "No", "No Information")) %>%
+  pivot_wider(names_from="disadvantaged", values_from="total_funding_amount") %>%
+  rename(funding_amount_dac = Yes,
+         funding_amount_ndac = No,
+         funding_amount_dac_ni = `No Information`) %>%
+  ungroup() %>%
+  select(state, state_fiscal_year, project_type, funding_amount_dac, funding_amount_ndac, funding_amount_dac_ni)
+
+
+fa_by_lsl <- lsl_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
+  dplyr::group_by(state, state_fiscal_year, lead_type) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
+  tidyr::pivot_wider(names_from="lead_type", values_from="total_funding_amount") |>
+  dplyr::rename(funding_amount_lslr = lslr,
+         funding_amount_lsli = lsli,
+         funding_amount_lslu = other) |>
+  dplyr::select(state, state_fiscal_year, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu)
+
+fa_by_lsl_ef <-  lsl_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
+  dplyr::group_by(state, state_fiscal_year, expecting_funding, lead_type) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
+  dplyr::filter(expecting_funding == "Yes") |>
+  tidyr::pivot_wider(names_from="lead_type", values_from="total_funding_amount") |>
+  dplyr::rename(funding_amount_ef_lslr = lslr,
+         funding_amount_ef_lsli = lsli,
+         funding_amount_ef_lslu = other) |>
+  dplyr::select(state, state_fiscal_year, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)
+
+fa_by_sc <- sc_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount)))
+
+fa_by_ef_sc <- sc_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, expecting_funding) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount))) |>
+  tidyr::pivot_wider(names_from="expecting_funding", values_from="total_funding_amount") |>
+  rename(funding_amount_ef = Yes,
+         funding_amount_nef = No)
+
+fa_by_dac_sc <- sc_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, disadvantaged) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount))) |>
+  tidyr::pivot_wider(names_from="disadvantaged", values_from="total_funding_amount") |>
+  rename(funding_amount_dac = Yes,
+         funding_amount_ndac = No,
+         funding_amount_dac_ni = `No Information`,
+         funding_amount_dac_na = `NA`
+         )
+
+fa_by_dac_ef_sc <- sc_projects |>
+  dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, small_community, disadvantaged, expecting_funding) |>
+  dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount)), .groups = "drop") |>
+  tidyr::pivot_wider(names_from= c("expecting_funding", "disadvantaged"), values_from="total_funding_amount") |>
+  dplyr::rename(
+    funding_amount_ef_dac = Yes_Yes,
+    funding_amount_ef_ndac = Yes_No,
+    funding_amount_ef_dac_ni = `Yes_No Information`,
+    funding_amount_ef_dac_na = `Yes_NA`,
+
+    funding_amount_nef_dac = No_Yes,
+    funding_amount_nef_ndac = No_No,
+    funding_amount_nef_dac_ni = `No_No Information`,
+    funding_amount_nef_dac_na = `No_NA`
+  )
 ```
 
 ```{r}
@@ -300,6 +449,7 @@ ra_by_type <- all_projects %>%
 
 ```
 
+### Principal Forgiveness
 ```{r}
 
 principal_forgiveness_aggregation <- all_projects %>%
@@ -334,29 +484,41 @@ project_dollars <- feature_coverage %>%
   left_join(funding_amount_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(fa_by_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(fa_by_ef_dac, by=c("state", "state_fiscal_year")) %>%
+  left_join(fa_by_lsl, by=c("state", "state_fiscal_year")) |>
+  left_join(fa_by_lsl_ef, by=c("state", "state_fiscal_year")) |>
   left_join(principal_forgiveness_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(project_cost_aggregation, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef, by=c("state", "state_fiscal_year")) %>%
+  left_join(pc_by_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
-
 
 project_type_df <- project_type_df %>%
   left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>% 
   left_join(pc_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(ra_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
-  left_join(pf_by_type, by=c("state", "state_fiscal_year", "project_type"))
+  left_join(pf_by_type, by=c("state", "state_fiscal_year", "project_type")) |>
+  left_join(pc_by_dac_type, by=c("state", "state_fiscal_year", "project_type")) |>
+  left_join(fa_by_type_dac,  by=c("state", "state_fiscal_year", "project_type"))
   
-
 project_counts <- project_counts %>%
   left_join(pf_projects, by=c("state", "state_fiscal_year"))
 
-
+small_community_df <- small_community_df |>
+  left_join(pc_by_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(pc_by_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(pc_by_dac_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(pc_by_dac_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(fa_by_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(fa_by_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(fa_by_dac_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  left_join(fa_by_dac_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) 
 ```
 
+## Exporting AWS
 ```{r}
 
 # Writing to temp
@@ -370,7 +532,6 @@ put_object(
   acl = "public-read"
 )
 
-
 # Writing to temp
 write.csv(project_counts, file.path(tempdir(), "dwsrf-funding-tracker-project-counts.csv"), row.names = FALSE)
 
@@ -381,7 +542,6 @@ put_object(
   bucket = "funding-tracker",
   acl = "public-read"
 )
-
 
 # Writing to temp
 write.csv(project_type_df, file.path(tempdir(), "dwsrf-funding-tracker-project-types.csv"), row.names = FALSE)
@@ -394,7 +554,6 @@ put_object(
   acl = "public-read"
 )
 
-
 # Writing to temp
 write.csv(small_community_df, file.path(tempdir(), "dwsrf-funding-tracker-small-community.csv"), row.names = FALSE)
 
@@ -405,7 +564,6 @@ put_object(
   bucket = "funding-tracker",
   acl = "public-read"
 )
-
 
 # Writing to temp
 write.csv(project_dollars, file.path(tempdir(), "dwsrf-funding-tracker-project-dollars.csv"), row.names = FALSE)
@@ -418,12 +576,10 @@ put_object(
   acl = "public-read"
 )
 
-
-
 ```
 
+## Exporting Google Sheets
 ```{r}
-
 write_sheet(feature_coverage, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Feature Coverage")
 write_sheet(project_type_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet = "Project Type")
 write_sheet(small_community_df, "https://docs.google.com/spreadsheets/d/1MtnflPSLXBvcPMGLmwwCtMe21wtXxGGKswzaE6m-GBw", sheet="Small Community")

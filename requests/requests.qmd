@@ -73,7 +73,8 @@ For state level data spreadsheet
 {{LI}} Total funding amounts LSLR yoy 
 {{LI}} Total project costs for DACs (DAC demand yoy) 
 {{LI}} Total DAC demand (aka project costs) vs. available funding "
-"[2025-07-14] Plots forthcoming.
+"[2025-07-15] Completed: Applicable plots published for Alabama, Illinois, New York, Tennessee, and Texas.
+{{PARA}}[2025-07-14] Plots forthcoming.
 Included ***survey*** in the keyword search for lead service line inventory. Added the following columns: 
 {{PARA}}
 {{LIST}}

@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Louisiana"
+state_abbr <- "LA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -1671,8 +1671,9 @@ if (sum(avg_med_requested_amount$value, na.rm=TRUE) > 0) {
 
 ### LSLI & LSLR
 
-```{r}
+#### Project Costs
 
+```{r}
 lead_project_cost <- project_dollars %>%
   select(state_fiscal_year, project_cost_lsli, project_cost_lslr, project_cost_lslu) %>%
   left_join(project_dollars %>%
@@ -1712,7 +1713,7 @@ if (sum(lead_project_cost$value, na.rm=TRUE) > 0) {
     
     run_save_plots(gg_plot = lead_pc_p,
                    gp_object = lead_pc_gp, 
-                   name = "lead-project-cost-yoy")
+                   name = "updated-lead-project-cost-yoy")
     }
   lead_pc_gp
   
@@ -1720,3 +1721,202 @@ if (sum(lead_project_cost$value, na.rm=TRUE) > 0) {
 ```
 
 
+#### Project Cost Expecting Funding
+```{r}
+lead_project_cost_ef <- project_dollars |>
+  dplyr::select(state_fiscal_year, project_cost_ef_lslu, project_cost_ef_lsli, project_cost_ef_lslr) |>
+  tidyr::pivot_longer(cols = c("project_cost_ef_lsli", "project_cost_ef_lslr", "project_cost_ef_lslu")) |>
+  dplyr::group_by(state_fiscal_year, name) |>
+  dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::mutate(project_cost_ef_combined = sum(value)) |>
+  dplyr::mutate(name = case_when(
+    name == "project_cost_ef_lsli" ~ "Inventory",
+    name == "project_cost_ef_lslr" ~ "Replacement",
+    TRUE ~ "Other"),
+    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    pct_str = as.character(round(value/project_cost_ef_combined,3)*100),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
+    )
+
+if (sum(lead_project_cost_ef$value, na.rm=TRUE) > 0) {
+  
+  lead_pc_ef_p <- ggplot(lead_project_cost_ef, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_dollar()) + 
+    scale_fill_manual(values = lead_colors, 
+                      name = "") + 
+    labs(x="State Fiscal Year",
+         y="",
+         title="What's the project cost for lead service line projects expecting funding?",
+         subtitle=get_subtitle_str(lead_project_cost_ef$state_fiscal_year, state_name)) +
+    epic_chart_theme
+  
+  lead_pc_ef_gp <- ggplotly(lead_pc_ef_p, tooltip="text") %>%
+    layout(title = list(text = paste0("What's the project cost for lead service line projects expecting funding?",
+                                      '<br>',
+                                      get_subtitle_str(lead_project_cost_ef$state_fiscal_year, state_name))))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_pc_ef_p,
+                   gp_object = lead_pc_ef_gp, 
+                   name = "lead-project-cost-expecting-funding-yoy")
+    }
+
+  lead_pc_ef_gp
+  
+}
+```
+
+
+
+#### Total Funding Amount
+```{r}
+
+lead_total_funding_amount <- project_dollars |>
+  dplyr::select(state_fiscal_year, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu) |>
+  tidyr::pivot_longer(cols = c("funding_amount_lslr", "funding_amount_lsli", "funding_amount_lslu")) |>
+  dplyr::group_by(state_fiscal_year, name) |>
+  dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::mutate(funding_amount_combined = sum(value)) |>
+  dplyr::mutate(name = case_when(
+    name == "funding_amount_lsli" ~ "Inventory",
+    name == "funding_amount_lslr" ~ "Replacement",
+    TRUE ~ "Other"),
+    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    pct_str = as.character(round(value/funding_amount_combined,3)*100),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
+    )
+
+if (sum(lead_total_funding_amount$value, na.rm=TRUE) > 0) {
+  
+  lead_fa_p <- ggplot(lead_total_funding_amount, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_dollar()) + 
+    scale_fill_manual(values = lead_colors, 
+                      name = "") + 
+    labs(x="State Fiscal Year",
+         y="",
+         title="What's the project funding amount for lead service line?",
+         subtitle=get_subtitle_str(lead_total_funding_amount$state_fiscal_year, state_name)) +
+    epic_chart_theme
+  
+  lead_fa_gp <- ggplotly(lead_fa_p, tooltip="text") %>%
+    layout(title = list(text = paste0("What's the project funding amount for lead service line?",
+                                      '<br>',
+                                      get_subtitle_str(lead_total_funding_amount$state_fiscal_year, state_name))))
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_fa_p,
+                   gp_object = lead_fa_gp, 
+                   name = "lead-funding-amount-yoy")
+    }
+
+  lead_fa_gp
+  
+}
+```
+
+#### Total Funding Amount Expecting Funding
+```{r}
+
+lead_total_funding_amount_ef <- project_dollars |>
+  dplyr::select(state_fiscal_year, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)|>
+  tidyr::pivot_longer(cols = c("funding_amount_ef_lslr", "funding_amount_ef_lsli", "funding_amount_ef_lslu")) |>
+  dplyr::group_by(state_fiscal_year, name) |>
+  dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::mutate(funding_amount_ef_combined = sum(value)) |>
+  dplyr::mutate(name = case_when(
+    name == "funding_amount_ef_lsli" ~ "Inventory",
+    name == "funding_amount_ef_lslr" ~ "Replacement",
+    TRUE ~ "Other"),
+    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    pct_str = as.character(round(value/funding_amount_ef_combined,3)*100),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
+    )
+
+if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
+  
+  lead_fa_ef_p <- ggplot(lead_total_funding_amount_ef, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
+    geom_bar(stat="identity", position="stack") + 
+    scale_y_continuous(labels=label_dollar()) + 
+    scale_fill_manual(values = lead_colors, 
+                      name = "") + 
+    labs(x="State Fiscal Year",
+         y="",
+         title="What's the project funding amount for lead service line projects expecting funding?",
+         subtitle=get_subtitle_str(lead_total_funding_amount_ef$state_fiscal_year, state_name)) +
+    epic_chart_theme
+  
+  lead_fa_ef_gp <- ggplotly(lead_fa_ef_p, tooltip="text") %>%
+    layout(title = list(text = paste0("What's the project funding amount for lead service line projects expecting funding?",
+                                      '<br>',
+                                      get_subtitle_str(lead_total_funding_amount_ef$state_fiscal_year, state_name))))
+  
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_fa_ef_p,
+                   gp_object = lead_fa_ef_gp, 
+                   name = "lead-funding-amount-expecting-funding-yoy")
+    }
+
+  lead_fa_gp
+  
+}
+```
+
+
+### DAC
+### Project Costs
+```{r}
+dac_pc <- project_dollars |>
+  dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, project_cost_dac_ni, project_cost_dac_na) |>
+  tidyr::pivot_longer(cols = c("project_cost_ndac", "project_cost_dac", "project_cost_dac_ni", "project_cost_dac_na")) |>
+  dplyr::group_by(state_fiscal_year, name) |>
+  dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::mutate(project_costs_combined = sum(value)) |>
+  dplyr::mutate(name = case_when(
+    name ==  "project_cost_ndac" ~ "No", 
+    name ==  "project_cost_dac" ~ "Yes", 
+    name ==  "project_cost_dac_ni" ~ "No Info", 
+    name == "project_cost_dac_na" ~ "NA"),
+    pct_str = as.character(round(value/project_costs_combined,3)*100),
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
+    ) |>
+    dplyr::filter(value>0)
+      
+  
+  if (sum(dac_pc$value, na.rm=TRUE) > 0) {
+
+    dac_pc_p <- dac_pc |>
+      ggplot2::ggplot() +
+      ggplot2::geom_col(aes(state_fiscal_year, value, fill=name)) +
+      ggplot2::scale_y_continuous(labels=label_dollar()) + 
+      ggplot2::labs(x="State Fiscal Year",
+         y="",
+         title="What's the project cost for DAC projects?",
+         ) +
+      ggplot2::scale_fill_manual(
+        values = ef_dac_sc_colors ,
+        name = "") +
+      epic_chart_theme
+
+    dac_pc_gp <- ggplotly(dac_pc_p, tooltip="plot_str") %>%
+    layout(title = list(text = paste0("What's the project cost for DAC projects?",
+                                      '<br>',
+                                      get_subtitle_str(dac_pc$state_fiscal_year, state_name))))
+
+    if (save_plots) {
+    run_save_plots(gg_plot = dac_pc_p,
+                   gp_object = dac_pc_gp, 
+                   name = "dac-project-cost-yoy")
+    }
+  
+  dac_pc_gp
+  }
+
+```

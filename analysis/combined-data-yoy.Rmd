@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Louisiana"
+state_abbr <- "LA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -652,3 +652,43 @@ if(sum(compare_requested_amount_lead$value[compare_requested_amount_lead$name=="
 ```
 
 
+# DAC
+## Comparing Project Cost and Funding Available
+
+```{r}
+pc_vs_fa_dac <- all_funds |>
+  dplyr::left_join(
+    project_type_df |>
+      dplyr::select(state, state_fiscal_year, project_cost_dac) |>
+      dplyr::group_by(state, state_fiscal_year) |>
+      dplyr::summarise(total_project_cost_dac = sum(project_cost_dac), .groups = "drop") 
+  ) |>
+  dplyr::mutate(
+    ratio = total_project_cost_dac/total_funding_available,
+    plot_str = paste0("Project Cost: ", format_currency(total_project_cost_dac),"<br>", "Funding Available: ",format_currency(total_funding_available))
+  ) 
+  
+pc_vs_fa_dac_p <- pc_vs_fa_dac |>
+  ggplot2::ggplot(aes(state_fiscal_year, ratio, text=plot_str)) +
+  ggplot2::geom_point(color = "#4ea324", size = 3, show.legend = FALSE) +
+  ggplot2::geom_hline(yintercept = 1) +
+  ggplot2::labs(x="State Fiscal Year",
+      y="",
+      title="What's the ratio of project cost to total available funding for DAC projects?",
+      ) +
+  ggplot2::scale_y_continuous(breaks = function(y) seq(0, ceiling(max(y)), by = 1)) +
+  epic_chart_theme
+
+pc_vs_fa_dac_gp <- ggplotly(pc_vs_fa_dac_p, tooltip="plot_str") |>
+    layout(title = list(text = paste0("What's the ratio of project cost to total available funding for DAC projects?",
+                                      '<br>',
+                                      get_subtitle_str(pc_vs_fa_dac$state_fiscal_year, state_name))))
+
+if (save_plots) {
+    run_save_plots(gg_plot = pc_vs_fa_dac_p,
+                   gp_object = pc_vs_fa_dac_gp, 
+                   name = "dac-project-cost-vs-available-funding-yoy")
+    }
+  
+pc_vs_fa_dac_gp
+```

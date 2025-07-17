@@ -27,6 +27,16 @@ To include a new request, follow this template using the shortcode `request` wit
 
 ------------------------------------------------------------------------
 {{< request 
+"Static plot"
+"2025-07-16"
+"Erica"
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752680250203129)"
+"Static plot for project costs for lead service line projects New York SFY23-25"
+"[2025-07-17] Completed"
+>}}
+
+
+{{< request 
 "Additional columns"
 "2025-07-14"
 "Danielle"

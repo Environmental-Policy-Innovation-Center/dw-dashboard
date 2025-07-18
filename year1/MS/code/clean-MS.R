@@ -1,48 +1,89 @@
 clean_ms_y1 <- function() {
+ 
+  # read in data (extracted with tabula, further inspected and curated)
+  priority_list<- data.table::fread("year1/MS/data/PPL_MS_FFY2022_raw_curated.csv",
+                  colClasses = "character", na.strings = "") |> 
+    janitor::clean_names() |>
+    dplyr::mutate(source_list="Priority")
   
-  # (48,9)
-  ms_raw <- fread("year1/MS/data/24-Mississippi_PPL.csv",
-                  colClasses = "character", na.strings = "") %>% 
-    clean_names()
+  planning_list<- data.table::fread("year1/MS/data/PPlaL_MS_FFY2022_raw_curated.csv",
+                  colClasses = "character", na.strings = "") |> 
+    janitor::clean_names() |>
+    dplyr::mutate(source_list="Planning")  
   
-  # -> (42,8)
-  ms_clean <- ms_raw %>%
-    # drop category rows and funding line row
-    filter(!grepl("Category", project) & project_description != "NA") %>%
-    # format numeric columns
-    mutate(
-      population = clean_numeric_string(service_area_population),
+  # sanity check
+  colnames(priority_list) == colnames(planning_list)
+
+  # order matters, priority list should be read in first
+  ms_clean <- priority_list |> 
+    dplyr::bind_rows(planning_list) |>
+    # drop category rows
+    dplyr::filter(!grepl("Category", project)) |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), ~ dplyr::na_if(.x, "#VALUE!"))) |>
+    dplyr::mutate(
+      geographic_reference = "No information", #this changed from community served?
+      borrower = stringr::str_squish(project),
+      pwsid = "No information",
+      project_id = "No information",
+      project_name = "No information"
+    ) |>
+    dplyr::mutate(
+      project_description = stringr::str_squish(project_description),
+      project_type = dplyr::case_when(
+            stringr::str_detect(lead_str, project_description) ~ "Lead",
+            stringr::str_detect(ec_str, project_description) ~ "Emerging Contaminants",
+            TRUE ~ "General"
+           )
+    ) |>
+    dplyr::mutate(
+      project_cost = "No information",
       requested_amount = clean_numeric_string(loan_amount_requested),
-      # use this to separate funding/applicant projects, but don't keep in standardized data
-      state_cumulative = as.numeric(str_replace_all(statewide_cum, "[^0-9.]","")),
-      # if above the threshold, funding amount is requested amount. otherwise 0
-      funding_amount = ifelse(
-        state_cumulative < 42500000, clean_numeric_string(loan_amount_requested), "No Information"),
-      ) %>%
-    # format text columns
-    mutate(borrower = str_squish(project),
-           project_description = str_squish(project_description),
-           project_score = str_replace_all(priority_points,"[^0-9.]",""),
-           disadvantaged = ifelse(
-             as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")) > 0, "Yes", "No"),
-           state = "Mississippi",
-           state_fiscal_year = "2023",
-           expecting_funding = case_when(
-             # funding line set at 42,500,000 in PPL
-             state_cumulative < 42500000 ~ "Yes",
-             TRUE ~ "No"),
-           community_served = as.character(NA),
-           pwsid = as.character(NA),
-           project_id = as.character(NA),
-           project_name = as.character(NA),
-           project_type = as.character(NA),
-           project_cost = as.character(NA),
-           principal_forgiveness = as.character(NA),
-           project_rank = as.character(NA),
-           ) %>%
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+      funding_amount = "No Information"
+    )|>
+    
+    dplyr::mutate(
+      row_id = dplyr::row_number(),
+      principal_forgiveness = dplyr::if_else(
+        row_id %in% {
+          funding_lines <- which(stringr::str_detect(project, "Funding Line--"))
+          unlist(lapply(funding_lines, function(x) seq_len(x - 1)))
+        },
+        clean_numeric_string(eligible_pf_amount),
+        # checked in w Danielle about this on 2025_07_17, 
+        # we use NA instead of 0, because projects below the funding line 
+        # are not expecting funding and principal forgiveness would not apply 
+        # to those cases.
+        "NA") 
+      ) |>
+    dplyr::mutate(
+      population = clean_numeric_string(service_area_population),
+      disadvantaged = ifelse(
+             as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")) > 0, 
+             "Yes", 
+             "No"), 
+      project_score = str_replace_all(priority_points,"[^0-9.]",""),
+      # determine expecting funding based on funding line (regardless of amount)
+      expecting_funding = dplyr::if_else(
+        row_id %in% {
+          funding_lines <- which(stringr::str_detect(project, "Funding Line--"))
+          unlist(lapply(funding_lines, function(x) seq_len(x - 1)))
+        },
+        "Yes",
+        "No") 
+    )|>
+    dplyr::filter(!stringr::str_detect("Funding Line--", project)) |>
+    dplyr::group_by(source_list) |>
+    dplyr::mutate(project_rank = paste0(dplyr::row_number(), source_list)) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      state = "Mississippi",
+      state_fiscal_year = "2023"
+    ) |>
+    dplyr::select(geographic_reference, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, 
+           project_rank, 
+           project_score, expecting_funding, state, state_fiscal_year)
   
   run_tests(ms_clean)
   rm(list=setdiff(ls(), "ms_clean"))

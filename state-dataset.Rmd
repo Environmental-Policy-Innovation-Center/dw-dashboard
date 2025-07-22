@@ -294,6 +294,9 @@ lsl_projects <- all_projects %>%
   mutate(lead_type = case_when(
    str_detect(tolower(project_description), lsli_str) ~ "lsli",
    str_detect(tolower(project_description), lslr_str) ~ "lslr",
+   # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+   str_detect(tolower(project_description), "replacement") & str_detect(tolower(project_description), lead_str) ~ "lslr",
+   str_detect(tolower(project_description), "inventory") & str_detect(tolower(project_description), lead_str) ~ "lsli",
     TRUE ~ "other"
   ))
 
@@ -430,7 +433,7 @@ fa_by_dac_ef_sc <- sc_projects |>
     funding_amount_nef_dac = No_Yes,
     funding_amount_nef_ndac = No_No,
     funding_amount_nef_dac_ni = `No_No Information`,
-    funding_amount_nef_dac_na = `No_NA`
+    #funding_amount_nef_dac_na = `No_NA`
   )
 ```
 

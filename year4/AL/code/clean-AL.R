@@ -9,6 +9,10 @@ clean_al_y4 <- function() {
   al_clean <- al_iup |>
     mutate(
       community_served = str_squish(city_town),
+      community_served = dplyr::case_when(
+        is.na(community_served) ~ "No Information",
+        .default = community_served
+      ),
       borrower = str_squish(applicant_name),
       pwsid = as.character(NA),
       project_id = as.character(project_number),
@@ -42,12 +46,11 @@ clean_al_y4 <- function() {
   
 ####### SANITY CHECKS #######
 # Hone in on project id duplication
-clean_al_y4 |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 ####### Decision : No duplicates
   
 # Check for disinfection byproduct in description
-clean_al_y4 |>
-  dplyr::filter(grepl("disinfection byproduct", project_description))
+al_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 ####### Decision : No disinfection byproduct string
 
 ####### SANITY CHECKS END #######

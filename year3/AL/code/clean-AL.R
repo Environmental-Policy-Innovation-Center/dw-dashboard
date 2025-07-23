@@ -104,21 +104,17 @@ clean_al_y3 <- function() {
 # Hone in on project id duplication
 al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
-
 al_clean |>
-  dplyr::filter(project_id == "FS010096-11") |>
-  readr::write_csv("~/Desktop/duplicates_AL_y3.csv")
-
-####### Decision: 
+  dplyr::filter(project_id == "FS010096-11") 
+####### Decision: Keep both as separate projects, they have different descriptions
 
 al_clean |>
   dplyr::filter(project_id == "FS010488-02") 
-####### Decision: Keep both as per Janet's request in Data Dictionary 
+####### Decision: Keep both as separate projects, per Janet's request in Data Dictionary 
  
 # Check for disinfection byproduct in description
 al_clean |>
   dplyr::filter(grepl("disinfection byproduct", project_description))
-  
 ####### Decision : No disinfection byproduct string
 
 ####### SANITY CHECKS END #######

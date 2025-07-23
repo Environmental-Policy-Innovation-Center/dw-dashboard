@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Louisiana"
-state_abbr <- "LA"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -183,7 +183,7 @@ compare_requested_amount_all <- year_table %>%
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
 
 
-if (sum(compare_demand_available_funding$value) > 0) {
+if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {
     
   
   comp_dem_avail_fund_p <- ggplot(compare_demand_available_funding, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 

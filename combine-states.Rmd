@@ -33,14 +33,17 @@ source("resources/testing.R")
 
 ```{r}
 
-# Arkansas
+# Alabama
+source("year0/AL/code/clean-AL.R")
+al_clean_y0<- clean_al_y0()
 
-source("year0/AR/code/clean-AR.R")
-ar_clean_y0 <- clean_ar_y0()
+# # Arkansas
+# source("year0/AR/code/clean-AR.R")
+# ar_clean_y0 <- clean_ar_y0()
 
-# Indiana
-source("year0/IN/code/clean-IN.R")
-in_clean_y0 <- clean_in_y0()
+# # Indiana
+# source("year0/IN/code/clean-IN.R")
+# in_clean_y0 <- clean_in_y0()
 
 # Louisiana
 source("year0/LA/code/clean-LA.R")
@@ -58,9 +61,9 @@ tn_clean_y0 <- clean_tn_y0()
 source("year0/TX/code/clean-TX.R")
 tx_clean_y0 <- clean_tx_y0()
 
-# Wisconsin
-source("year0/WI/code/clean-WI.R")
-wi_clean_y0 <- clean_wi_y0()
+# # Wisconsin
+# source("year0/WI/code/clean-WI.R")
+# wi_clean_y0 <- clean_wi_y0()
 
 
 ```
@@ -77,8 +80,8 @@ al_clean_y1 <- clean_al_y1()
 # ak_clean_y1 <- clean_ak_y1()
 
 # Arkansas
-source("year1/AR/code/clean-AR.R")
-ar_clean_y1 <- clean_ar_y1()
+# source("year1/AR/code/clean-AR.R")
+# ar_clean_y1 <- clean_ar_y1()
 
 # # Arizona
 # source("year1/AZ/code/clean-AZ.R")
@@ -116,13 +119,13 @@ ar_clean_y1 <- clean_ar_y1()
 # source("year1/ID/code/clean-ID.R")
 # id_clean_y1 <- clean_id_y1()
 
-# Illinois
-source("year1/IL/code/clean-IL.R")
-il_clean_y1 <- clean_il_y1()
+# # Illinois
+# source("year1/IL/code/clean-IL.R")
+# il_clean_y1 <- clean_il_y1()
 
-# Indiana
-source("year1/IN/code/clean-IN.R")
-in_clean_y1 <- clean_in_y1()
+# # Indiana
+# source("year1/IN/code/clean-IN.R")
+# in_clean_y1 <- clean_in_y1()
 
 # # Iowa
 # source("year1/IA/code/clean-IA.R")
@@ -156,13 +159,13 @@ la_clean_y1 <- clean_la_y1()
 source("year1/MI/code/clean-MI.R")
 mi_clean_y1 <- clean_mi_y1()
 
-# Minnesota
-source("year1/MN/code/clean-MN.R")
-mn_clean_y1 <- clean_mn_y1()
+# # Minnesota
+# source("year1/MN/code/clean-MN.R")
+# mn_clean_y1 <- clean_mn_y1()
 
-# Mississippi
-source("year1/MS/code/clean-MS.R")
-ms_clean_y1 <- clean_ms_y1()
+# # Mississippi
+# source("year1/MS/code/clean-MS.R")
+# ms_clean_y1 <- clean_ms_y1()
 
 # # Missouri
 # source("year1/MO/code/clean-MO.R")
@@ -180,9 +183,9 @@ ms_clean_y1 <- clean_ms_y1()
 # source("year1/NH/code/clean-NH.R")
 # nh_clean_y1  <- clean_nh_y1()
 
-# New Jersey
-source("year1/NJ/code/clean-NJ.R")
-nj_clean_y1 <- clean_nj_y1()
+# # New Jersey
+# source("year1/NJ/code/clean-NJ.R")
+# nj_clean_y1 <- clean_nj_y1()
 
 # # New Mexico
 # source("year1/NM/code/clean-NM.R")
@@ -204,9 +207,9 @@ ny_clean_y1 <- clean_ny_y1()
 # source("year1/ND/code/clean-ND.R")
 # nd_clean_y1 <- clean_nd_y1()
 
-# Ohio
-source("year1/OH/code/clean-OH.R")
-oh_clean_y1 <- clean_oh_y1()
+# # Ohio
+# source("year1/OH/code/clean-OH.R")
+# oh_clean_y1 <- clean_oh_y1()
 
 # # Oklahoma
 # source("year1/OK/code/clean-OK.R")
@@ -216,9 +219,9 @@ oh_clean_y1 <- clean_oh_y1()
 # source("year1/OR/code/clean-OR.R")
 # or_clean_y1 <- clean_or_y1()
 
-# Pennsylvania
-source("year1/PA/code/clean-PA.R")
-pa_clean_y1 <- clean_pa_y1()
+# # Pennsylvania
+# source("year1/PA/code/clean-PA.R")
+# pa_clean_y1 <- clean_pa_y1()
 
 # # Rhode Island
 # source("year1/RI/code/clean-RI.R")
@@ -260,9 +263,9 @@ tx_clean_y1 <- clean_tx_y1()
 # source("year1/WV/code/clean-WV.R")
 # wv_clean_y1 <- clean_wv_y1()
 
-# Wisconsin
-source("year1/WI/code/clean-WI.R")
-wi_clean_y1 <- clean_wi_y1()
+# # Wisconsin
+# source("year1/WI/code/clean-WI.R")
+# wi_clean_y1 <- clean_wi_y1()
   
 ```
 
@@ -286,9 +289,9 @@ la_clean_y2 <- clean_la_y2()
 source("year2/MI/code/clean-MI.R")
 mi_clean_y2 <- clean_mi_y2()
 
-# Minnesota
-source("year2/MN/code/clean-MN.R")
-mn_clean_y2 <- clean_mn_y2()
+# # Minnesota
+# source("year2/MN/code/clean-MN.R")
+# mn_clean_y2 <- clean_mn_y2()
 
 # New York
 source("year2/NY/code/clean-NY.R")
@@ -345,6 +348,10 @@ tx_clean_y3 <- clean_tx_y3()
 
 ## Year 4 
 ```{r}
+# Alabama
+source("year4/AL/code/clean-AL.R")
+al_clean_y4<- clean_al_y4()
+
 # Tennessee
 source("year4/TN/code/clean-TN.R")
 tn_clean_y4 <- clean_tn_y4()

@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Louisiana"
-state_abbr <- "LA"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -913,14 +913,14 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
     labs(x="State Fiscal Year",
          y="Projects",
          title="What proportion of projects expecting funding are DACs?",
-         subtitle=get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name)) +
+         subtitle=get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name)) +
     epic_chart_theme + 
     facet_wrap(~project_type, strip.position="bottom") + 
     theme(strip.placement = "outside")
   
   dac_ef_comp_facet_gp <- ggplotly(dac_ef_comp_facet_p, tooltip="text") %>%
     layout(title = list(text = paste0("What proportion of projects expecting funding are DACs?",
-                                      ' — ', get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name))))
+                                      ' — ', get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name))))
   
   if (save_plots) {
     
@@ -1873,8 +1873,17 @@ if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
 ### Project Costs
 ```{r}
 dac_pc <- project_dollars |>
-  dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, project_cost_dac_ni, project_cost_dac_na) |>
-  tidyr::pivot_longer(cols = c("project_cost_ndac", "project_cost_dac", "project_cost_dac_ni", "project_cost_dac_na")) |>
+  dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, 
+  project_cost_dac_ni
+  # , 
+  # project_cost_dac_na
+  ) |>
+  tidyr::pivot_longer(cols = c("project_cost_ndac", 
+  "project_cost_dac", 
+  "project_cost_dac_ni"
+  # , 
+  # "project_cost_dac_na"
+  )) |>
   dplyr::group_by(state_fiscal_year, name) |>
   dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(state_fiscal_year) |>
@@ -1882,8 +1891,10 @@ dac_pc <- project_dollars |>
   dplyr::mutate(name = case_when(
     name ==  "project_cost_ndac" ~ "No", 
     name ==  "project_cost_dac" ~ "Yes", 
-    name ==  "project_cost_dac_ni" ~ "No Info", 
-    name == "project_cost_dac_na" ~ "NA"),
+    name ==  "project_cost_dac_ni" ~ "No Info"
+    # , 
+    # name == "project_cost_dac_na" ~ "NA"
+    ),
     pct_str = as.character(round(value/project_costs_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
     ) |>

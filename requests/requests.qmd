@@ -27,6 +27,15 @@ To include a new request, follow this template using the shortcode `request` wit
 
 ------------------------------------------------------------------------
 {{< request 
+"Plot breakdown by project type"
+"2025-07-24"
+"Danielle"
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1753380722430609?thread_ts=1752680250.203129&cid=C08LXGF02AE)"
+"Create a separate plots by type of projects to compare demand to available funds and expected funding for AL"
+"[2025-07-24] Completed"
+>}}
+
+{{< request 
 "Static plot"
 "2025-07-16"
 "Erica"

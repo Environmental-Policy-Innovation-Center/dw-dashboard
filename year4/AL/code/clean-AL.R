@@ -35,8 +35,18 @@ clean_al_y4 <- function() {
         disadvantaged_score < 1 ~ "No"
       ),
       project_rank = as.character(NA),
-      project_score = str_squish(priority_ranking_points),
-      expecting_funding = as.character(NA),
+      project_score = str_squish(priority_ranking_points)
+    ) |>
+    dplyr::mutate(
+      project_score = dplyr::case_when(
+        project_score == "SUPP" ~ "No Information",
+        project_score == "NA" ~ "No Information",
+        is.na(project_score) ~ "No Information",
+        .default = project_score
+      )
+    ) |>
+    dplyr::mutate(
+      expecting_funding = "Yes",
       state = "Alabama",
       state_fiscal_year = "2026"
     ) |>

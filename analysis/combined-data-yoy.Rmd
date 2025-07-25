@@ -13,7 +13,7 @@ state_name <- "Alabama"
 state_abbr <- "AL"
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 ```
 
@@ -218,14 +218,14 @@ if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {
 ```{r}
 
 # get total funding available for each fed cap grant, merge with project type
-financial_by_project_type <- financial %>%
-  mutate(project_type = case_when(
+financial_by_project_type <- financial|>
+  dplyr::mutate(project_type = case_when(
     fed_cap_grant == "LSLR" ~ "Lead",
     fed_cap_grant == "EC" ~ "Emerging Contaminants",
     TRUE ~ "General"
-  )) %>%
-  group_by(state, state_fiscal_year, project_type) %>%
-  summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
+  )) |>
+  dplyr::group_by(state, state_fiscal_year, project_type) |>
+  dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
             .groups = "drop")
 
 comp_dem_avail_fund_type <- project_type_df |>
@@ -235,12 +235,12 @@ comp_dem_avail_fund_type <- project_type_df |>
             total_requested_amount = sum(total_requested_amount, na.rm=TRUE),
             total_funding_amount = sum(total_funding_amount, na.rm=TRUE),
           .groups = "drop") |>
-    left_join(financial_by_project_type, by=c("state","state_fiscal_year", "project_type")) %>%
-    mutate(total_funding_available = replace_na(total_funding_available, 0),
+    dplyr::left_join(financial_by_project_type, by=c("state","state_fiscal_year", "project_type")) |>
+    dplyr::mutate(total_funding_available = replace_na(total_funding_available, 0),
          # assume unmet demand is project cost, otherwise use requested amount
-         total_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost)) %>%
-  select(-total_project_cost, -total_requested_amount) %>%
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) %>%
+         total_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost)) |>
+  dplyr::select(-total_project_cost, -total_requested_amount) |>
+  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) |>
   dplyr::mutate(
       name = dplyr::case_when(
       name == "total_funding_available" ~ "Total Available",

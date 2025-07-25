@@ -1,6 +1,5 @@
 clean_ny_y1 <- function() {
   
-  
 ## BIL PPL
   # (120,10) -> (120,11)
   ny_bil <- fread("year1/NY/data/32-NewYork_bil_ppl.csv",
@@ -9,7 +8,12 @@ clean_ny_y1 <- function() {
     select(-v1) %>%
     mutate(project_type = "General",
            # “H” in Score on Annual List or project is included on BIL-GS PPL.
-           disadvantaged = "Yes")
+           disadvantaged = "Yes",
+           expecting_funding = dplyr::case_when(
+        row_number() <= 27 ~ "Yes",
+        row_number() > 27 ~ "No"
+      )
+    )
   
 ## BIL AWARDS
   ny_bil_awards <- fread("year1/NY/data/ny-bil-gen-supp-awards.csv",
@@ -30,6 +34,12 @@ clean_ny_y1 <- function() {
     mutate(population = clean_numeric_string(pop),
            project_cost = clean_numeric_string(project_cost),
            ) %>%
+    dplyr::mutate(
+      expecting_funding = dplyr::case_when(
+        !is.na(expecting_funding.y) ~ expecting_funding.y,
+        .default = expecting_funding.x
+      )
+    )|>
     select(project_number, county, system_name, borrower, description, population, project_cost,
            score, project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
   
@@ -79,7 +89,7 @@ clean_ny_y1 <- function() {
                         colClass="character", na.strings="") %>%
     clean_names() %>%
     rename(project_number = srf_number) %>%
-    mutate(funding_amount = "No Information",
+    mutate(funding_amount = clean_numeric_string(bil_ec_grant_award),
            principal_forgiveness = clean_numeric_string(bil_ec_grant_award),
            expecting_funding = "Yes",
     ) %>%
@@ -119,6 +129,13 @@ clean_ny_y1 <- function() {
   
   ny_annual_combined <- ny_annual %>%
     left_join(ny_combined_on_annual, by="project_number") %>%
+    # 94 is the Hardship Evaluation Eligibility Line
+    dplyr::mutate(
+      hardship = dplyr::case_when(
+        row_number() <= 94 ~ "Yes",
+        row_number() > 94 ~ "No"
+      )
+    )|>
     # 148 is the funding line for annual list, all projects above funded, all below not 
     # unless funding determined by gs/lead/ec funding lists
     mutate(expecting_funding = case_when(
@@ -128,8 +145,8 @@ clean_ny_y1 <- function() {
       disadvantaged = case_when(
         # projects with H are DACs, projects above line but not H are No, projects below line and only on annual list are No Info
         score == "H" & is.na(disadvantaged) ~ "Yes",
-        expecting_funding == "Yes" & score != "H" & is.na(disadvantaged) ~ "No",
-        expecting_funding == "No" & is.na(disadvantaged) ~ "No Information",
+        hardship == "Yes" & score != "H" & is.na(disadvantaged) ~ "No",
+        hardship == "No" & is.na(disadvantaged) ~ "No Information",
         TRUE ~ disadvantaged),
       # projects that are on lead/gs/ec but not on annual list, plus those on annual list, all No Information
       funding_amount = replace_na(funding_amount, "No Information"),
@@ -163,18 +180,33 @@ clean_ny_y1 <- function() {
   # append projects not on multi-year list
   ny_multi_annual_combined <- bind_rows(ny_multi_annual_combined, ny_annual_not_on_multi)
     
-    
-  ny_clean <- ny_multi_annual_combined %>%  
+
+  #final amendment no. 5: https://drive.google.com/file/d/1fsyBeEhaVFn9upghfnPngwJYs8Z76yGI/view
+  ny_multi_annual_combined_amended <- ny_multi_annual_combined |>
+    dplyr::mutate(
+      project_cost = dplyr::case_when(
+        project_number == "18907" ~ "5950000",
+        # project_number = "18976" ~ "5,036,753", #already in list
+        project_number == "18995" ~ "36000000",
+        project_number == "19126" ~ "13500000",
+        .default = project_cost)
+    )
+
+
+  ny_clean <- ny_multi_annual_combined_amended %>%  
     mutate(system_name_borrower = ifelse(is.na(system_name_borrower), paste0(system_name, " / ", borrower), system_name_borrower),
            borrower = str_squish(system_name_borrower),
            community_served = str_squish(county),
            project_id = str_squish(project_number),
            project_description = str_squish(description),
-           project_score = str_squish(score),
+           project_score = dplyr::case_when(
+            str_squish(score) == "H" ~ "No Information",
+            .default = str_squish(score)
+           ),
            project_type = case_when(
-             !is.na(project_type) ~ project_type,
-             str_detect(tolower(description), "lead") | code=="BLSLR" ~ "Lead",
-             str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") | code=="BEC" ~ "Emerging Contaminants",
+             !is.na(project_type) & project_type !="General" ~ project_type,
+             grepl(lead_str, project_description, ignore.case=TRUE) | code=="BLSLR" ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) | code=="BEC" ~ "Emerging Contaminants",
              TRUE ~ "General"),
            # all remaining projects on multi-year list are no info for DAC
            disadvantaged = replace_na(disadvantaged, "No Information"),
@@ -195,7 +227,23 @@ clean_ny_y1 <- function() {
   
   ny_clean <- ny_clean %>%
     filter(project_cost != "0")
-           
+   
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  
+  ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No duplicates
+  
+  # Check for disinfection byproduct in description
+  ny_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision: disinfection byproducts is an EC project, 
+  # but it's also a consolidation project, which is a general project type. 
+  # I think we should go ahead and classify as EC however.
+  # No change, classified as expected
+    
+  ####### SANITY CHECKS END #######
+
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

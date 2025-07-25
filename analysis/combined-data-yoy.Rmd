@@ -13,7 +13,7 @@ state_name <- "Alabama"
 state_abbr <- "AL"
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 ```
 
@@ -214,8 +214,20 @@ if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {
 }
 ```
 
-Further break down by project type
+### Further break down by project type
 ```{r}
+
+# get total funding available for each fed cap grant, merge with project type
+financial_by_project_type <- financial %>%
+  mutate(project_type = case_when(
+    fed_cap_grant == "LSLR" ~ "Lead",
+    fed_cap_grant == "EC" ~ "Emerging Contaminants",
+    TRUE ~ "General"
+  )) %>%
+  group_by(state, state_fiscal_year, project_type) %>%
+  summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
+            .groups = "drop")
+
 comp_dem_avail_fund_type <- project_type_df |>
   dplyr::select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount, total_funding_amount) |>
   dplyr::group_by(state, state_fiscal_year, project_type ) |>
@@ -223,13 +235,11 @@ comp_dem_avail_fund_type <- project_type_df |>
             total_requested_amount = sum(total_requested_amount, na.rm=TRUE),
             total_funding_amount = sum(total_funding_amount, na.rm=TRUE),
           .groups = "drop") |>
-  left_join(all_funds, by=c("state","state_fiscal_year")) %>%   
-  mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
-         cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
-         requested_less_available = total_requested_amount - replace_na(total_funding_available, 0),
-         requested_less_available = ifelse(requested_less_available < 0, 0, requested_less_available),
+    left_join(financial_by_project_type, by=c("state","state_fiscal_year", "project_type")) %>%
+    mutate(total_funding_available = replace_na(total_funding_available, 0),
          # assume unmet demand is project cost, otherwise use requested amount
-         total_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost)) |>
+         total_demand = ifelse(total_project_cost == 0, total_requested_amount, total_project_cost)) %>%
+  select(-total_project_cost, -total_requested_amount) %>%
   tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) %>%
   dplyr::mutate(
       name = dplyr::case_when(
@@ -310,7 +320,7 @@ if(sum(compare_project_cost_all$value[compare_project_cost_all$name=="Unmet Dema
 ```
 
 
-## Comparing Requested Amount & Funds Available
+# Comparing Requested Amount & Funds Available
 
 ```{r}
 

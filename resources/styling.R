@@ -103,7 +103,8 @@ lead_colors <- c("Inventory"="#B077B2",
 comp_colors <- c("Total Available"="#4ea324",
                  "Available Funds"="#4ea324",
                  "Total Demand"="#172f60",
-                 "Expected Funding"="#791a7b")
+                 "Expected Funding"="#791a7b",
+                 "Unmet Demand"="lightgrey")
 
 # Single SFY Colors
 distribution_colors <- c("Principal Forgiveness"="#4ea324",
@@ -124,8 +125,7 @@ ef_dac_comp_colors <- c(
   "DACs, Expecting Funding"="#4ea324",
   "Expecting Funding, DAC"="#4ea324", 
   "Expecting Funding, Not DAC"="#172f60", 
-  "Expecting Funding, No Info"="lightgrey",
-  "Unmet Demand"="lightgrey"
+  "Expecting Funding, No Info"="lightgrey"
 )
 
 ef_dac_hm_colors <- c("#172f60", "#B9D1FF")

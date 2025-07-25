@@ -13,7 +13,7 @@ state_name <- "Alabama"
 state_abbr <- "AL"
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 ```
 
@@ -255,7 +255,7 @@ for (type in levels(comp_dem_avail_fund_type$project_type)){
     epic_chart_theme + 
     theme(legend.position="bottom")
 
-  comp_dem_avail_fund_type_gp <- plotly::ggplotly(comp_dem_avail_fund_p, tooltip="text") |>
+  comp_dem_avail_fund_type_gp <- plotly::ggplotly(comp_dem_avail_fund_type_p, tooltip="text") |>
     plotly::layout(title = list(text = paste0('Comparing Demand to Available Funds and Expected Funding: ', type,
                                       '<br>',
                                       get_subtitle_str(comp_dem_avail_fund_type$state_fiscal_year, state_name)))
@@ -273,8 +273,6 @@ for (type in levels(comp_dem_avail_fund_type$project_type)){
   }
   comp_dem_avail_fund_type_gp
 }
-
-
 
 ```
 

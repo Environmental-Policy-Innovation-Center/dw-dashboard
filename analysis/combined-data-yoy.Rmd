@@ -13,7 +13,7 @@ state_name <- "Alabama"
 state_abbr <- "AL"
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 ```
 

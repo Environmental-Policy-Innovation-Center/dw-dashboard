@@ -146,7 +146,7 @@ small_community_df <- all_projects %>%
 
 ### Project Type
 ```{r}
-project_type_df <- all_projects %>%
+project_type_counts <- all_projects %>%
   group_by(state, state_fiscal_year, project_type) %>%
   summarize(projects = n(),
             dac_projects = sum(disadvantaged=="Yes", na.rm=TRUE),
@@ -272,6 +272,7 @@ pc_by_dac <- all_projects %>%
 pc_by_dac_type <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year,disadvantaged, project_type) %>%
+  filter(disadvantaged == "Yes") %>%
   summarize(project_cost_dac = sum(as.numeric(project_cost))) %>%
   ungroup() %>%
   select(state, state_fiscal_year, project_cost_dac, project_type)
@@ -505,7 +506,7 @@ project_dollars <- feature_coverage %>%
   left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
 
-project_type_df <- project_type_df %>%
+project_type_df <- project_type_counts %>%
   left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>% 
   left_join(pc_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) %>%

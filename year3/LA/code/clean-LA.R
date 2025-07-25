@@ -27,8 +27,7 @@ clean_la_y3 <- function() {
   gs_fundable <- fread("year3/LA/data/fundable-gen-supp.csv",
                        colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "General",
-           expecting_funding = "Yes")
+    mutate(expecting_funding = "Yes")
   
   ec_fundable <- fread("year3/LA/data/fundable-ec.csv",
                        colClasses = "character", na.strings = "") %>%

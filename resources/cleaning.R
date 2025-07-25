@@ -48,7 +48,7 @@ lslr_str <- "lslr|lead service line replacement|replacing lead"
 lead_str <- paste0(lsli_str, "|", lslr_str, "|lead|lsl")
 ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|
            PFPeA|PFAS|PFOA|PFOS|trihalomethane|THM|Unregulated Contaminant Monitoring Rule|DBP|
-           disinfection byproduct|HAA5|haloacetic acid"
+           disinfection byproduct|HAA5|haloacetic acid|emerging containment|BIL EC|BIL-EC"
 
 
 

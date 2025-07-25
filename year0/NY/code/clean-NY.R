@@ -92,7 +92,21 @@ clean_ny_y0 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-           
+  
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  
+  ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No duplicates
+  
+  # Check for disinfection byproduct in description
+  ny_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision: No disinfection byproduct string
+    
+  ####### SANITY CHECKS END #######
+  
+  
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

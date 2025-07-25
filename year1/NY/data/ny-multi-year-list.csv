@@ -1,6 +1,26 @@
 Project,County,"System Name /
 Borrower",Description,Pop .,Project Cost,Score,"Cumulative
 Total"
+17299,Albany,RAVENA VILLAGE / Ravena (V),"Source, WTP, Storage, and Distribution Improvements., Upgrade Water Treatment Plant, Upgrade Surface Water Source, Upgrade Storage, Upgrade Distribution System","4,500",$0,80,$0
+18535,Albany,WATERVLIET CITY / Watervliet (C),"Water System Improvements., Upgrade Water Treatment Plant, Upgrade Transmission","9,889",$0,80,$0
+18903,Albany,ALBANY CITY / Albany MWFA,"2022 Water System Improvements., Upgrade Water Treatment Plant, Upgrade Storage, Upgrade Pump Station","101,082","$6,100,000",70,"$6,100,000"
+18523,Albany,ALBANY CITY / Albany MWFA,"Feura Bush WTP Upgrades., Upgrade Water Treatment Plant, Upgrade Storage","101,082",$0,65,"$6,100,000"
+17548,Albany,MENANDS VILLAGE / Menands (V),"Upgrade Pump Station, Upgrade Distribution System","3,900","$6,936,000",60,"$13,036,000"
+18659,Albany,WESTERLO WD 1 / Westerlo (T),"Aeration for for DBP treatment at well sources, Upgrade Water Treatment Plant",265,"$200,000",55,"$13,236,000"
+18984,Albany,COHOES CITY / Cohoes (C),"Phase 2 WTP Upgrades., Upgrade Water Treatment Plant","15,550","$9,738,811",45,"$22,974,811"
+18572,Albany,COHOES CITY / Cohoes (C),"WTP Improvements Phase I., Upgrade Water Treatment Plant","15,550","$9,609,256",45,"$32,584,067"
+19157,Albany,ALBANY CITY / Albany MWFA,"Water System Improvements, Upgrade Water Treatment Plant, Upgrade Storage, Upgrade Pump Station","101,082","$8,642,193",40,"$41,226,260"
+19155,Albany,RAVENA VILLAGE / Ravena (V),"Phase 2 Water System Improvements, Upgrade Water Treatment Plant, Upgrade Storage, Upgrade Pump Station, Upgrade Distribution System","4,500","$7,650,840",40,"$48,877,100"
+19127,Albany,ALBANY CITY / Albany MWFA,"Basic Creek Reservoir Dam Safety Improvements, Upgrade Surface Water Source","101,082","$7,822,850",40,"$56,699,950"
+18333,Albany,MENANDS VILLAGE / Menands (V),"South End Water Systen Improvements., Upgrade Distribution System","3,900","$4,934,800",35,"$61,634,750"
+19059,Albany,GUILDERLAND TOWN WD / Guilderland (T),"Greensand Groundwater Filtration system. , Upgrade Water Treatment Plant","30,000","$5,005,050",35,"$66,639,800"
+18807,Albany,LATHAM WATER DISTRICT / Colonie (T),"River Road Storage and Mohawk View WTP Mixing Improvements, Upgrade Water Treatment Plant, Upgrade Distribution System","78,500","$6,230,000",30,"$72,869,800"
+18845,Albany,NORTHEAST W.D. / New Scotland (T),"Connect Northeast WD and Kensington Woods WDs., New Inter-Connection",370,"$488,220",25,"$73,358,020"
+19152,Albany,BETHLEHEM WD NO 1 - NEW SALEM SYSTEM / Bethlehem (T),"NYS Route 85 Transmission Main Replacement, Upgrade Transmission","31,000","$6,695,000",15,"$80,053,020"
+19150,Albany,BETHLEHEM WD NO 1 - NEW SALEM SYSTEM / Bethlehem (T),"Elevated Water Storage Tank Replacement, Upgrade Storage","31,000","$3,900,000",15,"$83,953,020"
+18824,Allegany,HUME WATER DISTRICT / Hume (T),"Sanford Springs Consolidation and System Upgrades., Extend Distribution System, Upgrade Distribution System, New System Consolidation",620,"$600,000",1160,"$84,553,020"
+18358,Allegany,ANDOVER VILLAGE PUBLIC WATER / Andover (V),"Source (GWUDI Springs), Distribution, & Storage Improvements., New Water Treatment Plant, Upgrade Transmission, Upgrade Distribution System, New System Consolidation","1,130","$2,547,345",1135,"$87,100,365"
+19051,Allegany,SCIO WATER DISTRICT / Scio (T),"Water Storage Tank Replacement and Water System Improvements, Upgrade Storage, Upgrade Distribution System",900,"$2,550,000",90,"$89,650,365"
 19213,Allegany,"WELLSVILLE VILLAGE
 PUBLIC WATER / Wellsville
 ( )","Village - Wide Watermain Replacement , Upgrade Distribution System","5,700","$5,166,480.00",60,"$94,816,845.00"

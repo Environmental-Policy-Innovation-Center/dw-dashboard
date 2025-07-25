@@ -1,4 +1,8 @@
-SRF #,Applicant,County,"2023 IUP ListedCost",Project Type,"BIL-LSLR GrantAward","BIL-LSLR 0%Loan Award","Total BIL-LSLRFunding Award"
+SRF #,Applicant,County,"2023 IUP Listed
+Cost",Project Type,"BIL-LSLR Grant
+Award","BIL-LSLR 0%
+Loan Award","Total BIL-LSLR
+Funding Award"
 19326,Amenia (T),Dutchess,"$481,000",Inventory,"$481,000",$0,"$481,000"
 19411,Auburn (C),Cayuga,"$917,988",Inventory,"$917,988",$0,"$917,988"
 19384,Bath (V),Steuben,"$1,382,000",Inventory,"$1,382,000",$0,"$1,382,000"
@@ -22,3 +26,4 @@ SRF #,Applicant,County,"2023 IUP ListedCost",Project Type,"BIL-LSLR GrantAward
 19407,Syracuse (C),Onondaga,"$2,266,000",Inventory,"$2,000,000","$266,000","$2,266,000"
 19408,Syracuse (C),Onondaga,"$41,341,728",Replacement,"$10,000,000","$12,756,047","$22,756,047"
 19287,Troy (C),Rensselaer,"$572,000",Inventory,"$572,000",$0,"$572,000"
+19370,Warwick (V),Orange,"$575,770",Inventory, "$0","$575,770", "$575,770"

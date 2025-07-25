@@ -26,7 +26,7 @@ clean_al_y4 <- function() {
       requested_amount = clean_numeric_string(applied_for_project_amount),
       funding_amount = as.character(NA),
       principal_forgiveness = 
-        as.numeric(tidyr::replace_na(stringr::str_remove(string = dw_srf_percent_pf, "%"), "0"))*as.numeric(clean_numeric_string(applied_for_project_amount)),
+        as.numeric(tidyr::replace_na(stringr::str_remove(string = dw_srf_percent_pf, "%"), "0"))*.01*as.numeric(clean_numeric_string(applied_for_project_amount)),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       project_description = str_squish(attachment_description),
       population = clean_numeric_string(population),

@@ -49,10 +49,12 @@ lsli_str <- paste(c(
 ), collapse = "|")
 
 lslr_str <- paste(c(
-  "lslr", 
-  "lead service line replacement", 
-  "replacing lead"
-), collapse = "|")
+  "lslr",
+  "lead service line replacement",
+  "replac\\w*\\s+(?:\\w+\\s+){0,5}?lead"
+), 
+collapse = "|")
+
 
 # create keywords for determining project types when extracting info from project descriptions
 lead_str <- paste(c(

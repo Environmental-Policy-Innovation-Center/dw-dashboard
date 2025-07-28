@@ -58,7 +58,8 @@ clean_al_y2 <- function() {
     dplyr::mutate(source_file = "EC") |>
     mutate(project_type = "Emerging Contaminants", 
            funding_amount = clean_numeric_string(dw_bil_ec_amount_granted), 
-           principal_forgiveness = clean_numeric_string(dw_bil_ec_amount_granted), 
+           principal_forgiveness = clean_numeric_string(dw_bil_ec_amount_granted),
+           requested_amount = clean_numeric_string(applied_for_project_amount),
            expecting_funding = "Yes",
            project_name = "No Information",
            project_number = str_squish(project_number), 

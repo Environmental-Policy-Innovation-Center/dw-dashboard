@@ -53,6 +53,10 @@ la_clean_y0 <- clean_la_y0()
 source("year0/MI/code/clean-MI.R")
 mi_clean_y0 <- clean_mi_y0()
 
+# New York 
+source("year0/NY/code/clean-NY.R")
+ny_clean_y0 <- clean_ny_y0()
+
 # Tennessee
 source("year0/TN/code/clean-TN.R")
 tn_clean_y0 <- clean_tn_y0()

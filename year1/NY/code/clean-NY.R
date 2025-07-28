@@ -236,7 +236,7 @@ clean_ny_y1 <- function() {
   ####### Decision: No duplicates
   
   # Check for disinfection byproduct in description
-  ny_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ny_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
   ####### Decision: disinfection byproducts is an EC project, 
   # but it's also a consolidation project, which is a general project type. 
   # I think we should go ahead and classify as EC however.

@@ -16,9 +16,13 @@ clean_ny_y3 <- function() {
              # if one of the BEC/BLSLR/BGS codes are present, expecting_funding
              !is.na(codes) ~ "Yes",
              TRUE ~ "No"),
-           cumulative_total = clean_numeric_string(cumulative_total))
+           cumulative_total = clean_numeric_string(cumulative_total),
+           # hardship evaluation eligibility line
+          hardship = dplyr::case_when(
+             row_number() <= 143 ~ "Yes",
+             .default = "No")
+          )
 
-  
   # Lead PPL: Lead service line projects
   ny_lead <- fread(file.path(base_path, "ny-y3-bil-lead-v2.csv"),
                    colClasses="character", na.strings=c("", "NA")) %>%
@@ -30,6 +34,7 @@ clean_ny_y3 <- function() {
 
   
   # EC PPL: Projects addressing emerging contaminants (e.g., PFAS)
+
   ny_ec <- fread(file.path(base_path, "ny-y3-bil-ec-v2.csv"),
                  colClass="character", na.strings="") %>%
     clean_names() %>%
@@ -49,11 +54,9 @@ clean_ny_y3 <- function() {
   ny_annual <- ny_annual %>%
     mutate(
       project_type = case_when(
-        !is.na(project_type) ~ project_type,
-        str_detect(tolower(description), "lead") ~ "Lead",
-        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
-        codes == "BEC" ~ "Emerging Contaminants",
-        codes == "BLSLR" ~ "Lead",
+        !is.na(project_type) & project_type !="General" ~ project_type,
+        grepl(lead_str, description, ignore.case=TRUE)  ~ "Lead",
+        grepl(ec_str, description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
       list = ifelse(is.na(list), "annual", list)
     )
@@ -64,11 +67,14 @@ clean_ny_y3 <- function() {
                          colClass="character", na.strings="") %>%
     clean_names()
   
-  # Only used for checking for General DAC status
+  # IIJA Gen Supp PPL
   ny_gs <- fread(file.path(base_path, "ny-y3-bil-ppl-v2.csv"),
                  colClass="character", na.strings="") %>%
-    clean_names()
-
+    clean_names() |>
+    dplyr::mutate(
+      disadvantaged = "Yes",
+      list = "gs"
+    )
   
   ny_multi_year <- ny_multi_year %>%
     # all projects not on annual, ec, or lead by project_number
@@ -76,11 +82,10 @@ clean_ny_y3 <- function() {
     mutate(
       # For remaining projects, check descriptions
       project_type = case_when(
-        str_detect(tolower(description), "lead") ~ "Lead",
-        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
+        grepl(lead_str, description, ignore.case=TRUE)  ~ "Lead",
+        grepl(ec_str, description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"),
       list = "multi",
-      # disadvantaged = "No Information",  # Per data dictionary
       expecting_funding = "No"  # Not on any funding list
     )
 
@@ -90,21 +95,18 @@ clean_ny_y3 <- function() {
     ny_multi_year,
   )
   
-  
-  
   # Step 6: Clean and standardize columns
   ny_clean <- ny_all %>%
     mutate(
       disadvantaged = case_when(
         score == "H" ~ "Yes",
-        list == "annual" & expecting_funding == "Yes" & score != "H" ~ "No",
+        project_number %in% ny_gs$project ~ "Yes",
+        list == "annual" & hardship == "Yes" & score != "H" ~ "No", 
         list == "lead" & dac=="Yes" ~ "Yes",
         list == "lead" & dac=="No" ~ "No",
         list == "ec" & dac=="dac" ~ "Yes",
         list == "ec" & is.na(dac) ~ "No",
-        list == "annual" & expecting_funding == "No" ~ "No Information",
-        list == "multi" & expecting_funding == "No" ~ "No Information",
-        TRUE ~ "!missing"
+        TRUE ~ "No Information"
       ),
       population = clean_numeric_string(pop),
       project_cost = clean_numeric_string(project_cost),
@@ -112,6 +114,10 @@ clean_ny_y3 <- function() {
       community_served = str_squish(county),
       borrower = str_squish(system_name_borrower),
       project_score = str_squish(score),
+      project_score = dplyr::case_when(
+        project_score == "H" ~ "No Information",
+        .default = project_score
+      ),
       project_description = str_squish(description),
       state = "New York",
       state_fiscal_year = "2025",
@@ -140,6 +146,24 @@ clean_ny_y3 <- function() {
       TRUE ~ project_cost
     ))
   
+  
+  # Amendment 2 update (March 26, 2025)
+  ny_clean <- ny_clean %>%
+    mutate(project_cost = case_when(
+      project_id == "18656" ~ "3000000",
+      project_id == "17299" ~ "2000000",
+      project_id == "18631" ~ "11000000",
+      TRUE ~ project_cost
+    ))
+  
+  # Amendment 3 update (June 11, 2025)
+  ny_clean <- ny_clean %>%
+    mutate(project_cost = case_when(
+      project_id == "75704" ~ "4000000",
+      project_id == "18214" ~ "1500000",
+      TRUE ~ project_cost
+    ))
+
   # Step 7: Final column selection and validation
   ny_clean <- ny_clean %>%
     select(community_served, borrower, pwsid, project_id, project_name,
@@ -152,7 +176,19 @@ clean_ny_y3 <- function() {
   ny_clean <- ny_clean %>%
     filter(project_cost != "0")
   
+  ####### SANITY CHECKS START #######
   
+  # Hone in on project id duplication
+  
+  ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No duplicates
+  
+  # Check for disinfection byproduct in description
+  ny_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  ####### Decision: No change, classified as expected
+    
+  ####### SANITY CHECKS END #######
+
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

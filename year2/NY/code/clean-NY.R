@@ -1,10 +1,17 @@
 clean_ny_y2 <- function() {
   base_path <- file.path("year2", "NY", "data")
   
-  # Annual List, includes some funded projects, and some confirmed not funded projects based on funding line at 163
+  # Annual List, includes some funded projects, and some confirmed not funded projects based on funding line at 163 (expanded susidized interest rate)
+  # Hardship evaluation line at 90
   ny_annual <- fread(file.path(base_path, "ny-y2-annual-list.csv"),
                      colClass="character", na.strings="") %>%
-    clean_names()
+    clean_names() |>
+    dplyr::mutate(
+      hardship = dplyr::case_when(
+        row_number() <= 90 ~ "Yes",
+        row_number() > 90 ~ "No"
+      )
+    )
   
   # Multi-year list, intended to be comprehensive, but may not be due to amendments or docs coming out at different times
   ny_multi_year <- fread(file.path(base_path, "ny-y2-multi-year.csv"),
@@ -12,7 +19,7 @@ clean_ny_y2 <- function() {
     clean_names() %>%
     mutate(list = "multi")
   
-  
+  ## ny-y2-bil-lead.csv amendment 2 origin
   ny_lead <- fread(file.path(base_path, "ny-y2-bil-lead.csv"),
                    colClasses="character", na.strings=c("", "NA")) %>%
     clean_names() %>%
@@ -65,7 +72,7 @@ clean_ny_y2 <- function() {
     # projects on ec awards list are expecting funding, but dac is determined on ec ppl
     mutate(expecting_funding = "Yes",
            principal_forgiveness = clean_numeric_string(bil_ec_grant_award_ffy24_iup),
-           funding_amount = principal_forgiveness) %>%
+           funding_amount = clean_numeric_string(bil_ec_grant_award_ffy24_iup)) %>%
     rename(project_number = srf_number) %>%
     select(project_number, expecting_funding, funding_amount, principal_forgiveness)
   
@@ -117,10 +124,10 @@ clean_ny_y2 <- function() {
   annual_projects <- annual_projects %>%
     mutate(
       project_type = case_when(
-        !is.na(project_type) ~ project_type,
-        str_detect(tolower(description), "lead") | code=="BLSLR" ~ "Lead",
-        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") | code=="BEC" ~ "Emerging Contaminants",
-        TRUE ~ "General"),
+          !is.na(project_type) & project_type !="General" ~ project_type,
+             grepl(lead_str, description, ignore.case=TRUE) | code=="BLSLR" ~ "Lead",
+             grepl(ec_str, description, ignore.case=TRUE) | code=="BEC" ~ "Emerging Contaminants",
+             TRUE ~ "General"),
       expecting_funding = case_when(
         # inherit expecting funding where known already
         !is.na(expecting_funding) ~ expecting_funding,
@@ -137,8 +144,8 @@ clean_ny_y2 <- function() {
     mutate(
       # For remaining projects, check descriptions
       project_type = case_when(
-        str_detect(tolower(description), "lead") ~ "Lead",
-        str_detect(tolower(description), "pfas|dioxane|cyanotoxins|mn") ~ "Emerging Contaminants",
+        grepl(lead_str, description, ignore.case=TRUE) ~ "Lead",
+        grepl(ec_str, description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
       expecting_funding = "No",  # Not on any funding list.
       list = "multi"
@@ -157,7 +164,8 @@ clean_ny_y2 <- function() {
       dac == "DAC" ~ "Yes",
       list == 'lead' & is.na(dac) ~ "No",
       list == "ec" & is.na(dac) ~ "No",
-      # these are the remaining projects on the annual list above the funding line, but without an H score or code
+      hardship == "Yes" & score != "H" ~ "No",
+      # these are the remaining projects on the annual list above the subsidized interest rate funding line, but without an H score or code
       expecting_funding == "Yes" ~ "No",
       # no other matches, if on multi list, no info
       list == "multi" ~ "No Information",
@@ -176,6 +184,10 @@ clean_ny_y2 <- function() {
       community_served = str_squish(county),
       borrower = paste(str_squish(system_name), "/", str_squish(borrower)),
       project_score = str_squish(score),
+      project_score = dplyr::case_when(
+        project_score == "H" ~ "No Information",
+        .default = project_score
+      ),
       project_description = str_squish(description),
       state = "New York",
       state_fiscal_year = "2024",
@@ -184,8 +196,7 @@ clean_ny_y2 <- function() {
       pwsid = as.character(NA),
       project_name = as.character(NA),
       requested_amount = as.character(NA),
-      project_rank = as.character(NA),
-      #expecting_funding = replace_na(expecting_funding, "No")
+      project_rank = as.character(NA)
     )
   
   # Step 7: Implement Amendment 1
@@ -213,6 +224,19 @@ clean_ny_y2 <- function() {
     filter(project_cost != "0" & project_cost != "0.0" &
              project_cost != "" & !is.na(project_cost))
 
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  
+  ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No duplicates
+  
+  # Check for disinfection byproduct in description
+  ny_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  ####### Decision: No change, classified as expected
+    
+  ####### SANITY CHECKS END #######
+  
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))
   

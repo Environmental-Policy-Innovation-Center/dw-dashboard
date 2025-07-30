@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "New York"
+state_abbr <- "NY"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -275,7 +275,7 @@ if (nrow(project_counts %>% filter(!is.na(ef_projects))) > 0) {
       name == "ef_projects" ~ "Yes",
       name == "nef_projects" ~ "No",
       name == "ef_ni_projects" ~ "No Info"),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       project_percent = value / projects,
       project_percent_str = format_percent(project_percent),
       plot_str = paste0(expecting_funding, ": ", as.character(value), " (", project_percent_str, ")")
@@ -324,7 +324,7 @@ if (nrow(project_counts %>% filter(!is.na(dac_projects))) > 0) {
       name == "dac_projects" ~ "Yes",
       name == "ndac_projects" ~ "No",
       name == "dac_ni_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       project_percent = value / projects,    project_percent_str = format_percent(project_percent),
       plot_str = paste0(disadvantaged, ": ", as.character(value), " (", project_percent_str, ")")
     )
@@ -417,7 +417,7 @@ if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
         name == "dac_projects" ~ "Yes",
         name == "ndac_projects" ~ "No",
         name == "dac_ni_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/projects,3)*100),
       plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>",
                         "Disadvantaged: ", disadvantaged, "<br>",
@@ -469,7 +469,7 @@ if (nrow(project_type_df %>% filter(project_type == "General" & !is.na(dac_proje
         name == "dac_projects" ~ "Yes",
         name == "ndac_projects" ~ "No",
         name == "dac_ni_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/projects,3)*100),
       plot_str = paste0("Disadvantaged: ", disadvantaged, "<br>",
                         value, " ", " projects (", pct_str, "%)")
@@ -516,7 +516,7 @@ if (nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_projects
         name == "dac_projects" ~ "Yes",
         name == "ndac_projects" ~ "No",
         name == "dac_ni_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/projects,3)*100),
       plot_str = paste0("Disadvantaged: ", disadvantaged, "<br>",
                         value, " ", " projects (", pct_str, "%)")
@@ -564,7 +564,7 @@ if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !i
         name == "dac_projects" ~ "Yes",
         name == "ndac_projects" ~ "No",
         name == "dac_ni_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/projects,3)*100),
       plot_str = paste0("Disadvantaged: ", disadvantaged, "<br>",
                         value, " ", " projects (", pct_str, "%)")
@@ -615,7 +615,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 & nrow(project_c
       expecting_funding == "dac_nef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct_str = as.character(round(value/dacs_combined,3)*100),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(expecting_funding, ": ", value, " projects (", pct_str, "%)")
     )
   
@@ -663,7 +663,7 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
         name == "dac_ef_projects" ~ "Yes",
         name == "dac_nef_projects" ~ "No",
         name == "dac_ef_ni_projects" ~ "No Info"),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/dac_projects,3)*100),
       plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>",
                         "DAC Expecting Funding: ", expecting_funding, "<br>",
@@ -715,7 +715,7 @@ if (nrow(project_type_df %>% filter(project_type == "General" & !is.na(dac_proje
       expecting_funding == "dac_nef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct_str = as.character(round(value/dac_projects,3)*100),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(expecting_funding, ": ", value, " projects (", pct_str, "%)")
     )
   
@@ -760,7 +760,7 @@ if (nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_projects
       expecting_funding == "dac_nef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct_str = as.character(round(value/dac_projects,3)*100),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(expecting_funding, ": ", value, " projects (", pct_str, "%)")
     )
   
@@ -805,7 +805,7 @@ if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !i
       expecting_funding == "dac_nef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct_str = as.character(round(value/dac_projects,3)*100),
-      expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
+      expecting_funding = factor(expecting_funding, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(expecting_funding, ": ", value, " projects (", pct_str, "%)")
     )
   
@@ -849,7 +849,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct = round(value/ef_projects,3)*100,
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
 
   
@@ -899,7 +899,7 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
         name == "dac_ef_projects" ~ "Yes",
         name == "ndac_ef_projects" ~ "No",
         name == "dac_ni_ef_projects" ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/ef_projects,3)*100),
       plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>",
                         "Disadvantaged: ", disadvantaged, "<br>",
@@ -953,7 +953,7 @@ if(nrow(project_type_df %>% filter(project_type == "General" & !is.na(dac_ef_pro
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct = round(value/ef_projects,3)*100,
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
 
   
@@ -1003,7 +1003,7 @@ if(nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_ef_projec
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct = round(value/ef_projects,3)*100,
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
 
   
@@ -1052,7 +1052,7 @@ if(nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is
       disadvantaged == "ndac_ef_projects" ~ "No",
       TRUE ~ "No Info"),
       pct = round(value/ef_projects,3)*100,
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       plot_str = paste0(disadvantaged, ": ", value, " projects", " (", as.character(pct), "%)"))
 
   
@@ -1154,7 +1154,7 @@ if(nrow(project_dollars %>% filter(!is.na(funding_amount_ef_dac))) > 0) {
       disadvantaged == "funding_amount_ef_dac" ~ "Yes",
       disadvantaged == "funding_amount_ef_ndac" ~ "No",
       TRUE ~ "No Info"),
-      disadvantaged = factor(disadvantaged, levels=c("No Info", "No", "Yes")),
+      disadvantaged = factor(disadvantaged, levels=c("No", "Yes", "No Info")),
       pct_str = as.character(round(value/funding_amount_ef,3)*100),
       plot_str = paste0(disadvantaged, ": ", format_currency(value), " (", pct_str, "%)")
     )
@@ -1471,7 +1471,14 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
                 summarize(projects_combined = sum(projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(projects/projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", projects, " projects", " (",
-                                                      pct_str, "%)"))
+                                                      pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No", "Yes", "No Info" )) 
+
   
   sc_pop_p <- ggplot(sc_projects, aes(x=state_fiscal_year, y=projects, fill=small_community, 
                                              text=plot_str)) + 
@@ -1514,7 +1521,13 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
                 summarize(ef_projects_combined = sum(ef_projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(ef_projects/ef_projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", ef_projects, " projects", " (",
-                                                      pct_str, "%)"))
+                                                      pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No", "Yes", "No Info" )) 
   
   sc_ef_p <- ggplot(sc_ef_projects, aes(x=state_fiscal_year, y=ef_projects, fill=small_community, 
                                             text=plot_str)) + 
@@ -1548,14 +1561,20 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
 ```{r}
 if(nrow(small_community_df %>% filter(!is.na(dac_projects))) > 0) {
   
-    sc_dac_projects <- small_community_df %>%
+sc_dac_projects <- small_community_df %>%
     select(state_fiscal_year, dac_projects, small_community) %>%
     left_join(small_community_df %>% 
                 group_by(state_fiscal_year) %>%
                 summarize(dac_projects_combined = sum(dac_projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(dac_projects/dac_projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", dac_projects, " projects", " (",
-                                                      pct_str, "%)"))
+           pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No", "Yes", "No Info" )) 
   
   sc_dac_p <- ggplot(sc_dac_projects, aes(x=state_fiscal_year, y=dac_projects, fill=small_community, 
                                              text=plot_str))+ 
@@ -1904,6 +1923,8 @@ dac_pc <- project_dollars |>
   if (sum(dac_pc$value, na.rm=TRUE) > 0) {
 
     dac_pc_p <- dac_pc |>
+      dplyr::ungroup() |>
+      dplyr::mutate(name = forcats::fct_relevel(name, "No", "Yes", "No Info" )) |>
       ggplot2::ggplot() +
       ggplot2::geom_col(aes(state_fiscal_year, value, fill=name)) +
       ggplot2::scale_y_continuous(labels=label_dollar()) + 

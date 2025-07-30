@@ -86,7 +86,7 @@ clean_ny_y0 <- function() {
     ) |>
     dplyr::mutate(
       state = "New York",
-      state_fiscal_year = "2023"
+      state_fiscal_year = "2022"
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,

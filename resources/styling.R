@@ -91,8 +91,8 @@ pt_colors <- c("General"="#526489",
                "Lead"="#82AB6E",
                "Emerging Contaminants"="#B077B2")
 
-ef_dac_sc_colors <- c("Yes"="#82AB6E",
-                      "No"="#526489",
+ef_dac_sc_colors <- c("No"="#526489",
+                      "Yes"="#82AB6E",
                       "No Info"="lightgrey")
 
 lead_colors <- c("Inventory"="#B077B2",

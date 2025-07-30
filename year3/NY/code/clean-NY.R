@@ -108,7 +108,9 @@ clean_ny_y3 <- function() {
         list == "ec" & is.na(dac) ~ "No",
         TRUE ~ "No Information"
       ),
-      population = clean_numeric_string(pop),
+      population = dplyr::case_when(
+        is.na(population) ~ clean_numeric_string(pop),
+        .default = clean_numeric_string(population)),
       project_cost = clean_numeric_string(project_cost),
       project_id = str_squish(project_number),
       community_served = str_squish(county),

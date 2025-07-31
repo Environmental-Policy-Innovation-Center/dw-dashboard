@@ -143,11 +143,11 @@ clean_ny_y1 <- function() {
       row_number() > 148 & is.na(expecting_funding) ~ "No",
       TRUE ~ expecting_funding),
       disadvantaged = case_when(
+        !is.na(disadvantaged) ~ disadvantaged,
         # projects with H are DACs, projects above line but not H are No, projects below line and only on annual list are No Info
         score == "H" & is.na(disadvantaged) ~ "Yes",
         hardship == "Yes" & score != "H" & is.na(disadvantaged) ~ "No",
-        hardship == "No" & is.na(disadvantaged) ~ "No Information",
-        TRUE ~ disadvantaged),
+        .default = "No Information"),
       # projects that are on lead/gs/ec but not on annual list, plus those on annual list, all No Information
       funding_amount = replace_na(funding_amount, "No Information"),
       principal_forgiveness = replace_na(principal_forgiveness, "No Information"))

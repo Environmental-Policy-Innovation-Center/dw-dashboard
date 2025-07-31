@@ -1,7 +1,7 @@
 clean_ny_y2 <- function() {
   base_path <- file.path("year2", "NY", "data")
   
-  # Annual List, includes some funded projects, and some confirmed not funded projects based on funding line at 163 (expanded susidized interest rate)
+  # Annual List, includes some funded projects, and some confirmed not funded projects based on funding line at 163 (expanded subsidized interest rate)
   # Hardship evaluation line at 90
   ny_annual <- fread(file.path(base_path, "ny-y2-annual-list.csv"),
                      colClass="character", na.strings="") %>%
@@ -10,6 +10,12 @@ clean_ny_y2 <- function() {
       hardship = dplyr::case_when(
         row_number() <= 90 ~ "Yes",
         row_number() > 90 ~ "No"
+      )
+    ) |>
+    dplyr::mutate(
+      subsidized = dplyr::case_when(
+        row_number() <= 163 ~ "Yes",
+        row_number() > 163 ~ "No"
       )
     )
   
@@ -159,19 +165,13 @@ clean_ny_y2 <- function() {
   
   ny_clean <- ny_clean %>%
     mutate(disadvantaged = case_when(
-      !is.na(disadvantaged) ~ disadvantaged,
-      score == "H" ~ "Yes",
-      dac == "DAC" ~ "Yes",
-      list == 'lead' & is.na(dac) ~ "No",
-      list == "ec" & is.na(dac) ~ "No",
-      hardship == "Yes" & score != "H" ~ "No",
-      # these are the remaining projects on the annual list above the subsidized interest rate funding line, but without an H score or code
-      expecting_funding == "Yes" ~ "No",
-      # no other matches, if on multi list, no info
-      list == "multi" ~ "No Information",
-      list == "annual" & expecting_funding == "No" ~ "No Information",
-      # used for testing
-      TRUE ~ "!Missing"
+      !is.na(disadvantaged) ~ disadvantaged, #IIJA Gen Supp (General, Lead, or EC)
+      score == "H" ~ "Yes", #Annual List H (General, Lead, or EC)
+      dac == "DAC" ~ "Yes", # DAC in Lead or EC
+      list == 'lead' & is.na(dac) ~ "No", # non DAC in Lead 
+      list == "ec" & is.na(dac) ~ "No", # non DAC in EC
+      hardship == "Yes" & score != "H" ~ "No", #Above Harship, but not designated H
+      .default = "No Information" #remaining projects are No Information
     ))
 
   

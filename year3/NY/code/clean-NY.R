@@ -99,7 +99,6 @@ clean_ny_y3 <- function() {
   ny_clean <- ny_all %>%
     mutate(
       disadvantaged = case_when(
-        !is.na(disadvantaged) ~ disadvantaged,
         score == "H" ~ "Yes",
         project_number %in% ny_gs$project ~ "Yes",
         list == "annual" & hardship == "Yes" & score != "H" ~ "No", 

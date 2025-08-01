@@ -1889,7 +1889,7 @@ if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
 
 
 ### DAC
-### Project Costs
+#### Project Costs
 ```{r}
 dac_pc <- project_dollars |>
   dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, 
@@ -1950,5 +1950,71 @@ dac_pc <- project_dollars |>
   
   dac_pc_gp
   }
+
+```
+
+#### Project Cost by Type
+
+```{r}
+pc_by_type_by_dac <- all_projects |>
+   dplyr::filter(state == state_name) |>
+   dplyr::filter(!is.na(project_cost) & project_cost !="No Information", expecting_funding == "Yes") |>
+   dplyr::select(state, state_fiscal_year, project_cost, project_type, disadvantaged) |>
+   dplyr::group_by(state, state_fiscal_year, project_type, disadvantaged) |>
+   dplyr::mutate(total_project_cost_by_dac = sum(as.numeric(project_cost), na.rm = TRUE)) |>
+   ungroup() |>
+   dplyr::group_by(state, state_fiscal_year, project_type) |>
+   dplyr::mutate(
+    total_project_cost_by_type = sum(as.numeric(project_cost), na.rm = TRUE),
+    proportion = round(100*total_project_cost_by_dac/total_project_cost_by_type, 2)
+) |>
+   dplyr::select(-project_cost) |>
+   dplyr::distinct() |>
+   ungroup()  |>
+   tidyr::pivot_longer(cols = disadvantaged) |>
+   dplyr::rename(
+    Disadvantaged = "value"
+   ) |>
+   dplyr::mutate(
+    Disadvantaged = dplyr::case_when(
+      Disadvantaged == "No Information" ~ "No Info",
+      .default = Disadvantaged
+    ),
+    Disadvantaged= as.factor(Disadvantaged),
+    Disadvantaged = forcats::fct_relevel(Disadvantaged, "No Info", "No", "Yes" ),
+    project_type = as.factor(project_type),
+    project_type = forcats::fct_relevel(project_type, "General", "Lead", "Emerging Contaminants" ),
+    text = paste0(
+      project_type, ", ", state_fiscal_year, ": <br>", 
+      "Disadvantaged: ", Disadvantaged, "<br>", 
+      "Total project costs: ", format_currency(total_project_cost_by_dac), " (", proportion, "%)"
+    )
+   ) 
+
+pc_by_type_by_dac_g<- pc_by_type_by_dac |>
+   ggplot2::ggplot() +
+   geom_col(aes(state_fiscal_year, total_project_cost_by_dac, fill = Disadvantaged)) +
+   facet_grid(~project_type) +
+   epic_chart_theme +
+   scale_fill_manual(values = ef_dac_sc_colors) +
+   scale_y_continuous(labels=label_dollar()) +
+   labs(
+    title= paste0(
+      "What proportion of project costs for projects expecting funding are DAC? — ",
+      get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name)),
+    x="",
+    y="") + 
+  epic_chart_theme
+
+pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") %>%
+  layout(title = list(text = paste0(
+      "What proportion of project costs for projects expecting funding are DAC? — ",
+      get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
+
+    if (save_plots) {
+    run_save_plots(gg_plot = pc_by_type_by_dac_g,
+                   gp_object = pc_by_type_by_dac_gp, 
+                   name = "dac-by-type-project-cost-yoy")
+    }
 
 ```

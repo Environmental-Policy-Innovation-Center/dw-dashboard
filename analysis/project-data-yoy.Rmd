@@ -1956,6 +1956,9 @@ dac_pc <- project_dollars |>
 #### Project Cost by Type
 
 ```{r}
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names()
+
 pc_by_type_by_dac <- all_projects |>
    dplyr::filter(state == state_name) |>
    dplyr::filter(!is.na(project_cost) & project_cost !="No Information", expecting_funding == "Yes") |>
@@ -1993,7 +1996,7 @@ pc_by_type_by_dac <- all_projects |>
 
 pc_by_type_by_dac_g<- pc_by_type_by_dac |>
    ggplot2::ggplot() +
-   geom_col(aes(state_fiscal_year, total_project_cost_by_dac, fill = Disadvantaged)) +
+   geom_col(aes(state_fiscal_year, total_project_cost_by_dac, fill = Disadvantaged, text = text)) +
    facet_grid(~project_type) +
    epic_chart_theme +
    scale_fill_manual(values = ef_dac_sc_colors) +
@@ -2006,7 +2009,7 @@ pc_by_type_by_dac_g<- pc_by_type_by_dac |>
     y="") + 
   epic_chart_theme
 
-pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") %>%
+pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
   layout(title = list(text = paste0(
       "What proportion of project costs for projects expecting funding are DAC? — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
@@ -2016,5 +2019,7 @@ pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") %>%
                    gp_object = pc_by_type_by_dac_gp, 
                    name = "dac-by-type-project-cost-yoy")
     }
+
+    pc_by_type_by_dac_gp
 
 ```

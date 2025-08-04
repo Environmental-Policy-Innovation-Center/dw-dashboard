@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "New York"
-state_abbr <- "NY"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -176,14 +176,14 @@ if ( nrow(project_dollars %>% filter(!is.na(project_cost_ef)))  > 0 ) {
 tpc_ef_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=project_cost_ef, text=format_currency(project_cost_ef))) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="What are the total project costs of projects expecting funding?",
+  labs(title="What are the total project costs of projects in funding lists?",
        subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
        x="State Fiscal Year",
        y="Project Cost") + 
   epic_chart_theme
 
 tpc_ef_gp <- ggplotly(tpc_ef_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What are the total project costs of projects expecting funding?",
+  layout(title = list(text = paste0("What are the total project costs of projects in funding lists?",
                                     '<br>',
                                     get_subtitle_str(project_dollars$state_fiscal_year, state_name)
                                     )))
@@ -1393,7 +1393,7 @@ if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
     epic_chart_theme
   
   tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the total expected funding amount for each type of project?",
+    layout(title = list(text = paste0("What's the total amount of funding for projects on funding lists per project type?",
                                       '<br>',
                                       get_subtitle_str(project_type_df$state_fiscal_year, state_name)
                                       )))
@@ -1534,14 +1534,14 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many projects serving small communities expect funding?",
+         title="How many projects serving small communities are on funding lists?",
          subtitle=get_subtitle_str(small_community_df$state_fiscal_year, state_name)) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
     epic_chart_theme
   
   sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many projects serving small communities expect funding?",
+    layout(title = list(text = paste0("How many projects serving small communities are on funding lists?",
                                       '<br>',
                                       get_subtitle_str(small_community_df$state_fiscal_year, state_name))))
   
@@ -2003,7 +2003,7 @@ pc_by_type_by_dac_g<- pc_by_type_by_dac |>
    scale_y_continuous(labels=label_dollar()) +
    labs(
     title= paste0(
-      "What proportion of project costs for projects expecting funding are DAC? — ",
+      "What proportion of project costs for projects on funding lists are DAC? — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name)),
     x="",
     y="") + 
@@ -2011,7 +2011,7 @@ pc_by_type_by_dac_g<- pc_by_type_by_dac |>
 
 pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
   layout(title = list(text = paste0(
-      "What proportion of project costs for projects expecting funding are DAC? — ",
+      "What proportion of project costs for projects on funding lists are DAC? — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
 
     if (save_plots) {

@@ -14,8 +14,10 @@ clean_la_y3 <- function() {
   
   base_all <- base_app %>%
     left_join(base_fund, by="dwrlf_project_number") %>%
-    select(-potential_funding_source_s, -expected_loan_term, -est_date_to_close_loan, -readiness_to_proceed,
-           -compliance_correction_list_ao, -arpa_wsp_match_project, -preliminary_water_system_grade)
+    select(water_system_name, dwrlf_project_number, system_population, est_loan_amount,
+           potential_funding_source_s, amount_of_principal_forgiveness, priority_points,
+           project_description, type_of_principal_forgiveness_received, meets_affordability_criteria_dac,
+           iija_project, expecting_funding, principal_forgiveness)
   
   # 2025 combines gen, lead, and ec applicants into a single list
   # whereas fundable lists are separate by fed cap grant
@@ -27,8 +29,7 @@ clean_la_y3 <- function() {
   gs_fundable <- fread("year3/LA/data/fundable-gen-supp.csv",
                        colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(project_type = "General",
-           expecting_funding = "Yes")
+    mutate(expecting_funding = "Yes")
   
   ec_fundable <- fread("year3/LA/data/fundable-ec.csv",
                        colClasses = "character", na.strings = "") %>%
@@ -52,7 +53,7 @@ clean_la_y3 <- function() {
   bil_all <- bil_comp %>%
     left_join(fundable, by=c("dwrlf_project_number", "est_loan_amount")) %>%
     select(-potential_funding_source_s, -expected_loan_term, -est_date_to_close_loan, -readiness_to_proceed,
-           -compliance_correction_list_ao, -arpa_wsp_match_project, -preliminary_water_system_grade)
+           -compliance_correction, -arpa_wsp_match_project, -preliminary_water_system_grade)
   
   # combine and clean base and bil lists, which appear to not be overlapping, unlike 2024
   la_clean <- bind_rows(base_all, bil_all) %>% 
@@ -66,9 +67,9 @@ clean_la_y3 <- function() {
       project_type = case_when(
         # use type if already defined
         !is.na(project_type) ~ project_type,
-        # define type by source of BIL funding considered
-        grepl("BIL-EC", bil_project) ~ "Emerging Contaminants",
-        grepl("BIL-LSL", bil_project) ~ "Lead",
+        # define type by source of IIJA funding considered
+        grepl("IIJA-EC", iija_project) ~ "Emerging Contaminants",
+        grepl("IIJA-LSL", iija_project) ~ "Lead",
         # search for keywords
         grepl(lead_str, project_description) ~ "Lead",
         grepl(ec_str, project_description) ~ "Emerging Contaminants",

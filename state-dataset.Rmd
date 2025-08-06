@@ -146,7 +146,7 @@ small_community_df <- all_projects %>%
 
 ### Project Type
 ```{r}
-project_type_df <- all_projects %>%
+project_type_counts <- all_projects %>%
   group_by(state, state_fiscal_year, project_type) %>%
   summarize(projects = n(),
             dac_projects = sum(disadvantaged=="Yes", na.rm=TRUE),
@@ -206,8 +206,10 @@ pc_by_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`,
-         project_cost_ef_na = `NA`)
+         project_cost_ef_ni = `No Information`
+        #  ,
+        #  project_cost_ef_na = `NA`
+         )
 
 
 pc_by_dac_sc <- sc_projects |>
@@ -217,8 +219,9 @@ pc_by_dac_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="disadvantaged", values_from="total_project_cost") %>%
   rename(project_costs_dac = Yes,
          project_costs_ndac = No,
-         project_costs_dac_ni = `No Information`,
-         project_costs_dac_na = `NA`
+         project_costs_dac_ni = `No Information`
+        #  ,
+        #  project_costs_dac_na = `NA`
          ) 
  
 pc_by_dac_ef_sc <- sc_projects |>
@@ -228,17 +231,17 @@ pc_by_dac_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from=c("expecting_funding", "disadvantaged"), values_from="total_project_cost")|> 
   dplyr::rename(
     project_costs_ef_dac = Yes_Yes,
-    project_costs_ef_ndac = Yes_No,
-    project_costs_ef_dac_ni = `Yes_No Information`,
-    project_costs_ef_dac_na = `Yes_NA`,
+    # project_costs_ef_ndac = Yes_No,
+    # project_costs_ef_dac_ni = `Yes_No Information`,
+    # project_costs_ef_dac_na = `Yes_NA`,
 
     project_costs_nef_dac = No_Yes,
     project_costs_nef_ndac = No_No,
     project_costs_nef_dac_ni = `No_No Information`,
-    project_costs_nef_dac_na = `No_NA`,
+    # project_costs_nef_dac_na = `No_NA`,
 
     project_costs_ef_ni_dac = `No Information_Yes`,
-    project_costs_ef_NA_dac_na = `NA_NA`
+    # project_costs_ef_NA_dac_na = `NA_NA`
     ) 
 
 # filter project costs by expecting funding for both tables
@@ -249,8 +252,10 @@ pc_by_ef <- all_projects %>%
   pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`,
-         project_cost_ef_na = `NA`)
+         project_cost_ef_ni = `No Information`
+        #  ,
+        #  project_cost_ef_na = `NA`
+         )
 
 pc_by_dac <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
@@ -259,12 +264,15 @@ pc_by_dac <- all_projects %>%
   tidyr::pivot_wider(names_from="disadvantaged", values_from="project_cost_dac") %>%
   rename(project_cost_dac = Yes,
          project_cost_ndac = No,
-         project_cost_dac_ni = `No Information`,
-         project_cost_dac_na = `NA`)
+         project_cost_dac_ni = `No Information`
+        #  ,
+        #  project_cost_dac_na = `NA`
+         )
 
 pc_by_dac_type <- all_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year,disadvantaged, project_type) %>%
+  filter(disadvantaged == "Yes") %>%
   summarize(project_cost_dac = sum(as.numeric(project_cost))) %>%
   ungroup() %>%
   select(state, state_fiscal_year, project_cost_dac, project_type)
@@ -432,8 +440,8 @@ fa_by_dac_ef_sc <- sc_projects |>
 
     funding_amount_nef_dac = No_Yes,
     funding_amount_nef_ndac = No_No,
-    funding_amount_nef_dac_ni = `No_No Information`,
-    #funding_amount_nef_dac_na = `No_NA`
+    # funding_amount_nef_dac_ni = `No_No Information`,
+    # funding_amount_nef_dac_na = `No_NA`
   )
 ```
 
@@ -498,7 +506,7 @@ project_dollars <- feature_coverage %>%
   left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
   left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
 
-project_type_df <- project_type_df %>%
+project_type_df <- project_type_counts %>%
   left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>% 
   left_join(pc_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) %>%

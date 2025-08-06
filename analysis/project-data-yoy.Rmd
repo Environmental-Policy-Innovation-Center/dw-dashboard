@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Louisiana"
-state_abbr <- "LA"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -176,14 +176,14 @@ if ( nrow(project_dollars %>% filter(!is.na(project_cost_ef)))  > 0 ) {
 tpc_ef_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=project_cost_ef, text=format_currency(project_cost_ef))) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="What are the total project costs of projects expecting funding?",
+  labs(title="What are the total project costs of projects in funding lists?",
        subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
        x="State Fiscal Year",
        y="Project Cost") + 
   epic_chart_theme
 
 tpc_ef_gp <- ggplotly(tpc_ef_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What are the total project costs of projects expecting funding?",
+  layout(title = list(text = paste0("What are the total project costs of projects in funding lists?",
                                     '<br>',
                                     get_subtitle_str(project_dollars$state_fiscal_year, state_name)
                                     )))
@@ -913,14 +913,14 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
     labs(x="State Fiscal Year",
          y="Projects",
          title="What proportion of projects expecting funding are DACs?",
-         subtitle=get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name)) +
+         subtitle=get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name)) +
     epic_chart_theme + 
     facet_wrap(~project_type, strip.position="bottom") + 
     theme(strip.placement = "outside")
   
   dac_ef_comp_facet_gp <- ggplotly(dac_ef_comp_facet_p, tooltip="text") %>%
     layout(title = list(text = paste0("What proportion of projects expecting funding are DACs?",
-                                      ' — ', get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name))))
+                                      ' — ', get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name))))
   
   if (save_plots) {
     
@@ -1393,7 +1393,7 @@ if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
     epic_chart_theme
   
   tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the total expected funding amount for each type of project?",
+    layout(title = list(text = paste0("What's the total amount of funding for projects on funding lists per project type?",
                                       '<br>',
                                       get_subtitle_str(project_type_df$state_fiscal_year, state_name)
                                       )))
@@ -1471,7 +1471,14 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
                 summarize(projects_combined = sum(projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(projects/projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", projects, " projects", " (",
-                                                      pct_str, "%)"))
+                                                      pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No Info", "No", "Yes" )) 
+
   
   sc_pop_p <- ggplot(sc_projects, aes(x=state_fiscal_year, y=projects, fill=small_community, 
                                              text=plot_str)) + 
@@ -1514,21 +1521,27 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
                 summarize(ef_projects_combined = sum(ef_projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(ef_projects/ef_projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", ef_projects, " projects", " (",
-                                                      pct_str, "%)"))
+                                                      pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No Info", "No", "Yes" )) 
   
   sc_ef_p <- ggplot(sc_ef_projects, aes(x=state_fiscal_year, y=ef_projects, fill=small_community, 
                                             text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many projects serving small communities expect funding?",
+         title="How many projects serving small communities are on funding lists?",
          subtitle=get_subtitle_str(small_community_df$state_fiscal_year, state_name)) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
     epic_chart_theme
   
   sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many projects serving small communities expect funding?",
+    layout(title = list(text = paste0("How many projects serving small communities are on funding lists?",
                                       '<br>',
                                       get_subtitle_str(small_community_df$state_fiscal_year, state_name))))
   
@@ -1548,14 +1561,20 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
 ```{r}
 if(nrow(small_community_df %>% filter(!is.na(dac_projects))) > 0) {
   
-    sc_dac_projects <- small_community_df %>%
+sc_dac_projects <- small_community_df %>%
     select(state_fiscal_year, dac_projects, small_community) %>%
     left_join(small_community_df %>% 
                 group_by(state_fiscal_year) %>%
                 summarize(dac_projects_combined = sum(dac_projects, na.rm=TRUE))) %>%
     mutate(pct_str = as.character(round(dac_projects/dac_projects_combined ,3)*100),
            plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", dac_projects, " projects", " (",
-                                                      pct_str, "%)"))
+           pct_str, "%)")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(small_community = dplyr::case_when(
+      small_community == "No Information" ~ "No Info",
+      .default = small_community
+    )) |>
+    dplyr::mutate(small_community = forcats::fct_relevel(small_community, "No Info", "No", "Yes" )) 
   
   sc_dac_p <- ggplot(sc_dac_projects, aes(x=state_fiscal_year, y=dac_projects, fill=small_community, 
                                              text=plot_str))+ 
@@ -1870,11 +1889,20 @@ if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
 
 
 ### DAC
-### Project Costs
+#### Project Costs
 ```{r}
 dac_pc <- project_dollars |>
-  dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, project_cost_dac_ni, project_cost_dac_na) |>
-  tidyr::pivot_longer(cols = c("project_cost_ndac", "project_cost_dac", "project_cost_dac_ni", "project_cost_dac_na")) |>
+  dplyr::select(state_fiscal_year, project_cost_ndac, project_cost_dac, 
+  project_cost_dac_ni
+  # , 
+  # project_cost_dac_na
+  ) |>
+  tidyr::pivot_longer(cols = c("project_cost_ndac", 
+  "project_cost_dac", 
+  "project_cost_dac_ni"
+  # , 
+  # "project_cost_dac_na"
+  )) |>
   dplyr::group_by(state_fiscal_year, name) |>
   dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(state_fiscal_year) |>
@@ -1882,8 +1910,10 @@ dac_pc <- project_dollars |>
   dplyr::mutate(name = case_when(
     name ==  "project_cost_ndac" ~ "No", 
     name ==  "project_cost_dac" ~ "Yes", 
-    name ==  "project_cost_dac_ni" ~ "No Info", 
-    name == "project_cost_dac_na" ~ "NA"),
+    name ==  "project_cost_dac_ni" ~ "No Info"
+    # , 
+    # name == "project_cost_dac_na" ~ "NA"
+    ),
     pct_str = as.character(round(value/project_costs_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
     ) |>
@@ -1893,6 +1923,8 @@ dac_pc <- project_dollars |>
   if (sum(dac_pc$value, na.rm=TRUE) > 0) {
 
     dac_pc_p <- dac_pc |>
+      dplyr::ungroup() |>
+      dplyr::mutate(name = forcats::fct_relevel(name, "No Info", "No", "Yes" )) |>
       ggplot2::ggplot() +
       ggplot2::geom_col(aes(state_fiscal_year, value, fill=name)) +
       ggplot2::scale_y_continuous(labels=label_dollar()) + 
@@ -1918,5 +1950,76 @@ dac_pc <- project_dollars |>
   
   dac_pc_gp
   }
+
+```
+
+#### Project Cost by Type
+
+```{r}
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names()
+
+pc_by_type_by_dac <- all_projects |>
+   dplyr::filter(state == state_name) |>
+   dplyr::filter(!is.na(project_cost) & project_cost !="No Information", expecting_funding == "Yes") |>
+   dplyr::select(state, state_fiscal_year, project_cost, project_type, disadvantaged) |>
+   dplyr::group_by(state, state_fiscal_year, project_type, disadvantaged) |>
+   dplyr::mutate(total_project_cost_by_dac = sum(as.numeric(project_cost), na.rm = TRUE)) |>
+   ungroup() |>
+   dplyr::group_by(state, state_fiscal_year, project_type) |>
+   dplyr::mutate(
+    total_project_cost_by_type = sum(as.numeric(project_cost), na.rm = TRUE),
+    proportion = round(100*total_project_cost_by_dac/total_project_cost_by_type, 2)
+) |>
+   dplyr::select(-project_cost) |>
+   dplyr::distinct() |>
+   ungroup()  |>
+   tidyr::pivot_longer(cols = disadvantaged) |>
+   dplyr::rename(
+    Disadvantaged = "value"
+   ) |>
+   dplyr::mutate(
+    Disadvantaged = dplyr::case_when(
+      Disadvantaged == "No Information" ~ "No Info",
+      .default = Disadvantaged
+    ),
+    Disadvantaged= as.factor(Disadvantaged),
+    Disadvantaged = forcats::fct_relevel(Disadvantaged, "No Info", "No", "Yes" ),
+    project_type = as.factor(project_type),
+    project_type = forcats::fct_relevel(project_type, "General", "Lead", "Emerging Contaminants" ),
+    text = paste0(
+      project_type, ", ", state_fiscal_year, ": <br>", 
+      "Disadvantaged: ", Disadvantaged, "<br>", 
+      "Total project costs: ", format_currency(total_project_cost_by_dac), " (", proportion, "%)"
+    )
+   ) 
+
+pc_by_type_by_dac_g<- pc_by_type_by_dac |>
+   ggplot2::ggplot() +
+   geom_col(aes(state_fiscal_year, total_project_cost_by_dac, fill = Disadvantaged, text = text)) +
+   facet_grid(~project_type) +
+   epic_chart_theme +
+   scale_fill_manual(values = ef_dac_sc_colors) +
+   scale_y_continuous(labels=label_dollar()) +
+   labs(
+    title= paste0(
+      "What proportion of project costs for projects on funding lists are DAC? — ",
+      get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name)),
+    x="",
+    y="") + 
+  epic_chart_theme
+
+pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
+  layout(title = list(text = paste0(
+      "What proportion of project costs for projects on funding lists are DAC? — ",
+      get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
+
+    if (save_plots) {
+    run_save_plots(gg_plot = pc_by_type_by_dac_g,
+                   gp_object = pc_by_type_by_dac_gp, 
+                   name = "dac-by-type-project-cost-yoy")
+    }
+
+    pc_by_type_by_dac_gp
 
 ```

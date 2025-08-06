@@ -41,14 +41,34 @@ median_wo_zero <- function(col_name) {
 ### Project Type Lists
 
 # create keywords to search for identifying inventorying and replacement efforts
-lsli_str <- "lsli|lead service line inventory|inventory|survey"
-lslr_str <- "lslr|lead service line replacement|replacing lead"
+lsli_str <- paste(c(
+  "lsli", 
+  "lead service line inventory", 
+  "inventory", 
+  "survey"
+), collapse = "|")
+
+lslr_str <- paste(c(
+  "lslr",
+  "lead service line replacement",
+  "replac\\w*\\s+(?:\\w+\\s+){0,5}?lead"
+), 
+collapse = "|")
+
 
 # create keywords for determining project types when extracting info from project descriptions
-lead_str <- paste0(lsli_str, "|", lslr_str, "|lead|lsl")
-ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|
-           PFPeA|PFAS|PFOA|PFOS|trihalomethane|THM|Unregulated Contaminant Monitoring Rule|DBP|
-           disinfection byproduct|HAA5|haloacetic acid"
+lead_str <- paste(c(
+  lsli_str, 
+  lslr_str, 
+  "lead",
+  "lsl"), collapse = "|")
+
+ec_str <- paste(c(
+  "cyanotoxin", "dioxane", "emerging contaminant", "lithium", "manganese", "Mn",
+  "Perfluoro-n-pentanoic acid", "PFPeA", "PFAS", "PFOA", "PFOS", "trihalomethane", "THM",
+  "Unregulated Contaminant Monitoring Rule", "DBP", "disinfection byproduct", "HAA5",
+  "haloacetic acid", "emerging containment", "BIL EC", "BIL-EC"
+), collapse = "|")
 
 
 

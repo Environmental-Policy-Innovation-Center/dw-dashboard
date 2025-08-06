@@ -91,8 +91,8 @@ pt_colors <- c("General"="#526489",
                "Lead"="#82AB6E",
                "Emerging Contaminants"="#B077B2")
 
-ef_dac_sc_colors <- c("Yes"="#82AB6E",
-                      "No"="#526489",
+ef_dac_sc_colors <- c("No"="#526489",
+                      "Yes"="#82AB6E",
                       "No Info"="lightgrey")
 
 lead_colors <- c("Inventory"="#B077B2",
@@ -103,7 +103,8 @@ lead_colors <- c("Inventory"="#B077B2",
 comp_colors <- c("Total Available"="#4ea324",
                  "Available Funds"="#4ea324",
                  "Total Demand"="#172f60",
-                 "Expected Funding"="#791a7b")
+                 "Expected Funding"="#791a7b",
+                 "Unmet Demand"="lightgrey")
 
 # Single SFY Colors
 distribution_colors <- c("Principal Forgiveness"="#4ea324",

@@ -56,7 +56,8 @@ clean_la_y2 <- function() {
                     colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     select(-est_date_to_close_loan) %>%
-    mutate(expecting_funding = "No",
+    # if there is a future amendment, check projects on this list against funding lists to determine if this should change
+    mutate(expecting_funding = "No Information",
            project_type = "Lead")
   
   # combine bil

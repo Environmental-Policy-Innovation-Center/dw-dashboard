@@ -1,110 +1,245 @@
  Rank,Project #,Project Name,County,Project Description,Population,Total Points,Estimated Binding Commitment Date,Project Amount,Water Infrastructure Fund Transfer Act (WIFTA Amount),Drinking Water Infrastructure (DWI) Grant Amount,DWSRF Loan Amount,Disadvantaged Community,MAHI*,Disadvantaged PF 24% of Loan Not Receiving WIFTA After DWI Applied,"Additional 5% PF If MAHI < $35,000",Total Principal Forgiveness (non WIFTA)
 1,7555-01,City of Owosso,Shiawassee County,LSLR,"14,539",690,02/25/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$41,469.00",,,
-2,7458-01,City of Owosso,"ShiawasseeCounty",WM repl,"14,539",690,02/25/2022,"$1,345,000.00",,"$403,500.00","$941,500.00",Yes,"$41,469.00","$225,960.00",,"$225,960.00"
-3,7539-01,"Charter Twp. ofAnn Arbor","WashtenawCounty",Dist sys imp,"3,300",570,05/16/2022,"$8,385,000.00",,"$2,000,000.00","$6,385,000.00",,,,,
-4,7508-01,"Village ofKaleva",Manistee County,LSLR,282,535,02/25/2022,"$415,000.00","$415,000.00",,,Yes,"$39,185.00",,,
-5,7636-01,"Village ofKaleva",Manistee County,"WM repl, PSSCADA",282,535,02/25/2022,"$5,000.00",,"$1,500.00","$3,500.00",Yes,"$39,185.00",$840.00,,$840.00
-6,7492-01,"City of GrandRapids",Kent County,"WM repl,LSLR","198,401",525,08/08/2022,"$32,200,000.00","$10,000,000.00",,"$22,200,000.00",Yes,"$41,774.00",,,
-7,7606-01,"Village ofShelby",Oceana County,"WM repl, strgtank","2,157",520,05/16/2022,"$2,070,000.00",,"$621,000.00","$1,449,000.00",Yes,"$38,498.00","$347,760.00",,"$347,760.00"
-8,7605-01,"Village ofShelby",Oceana County,LSLR,"2,157",520,05/16/2022,"$2,015,000.00","$1,920,000.00",,"$95,000.00",Yes,"$38,498.00",,,
-9,7490-01,"City of HighlandPark",Wayne County,WM repl,"11,398",515,11/15/2021,"$9,900,000.00",,"$2,000,000.00","$7,900,000.00",Yes,"$23,362.00","$1,896,000.00","$395,000.00","$2,291,000.00"
-10,7516-01,"City of HighlandPark",Wayne County,LSLR,"11,398",515,11/15/2021,"$2,490,000.00","$2,445,000.00",,"$45,000.00",Yes,"$23,362.00",,,
-11,7609-01,"CharterTownship ofBrownstown",Wayne County,"New elev strgtanks","30,627",515,05/16/2022,"$9,595,000.00",,"$2,000,000.00","$7,595,000.00",,,,,
-12,7607-01,"City ofEscanaba",Delta County,LSLR,"12,181",490,05/16/2022,"$5,000,000.00","$3,000,000.00",,"$2,000,000.00",Yes,"$33,682.00","$33,68",,
-13,7634-01,"City ofEscanaba",Delta County,WTP,"12,181",490,08/08/2022,"$5,650,000.00",,"$1,695,000.00","$3,955,000.00",Yes,"$33,682.00","$949,200.00","$197,750.00","$1,146,950.00"
-14,7575-01,"City ofMuskegonHeights","MuskegonCounty",LSLR,"10,800",490,02/25/2022,"$3,640,000.00","$3,000,000.00",,"$640,000.00",Yes,"$23,544.00",,,
-15,7576-01,City of Muskegon Heights,"MuskegonCounty","WM repl, WTP impr","10,800",490,02/25/2022,"$4,045,000.00",,"$1,213,500.00","$2,831,500.00",Yes,"$23,544.00","$679,560.00","$141,575.00","$821,135.00"
-16,7487-01,"City of StJoseph",Berrien County,"WM replac,LSLR","33,000",490,05/16/2022,"$4,000,000.00",,"$1,200,000.00","$2,800,000.00",,,,,
-17,7580-01,"Village of PawPaw","Van BurenCounty","WM repl, strgtank rehab","3,560",480,05/16/2022,"$5,805,000.00",,"$1,741,500.00","$4,063,500.00",Yes,"$33,380.00","$975,240.00","$203,175.00","$1,178,415.00"
-18,7579-01,"Village of PawPaw","Van BurenCounty",LSLR,"3,560",480,05/16/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$33,380.00",,,
-19,7557-01,"City of GrandRapids",Kent County,"WTP, PS repl","380,815",475,02/25/2022,"$22,680,000.00",,"$2,000,000.00","$20,680,000.00",,,,,
-20,7617-01,"Village ofWestphalia",Clinton County,WM repl,923,470,05/16/2022,"$1,820,000.00",,"$546,000.00","$1,274,000.00",,,,,
-21,7471-01,City of Howell,"LivingstonCounty","WM repl - E.Grand River","9,203",455,02/25/2022,"$3,685,000.00",,"$1,105,500.00","$2,579,500.00",Yes,"$49,828.00","$619,080.00",,"$619,080.00"
-22,7630-01,City of Howell,"LivingstonCounty","LSLR - E.Grand River","9,203",455,02/25/2022,"$165,000.00","$165,000.00",,,Yes,"$49,828.00",,,
-23,7443-01,"East LansingMeridian Water& SewerAuthority",Ingham County,"Water mainext, filterbkwsh","79,585",450,05/16/2022,"$9,100,000.00",,"$2,000,000.00","$7,100,000.00",,,,,
-24,7573-01,"City of WestBranch",Ogemaw County,"WM repl, newWTP","2,139",445,05/16/2022,"$4,900,000.00",,"$1,470,000.00","$3,430,000.00",Yes,"$34,562.00","$823,200.00","$171,500.00","$994,700.00"
-25,7572-01,"City of WestBranch",Ogemaw County,LSLR,"2,139",445,05/16/2022,"$2,800,000.00","$2,800,000.00",,,Yes,"$34,562.00",,,
-26,7599-01,City of Corunna,"ShiawasseeCounty",LSLR,"1,600",445,05/16/2022,"$305,000.00","$305,000.00",,,Yes,"$45,690.00",,,
-27,7600-01,City of Corunna,"ShiawasseeCounty",Water sys imp,"1,600",445,05/16/2022,"$3,860,000.00",,"$1,158,000.00","$2,702,000.00",Yes,"$45,690.00","$648,480.00",,"$648,480.00"
-28,7525-01,"Village ofMarcellus",Cass County,LSLR,"1,149",445,05/16/2022,"$3,250,000.00","$2,795,000.00",,"$455,000.00",Yes,"$45,802.00",,,
+2,7458-01,City of Owosso,"Shiawassee
+County",WM repl,"14,539",690,02/25/2022,"$1,345,000.00",,"$403,500.00","$941,500.00",Yes,"$41,469.00","$225,960.00",,"$225,960.00"
+3,7539-01,"Charter Twp. of
+Ann Arbor","Washtenaw
+County",Dist sys imp,"3,300",570,05/16/2022,"$8,385,000.00",,"$2,000,000.00","$6,385,000.00",,,,,
+4,7508-01,"Village of
+Kaleva",Manistee County,LSLR,282,535,02/25/2022,"$415,000.00","$415,000.00",,,Yes,"$39,185.00",,,
+5,7636-01,"Village of
+Kaleva",Manistee County,"WM repl, PS
+SCADA",282,535,02/25/2022,"$5,000.00",,"$1,500.00","$3,500.00",Yes,"$39,185.00",$840.00,,$840.00
+6,7492-01,"City of Grand
+Rapids",Kent County,"WM repl,
+LSLR","198,401",525,08/08/2022,"$32,200,000.00","$10,000,000.00",,"$22,200,000.00",Yes,"$41,774.00",,,
+7,7606-01,"Village of
+Shelby",Oceana County,"WM repl, strg
+tank","2,157",520,05/16/2022,"$2,070,000.00",,"$621,000.00","$1,449,000.00",Yes,"$38,498.00","$347,760.00",,"$347,760.00"
+8,7605-01,"Village of
+Shelby",Oceana County,LSLR,"2,157",520,05/16/2022,"$2,015,000.00","$1,920,000.00",,"$95,000.00",Yes,"$38,498.00",,,
+9,7490-01,"City of Highland
+Park",Wayne County,WM repl,"11,398",515,11/15/2021,"$9,900,000.00",,"$2,000,000.00","$7,900,000.00",Yes,"$23,362.00","$1,896,000.00","$395,000.00","$2,291,000.00"
+10,7516-01,"City of Highland
+Park",Wayne County,LSLR,"11,398",515,11/15/2021,"$2,490,000.00","$2,445,000.00",,"$45,000.00",Yes,"$23,362.00",,,
+11,7609-01,"Charter
+Township of
+Brownstown",Wayne County,"New elev strg
+tanks","30,627",515,05/16/2022,"$9,595,000.00",,"$2,000,000.00","$7,595,000.00",,,,,
+12,7607-01,"City of
+Escanaba",Delta County,LSLR,"12,181",490,05/16/2022,"$5,000,000.00","$3,000,000.00",,"$2,000,000.00",Yes,"$33,682.00","$33,68",,
+13,7634-01,"City of
+Escanaba",Delta County,WTP,"12,181",490,08/08/2022,"$5,650,000.00",,"$1,695,000.00","$3,955,000.00",Yes,"$33,682.00","$949,200.00","$197,750.00","$1,146,950.00"
+14,7575-01,"City of
+Muskegon
+Heights","Muskegon
+County",LSLR,"10,800",490,02/25/2022,"$3,640,000.00","$3,000,000.00",,"$640,000.00",Yes,"$23,544.00",,,
+15,7576-01,City of Muskegon Heights,"Muskegon
+County","WM repl, WTP impr","10,800",490,02/25/2022,"$4,045,000.00",,"$1,213,500.00","$2,831,500.00",Yes,"$23,544.00","$679,560.00","$141,575.00","$821,135.00"
+16,7487-01,"City of St
+Joseph",Berrien County,"WM replac,
+LSLR","33,000",490,05/16/2022,"$4,000,000.00",,"$1,200,000.00","$2,800,000.00",,,,,
+17,7580-01,"Village of Paw
+Paw","Van Buren
+County","WM repl, strg
+tank rehab","3,560",480,05/16/2022,"$5,805,000.00",,"$1,741,500.00","$4,063,500.00",Yes,"$33,380.00","$975,240.00","$203,175.00","$1,178,415.00"
+18,7579-01,"Village of Paw
+Paw","Van Buren
+County",LSLR,"3,560",480,05/16/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$33,380.00",,,
+19,7557-01,"City of Grand
+Rapids",Kent County,"WTP, PS repl","380,815",475,02/25/2022,"$22,680,000.00",,"$2,000,000.00","$20,680,000.00",,,,,
+20,7617-01,"Village of
+Westphalia",Clinton County,WM repl,923,470,05/16/2022,"$1,820,000.00",,"$546,000.00","$1,274,000.00",,,,,
+21,7471-01,City of Howell,"Livingston
+County","WM repl - E.
+Grand River","9,203",455,02/25/2022,"$3,685,000.00",,"$1,105,500.00","$2,579,500.00",Yes,"$49,828.00","$619,080.00",,"$619,080.00"
+22,7630-01,City of Howell,"Livingston
+County","LSLR - E.
+Grand River","9,203",455,02/25/2022,"$165,000.00","$165,000.00",,,Yes,"$49,828.00",,,
+23,7443-01,"East Lansing
+Meridian Water
+& Sewer
+Authority",Ingham County,"Water main
+ext, filter
+bkwsh","79,585",450,05/16/2022,"$9,100,000.00",,"$2,000,000.00","$7,100,000.00",,,,,
+24,7573-01,"City of West
+Branch",Ogemaw County,"WM repl, new
+WTP","2,139",445,05/16/2022,"$4,900,000.00",,"$1,470,000.00","$3,430,000.00",Yes,"$34,562.00","$823,200.00","$171,500.00","$994,700.00"
+25,7572-01,"City of West
+Branch",Ogemaw County,LSLR,"2,139",445,05/16/2022,"$2,800,000.00","$2,800,000.00",,,Yes,"$34,562.00",,,
+26,7599-01,City of Corunna,"Shiawassee
+County",LSLR,"1,600",445,05/16/2022,"$305,000.00","$305,000.00",,,Yes,"$45,690.00",,,
+27,7600-01,City of Corunna,"Shiawassee
+County",Water sys imp,"1,600",445,05/16/2022,"$3,860,000.00",,"$1,158,000.00","$2,702,000.00",Yes,"$45,690.00","$648,480.00",,"$648,480.00"
+28,7525-01,"Village of
+Marcellus",Cass County,LSLR,"1,149",445,05/16/2022,"$3,250,000.00","$2,795,000.00",,"$455,000.00",Yes,"$45,802.00",,,
 29,7562-01,Village of Marcellus,Cass County,"WM repl, filter","1,149",445,05/16/2022,"$3,580,000.00",,"$1,074,000.00","$2,506,000.00",Yes,"$45,802.00","$601,440.00",,"$601,440.00"
-30,7625-01,"Village ofOnsted",Lenawee County,"WM repl, wellimp",917,445,02/25/2022,"$3,075,000.00",,"$922,500.00","$2,152,500.00",Yes,"$46,090.00","$516,600.00",,"$516,600.00"
-31,7624-01,"Village ofOnsted",Lenawee County,LSLR,917,445,02/25/2022,"$685,000.00","$579,000.00",,"$106,000.00",Yes,"$46,090.00",,,
-32,7565-01,"City ofMuskegon","MuskegonCounty",LSLR,"38,401",440,08/08/2022,"$3,240,000.00","$3,000,000.00",,"$240,000.00",Yes,"$30,856.00",,,
-33,7566-01,"City ofMuskegon","MuskegonCounty",WM repl,"38,401",440,08/08/2022,"$3,470,000.00",,"$1,041,000.00","$2,429,000.00",Yes,"$30,856.00","$582,960.00","$121,450.00","$704,410.00"
-34,7541-01,"City of GrandHaven",Ottawa County,LSLR,"10,412",440,02/25/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$53,507.00",,,
-35,7604-01,"City ofHamtramck",Wayne County,WM repl,"22,777",440,02/25/2022,"$3,900,000.00",,"$1,170,000.00","$2,730,000.00",Yes,"$28,028.00","$655,200.00","$136,500.00","$791,700.00"
-36,7603-01,"City ofHamtramck",Wayne County,LSLR,"22,777",440,02/25/2022,"$3,510,000.00","$3,000,000.00",,"$510,000.00",Yes,"$28,028.00",,,
-37,7591-01,"City ofMelvindale",Wayne County,WM repl,"10,715",440,05/16/2022,"$4,815,000.00",,"$1,444,500.00","$3,370,500.00",Yes,"$44,205.00","$808,920.00",,"$808,920.00"
-38,7590-01,"City ofMelvindale",Wayne County,LSLR,"10,715",440,05/16/2022,"$3,510,000.00","$3,000,000.00",,"$510,000.00",Yes,"$44,205.00",,,
-39,7596-01,"City of BentonHarbor",Berrien County,"Water sysimpr","10,013",440,08/08/2022,"$3,500,000.00",,"$1,050,000.00","$2,450,000.00",Yes,"$20,005.00","$588,000.00","$122,500.00","$710,500.00"
-40,7595-01,"City of BentonHarbor",Berrien County,LSLR,"10,013",440,08/08/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$20,005.00",,,
-41,7635-01,"Village ofElberta",Benzie County,"WM repl, welland wellhouse impr",372,435,02/25/2022,"$50,000.00",,"$15,000.00","$35,000.00",Yes,"$39,024.00","$8,400.00",,"$8,400.00"
-42,7581-01,"Village ofElberta",Benzie County,LSLR,372,435,02/25/2022,"$1,950,000.00","$1,650,000.00",,"$300,000.00",Yes,"$39,024.00",,,
-43,7556-01,"Charter Twp. ofOscoda",Iosco County,WM ext.,"6,797",430,05/16/2022,"$2,000,000.00",,"$600,000.00","$1,400,000.00",,,,,
+30,7625-01,"Village of
+Onsted",Lenawee County,"WM repl, well
+imp",917,445,02/25/2022,"$3,075,000.00",,"$922,500.00","$2,152,500.00",Yes,"$46,090.00","$516,600.00",,"$516,600.00"
+31,7624-01,"Village of
+Onsted",Lenawee County,LSLR,917,445,02/25/2022,"$685,000.00","$579,000.00",,"$106,000.00",Yes,"$46,090.00",,,
+32,7565-01,"City of
+Muskegon","Muskegon
+County",LSLR,"38,401",440,08/08/2022,"$3,240,000.00","$3,000,000.00",,"$240,000.00",Yes,"$30,856.00",,,
+33,7566-01,"City of
+Muskegon","Muskegon
+County",WM repl,"38,401",440,08/08/2022,"$3,470,000.00",,"$1,041,000.00","$2,429,000.00",Yes,"$30,856.00","$582,960.00","$121,450.00","$704,410.00"
+34,7541-01,"City of Grand
+Haven",Ottawa County,LSLR,"10,412",440,02/25/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$53,507.00",,,
+35,7604-01,"City of
+Hamtramck",Wayne County,WM repl,"22,777",440,02/25/2022,"$3,900,000.00",,"$1,170,000.00","$2,730,000.00",Yes,"$28,028.00","$655,200.00","$136,500.00","$791,700.00"
+36,7603-01,"City of
+Hamtramck",Wayne County,LSLR,"22,777",440,02/25/2022,"$3,510,000.00","$3,000,000.00",,"$510,000.00",Yes,"$28,028.00",,,
+37,7591-01,"City of
+Melvindale",Wayne County,WM repl,"10,715",440,05/16/2022,"$4,815,000.00",,"$1,444,500.00","$3,370,500.00",Yes,"$44,205.00","$808,920.00",,"$808,920.00"
+38,7590-01,"City of
+Melvindale",Wayne County,LSLR,"10,715",440,05/16/2022,"$3,510,000.00","$3,000,000.00",,"$510,000.00",Yes,"$44,205.00",,,
+39,7596-01,"City of Benton
+Harbor",Berrien County,"Water sys
+impr","10,013",440,08/08/2022,"$3,500,000.00",,"$1,050,000.00","$2,450,000.00",Yes,"$20,005.00","$588,000.00","$122,500.00","$710,500.00"
+40,7595-01,"City of Benton
+Harbor",Berrien County,LSLR,"10,013",440,08/08/2022,"$3,000,000.00","$3,000,000.00",,,Yes,"$20,005.00",,,
+41,7635-01,"Village of
+Elberta",Benzie County,"WM repl, well
+and well
+house impr",372,435,02/25/2022,"$50,000.00",,"$15,000.00","$35,000.00",Yes,"$39,024.00","$8,400.00",,"$8,400.00"
+42,7581-01,"Village of
+Elberta",Benzie County,LSLR,372,435,02/25/2022,"$1,950,000.00","$1,650,000.00",,"$300,000.00",Yes,"$39,024.00",,,
+43,7556-01,"Charter Twp. of
+Oscoda",Iosco County,WM ext.,"6,797",430,05/16/2022,"$2,000,000.00",,"$600,000.00","$1,400,000.00",,,,,
 44,7531-01,GLWA,Wayne County,PS impr -Ypsilanti,"713,777",425,08/08/2022,"$38,700,000.00",,"$2,000,000.00","$36,700,000.00",,,,,
-45,7569-01,"City of AnnArbor","WashtenawCounty",PS repl,"121,500",425,05/16/2022,"$4,600,000.00",,"$1,380,000.00","$3,220,000.00",,,,,
-46,7623-01,"City of TraverseCity","Grand TraverseCounty",Water sys imp,"29,476",415**,08/08/2022,"$5,015,000.00",,"$1,504,500.00","$3,510,500.00",,,,,
-47,7622-01,"City ofEastpointe",Macomb County,"WM repl,LSLR","32,442",415**,08/08/2022,"$20,000,000.00",,"$1,643,000.00","$18,357,000.00",,,,,
+45,7569-01,"City of Ann
+Arbor","Washtenaw
+County",PS repl,"121,500",425,05/16/2022,"$4,600,000.00",,"$1,380,000.00","$3,220,000.00",,,,,
+46,7623-01,"City of Traverse
+City","Grand Traverse
+County",Water sys imp,"29,476",415**,08/08/2022,"$5,015,000.00",,"$1,504,500.00","$3,510,500.00",,,,,
+47,7622-01,"City of
+Eastpointe",Macomb County,"WM repl,
+LSLR","32,442",415**,08/08/2022,"$20,000,000.00",,"$1,643,000.00","$18,357,000.00",,,,,
 48,7502-01,City of Inkster,Wayne County,LSLR,"25,369",415**,02/25/2022,"$100,000.00","$90,000.00",,"$10,000.00",Yes,"$36,775.00",,,
 49,7637-01,City of Inkster,Wayne County,WM repl,"25,369",415**,02/25/2022,"$6,640,000.00",,,"$6,640,000.00",Yes,"$36,775.00","$1,593,600.00",,"$1,593,600.00"
-50,7612-01,Mackinac Island,"MackinawCounty",WM impr,492,410,05/16/2022,"$1,545,000.00",,,"$1,545,000.00",,,,,
-51,7571-01,"Village ofPewamo",Ionia County,WM repl,469,410,05/16/2022,"$1,640,000.00",,,"$1,640,000.00",,,,,
-52,7532-01,GLWA,Wayne County,"96 inch transmainrelocation","713,777",400,05/16/2022,"$34,075,000.00",,,"$34,075,000.00",,,,,
-53,7532-02,GLWA,Wayne County,"96 inch transmainrelocation ph2","713,777",400,08/08/2022,"$136,290,000.00",,,"$24,439,000.00",,,,,
-54,7530-01,GLWA,Wayne County,"TransmissionMain Loop","713,777",400,05/16/2022,"$60,900,000.00",,,,,,,,
-55,7430-01,"Village of LakeOrion",Oakland County,"WM repl Ph 3& 4","3,032",395,05/16/2022,"$4,390,000.00",,,,,,,,
-,,,,,,,,,,,,,,,,
-57,7494-01,"City of GrossePointe Park",Wayne County,"WM repl,LSLR","11,555",390,05/16/2022,"$27,700,000.00",,,,,,,,
-58,7550-01,"Village ofBeverly Hills",Oakland County,"WMrepl/looping","10,451",390,08/08/2022,"$5,980,000.00",,,,,,,,
+50,7612-01,Mackinac Island,"Mackinaw
+County",WM impr,492,410,05/16/2022,"$1,545,000.00",,,"$1,545,000.00",,,,,
+51,7571-01,"Village of
+Pewamo",Ionia County,WM repl,469,410,05/16/2022,"$1,640,000.00",,,"$1,640,000.00",,,,,
+52,7532-01,GLWA,Wayne County,"96 inch trans
+main
+relocation","713,777",400,05/16/2022,"$34,075,000.00",,,"$34,075,000.00",,,,,
+53,7532-02,GLWA,Wayne County,"96 inch trans
+main
+relocation ph2","713,777",400,08/08/2022,"$136,290,000.00",,,"$24,439,000.00",,,,,
+54,7530-01,GLWA,Wayne County,"Transmission
+Main Loop","713,777",400,05/16/2022,"$60,900,000.00",,,,,,,,
+55,7430-01,"Village of Lake
+Orion",Oakland County,"WM repl Ph 3
+& 4","3,032",395,05/16/2022,"$4,390,000.00",,,,,,,,
+56,7613-01,"Village of Baldwin",Lake County,LSLR,"1,200",395,05/16/2022,"$1,375,000","$1,250,000",,,Yes,,,,
+57,7494-01,"City of Grosse
+Pointe Park",Wayne County,"WM repl,
+LSLR","11,555",390,05/16/2022,"$27,700,000.00",,,,,,,,
+58,7550-01,"Village of
+Beverly Hills",Oakland County,"WM
+repl/looping","10,451",390,08/08/2022,"$5,980,000.00",,,,,,,,
 59,7548-01,GLWA/DWSD,City of Detroit,LSLR,"713,777",375,02/25/2022,"$11,000,000.00","$10,000,000.00",,,Yes,,,,
-60,7547-01,GLWA/DWSD,City of Detroit,"WM repl,LSLR (WS-725)","713,777",375,05/16/2022,"$24,115,000.00",,,,Yes,,,,
-61,7538-01,"Lansing Boardof Water andLight",Ingham County,WM repl,"208,909",375,02/25/2022,"$5,200,000.00",,,,Yes,,,,
-62,7517-01,"City ofKalamazoo","KalamazooCounty",LSLR,"76,000",375,05/16/2022,"$20,000,000.00","$5,000,000.00",,,Yes,,,,
-63,7553-01,"Oakland CountyWaterResourcesCommission",City of Pontiac,LSLR,"63,398",375,02/25/2022,"$5,000,000.00","$5,000,000.00",,,Yes,,,,
-64,7493-01,"City of St. ClairShores",Macomb County,LSLR,"60,922",375,02/25/2022,"$4,000,000.00",,,,,,,,
+60,7547-01,GLWA/DWSD,City of Detroit,"WM repl,
+LSLR (WS-
+725)","713,777",375,05/16/2022,"$24,115,000.00",,,,Yes,,,,
+61,7538-01,"Lansing Board
+of Water and
+Light",Ingham County,WM repl,"208,909",375,02/25/2022,"$5,200,000.00",,,,Yes,,,,
+62,7517-01,"City of
+Kalamazoo","Kalamazoo
+County",LSLR,"76,000",375,05/16/2022,"$20,000,000.00","$5,000,000.00",,,Yes,,,,
+63,7553-01,"Oakland County
+Water
+Resources
+Commission",City of Pontiac,LSLR,"63,398",375,02/25/2022,"$5,000,000.00","$5,000,000.00",,,Yes,,,,
+64,7493-01,"City of St. Clair
+Shores",Macomb County,LSLR,"60,922",375,02/25/2022,"$4,000,000.00",,,,,,,,
 65,7509-01,City of Bay City,Bay County,LSLR,"33,644",365,02/25/2022,"$3,010,000.00","$2,736,590.00",,,Yes,,,,
 66,7558-01,City of Ecorse,Wayne County,LSLR,"9,512",355,02/25/2022,"$3,000,000.00","$3,000,000.00",,,Yes,,,,
 67,7559-01,City of Ecorse,Wayne County,WM repl,"9,512",355,02/25/2022,"$1,500,000.00",,,,Yes,,,,
-68,7593-01,"CharterTownship ofHampton",Bay County,LSLR,"9,452",355,05/16/2022,"$1,875,000.00","$1,875,000.00",,,Yes,,,,
-69,7594-01,"CharterTownship ofHampton",Bay County,WM repl,"9,452",355,05/16/2022,"$3,980,000.00",,,,Yes,,,,
+68,7593-01,"Charter
+Township of
+Hampton",Bay County,LSLR,"9,452",355,05/16/2022,"$1,875,000.00","$1,875,000.00",,,Yes,,,,
+69,7594-01,"Charter
+Township of
+Hampton",Bay County,WM repl,"9,452",355,05/16/2022,"$3,980,000.00",,,,Yes,,,,
 70,7521-01,City of Lapeer,Lapeer County,LSLR,"8,841",355,05/16/2022,"$4,410,000.00","$3,000,000.00",,,Yes,,,,
 71,7560-01,City of Lapeer,Lapeer County,WM repl,"8,841",355,05/16/2022,"$5,000,000.00",,,,Yes,,,,
-72,7610-01,"East ChinaTownship",St Clair County,WM repl,"8,531",355,05/16/2022,"$6,530,000.00",,,,,,,,
-73,7601-01,"City of RiverRouge",Wayne County,LSLR,"7,903",355,02/25/2022,"$3,510,000.00","$3,000,000.00",,,Yes,,,,
-74,7602-01,"City of RiverRouge",Wayne County,PRV,"7,903",355,02/25/2022,"$585,000.00",,,,Yes,,,,
+72,7610-01,"East China
+Township",St Clair County,WM repl,"8,531",355,05/16/2022,"$6,530,000.00",,,,,,,,
+73,7601-01,"City of River
+Rouge",Wayne County,LSLR,"7,903",355,02/25/2022,"$3,510,000.00","$3,000,000.00",,,Yes,,,,
+74,7602-01,"City of River
+Rouge",Wayne County,PRV,"7,903",355,02/25/2022,"$585,000.00",,,,Yes,,,,
 75,7577-01,City of Allegan,Allegan County,LSLR,"5,185",355,05/16/2022,"$3,000,000.00","$3,000,000.00",,,Yes,,,,
 76,7578-01,City of Allegan,Allegan County,WM repl,"5,185",355,05/16/2022,"$4,195,000.00",,,,Yes,,,,
-77,7529-01,"Charter Twp. ofRoyal Oak",Oakland County,LSLR,"1,881",345,02/25/2022,"$3,400,000.00","$3,000,000.00",,,Yes,,,,
-78,7519-01,"Village ofNashville",Barry County,LSLR,"1,628",345,05/16/2022,"$1,150,000.00","$1,148,500.00",,,Yes,,,,
-79,7512-01,"Village of WhitePigeon","St. JosephCounty",WM repl,"1,522",345,08/08/2022,"$7,065,000.00",,,,Yes,,,,
-80,7632-01,"Village of WhitePigeon","St JosephCounty",LSLR,"1,522",345,08/08/2022,"$1,580,000.00","$1,200,000.00",,,Yes,,,,
-81,7551-01,Republic Twp.,"MarquetteCounty",LSLR,"1,060",345,05/16/2022,"$300,000.00","$300,000.00",,,Yes,,,,
+77,7529-01,"Charter Twp. of
+Royal Oak",Oakland County,LSLR,"1,881",345,02/25/2022,"$3,400,000.00","$3,000,000.00",,,Yes,,,,
+78,7519-01,"Village of
+Nashville",Barry County,LSLR,"1,628",345,05/16/2022,"$1,150,000.00","$1,148,500.00",,,Yes,,,,
+79,7512-01,"Village of White
+Pigeon","St. Joseph
+County",WM repl,"1,522",345,08/08/2022,"$7,065,000.00",,,,Yes,,,,
+80,7632-01,"Village of White
+Pigeon","St Joseph
+County",LSLR,"1,522",345,08/08/2022,"$1,580,000.00","$1,200,000.00",,,Yes,,,,
+81,7551-01,Republic Twp.,"Marquette
+County",LSLR,"1,060",345,05/16/2022,"$300,000.00","$300,000.00",,,Yes,,,,
 82,7540-01,Village of Muir,Ionia County,LSLR,612,345,02/25/2022,"$1,175,000.00","$1,000,000.00",,,Yes,,,,
-83,7626-01,"City of HarborBeach",Huron County,WTP imp,"5,209",330,11/15/2021,"$3,600,000.00",,,,Yes,,,,
+83,7626-01,"City of Harbor
+Beach",Huron County,WTP imp,"5,209",330,11/15/2021,"$3,600,000.00",,,,Yes,,,,
 84,7631-01,City of Harbor Beach,Huron County,Trans main,"5,209",330,08/08/2022,"$1,800,000.00",,,,Yes,,,,
 85,7536-01,City of Dearborn,Wayne County,LSLR,"101,000",325,05/16/2022,"$6,600,000.00",,,,,,,,
 86,7454-01,City of Livonia,Wayne County,WM repl,"94,060",325,05/16/2022,"$4,815,000.00",,,,,,,,
-87,7500-01,"CharterTownship ofBloomfield",Oakland County,WM repl,"41,070",315,02/25/2022,"$6,730,000.00",,,,,,,,
-88,7629-01,"City of LincolnPark",Wayne County,"WM repl,LSLR","36,517",315,08/08/2022,"$8,410,000.00",,,,,,,,
-89,7554-01,"City ofSouthgate",Wayne County,"WM repl,LSLR","30,047",315,02/25/2022,"$2,085,000.00",,,,,,,,
-90,7619-01,City of Sturgis,"St JosephCounty","LSLR, WMrepl","10,944",315,02/25/2022,"$2,645,000.00",,,,,,,,
-91,7567-01,"City ofColdwater",Branch County,LSLR,"12,241",290,05/16/2022,"$3,300,000.00","$3,000,000.00",,,Yes,,,,
-92,7568-01,"City ofColdwater",Branch County,"WM repl, WTPimp","12,241",290,05/16/2022,"$2,500,000.00",,,,Yes,,,,
+87,7500-01,"Charter
+Township of
+Bloomfield",Oakland County,WM repl,"41,070",315,02/25/2022,"$6,730,000.00",,,,,,,,
+88,7629-01,"City of Lincoln
+Park",Wayne County,"WM repl,
+LSLR","36,517",315,08/08/2022,"$8,410,000.00",,,,,,,,
+89,7554-01,"City of
+Southgate",Wayne County,"WM repl,
+LSLR","30,047",315,02/25/2022,"$2,085,000.00",,,,,,,,
+90,7619-01,City of Sturgis,"St Joseph
+County","LSLR, WM
+repl","10,944",315,02/25/2022,"$2,645,000.00",,,,,,,,
+91,7567-01,"City of
+Coldwater",Branch County,LSLR,"12,241",290,05/16/2022,"$3,300,000.00","$3,000,000.00",,,Yes,,,,
+92,7568-01,"City of
+Coldwater",Branch County,"WM repl, WTP
+imp","12,241",290,05/16/2022,"$2,500,000.00",,,,Yes,,,,
 93,7552-01,City of St. Clair,St. Clair County,WTP imp,"6,285",280,05/16/2022,"$8,955,000.00",,,,,,,,
 94,7534-01,City of Saginaw,Saginaw County,LSLR,"51,503",275,05/16/2022,"$5,500,000.00","$4,500,973.00",,,Yes,,,,
-95,7544-01,"City of St.Ignace",Mackinac County,WTP imp,"2,617",270,08/08/2022,"$2,030,000.00",,,,Yes,,,,
+95,7544-01,"City of St.
+Ignace",Mackinac County,WTP imp,"2,617",270,08/08/2022,"$2,030,000.00",,,,Yes,,,,
 96,7537-01,City of Jackson,Jackson County,LSLR,"33,500",265,05/16/2022,"$3,300,000.00",,,,Yes,,,,
-97,7533-01,"City ofCheboygan","CheboyganCounty",LSLR,"5,500",255,05/16/2022,"$1,080,000.00",,,,Yes,,,,
+97,7533-01,"City of
+Cheboygan","Cheboygan
+County",LSLR,"5,500",255,05/16/2022,"$1,080,000.00",,,,Yes,,,,
 98,7549-01,City of St. Louis,Gratiot County,LSLR,"7,482",255,05/16/2022,"$4,900,000.00",,,,Yes,,,,
 99,7523-01,City of Ironwood,Gogebic County,LSLR,"5,387",255,08/08/2022,"$3,000,000.00",,,,Yes,,,,
-100,7618-01,"City ofNegaunee","MarquetteCounty",LSLR,"4,568",255,05/16/2022,"$2,300,000.00",,,,Yes,,,,
-101,7498-01,"City ofMarysville",St. Clair County,"WTP imp, strgtank, WMrepl/LSLR","9,959",255,05/16/2022,"$3,050,000.00",,,,,,,,
-102,7545-01,City of Onaway,"Presque IsleCounty",LSLR,880,245,02/25/2022,"$3,105,000.00",,,,Yes,,,,
-103,7589-01,City of Croswell,Sanilac County,"WM repl,water sys impr","2,422",245,02/25/2022,"$6,560,000.00",,,,Yes,,,,
-104,7518-01,"City of WhiteCloud",Newaygo County,LSLR,"1,381",245,05/16/2022,"$3,610,000.00",,,,Yes,,,,
-105,7608-01,"City ofBessemer",Gogebic County,LSLR,"1,900",245,05/16/2022,"$1,070,000.00",,,,Yes,,,,
-106,7616-01,"BessemerTownship",Gogebic County,LSLR,"1,076",245,05/16/2022,"$430,000.00",,,,Yes,,,,
-107,7524-01,"City ofWatervliet",Berrien County,LSLR,"2,015",245,02/25/2022,"$2,935,000.00",,,,Yes,,,,
+100,7618-01,"City of
+Negaunee","Marquette
+County",LSLR,"4,568",255,05/16/2022,"$2,300,000.00",,,,Yes,,,,
+101,7498-01,"City of
+Marysville",St. Clair County,"WTP imp, strg
+tank, WM
+repl/LSLR","9,959",255,05/16/2022,"$3,050,000.00",,,,,,,,
+102,7545-01,City of Onaway,"Presque Isle
+County",LSLR,880,245,02/25/2022,"$3,105,000.00",,,,Yes,,,,
+103,7589-01,City of Croswell,Sanilac County,"WM repl,
+water sys impr","2,422",245,02/25/2022,"$6,560,000.00",,,,Yes,,,,
+104,7518-01,"City of White
+Cloud",Newaygo County,LSLR,"1,381",245,05/16/2022,"$3,610,000.00",,,,Yes,,,,
+105,7608-01,"City of
+Bessemer",Gogebic County,LSLR,"1,900",245,05/16/2022,"$1,070,000.00",,,,Yes,,,,
+106,7616-01,"Bessemer
+Township",Gogebic County,LSLR,"1,076",245,05/16/2022,"$430,000.00",,,,Yes,,,,
+107,7524-01,"City of
+Watervliet",Berrien County,LSLR,"2,015",245,02/25/2022,"$2,935,000.00",,,,Yes,,,,
 108,7588-01,City of Croswell,Sanilac County,LSLR,"2,422",245,02/25/2022,"$840,000.00",,,,Yes,,,,
 109,7615-01,Sumpter Township,Wayne County,WM repl,"9,576",205,05/16/2022,"$1,530,000.00",,,,,,,,

@@ -8,58 +8,65 @@ clean_mi_y1 <- function() {
     ## clean names
     clean_names() %>%
     ## get rid of rows without projects
-    filter(!is.na(project_number)) %>%
-    ## rowwise operations for sums
-    rowwise() %>%
-    ## make relevant columns numbers
-    mutate(project_rank = as.numeric(gsub(",", "", rank)),
-           population = clean_numeric_string(population),
-           ## sum of columns, getting rid of $ and comma and replacing blanks with zero
-           funding_amount = sum(as.numeric(gsub("\\$|,", "", dwsrf_loan)),
-                                as.numeric(gsub("\\$|,", "", dwsrf_pf)),
-                                as.numeric(gsub("\\$|,", "", bil_dwsrf_supplemental_loan)),
-                                as.numeric(gsub("\\$|,", "", bil_dwsrf_supplemental_pf)),
-                                as.numeric(gsub("\\$|,", "", bil_dwsrf_emerging_contaminants_pf)),
-                                as.numeric(gsub("\\$|,", "", bil_dwsrf_lslr_loan)),
-                                as.numeric(gsub("\\$|,", "", bil_dwsrf_lslr_pf)),
-                                na.rm = T),
-           principal_forgiveness = sum(as.numeric(str_replace_all(total_pf_grant,"[^0-9.]", "")),
-                                              -as.numeric(str_replace_all(arp_grant, "[^0-9.]", "")),
-                                              na.rm = T)) %>%
-    ungroup() %>%
-    ## standardize names
-    rename(borrower = applicant_name,
-           cities_served = project_location) %>%
-    ## create project type column
-    mutate(funding_amount = clean_numeric_string(funding_amount),
-           funding_amount = case_when(
-             funding_amount == 0 ~ "No Information",
-             TRUE ~ funding_amount),
-           principal_forgiveness = clean_numeric_string(principal_forgiveness),
-           principal_forgiveness = case_when(
-             principal_forgiveness == 0 ~ "No Information",
-             TRUE ~ principal_forgiveness),
-           project_type = case_when(lslr_costs != "" ~ "Lead",
-                                    pfas_costs != "" ~ "Emerging Contaminants"),
-           project_type = replace_na(project_type, "General"),
-           expecting_funding = case_when(project_rank <= 70 ~ "Yes",
-                                      project_rank > 70 ~ "No"),
-           # with project_rank used for specifying funding, return to string
-           project_rank = as.character(project_rank),
-           project_score = str_squish(total_points),
-           project_id = str_squish(project_number),
-           project_cost = clean_numeric_string(estimated_project_cost),
-           disadvantaged = replace_na(disadvantaged, "No"),
-           state = "Michigan",
-           state_fiscal_year = "2023",
-           community_served = as.character(NA),
-           pwsid = as.character(NA),
-           project_name = as.character(NA),
-           requested_amount = as.character(NA),
-    ) %>%
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+    filter(!is.na(project_number)) |>
+    dplyr::mutate(
+      community_served = stringr::str_squish(project_location),
+      borrower = stringr::str_squish(applicant_name),
+      pwsid = as.character(NA),
+      project_id = str_squish(project_number),
+      project_name = as.character(NA),
+      project_type =  case_when(
+             grepl(lead_str, project_description, ignore.case=TRUE) | !is.na(lslr_costs)  ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) | !is.na(pfas_costs) ~ "Emerging Contaminants",
+             TRUE ~ "General"),
+      project_cost = dplyr::case_when(
+        !is.na(full_estimated_project_cost_prior_to_30_percent_limitation) ~ 
+          clean_numeric_string(full_estimated_project_cost_prior_to_30_percent_limitation),
+        .default = clean_numeric_string(estimated_project_cost)
+      ),
+      requested_amount = as.character(NA),
+      funding_amount = convert_to_numeric(dwsrf_loan, TRUE) + 
+        convert_to_numeric(dwsrf_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_supplemental_loan, TRUE) +
+        convert_to_numeric(bil_dwsrf_supplemental_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_emerging_contaminants_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_lslr_loan, TRUE) +
+        convert_to_numeric(bil_dwsrf_lslr_pf, TRUE),
+      funding_amount = clean_numeric_string(funding_amount), 
+      principal_forgiveness = convert_to_numeric(dwsrf_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_supplemental_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_emerging_contaminants_pf, TRUE) +
+        convert_to_numeric(bil_dwsrf_lslr_pf, TRUE),
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      population = as.character(NA),
+      project_description = stringr::str_squish(project_description),
+      disadvantaged = dplyr::case_when(
+        is.na(disadvantaged) ~ "No",
+        .default = "Yes"
+      ),
+      project_rank = stringr::str_squish(rank),
+      project_score = stringr::str_squish(total_points),
+      expecting_funding = ifelse((funding_amount != "0" & funding_amount != "No Information"),
+                                        "Yes", "No"),
+      state = "Michigan",
+      state_fiscal_year = "2023",
+    ) |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+  
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  
+  mi_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No duplicates
+  
+  # Check for disinfection byproduct in description
+  mi_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  ####### Decision: No disinfection byproduct string
+    
+  ####### SANITY CHECKS END #######
   
   run_tests(mi_clean)
   rm(list=setdiff(ls(), "mi_clean"))

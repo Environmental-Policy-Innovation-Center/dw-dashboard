@@ -7,6 +7,7 @@ clean_ms_y4 <- function() {
   # However, the base funding file first must be read in first, because it has 
   # a "funding line" element that provides special information about it's projects.
   # Alternatively, in the data curation process, we should add a logical column to denote if it's considered for the funding line.
+  # 2025-08-07 added expecting funding column
 
   # list files
   PPL_files <- stringr::str_subset(curated_file_names, "PPL")  
@@ -57,7 +58,8 @@ clean_ms_y4 <- function() {
   }
 
   # sanity check
-  colnames(priority_list) == colnames(planning_list)
+  colnames(priority_list) %in% colnames(planning_list)
+  colnames(planning_list) %in% colnames(priority_list)
 
   # order matters, priority list should be read in first
   combined_list<- priority_list |> 
@@ -98,10 +100,11 @@ clean_ms_y4 <- function() {
       project_score = str_replace_all(priority_points,"[^0-9.]","")
     ) |>
     dplyr::mutate(  
-      expecting_funding = dplyr::if_else(
-        source_list == "Planning",
-        "No",
-        "No Information"))|>
+      expecting_funding = dplyr::case_when(
+        source_list == "Priority" & !is.na(expecting_funding) ~ expecting_funding,
+        source_list == "Planning" ~ "No",
+        .default = "No Information") #these are EC projects
+      )|>
     dplyr::group_by(source_list) |>
     dplyr::mutate(project_rank = paste0(dplyr::row_number(), "-", source_list)) |>
     dplyr::ungroup() |>

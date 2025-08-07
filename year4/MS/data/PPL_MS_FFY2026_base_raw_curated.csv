@@ -1,49 +1,39 @@
-Project ,Project Title,Zip Code,Priority Points,Service Area Population,Eligible PF Amount,Loan Amount Requested,Statewide Cum. $
-Category III: Primary Drinking Water Standards Projects,,,,,,,
-"Smithville, Town of ",Water Treatment Plant Repair,38870,131,2004,"$49,923","$5,000,000","$5,000,000"
-Category IV: One Well Projects,,,,,,,
-Clayton Village Water Association ,Distribution Improvements,39759,4786,4984,"$500,000","$2,411,446","$7,411,446"
-Category V: Pressure Deficiencies Projects,,,,,,,
-"Mound Bayou, City of ",Pressure Deficiencies,38762,741,1500,"$382,500","$850,000","$8,261,446"
-Category VII: System Capacity Expansion to Serve Existing Unserved Residences/Businesses,,,,,,,
-"Shuqualak, Town of ",Extending Public Water Service to Unserved Areas,39361,176,575,"$500,000","$2,844,000","$11,105,446"
-West Harrison Water & Sewer Dist ,Underserved Area Stablewood,39571,41,14892,"$500,000","$2,287,869","$13,393,315"
-West Harrison Water & Sewer Dist ,Connect to Underserved Area- Ladner,39571,32,14892,"$398,763","$1,595,051","$14,988,366"
-West Harrison Water & Sewer Dist ,2 Miles of Water Line,39571,31,14892,"$345,353","$1,381,412","$16,369,778"
-Harrison Co. Utility Authority ,Service to Existing Unserved Areas,39503,31,624,"$360,000","$2,477,550","$18,847,328"
-West Harrison Water & Sewer Dist ,Connect to Underserved Area- Enchanment,39571,29,14892,"$366,249","$1,464,997","$20,312,325"
-West Harrison Water & Sewer Dist ,Connect to Underserved Area- Vidalia,39571,29,14892,"$366,249","$1,464,997","$21,777,322"
-West Harrison Water & Sewer Dist, Connect to Underserved Area- Edwin,39571,28,14892,"$500,000","$3,368,737","$25,146,059"
-Category VIII: Back-up Water Supply Sources Projects,,,,,,,
-"Boyle, Town of ",New Water Mains/ Distribution Improvements,38730,326,498,"$152,583","$1,017,217","$26,163,276"
-Category IX: Existing Facilities Upgrade (Meeting Primary Standards),,,,,,,
-"Hernando, City of ",Treatment Plant Upgrades and Distribution Impro,38632,7626,15000,$0,"$931,000","$27,094,276"
-Clarksdale Public Utilities ,Rehab/ Replacement of Existing Facilities,39814,4654,17962,"$500,000","$2,375,000","$29,469,276"
-Natchez Water Works ,Rehab/ Replacement of Existing Facilities,39121,3756,15792,"$500,000","$3,250,000","$32,719,276"
-"Brandon, City of ",New Well- Northwest,39042,3042,26355,$0,"$3,300,000","$36,019,276"
-"Brandon, City of ",New Well- Southeast,39042,3014,26355,$0,"$3,330,000","$39,349,276"
-"Meridian, City of ",Two New Wells,39301,2493,36347,"$500,000","$6,699,116","$46,048,392"
-Lewisburg Water Association ,"New Treatment Plant/ New 500,000 gallon Tank",38654,2391,8277,$0,"$1,385,000","$47,433,392"
-Alcorn Co. Water Association ,Elevated tank/waterlines/facilities upgrade,38834,1767,6500,"$500,000","$2,146,021","$49,579,413"
-Sunnyhill Water Association,New 500 gpm Well/ Booster Station/ Water Main,39649,1450,3828,"$500,000","$1,500,000","$51,079,413"
-Short Coleman Park Association,New Well/ New Treatment Facility,38852,1437,4400,"$351,575","$1,004,500","$52,083,913"
-Hilldale Water District,New Well and Generator,39180,1380,5561,"$308,045","$1,232,180","$53,316,093"
-"Hattiesburg, City of",Rehab/ Replacement of Existing Facilities,39403,907,41951,"$500,000","$5,000,000","$58,316,093"
-"Bay St. Louis, City of",New Elevated Storage Tank,39520,890,9284,"$500,000","$3,016,250","$61,332,343"
-South MS Public Water Authority,Tank Rehab/ New Valves,39401,826,1674,"$255,500","$730,000","$62,062,343"
-Shivers Water Association,New Water Mains/ Tank Rehab,39149,651,2292,"$500,000","$2,000,000","$64,062,343"
-Sunnyhill Water Association,New Well/ New Water Main with Appurtences,39649,621,3828,"$500,000","$3,500,000","$67,562,343"
-Bunker Hill Water Association,New Water Mains/ New AMR System,39429,569,2900,"$500,000","$1,966,700","$69,529,043"
-Fisher Ferry Water District,Two New Wells/ Well Rehab,39180,471,5200,"$471,052","$3,140,349","$72,669,392"
-Farmington Water Association,Installation of Pressure Filtration,38834,442,6000,$0,"$5,654,800","$78,324,192"
-Hancock County Water & Sewer District,"New 250,000 gallon Elevated Storage Tank",39556,411,5570,"$500,000","$4,968,114","$83,292,306"
-Midway Community Water Association,New Treatment Plant,39039,383,1680,"$279,000","$2,700,000","$85,992,306"
-"Jumpertown ,Town of",Rehab/ Replacement of Existing Facilities,38829,345,1150,"$500,000","$2,458,600","$88,450,906"
-Fannin Water Association,"New 300,000 Gal Tank",39047,217,6500,$0,"$4,610,934","$93,061,840"
-"Mound Bayou, City of",New Well/ Distribution Improvements,38762,203,1500,"$500,000","$5,000,000","$98,061,840"
-North District One Water Association,New Well/ Pressure Tank/ Water Line,38967,199,787,"$500,000","$3,780,014","$101,841,854"
-"Hickory, Town of",New Well/ Elevated Tank/ Pipe Extension,39332,189,1000,"$500,000","$4,629,771","$106,471,625"
-"Cleveland, City of",Rehab Existing Facilities,38732,119,12000,"$500,000","$2,114,701","$108,586,326"
-Poplar Springs Water District,Rehab/ Replacement of Existing Facilities,39114,88,1188,"$500,000","$4,534,031","$113,120,357"
-Harrison Co. Utility Authority,Distribution Improvements,39503,21,624,"$500,000","$6,950,000","$120,070,357"
-"Laurel, City of",Distribution Improvements,39441,19,17066,"$500,000","$8,240,000","$128,310,357"
+Project,Project Title,Zip Code,Priority Points,Service Area Pop.,Eligible PF Amount,Loan Amount Requested,Statewide Cum. $,Expecting Funding
+Category III: Primary Drinking Water Standards Projects,,,,,,,,
+"Smithville, Town of ",Water Treatment Plant Repair,38870,131,2004,"$49,923","$5,000,000","$5,000,000",Yes
+Category IV: One Well Projects,,,,,,,,
+Clayton Village Water Association ,Distribution Improvements,39759,4388,4984,"$500,000","$2,630,575","$7,630,575",Yes
+Category V: Pressure Deficiencies,,,,,,,,
+"Mound Bayou, City of ",Pressure Deficiencies,38762,126,1500,"$382,500","$5,000,000","$12,630,575",Yes
+Category VII: System Capacity Expansion to Serve Existing Unserved,,,,,,,,
+"Shuqualak, Town of ",Extending Public Water Service to Unserved Areas,39361,157,575,"$500,000","$3,185,365","$15,815,940",Yes
+West Harrison Water & Sewer Dist ,Unserved Areas/New Water Main,39571,29,14892,"$366,249","$1,464,997","$17,280,937",Yes
+Harrison Co. Utility Authority ,Service to Existing Unserved Areas,39503,28,624,"$360,000","$2,601,398","$19,882,335",Yes
+Category VIII: Back-up Water Supply Sources Projects,,,,,,,,
+"Boyle, Town of ",New Water Mains/ Distribution Improvements,38730,326,498,"$152,583","$1,017,217","$20,899,552",Yes
+Category IX: Existing Facilities Upgrade (Meeting Primary Standards),,,,,,,,
+"Hernando, City of ",Treatment Plant Upgrades and Distribution Impro,38632,7626,15000,$0,"$931,000","$21,830,552",Yes
+Clarksdale Public Utilities ,Rehab/ Replacement of Existing Facilities,39814,4654,17962,"$500,000","$2,375,000","$24,205,552",Yes
+"Meridian, City of ",Two New Wells,39301,4204,36347,"$500,000","$3,971,930","$28,177,482",Yes
+Natchez Water Works ,Replace Water Meters,39121,3062,15792,"$500,000","$3,985,605","$32,163,087",Yes
+Lewisburg Water Association ,"New Treatment Plant/ New 500,000 gallon Tank",38654,2391,8277,$0,"$1,385,000","$33,548,087",Yes
+"Brandon, City of ",New Water Well,39042,1514,26355,$0,"$6,630,000","$40,178,087",Yes
+Short Coleman Park Association ,New Well/ New Treatment Facility,38852,1437,4400,"$351,575","$1,004,500","$41,182,587",Yes
+Hilldale Water District ,New Well and Generator,39180,1380,5561,"$308,045","$1,232,180","$42,414,767",Yes
+"Hattiesburg, City of",Rehab/ Replacement of Existing Facilities,39403,907,41951,"$500,000","$5,000,000","$47,414,767",No
+"Bay St. Louis, City of",New Elevated Storage Tank,39520,890,9284,"$500,000","$3,016,250","$50,431,017",No
+South MS Public Water Authority,Tank Rehab/ New Valves,39401,653,1674,"$255,500","$923,528","$51,354,545",No
+Shivers Water Association,New Water Mains/ Tank Rehab,39149,651,2292,"$500,000","$2,000,000","$53,354,545",No
+Alcorn Co. Water Association,Elevated tank/waterlines/facilities upgrade,38834,626,6500,"$500,000","$3,591,500","$56,946,045",No
+Sunnyhill Water Association,New 500 gpm Well/ Booster Station/ Water Main,39649,621,3828,"$500,000","$3,500,000","$60,446,045",No
+Bunker Hill Water Association,New Water Mains/ New AMR System,39429,569,2900,"$500,000","$1,966,700","$62,412,745",No
+Fisher Ferry Water District,Two New Wells/ Well Rehab,39180,465,5200,"$471,052","$3,140,349","$65,553,094",No
+Hancock County Water & Sewer District,"New 250,000 gallon Elevated Storage Tank",39556,411,5570,"$500,000","$4,968,114","$70,521,208",No
+Midway Community Water Association,New Treatment Plant,39039,383,1680,"$279,000","$2,700,000","$73,221,208",No
+"Jumpertown ,Town of",Rehab/ Replacement of Existing Facilities,38829,345,1150,"$500,000","$2,458,600","$75,679,808",No
+Fannin Water Association,"New 300,000 Gal Tank",39047,197,6500,$0,"$5,069,213","$80,749,021",No
+"Hickory, Town of",New Well/ Elevated Tank/ Pipe Extension,39332,189,1000,"$500,000","$4,629,771","$85,378,792",No
+"Cleveland, City of",Rehab Existing Facilities,38732,125,12000,"$500,000","$2,016,907","$87,395,699",No
+North District One Water Association,New Well/ Pressure Tank/ Water Line,38967,105,787,"$500,000","$3,780,014","$91,175,713",No
+Poplar Springs Water District,Rehab/ Replacement of Existing Facilities,39114,81,1188,"$500,000","$4,897,615","$96,073,328",No
+"Laurel, City of",Distribution Improvements,39441,19,17066,"$500,000","$8,240,000","$104,313,328",No

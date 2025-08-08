@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Mississippi"
+state_abbr <- "MS"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -59,14 +59,14 @@ base <- financial %>%
 gen_supp <- financial %>%
   filter(fed_cap_grant == "IIJA Gen Supp")
 
-base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & IIJA Gen Supp")
+# base_gen_supp <- financial %>%
+#   filter(fed_cap_grant == "Base & IIJA Gen Supp")
 
-lead <- financial %>%
-  filter(fed_cap_grant == "Lead Service Line Replacement")
+# lead <- financial %>%
+#   filter(fed_cap_grant == "Lead Service Line Replacement")
 
-ec <- financial %>%
-  filter(fed_cap_grant == "Emerging Contaminants")
+# ec <- financial %>%
+#   filter(fed_cap_grant == "Emerging Contaminants")
 
 # get annual totals for calculating percentages for plot display
 grants_yoy <- financial %>%

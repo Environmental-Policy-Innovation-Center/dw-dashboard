@@ -22,6 +22,11 @@ clean_ms_y2 <- function() {
           stringr::str_detect(file_name, "_LSLR") ~ "LSLR",
           stringr::str_detect(file_name, "_EC") ~ "EC",
           TRUE ~ "Base"
+        ),
+        iup_number = dplyr::case_when(
+          source_file == "EC" ~ stringr::str_extract(file_name, "(?<=_EC)\\d+"),
+          source_file == "LSLR" ~ stringr::str_extract(file_name, "(?<=_LSLR)\\d+"),
+          .default = "Base" 
         )
       )
     priority_list<- priority_list |>
@@ -39,6 +44,12 @@ clean_ms_y2 <- function() {
           stringr::str_detect(file_name, "_LSLR") ~ "LSLR",
           stringr::str_detect(file_name, "_EC") ~ "EC",
           TRUE ~ "Base"
+        ),
+        ,
+        iup_number = dplyr::case_when(
+          source_file == "EC" ~ stringr::str_extract(file_name, "(?<=_EC)\\d+"),
+          source_file == "LSLR" ~ stringr::str_extract(file_name, "(?<=_LSLR)\\d+"),
+          .default = "Base" 
         )
       )
     
@@ -109,7 +120,7 @@ clean_ms_y2 <- function() {
     )|>
     dplyr::filter(!stringr::str_detect(project, "Funding Line--")) |>
     dplyr::group_by(source_list) |>
-    dplyr::mutate(project_rank = paste0(dplyr::row_number(), "-", source_file)) |>
+    dplyr::mutate(project_rank = paste0(dplyr::row_number(), "-", source_file, "_", iup_number)) |>
     dplyr::ungroup() |>
     dplyr::mutate(
       state = "Mississippi",

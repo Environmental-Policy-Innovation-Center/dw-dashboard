@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Mississippi"
+state_abbr <- "MS"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE

@@ -6,7 +6,7 @@ clean_ms_y4 <- function() {
   # there are many data files, so this read in structure may be more efficient.
   # However, the base funding file first must be read in first, because it has 
   # a "funding line" element that provides special information about it's projects.
-  # Alternatively, in the data curation process, we should add a logical column to denote if it's considered for the funding line.
+  # Alternatively, in the data curation process, we should add a logical column to denote if it's considered for the funding line (Expecting Funding).
   # 2025-08-07 added expecting funding column
 
   # list files
@@ -89,7 +89,10 @@ clean_ms_y4 <- function() {
       project_cost = as.character(NA), 
       requested_amount = clean_numeric_string(loan_amount_requested),
       funding_amount = as.character(NA),
-      principal_forgiveness = as.character(NA)
+      principal_forgiveness = dplyr::case_when(
+        expecting_funding == "Yes" ~ clean_numeric_string(eligible_pf_amount),
+        .default = "No Information"
+      )
     )|> 
     dplyr::mutate(
       population = clean_numeric_string(service_area_population),

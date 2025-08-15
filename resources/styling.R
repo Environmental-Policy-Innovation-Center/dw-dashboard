@@ -78,6 +78,19 @@ fed_cap_grant_colors <- c("Base" = "#172f60",
                           "Base, IIJA Gen Supp, LSLR, and EC" = "#82AB6E",
                           "IIJA Gen Supp, LSLR, and EC" = "#527CAF")
 
+fed_cap_grant_linetypes <- c("Base" = "solid",
+                          "EC" = "dashed",
+                          "EC_FFY22" = "dashed",
+                          "EC_FFY23" = "dashed",
+                          "LSLR" = "dotted",
+                          "LSLR_FFY22" = "dotted",
+                          "LSLR_FFY23" = "dotted",
+                          "IIJA Gen Supp" ="dotdash",
+                          "Base & IIJA Gen Supp" = "longdash",
+                          "Base, IIJA Gen Supp, and EC" = "twodash",
+                          "Base, IIJA Gen Supp, LSLR, and EC" = "twodash",
+                          "IIJA Gen Supp, LSLR, and EC" = "solid")
+
 allowance_colors <- c("Admin & TA" ="#172f60",
                       "Small System TA"= "#1054a8",
                       "State Program Management"="#4ea324",

@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Mississippi"
+state_abbr <- "MS"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -790,7 +790,7 @@ if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
 ```{r}
 
 sa_pct_lead <- set_asides %>%
-  filter(fed_cap_grant == "LSLR" & !is.na(total_sa_pct)) %>%
+  filter(fed_cap_grant %in% c("LSLR", "LSLR_FFY22", "LSLR_FFY23") & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
                            total_sa_pct_str, " (", max_set_aside, ")"),
          state_fiscal_year = as.numeric(as.character(state_fiscal_year)))
@@ -831,7 +831,7 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
 ```{r}
 
 sa_pct_ec <- set_asides %>%
-  filter(fed_cap_grant == "EC" & !is.na(total_sa_pct)) %>%
+  filter(fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") & !is.na(total_sa_pct)) %>%
   mutate(plot_str = paste0(allowance, ", ", state_fiscal_year, ":<br>",
                            total_sa_pct_str, " (", max_set_aside, ")"),
          state_fiscal_year = as.numeric(as.character(state_fiscal_year)))

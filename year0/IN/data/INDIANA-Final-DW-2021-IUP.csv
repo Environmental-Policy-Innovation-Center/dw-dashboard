@@ -1,18 +1,25 @@
 PPL Rank,PPL Score,Participant,MHI,Population Served,PWSID No.,SRF Project No.,Project Description,EPA’s Sustainability Policy Category,Estimated Green Project Reserve Cost,Green Project Reserve Category,"Current User Rate (per 4,000 gallons)","Estimated Post-Project User Rate (per 4,000 gallons)",Requested Funds,Estimated Total Project Cost,Cumulative Requested Funds,Cumulative Total
 1,54,North Salem,"$39,943.00",504,5232017,DW190332 01,"Supply, Plant, and Storage Improvements",1,$0.00,N/A,$57.25,$91.60,"$2,170,000.00",,"$2,170,000.00",
-2,52,Crown Point,"$77,537.00","30,000",5245008,DW180445 03,"New Storage and Distribution System Improvements, and LeadService Line Replacement","1, 2",$0.00,N/A,$50.74,$55.81,"$7,000,000.00",,"$9,170,000.00",
+2,52,Crown Point,"$77,537.00","30,000",5245008,DW180445 03,"New Storage and Distribution System Improvements, and Lead
+Service Line Replacement","1, 2",$0.00,N/A,$50.74,$55.81,"$7,000,000.00",,"$9,170,000.00",
 3,51,Andrews,"$40,333.00","1,149",5235001,DW160935 01,New Plant,1,TBD,TBD,$29.60,$67.20,"$2,739,000.00",,"$11,909,000.00",
 4,50,Martinsville,"$46,635.00","15,000",5255009,DW191255 02,"Supply, Plant and Distribution System Improvements",1,$0.00,N/A,$33.47,$36.27,"$6,211,000.00",,"$18,120,000.00",
-5,48,Nappanee,"$52,744.00","6,648",5220016,DW200920 02,"Storage and Distribution System Improvements and Lead ServiceLine Replacement","1, 2",$0.00,N/A,$19.55,$27.46,"$7,250,000.00",,"$25,370,000.00",
-6,45,"Jackson CountyWater Utility","$49,506.00","13,050",5236003,DW210336 04,"Distribution System Improvements and Lead Service LineReplacement",1,TBD,TBD,$46.16,TBD,"$3,220,000.00",,"$28,590,000.00",
+5,48,Nappanee,"$52,744.00","6,648",5220016,DW200920 02,"Storage and Distribution System Improvements and Lead Service
+Line Replacement","1, 2",$0.00,N/A,$19.55,$27.46,"$7,250,000.00",,"$25,370,000.00",
+6,45,"Jackson County
+Water Utility","$49,506.00","13,050",5236003,DW210336 04,"Distribution System Improvements and Lead Service Line
+Replacement",1,TBD,TBD,$46.16,TBD,"$3,220,000.00",,"$28,590,000.00",
 7,45,Grabill,"$55,536.00","1,325",5202006,DW201302 02,"Supply, Plant, Treatment and Distribution System Improvements",1,"$296,000.00","EE, WE",$17.96,$41.14,"$5,195,000.00",,"$33,785,000.00",
 8,41,Lebanon,"$50,480.00","16,098",5206003,DW181306 02,Distribution System and Capacity Improvements,1,TBD,TBD,$34.26,$40.16,"$7,738,605.00",,"$41,523,605.00",
-9,41,"Indiana AmericanWater Company",Various,Various,Various,DW182141 09,Lead Service Line Replacement,1,$0.00,N/A,$34.84,$34.84,"$26,523,000.00",,"$68,046,605.00",
-10,38,Monticello,"$44,278.00","5,300",5291011,DW210191 02,"Distribution System Improvements and Lead Service LineReplacement",1,$0.00,N/A,$22.05,$25.00,"$2,141,250.00",,"$70,187,855.00",
+9,41,"Indiana American
+Water Company",Various,Various,Various,DW182141 09,Lead Service Line Replacement,1,$0.00,N/A,$34.84,$34.84,"$26,523,000.00",,"$68,046,605.00",
+10,38,Monticello,"$44,278.00","5,300",5291011,DW210191 02,"Distribution System Improvements and Lead Service Line
+Replacement",1,$0.00,N/A,$22.05,$25.00,"$2,141,250.00",,"$70,187,855.00",
 11,38,Monroe,"$61,250.00",872,5201004,DW190101 01,Plant and Distribution System Improvements,"1, 2",$0.00,N/A,$54.25,$94.50,"$3,760,569.00",,"$73,948,424.00",
 12,37,Galveston,"$45,536.00","1,258",5209003,DW190709 01,"Plant, Storage, Distribution System Improvements",1,$0.00,N/A,$45.68,$90.30,"$6,600,000.00",,"$80,548,424.00",
 13,35,LaCrosse,"$54,325.00",540,5246015,DW200246 01,Supply and Distribution System Improvements,"1, 2, 3","$545,600.00",WE,$22.57,$92.12,"$4,019,860.00",,"$84,568,284.00",
-14,35,"Northwest JasperRegional Water District","$56,574.00","3,815",5237015,DW191737 01,"Supply, Plant and Distribution System Improvements",1,$0.00,N/A,$42.60,$49.50,"$6,985,480.00",,"$91,553,764.00",
+14,35,"Northwest Jasper
+Regional Water District","$56,574.00","3,815",5237015,DW191737 01,"Supply, Plant and Distribution System Improvements",1,$0.00,N/A,$42.60,$49.50,"$6,985,480.00",,"$91,553,764.00",
 15,34,Topeka,"$53,438.00","1,022",5244008,DW201044 01,Supply and Plant Improvements,"1, 2, 3","$210,000.00",EE,$24.34,$49.04,"$4,392,000.00",,"$95,945,764.00",
 16,33,Universal,"$40,250.00",472,5283001,DW200583 03,"Supply, Plant and Distribution System Improvements",1,$0.00,N/A,$37.36,$69.46,"$815,500.00",,"$96,761,264.00",
 17,33,LaGrange,"$43,528.00","2,625",5244003,DW200644 01,"New Supply, Plant, Storage","1, 2, 3","$345,000.00","EE, EI",$28.86,$36.04,"$7,870,000.00",,"$104,631,264.00",
@@ -20,22 +27,31 @@ PPL Rank,PPL Score,Participant,MHI,Population Served,PWSID No.,SRF Project No.,P
 19,32,Carlisle,"$31,313.00","3,270",5277001,DW190977 01,Supply and Treatment Improvements,"1, 2, 3",$0.00,N/A,$23.74,$37.27,"$3,555,000.00",,"$111,877,683.00",
 20,32,Lewisville,"$45,739.00",392,5233006,DW200333 02,"Supply, Plant and Distribution System Improvements","1, 2",$0.00,N/A,$53.94,$91.35,"$2,009,450.00",,"$113,887,133.00",
 21,32,Dana,"$45,804.00",800,5283005,DW200483 01,"Plant, Storage and Distribution System Improvements",1,$0.00,N/A,$39.02,$87.58,"$1,880,000.00",,"$115,767,133.00",
-22,31,"Van Bibber LakeConservancy District","$25,313.00",340,5267010,DW191067 01,Distribution System Improvements,1,$0.00,N/A,$78.00,$253.91,"$8,400,000.00",,"$124,167,133.00",
+22,31,"Van Bibber Lake
+Conservancy District","$25,313.00",340,5267010,DW191067 01,Distribution System Improvements,1,$0.00,N/A,$78.00,$253.91,"$8,400,000.00",,"$124,167,133.00",
 23,30,Elwood,"$40,122.00","8,586",5248007,DW191848 02,Storage and Distribution Improvements,1,TBD,TBD,$30.84,$34.08,"$2,512,000.00",,"$126,679,133.00",
 24,30,Dillsboro,"$40,250.00","2,000",5215005,DW201515 01,Storage and Distribution System Improvements,1,TBD,TBD,$34.64,$54.11,"$2,017,000.00",,"$128,696,133.00",
 25,30,Evansville,"$40,899.00","173,000",5282002,DW181282 02,Distribution System Improvements,"1, 2",$0.00,N/A,$33.74,TBD,"$97,024,000.00",,"$225,720,133.00",
-26,30,"Hoosier HillsRegional Water District","$44,734.00","8,642",5289002,DW210469 01,"Storage and Distribution System Improvements and Water MainExtension","1, 2, 3",TBD,TBD,$32.00,TBD,"$3,047,000.00",,"$228,767,133.00",
+26,30,"Hoosier Hills
+Regional Water District","$44,734.00","8,642",5289002,DW210469 01,"Storage and Distribution System Improvements and Water Main
+Extension","1, 2, 3",TBD,TBD,$32.00,TBD,"$3,047,000.00",,"$228,767,133.00",
 27,30,Chandler,"$50,904.00","19,295",5287002,DW181987 02,Distribution System Improvements,"1, 2",TBD,TBD,$35.21,$35.21,"$19,794,000.00",,"$248,561,133.00",
-28,29,"EdwardsvilleWater Corporation","$30,300.00","10,200",5222001,DW201122 01,Storage and Distribution System Improvements,"1, 3",TBD,TBD,$38.26,$42.47,"$7,905,800.00",,"$256,466,933.00",
+28,29,"Edwardsville
+Water Corporation","$30,300.00","10,200",5222001,DW201122 01,Storage and Distribution System Improvements,"1, 3",TBD,TBD,$38.26,$42.47,"$7,905,800.00",,"$256,466,933.00",
 29,29,Warren,"$47,188.00","1,237",5235012,DW200835 01,Supply and Storage Improvements,1,$0.00,N/A,$36.35,$45.08,"$1,640,000.00",,"$258,106,933.00",
 30,29,Middlebury,"$68,152.00","3,420",5220014,DW200720 02,Distribution System Improvements,1,$0.00,N/A,$32.98,$37.79,"$1,117,000.00",,"$259,223,933.00",
 31,29,Carmel,"$125,168.00","88,077",5229004,DW181129 01,"Plant, Storage and Distribution System Improvements","1, 2, 3",TBD,TBD,$25.31,$29.87,"$51,100,000.00",,"$310,323,933.00",
 32,27,Chrisney,"$57,750.00",813,5274001,DW201274 01,"Supply, Storage and Distribution System Improvements",1,TBD,TBD,$47.36,$82.99,"$2,006,000.00",,"$312,329,933.00",
-33,26,Frankfort,"$40,889.00","16,422",5212003,DW191412 01,"New Supply, Plant Expansion, Storage and Distribution SystemImprovements","1, 3",TBD,TBD,$13.75,$22.62,"$13,650,000.00",,"$325,979,933.00",
-34,26,"Brown CountyWater Utility","$54,237.00","11,300",5207001,DW201407 03,Supply and Distribution System Improvements,1,TBD,TBD,$51.76,$55.84,"$3,894,250.00",,"$329,874,183.00",
+33,26,Frankfort,"$40,889.00","16,422",5212003,DW191412 01,"New Supply, Plant Expansion, Storage and Distribution System
+Improvements","1, 3",TBD,TBD,$13.75,$22.62,"$13,650,000.00",,"$325,979,933.00",
+34,26,"Brown County
+Water Utility","$54,237.00","11,300",5207001,DW201407 03,Supply and Distribution System Improvements,1,TBD,TBD,$51.76,$55.84,"$3,894,250.00",,"$329,874,183.00",
 35,25,Peru,"$34,992.00","11,417",5252016,DW170652 02,Distribution System Improvements,"1, 2, 3",TBD,TBD,$43.32,TBD,"$1,100,000.00",,"$330,974,183.00",
-36,25,"Clinton CountyBuilding Corporation","$51,659.00","16,422",5212003,DW190512 01,Distribution System Expansion,1,$0.00,N/A,$13.74,$45.00,"$5,000,000.00",,"$335,974,183.00",
-37,25,"North DearbornWater Corporation","$65,096.00","5,405",5215008,DW201615 02,"Supply, Plant and Distribution System Improvements","1, 2, 3",TBD,TBD,$26.07,TBD,"$4,196,945.00",,"$340,171,128.00",
+36,25,"Clinton County
+Building Corporation","$51,659.00","16,422",5212003,DW190512 01,Distribution System Expansion,1,$0.00,N/A,$13.74,$45.00,"$5,000,000.00",,"$335,974,183.00",
+37,25,"North Dearborn
+Water Corporation","$65,096.00","5,405",5215008,DW201615 02,"Supply, Plant and Distribution System Improvements","1, 2, 3",TBD,TBD,$26.07,TBD,"$4,196,945.00",,"$340,171,128.00",
 38,23,Russellville,"$51,250.00",380,5267008,DW201867 02,Storage and Distribution System Improvements,1,$0.00,N/A,$45.00,$100.47,"$1,300,000.00",,"$341,471,128.00",
+39,21,Washington,"$40,645","13,690",5214007,DW190414 01,Distribution System Improvements,"1, 2, 3",$0.00,N/a,$33.79,$38.86,"$3,320,000",,"$344,791,128",
 ,,Cedar Lake,"$65,067.00","4,600",5245047,DW201745 04,"Supply, Storage, and Distribution System Improvements",1,$0.00,N/A,$36.04,$40.18,,"$3,915,000.00",,"$3,915,000.00"
 ,,Loogootee,"$44,125.00","3,915",5251005,DW210251 01,Storage and Distribution System Improvements,1,TBD,TBD,$31.54,$46.35,,"2,630,000",,"$6,545,000.00"

@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Mississippi"
-state_abbr <- "MS"
+state_name <- "Michigan"
+state_abbr <- "MI"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -257,6 +257,7 @@ for (type in levels(comp_dem_avail_fund_type$project_type)){
     ggplot2::ggplot(ggplot2::aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
     ggplot2::geom_bar(stat="identity", position="dodge") + 
     ggplot2::scale_y_continuous(labels=label_currency()) + 
+    ggplot2::scale_x_discrete(drop = FALSE) +
     ggplot2::scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 

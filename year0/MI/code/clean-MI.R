@@ -8,6 +8,7 @@ clean_mi_y0 <- function() {
     mutate(community_served = str_squish(county),
            borrower = str_squish(project_name),
            project_id = str_squish(project),
+           project_description = str_squish(project_description),
            project_type =  case_when(
              grepl(lead_str, project_description, ignore.case=TRUE) | water_infrastructure_fund_transfer_act_wifta_amount != ""  ~ "Lead",
              grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
@@ -16,7 +17,7 @@ clean_mi_y0 <- function() {
            funding_amount = clean_numeric_string(dwsrf_loan_amount),         
            principal_forgiveness = clean_numeric_string(total_principal_forgiveness_non_wifta),
            population = as.character(NA),
-           project_description = str_squish(project_description),
+           
           disadvantaged = str_squish(disadvantaged_community),
           disadvantaged = ifelse(disadvantaged=="", "No", "Yes"),
           project_rank = str_squish(rank),

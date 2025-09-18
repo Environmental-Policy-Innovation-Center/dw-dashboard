@@ -15,9 +15,10 @@ clean_mi_y3 <- function() {
         .default = stringr::str_squish(project_number)
       ),
       project_name = as.character(NA),
+      project_description = stringr::str_squish(project_scope),
       project_type =  case_when(
-             grepl(lead_str, project_scope, ignore.case=TRUE) | !is.na(bil_lslr_eligible_costs)  ~ "Lead",
-             grepl(ec_str, project_scope, ignore.case=TRUE) | !is.na(emerging_contaminant_costs) ~ "Emerging Contaminants",
+             grepl(lead_str, project_description, ignore.case=TRUE) | !is.na(bil_lslr_eligible_costs)  ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) | !is.na(emerging_contaminant_costs) ~ "Emerging Contaminants",
              TRUE ~ "General"),
       project_cost = as.character(NA),
       requested_amount = clean_numeric_string(total_loan_amount_requested),
@@ -35,7 +36,6 @@ clean_mi_y3 <- function() {
         convert_to_numeric(bil_dwsrf_lslr_pf, TRUE),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       population = as.character(NA),
-      project_description = stringr::str_squish(project_scope),
       disadvantaged = dplyr::case_when(
         is.na(overburdened_determination) ~ "No",
         .default = "Yes"

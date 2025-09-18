@@ -67,12 +67,29 @@ epic_chart_theme <- theme_minimal() +
 # Funding YOY Colors
 fed_cap_grant_colors <- c("Base" = "#172f60",
                           "EC" = "#791a7b",
+                          "EC_FFY22" = "#a642a8",
+                          "EC_FFY23" = "#5d1460",
                           "LSLR" = "#4ea324",
+                          "LSLR_FFY22" = "#6bc842",
+                          "LSLR_FFY23" = "#3d7f1c",
                           "IIJA Gen Supp" ="#1054a8",
                           "Base & IIJA Gen Supp" = "#526489",
                           "Base, IIJA Gen Supp, and EC" = "#B077B2",
                           "Base, IIJA Gen Supp, LSLR, and EC" = "#82AB6E",
                           "IIJA Gen Supp, LSLR, and EC" = "#527CAF")
+
+fed_cap_grant_linetypes <- c("Base" = "solid",
+                          "EC" = "dashed",
+                          "EC_FFY22" = "dashed",
+                          "EC_FFY23" = "dashed",
+                          "LSLR" = "dotted",
+                          "LSLR_FFY22" = "dotted",
+                          "LSLR_FFY23" = "dotted",
+                          "IIJA Gen Supp" ="dotdash",
+                          "Base & IIJA Gen Supp" = "longdash",
+                          "Base, IIJA Gen Supp, and EC" = "twodash",
+                          "Base, IIJA Gen Supp, LSLR, and EC" = "twodash",
+                          "IIJA Gen Supp, LSLR, and EC" = "solid")
 
 allowance_colors <- c("Admin & TA" ="#172f60",
                       "Small System TA"= "#1054a8",
@@ -82,7 +99,11 @@ allowance_colors <- c("Admin & TA" ="#172f60",
 pf_colors <- c("DAC PF"="#526489",
                "Discretionary PF"="#172f60",
                "IIJA - EC"="#791a7b",
+               "IIJA - EC_FFY22"="#a642a8",
+               "IIJA - EC_FFY23"="#5d1460",
                "IIJA - LSLR"="#4ea324",
+               "IIJA - LSLR_FFY22"="#6bc842",
+               "IIJA - LSLR_FFY23"="#3d7f1c",
                "IIJA Gen Supp"="#1054a8",
                "Remaining Loans" = "lightgrey")
 

@@ -14,13 +14,13 @@ clean_mi_y2 <- function() {
         .default = stringr::str_squish(project_number)
       ),
       project_name = as.character(NA),
+      project_description = stringr::str_squish(project_components),
       project_type =  case_when(
-             grepl(lead_str, project_components, ignore.case=TRUE) | !is.na(lead_service_line_costs)  ~ "Lead",
-             grepl(ec_str, project_components, ignore.case=TRUE) | !is.na(ec_related_costs) ~ "Emerging Contaminants",
+             grepl(lead_str, project_description, ignore.case=TRUE) | !is.na(lead_service_line_costs)  ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) | !is.na(ec_related_costs) ~ "Emerging Contaminants",
              TRUE ~ "General"),
       project_cost = clean_numeric_string(total_project_costs),
       requested_amount = as.character(NA),
-
       funding_amount = convert_to_numeric(dwsrf_traditional_loan, TRUE) + 
         convert_to_numeric(dwsrf_traditional_pf, TRUE) +
         convert_to_numeric(bil_dwsrf_supplemental_loan, TRUE) +
@@ -34,8 +34,7 @@ clean_mi_y2 <- function() {
         convert_to_numeric(bil_dwsrf_emerging_contaminants_pf, TRUE) +
         convert_to_numeric(bil_dwsrf_lslr_pf, TRUE),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
-      population = stringr::str_squish(population),
-      project_description = stringr::str_squish(project_components),
+      population = as.character(NA),
       disadvantaged = dplyr::case_when(
         is.na(disadvantaged_status) ~ "No",
         .default = "Yes"

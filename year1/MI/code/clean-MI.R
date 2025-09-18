@@ -15,6 +15,7 @@ clean_mi_y1 <- function() {
       pwsid = as.character(NA),
       project_id = str_squish(project_number),
       project_name = as.character(NA),
+      project_description = stringr::str_squish(project_description),
       project_type =  case_when(
              grepl(lead_str, project_description, ignore.case=TRUE) | !is.na(lslr_costs)  ~ "Lead",
              grepl(ec_str, project_description, ignore.case=TRUE) | !is.na(pfas_costs) ~ "Emerging Contaminants",
@@ -39,7 +40,6 @@ clean_mi_y1 <- function() {
         convert_to_numeric(bil_dwsrf_lslr_pf, TRUE),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       population = as.character(NA),
-      project_description = stringr::str_squish(project_description),
       disadvantaged = dplyr::case_when(
         is.na(disadvantaged) ~ "No",
         .default = "Yes"

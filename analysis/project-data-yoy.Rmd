@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Michigan"
+state_abbr <- "MI"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -859,13 +859,13 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
     labs(x="State Fiscal Year",
          y="",
          fill="Disadvantaged",
-         title="How many projects expecting funding serve DACs?",
+         title="How many projects on Fundable List serve DACs?",
          subtitle=get_subtitle_str(dac_ef_comps$state_fiscal_year, state_name)) +
     scale_fill_manual(values=ef_dac_sc_colors) + 
     epic_chart_theme
   
   dac_ef_gp <- ggplotly(dac_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many projects expecting funding serve DACs?",
+    layout(title = list(text = paste0("How many projects on Fundable List serve DACs?",
                                       '<br>',
                                       get_subtitle_str(dac_ef_comps$state_fiscal_year, state_name)
                                       )))
@@ -881,7 +881,7 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0) {
 }
 ```
 
-###Facet EF DACs by PT
+### Facet EF DACs by PT
 
 ```{r}
 
@@ -935,7 +935,7 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
 
 ```
 
-###Each Project Type
+### Each Project Type
 
 #### General
 
@@ -1485,14 +1485,14 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many projects serve small communities?",
+         title="How many projects serving small communities are on Comprehensive Lists?",
          subtitle=get_subtitle_str(small_community_df$state_fiscal_year, state_name)) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
     epic_chart_theme
   
   sc_pop_gp <- ggplotly(sc_pop_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many projects serve small communities?",
+    layout(title = list(text = paste0("How many projects serving small communities are on Comprehensive Lists?",
                                       '<br>',
                                       get_subtitle_str(small_community_df$state_fiscal_year, state_name))))
   
@@ -1514,7 +1514,7 @@ if(nrow(small_community_df %>% filter(!is.na(projects))) > 0) {
 ```{r}
 if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
   
-      sc_ef_projects <- small_community_df %>%
+  sc_ef_projects <- small_community_df %>%
     select(state_fiscal_year, ef_projects, small_community) %>%
     left_join(small_community_df %>% 
                 group_by(state_fiscal_year) %>%
@@ -1534,14 +1534,14 @@ if(nrow(small_community_df %>% filter(!is.na(ef_projects))) > 0) {
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many projects serving small communities are on funding lists?",
+         title="How many projects serving small communities are on Fundable Lists?",
          subtitle=get_subtitle_str(small_community_df$state_fiscal_year, state_name)) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
                       name = "Population < 10k") + 
     epic_chart_theme
   
   sc_ef_gp <- ggplotly(sc_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many projects serving small communities are on funding lists?",
+    layout(title = list(text = paste0("How many projects serving small communities are on Fundable Lists?",
                                       '<br>',
                                       get_subtitle_str(small_community_df$state_fiscal_year, state_name))))
   
@@ -1602,6 +1602,93 @@ sc_dac_projects <- small_community_df %>%
   
   sc_dac_gp
 }
+```
+
+### Expecting funding and DAC
+```{r}
+state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
+  janitor::clean_names() |>
+  dplyr::filter(state == state_name) 
+ 
+ sc_dac_ef <- state_projects |>
+  dplyr::select(state_fiscal_year, disadvantaged, expecting_funding, population) |>
+  dplyr::mutate(
+    population = as.numeric(population),
+    small_community = dplyr::case_when(
+      population < 10000 ~ "Yes",
+      .default = "No"
+  )) |>
+  dplyr::select(-population) |>
+  dplyr::filter(expecting_funding == "Yes") |>
+  dplyr::group_by(state_fiscal_year, small_community, disadvantaged) |>
+  dplyr::tally() |>
+  dplyr::mutate(interaction = interaction(small_community, disadvantaged),
+  interaction = dplyr::case_when(
+    interaction =="No.No" ~ "Not small community, Not disadvantaged",
+    interaction =="No.Yes"~ "Not small community, Disadvantaged",
+    interaction =="Yes.No"~ "Small community, Not disadvantaged",
+    interaction =="Yes.Yes"~ "Small community, Disadvantaged",
+  )
+  ) 
+
+sc_ef <- sc_dac_ef |>
+  dplyr::ungroup() |>
+  dplyr::group_by(state_fiscal_year, small_community) |>
+  dplyr::summarise(total_projects = sum(n)) |>
+  dplyr::mutate(text = paste0("Small Community: ", small_community, "<br>", "Projects in Fundable List: ", total_projects))
+
+sc_dac_ef_sub <- sc_dac_ef |> dplyr::filter(disadvantaged =="Yes" & small_community =="Yes")
+
+sc_dac_ef_p <- ggplot2::ggplot() +
+  ggplot2::geom_col(data = sc_ef, ggplot2::aes(state_fiscal_year, total_projects, fill = small_community, text = text)) +
+  ggplot2::geom_col(data = sc_dac_ef_sub, ggplot2::aes(state_fiscal_year, n), color= "black", fill = "transparent") +
+  ggplot2::geom_text(data = sc_dac_ef_sub, ggplot2::aes(state_fiscal_year, n), label = "DAC", position = position_stack(vjust=0.5)) +
+  ggplot2::labs(x="State Fiscal Year",
+         y="Projects",
+         title="Projects on Fundable Lists serving small communities serving DACs") + 
+  ggplot2::scale_fill_manual(values = ef_dac_sc_colors, 
+                      name = "Population < 10k") + 
+    epic_chart_theme
+
+  
+
+# sc_dac_ef_projects <- small_community_df |>
+#   dplyr::select(state_fiscal_year, small_community, projects, dac_ef_projects) |>
+#   dplyr::group_by(state_fiscal_year) |>
+#   dplyr::mutate(
+#     total_dac_ef_projects = sum(dac_ef_projects),
+#     pct_str = as.character(round(dac_ef_projects/total_dac_ef_projects ,3)*100),
+#     plot_str = paste0(small_community, ", ", state_fiscal_year, ":<br>", dac_ef_projects, " projects", " (",pct_str, "%)")
+#     )
+
+# sc_dac_ef_p <- ggplot(sc_dac_ef_projects, aes(x=state_fiscal_year, y=dac_ef_projects, fill=small_community, 
+#                                              text=plot_str))+ 
+#     geom_bar(stat="identity", position="stack") + 
+#     labs(x="State Fiscal Year",
+#          y="Projects",
+#          title="Projects on Fundable Lists serving small communities serving DACs",
+#          subtitle=get_subtitle_str(sc_dac_ef_projects$state_fiscal_year, state_name)) + 
+#     scale_fill_manual(values = ef_dac_sc_colors, 
+#                       name = "Population < 10k") + 
+#     epic_chart_theme
+  
+  sc_dac_ef_gp <- ggplotly(sc_dac_ef_p, tooltip="text") %>%
+    layout(title = list(text = paste0("Projects on Fundable Lists serving small communities serving DACs",
+                                      '<br>',
+                                      get_subtitle_str(sc_dac_ef$state_fiscal_year, state_name))))
+  
+  
+  if (save_plots) {
+    
+    run_save_plots(gg_plot = sc_dac_ef_p,
+                   gp_object = sc_dac_ef_gp,
+                   name = "small-community-dacs-ef-yoy")
+    }
+  
+  sc_dac_gp
+
+
+
 ```
 
 ## Misc Plots
@@ -2003,7 +2090,7 @@ pc_by_type_by_dac_g<- pc_by_type_by_dac |>
    scale_y_continuous(labels=label_dollar()) +
    labs(
     title= paste0(
-      "What proportion of project costs for projects on funding lists are DAC? — ",
+      "Proportion of project costs for projects on fundable list that serve DACs — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name)),
     x="",
     y="") + 
@@ -2011,7 +2098,7 @@ pc_by_type_by_dac_g<- pc_by_type_by_dac |>
 
 pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
   layout(title = list(text = paste0(
-      "What proportion of project costs for projects on funding lists are DAC? — ",
+      "Proportion of project costs for projects on fundable list that serve DACs — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
 
     if (save_plots) {
@@ -2021,5 +2108,66 @@ pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
     }
 
     pc_by_type_by_dac_gp
+
+```
+
+```{r}
+# all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
+#   janitor::clean_names()
+
+
+# vsc_pc_summary <- all_projects |>
+#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
+#    dplyr::select(population, project_cost) |>
+#    dplyr::mutate(
+#     population = as.numeric(population),
+#     project_cost = as.numeric(project_cost),
+#     very_small_communities = dplyr::case_when(
+#     population <= 1000 ~ "Yes",
+#     .default = "No"
+#    )) |>
+#    dplyr::group_by(very_small_communities) |>
+#    dplyr::summarise(
+#     median_project_cost = median(project_cost) ,
+#     mean_project_cost  = mean(project_cost)
+#    ) |>
+#   tidyr::pivot_longer(cols = c("median_project_cost", "mean_project_cost"), names_to = "stat")
+
+
+# pc_summary <- all_projects |>
+#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
+#    dplyr::select(population, project_cost) |>
+#    dplyr::mutate(
+#     population = as.numeric(population),
+#     project_cost = as.numeric(project_cost),
+#     very_small_communities = dplyr::case_when(
+#     population <= 1000 ~ "Yes",
+#     .default = "No"
+#    )) |> 
+#    dplyr::summarise(
+#     median_project_cost = median(project_cost) ,
+#     mean_project_cost  = mean(project_cost)
+#    ) |>
+#   tidyr::pivot_longer(cols = c("median_project_cost", "mean_project_cost"), names_to = "stat", values_to = "all_project_cost")
+
+
+# vsc_pc_summary |>
+#   dplyr::left_join(pc_summary) |>
+#   gt::gt()
+
+
+
+# data_subset<- all_projects |>
+#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
+#    dplyr::mutate(
+#     population = as.numeric(population),
+#     project_cost = as.numeric(project_cost),
+#     very_small_communities = dplyr::case_when(
+#     population <= 1000 ~ "Yes",
+#     .default = "No"
+#    )) |>
+#     dplyr::filter(very_small_communities == "Yes") 
+
+# googlesheets4::write_sheet(data_subset, "https://docs.google.com/spreadsheets/d/1ONJ_bFWaRSOMGbhI8hF7UOQs6FQsvpXaY70rkTgoJQM/", sheet = "Sheet1")
 
 ```

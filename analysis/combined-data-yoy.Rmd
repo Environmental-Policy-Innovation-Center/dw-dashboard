@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Michigan"
+state_abbr <- "MI"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -49,10 +49,10 @@ base_gen_supp <- bind_rows(base, gen_supp, base_gen_supp) %>%
   summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
 
 lead <- financial %>%
-  filter(fed_cap_grant == "LSLR")
+  filter(fed_cap_grant %in%  c("LSLR", "LSLR_FFY22","LSLR_FFY23"))
 
 ec <- financial %>%
-  filter(fed_cap_grant == "EC")
+  filter(fed_cap_grant %in% c("EC","EC_FFY22", "EC_FFY23"))
 
 ```
 
@@ -220,8 +220,8 @@ if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {
 # get total funding available for each fed cap grant, merge with project type
 financial_by_project_type <- financial|>
   dplyr::mutate(project_type = case_when(
-    fed_cap_grant == "LSLR" ~ "Lead",
-    fed_cap_grant == "EC" ~ "Emerging Contaminants",
+    fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
+    fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants",
     TRUE ~ "General"
   )) |>
   dplyr::group_by(state, state_fiscal_year, project_type) |>
@@ -257,6 +257,7 @@ for (type in levels(comp_dem_avail_fund_type$project_type)){
     ggplot2::ggplot(ggplot2::aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
     ggplot2::geom_bar(stat="identity", position="dodge") + 
     ggplot2::scale_y_continuous(labels=label_currency()) + 
+    ggplot2::scale_x_discrete(drop = FALSE) +
     ggplot2::scale_fill_manual(values = comp_colors, 
                       name = "") + 
     labs(x="", y="", 
@@ -496,7 +497,12 @@ if(sum(compare_requested_amount_gen$value[compare_requested_amount_gen$name=="Un
 compare_ec_funds <- project_type_df %>%
   select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
   filter(project_type == "Emerging Contaminants") %>%
-  left_join(ec %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+  left_join(
+    ec %>% 
+      select(state, state_fiscal_year, total_funding_available) |> 
+      dplyr::group_by(state, state_fiscal_year) |>
+      dplyr::summarise(total_funding_available = sum(total_funding_available), .groups = "drop")
+      ) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
   mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),
@@ -618,7 +624,12 @@ if(sum(compare_requested_amount_ec$value[compare_requested_amount_ec$name=="Unme
 compare_lead_funds <- project_type_df %>%
   select(state, state_fiscal_year, project_type, total_project_cost, total_requested_amount) %>%
   filter(project_type == "Lead") %>%
-  left_join(lead %>% select(state, state_fiscal_year, total_funding_available)) %>%   
+  left_join(
+    lead %>% 
+      select(state, state_fiscal_year, total_funding_available) |> 
+      dplyr::group_by(state, state_fiscal_year) |>
+      dplyr::summarise(total_funding_available = sum(total_funding_available), .groups = "drop")
+      ) %>%   
 # create calculated columns that will be "what's left" so that the total and the proportions are correct in plots
   mutate(cost_less_available = total_project_cost - replace_na(total_funding_available, 0),
          cost_less_available = ifelse(cost_less_available < 0, 0, cost_less_available),

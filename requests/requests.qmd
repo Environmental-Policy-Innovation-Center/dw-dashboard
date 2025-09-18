@@ -27,6 +27,42 @@ To include a new request, follow this template using the shortcode `request` wit
 
 ------------------------------------------------------------------------
 {{< request 
+"Projects on Fundable Lists serving small communities serving DACs"
+"2025-09-10"
+"Danielle"
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1757529404074779)"
+"Plot showing small communities expecting funding that are also DACs"
+"[2025-09-10] Completed"
+>}}
+
+{{< request 
+"Independent fed cap grant by categories: General, LSLR, EC"
+"2025-09-09"
+"Lauren"
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1757445152789539?thread_ts=1757104941.967279&cid=C08LXGF02AE)"
+"Overview plots that capture the individual year fed-cap-grant-amount-202X for each grant category."
+"[2025-09-10] Completed"
+>}}
+
+{{< request 
+"PF Carryover added to general carryover plot"
+"2025-09-05"
+"Lauren"
+"[Slack](https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1757093964900689?thread_ts=1757024920.371109&cid=C08LXGF02AE)"
+"Stack principal forgiveness carryover over general carryover across state fiscal year with bars colored by fed cap grant and direct labeling of principal forgiveness carryover"
+"[2025-09-07] Completed"
+>}}
+
+{{< request 
+"Overlaping lines viz in static plots"
+"2025-08-07"
+"Janet"
+"[ROD](https://docs.google.com/document/d/1tXmqVYR7sLY_dD8xiqMMIIINsRmTzms0pA6Qq0ZeQjU/edit?tab=t.0#heading=h.cst0s9qykgpj)"
+"Request originated from findings and recommendation documents, the solution was discussed and agreed upon by the group and consists of mapping factor to line type and provide a direct annotation."
+"[2025-08-14] Completed"
+>}}
+
+{{< request 
 "Plot breakdown by project type"
 "2025-07-24"
 "Danielle"

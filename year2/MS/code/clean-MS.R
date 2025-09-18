@@ -1,0 +1,152 @@
+clean_ms_y2 <- function() {
+
+  curated_file_names <- stringr::str_subset(list.files("year2/MS/data"), "curated")
+  
+  # read in data (extracted with tabula, further inspected and curated)
+  # there are many data fils, so this read in structure may be more efficient.
+  # However, the base funding file first must be read in first, because it has 
+  # a "funding line" element that provides special information about it's projects.
+
+  # list files
+  PPL_files <- stringr::str_subset(curated_file_names, "PPL")  
+  PPlaL_files <- stringr::str_subset(curated_file_names, "PPlaL")
+
+  # read file
+  priority_list <- dplyr::tibble()
+  for (file_name in PPL_files){
+    tmp_priority_list <- data.table::fread(paste0("year2/MS/data/", file_name), colClasses = "character", na.strings = "") |> 
+      janitor::clean_names() |>
+      dplyr::mutate(
+        source_list="Priority",
+        source_file = dplyr::case_when(
+          stringr::str_detect(file_name, "_LSLR") ~ "LSLR",
+          stringr::str_detect(file_name, "_EC") ~ "EC",
+          TRUE ~ "Base"
+        ),
+        iup_number = dplyr::case_when(
+          source_file == "EC" ~ stringr::str_extract(file_name, "(?<=_EC)\\d+"),
+          source_file == "LSLR" ~ stringr::str_extract(file_name, "(?<=_LSLR)\\d+"),
+          .default = "Base" 
+        )
+      )
+    priority_list<- priority_list |>
+      dplyr::bind_rows(tmp_priority_list)
+  }
+  
+  
+  planning_list <- dplyr::tibble()
+  for (file_name in PPlaL_files){
+    tmp_planning_list <- data.table::fread(paste0("year2/MS/data/", file_name), colClasses = "character", na.strings = "") |> 
+      janitor::clean_names() |>
+      dplyr::mutate(
+        source_list="Planning",
+        source_file = dplyr::case_when(
+          stringr::str_detect(file_name, "_LSLR") ~ "LSLR",
+          stringr::str_detect(file_name, "_EC") ~ "EC",
+          TRUE ~ "Base"
+        ),
+        ,
+        iup_number = dplyr::case_when(
+          source_file == "EC" ~ stringr::str_extract(file_name, "(?<=_EC)\\d+"),
+          source_file == "LSLR" ~ stringr::str_extract(file_name, "(?<=_LSLR)\\d+"),
+          .default = "Base" 
+        )
+      )
+    
+    planning_list<- planning_list |>
+      dplyr::bind_rows(tmp_planning_list)
+    
+  }
+
+  # sanity check
+  colnames(priority_list) == colnames(planning_list)
+
+  # order matters, priority list should be read in first
+  combined_list<- priority_list |> 
+    dplyr::bind_rows(planning_list) |>
+    # drop category rows
+    dplyr::filter(!grepl("Category", project))
+
+  ms_clean <- combined_list |>
+    dplyr::mutate(
+      community_served = as.character(NA), 
+      borrower = stringr::str_squish(project),
+      pwsid = as.character(NA),
+      project_id = as.character(NA),
+      project_name = as.character(NA)
+    ) |>
+    dplyr::mutate(
+      project_description = stringr::str_squish(project_description),
+      project_type = dplyr::case_when(
+            stringr::str_detect(source_file, "LSLR") ~ "Lead",
+            stringr::str_detect(source_file, "EC") ~ "Emerging Contaminants",
+            grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+            grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+            TRUE ~ "General"
+           )
+    ) |>
+    dplyr::mutate(
+      project_cost = as.character(NA),
+      requested_amount = clean_numeric_string(loan_amount_requested),
+      funding_amount = as.character(NA)
+    )|>
+    
+    dplyr::mutate(
+      row_id = dplyr::row_number(),
+      principal_forgiveness = dplyr::if_else(
+        row_id %in% {
+          funding_lines <- which(stringr::str_detect(project, "Funding Line--"))
+          unlist(lapply(funding_lines, function(x) seq_len(x - 1)))
+        },
+        clean_numeric_string(eligible_pf_amount),
+        "No Information") 
+      ) |>
+    dplyr::mutate(
+      population = clean_numeric_string(service_area_population),
+      disadvantaged = dplyr::case_when(
+             as.numeric(str_replace_all(eligible_pf_amount,"[^0-9.]","")) > 0 ~ "Yes", 
+             source_list == "Planning" & source_file == "EC" ~ "No Information",
+             .default = "No"),
+      project_score = str_replace_all(priority_points,"[^0-9.]",""),
+      # determine expecting funding based on funding line (regardless of amount)
+      expecting_funding = dplyr::case_when(
+        row_id %in% {
+          funding_lines <- which(stringr::str_detect(project, "Funding Line--"))
+          unlist(lapply(funding_lines, function(x) seq_len(x - 1)))
+        } ~ "Yes",
+        source_file %in% c("LSLR", "EC") ~ "No Information",
+        .default = "No") 
+
+    )|>
+    dplyr::filter(!stringr::str_detect(project, "Funding Line--")) |>
+    dplyr::group_by(source_list) |>
+    dplyr::mutate(project_rank = paste0(dplyr::row_number(), "-", source_file, "_", iup_number)) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      state = "Mississippi",
+      state_fiscal_year = "2024"
+    ) |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank,project_score, expecting_funding, state, state_fiscal_year)
+  
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  
+  ms_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision: No information for project id
+  
+  # Check for disinfection byproduct in description
+  ms_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  ####### Decision: No disinfection byproduct string
+    
+  ####### SANITY CHECKS END #######
+  
+  run_tests(ms_clean)
+  rm(list=setdiff(ls(), "ms_clean"))
+  
+  return(ms_clean)
+}
+
+

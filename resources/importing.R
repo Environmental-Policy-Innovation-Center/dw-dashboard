@@ -36,6 +36,7 @@ get_financial <- function(state_name) {
            cw_transferred_to_dw = convert_to_numeric(cw_transferred_to_dw),
            dw_transferred_to_cw = convert_to_numeric(dw_transferred_to_cw),
            unutilized_fcg = convert_to_numeric(unutilized_fcg),
+           pf_carryover = convert_to_numeric(pf_carryover),
            leveraged_funds = convert_to_numeric(leveraged_funds),
            funds_reserved_leveraging = convert_to_numeric(funds_reserved_leveraging),
            total_funding_available = convert_to_numeric(total_funding_available),

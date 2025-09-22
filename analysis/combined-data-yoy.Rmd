@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "Indiana"
+state_abbr <- "IN"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -775,4 +775,7 @@ if (save_plots) {
     }
   
 pc_vs_fa_dac_gp
+```
+
+```{r}
 ```

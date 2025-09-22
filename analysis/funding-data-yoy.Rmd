@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "Indiana"
+state_abbr <- "IN"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -1010,3 +1010,6 @@ if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
 
 ```
 
+```{r}
+
+```

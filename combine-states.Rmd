@@ -36,7 +36,7 @@ states <- c(
   "AL", 
   #"AR",
   #"IL", 
-  #"IN",   
+  "IN",   
   "LA",
   "MI", 
   #"MN", 
@@ -57,7 +57,8 @@ years <- c(
   1,
   2,
   3,
-  4
+  4,
+  5
   )
 
 for (year in years) {

@@ -1,10 +1,18 @@
-clean_in_y1 <- function() {
+clean_in_y4 <- function() {
  
-  in_ppl <- fread("year1/IN/data/IN-SFY22-DWSRF-Q4-PPL.csv",
-                  colClasses = "character", na.strings = "") %>%
-    clean_names()
+  in_ppl_comprehensive <- fread("year4/IN/data/IN-SFY25-DWSRF-Q4-PPL-Comprehensive.csv",
+                  colClasses = "character", na.strings = "") |>
+    janitor::clean_names()
+
+
+   in_ppl_lslr <- fread("year4/IN/data/IN-SFY25-DWSRF-Q4-PPL-Lead.csv",
+                  colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(project_type = "Lead")
   
-  in_clean <- in_ppl |>
+  in_combined <- dplyr::bind_rows(in_ppl_comprehensive,in_ppl_lslr)
+  
+  in_clean <- in_combined |>
     dplyr::mutate(
       community_served = as.character(NA),
       borrower = str_squish(participant),
@@ -17,7 +25,8 @@ clean_in_y1 <- function() {
       project_name = as.character(NA),
       project_description = stringr::str_squish(project_description),
       project_type =  case_when(
-          grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(estimated_lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        !is.na(project_type) ~"Lead",
+          grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
           grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
           TRUE ~ "General"),
       project_cost = dplyr::case_when(
@@ -31,20 +40,18 @@ clean_in_y1 <- function() {
       funding_amount = as.character(NA),
       principal_forgiveness = as.character(NA),
       population = clean_numeric_string(population_served),
-      estimated_post_user_rate = convert_to_numeric(estimated_post_project_user_rate_per_4_000_gallons, TRUE),
-      mhi = convert_to_numeric(mhi, TRUE),
-    disadvantaged = as.character(NA),
-    project_rank = dplyr::case_when(
-      is.na(ppl_rank) ~ "No Information",
-      .default = str_squish(ppl_rank)
-    ),
-    project_score = dplyr::case_when(
-      is.na(ppl_score) ~ "No Information",
-      .default = str_squish(ppl_score)
-    ),
+      disadvantaged = disadvantaged_community,
+      project_rank = dplyr::case_when(
+        is.na(ppl_rank) ~ "No Information",
+        .default = str_squish(ppl_rank)
+      ),
+      project_score = dplyr::case_when(
+        is.na(ppl_score) ~ "No Information",
+        .default = str_squish(ppl_score)
+      ),
     expecting_funding =  as.character(NA),
     state = "Indiana",
-    state_fiscal_year = "2022",
+    state_fiscal_year = "2025",
     ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
@@ -54,6 +61,7 @@ clean_in_y1 <- function() {
 
 # Hone in on project id duplication
 in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+
 ####### Decision : No duplicates
 
 # Check for disinfection byproduct in description

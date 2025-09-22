@@ -17,8 +17,8 @@ clean_mi_y3 <- function() {
       project_name = as.character(NA),
       project_description = stringr::str_squish(project_scope),
       project_type =  case_when(
-             grepl(lead_str, project_description, ignore.case=TRUE) | !is.na(bil_lslr_eligible_costs)  ~ "Lead",
-             grepl(ec_str, project_description, ignore.case=TRUE) | !is.na(emerging_contaminant_costs) ~ "Emerging Contaminants",
+             grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(bil_lslr_eligible_costs, TRUE)>0  ~ "Lead",
+             grepl(ec_str, project_description, ignore.case=TRUE) | convert_to_numeric(emerging_contaminant_costs, TRUE)>0 ~ "Emerging Contaminants",
              TRUE ~ "General"),
       project_cost = as.character(NA),
       requested_amount = clean_numeric_string(total_loan_amount_requested),

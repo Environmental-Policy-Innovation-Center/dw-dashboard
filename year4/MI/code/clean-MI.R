@@ -25,10 +25,14 @@ clean_mi_y4 <- function() {
       pwsid = as.character(NA),
       project_id = stringr::str_squish(project_number),
       project_name = as.character(NA),
+      project_description = dplyr::case_when(
+        list == "traditional" ~ stringr::str_squish(project_scope),
+        list == "lead" ~ stringr::str_squish(scope_of_work)
+      ),
       project_type =  case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_scope, ignore.case=TRUE)  ~ "Lead",
-        grepl(ec_str, project_scope, ignore.case=TRUE) | !is.na(emerging_contaminant_ec_cost) ~ "Emerging Contaminants",
+        grepl(lead_str, project_description, ignore.case=TRUE)  ~ "Lead",
+        grepl(ec_str, project_description, ignore.case=TRUE) | convert_to_numeric(emerging_contaminant_ec_cost)>0 ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = clean_numeric_string(project_cost),
       requested_amount = as.character(NA),
@@ -43,12 +47,9 @@ clean_mi_y4 <- function() {
         convert_to_numeric(bil_pf_allocation, TRUE) ,
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       population = as.character(NA),
-      project_description = dplyr::case_when(
-        list == "traditional" ~ stringr::str_squish(project_scope),
-        list == "lead" ~ stringr::str_squish(scope_of_work)
-      ),
+      
       disadvantaged = dplyr::case_when(
-        is.na(disadvantaged_status) ~ "No",
+        disadvantaged_status== "NA" ~ "No",
         .default = "Yes"
       ),
       project_rank = as.character(NA),

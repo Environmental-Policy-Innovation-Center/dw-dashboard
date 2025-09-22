@@ -11,11 +11,11 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Indiana"
-state_abbr <- "IN"
+state_name <- "Michigan"
+state_abbr <- "MI"
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 ```
 
@@ -145,6 +145,7 @@ if(nrow(available_funds) > 0 &
          title="Total Funding Available for Projects",
          subtitle=get_subtitle_str(all_grants$state_fiscal_year, state_name)) + 
     scale_fill_manual(values=fed_cap_grant_colors) + 
+    ggplot2::scale_x_discrete(drop = FALSE) +
     epic_chart_theme
   
   available_funds_gp <- ggplotly(available_funds_p, tooltip="text") %>%
@@ -572,6 +573,7 @@ unutilized_p <- ggplot2::ggplot() +
     position = position_stack(vjust = .5), 
     show.legend = FALSE) +
   scale_y_continuous(labels=label_currency()) + 
+  ggplot2::scale_x_discrete(drop = FALSE) +
   scale_fill_manual(values = fed_cap_grant_colors) + 
   scale_alpha_manual(values = c("General" = 1, "PF" = 0.8), name = "" ) + 
   labs(x="", y="", fill="",
@@ -788,8 +790,7 @@ if(sum(set_asides_fcg_group$total_sa_amt, na.rm=TRUE) > 0) {
 
 ```{r}
 set_asides_percent <- set_asides_fcg_group %>%
-  filter(!is.na(total_sa_pct)) |>
-  dplyr::filter(state_fiscal_year <= 2025)
+  filter(!is.na(total_sa_pct)) 
 
 if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
   

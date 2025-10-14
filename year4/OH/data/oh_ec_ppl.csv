@@ -1,37 +1,37 @@
-District,Project,PWSID,County,Estimated Loan Amount,Estimated EC Related Costs,Estimated EC Principal Forgiveness,Loan Type,Estimated Award Date,Project Score,Readiness to proceed,Rate,District Office
-Cleves,Addyston Waterline Extension,OH3100512,Hamilton,"$67,584.00",$0.00,$0.00,Design,Sep-25,13,3,DES/EC,SWDO
-Cleves,Addyston Waterline Extension,OH3100512,Hamilton,"$797,309.00","$797,309.00","$797,309.00",Construction,Oct-25,13,3,DIS/REG/EC,SWDO
-Wooster,Well S-4,OH8504512,Wayne,"$1,000,000.00","$1,000,000.00","$1,000,000.00",Construction,Dec-25,12,3,STD/EC,NEDO
-Beverly,PFAS Treatment,OH8400112,Washington,"$1,543,200.00","$2,733,900.00",Bypass2,Construction,Jan-26,11,3,DIS/EC,SEDO
-Dayton,"36"" Raw Water Main within Miami Wellfield Phase 3",OH5703512,Montgomery,"$7,000,000.00","$7,000,000.00","$4,000,000.00",Construction,Oct-25,11,3,STD/EC,SWDO
-Dayton,"Expansion of Miami Well Field Recharge Lagoon, Phase 2",OH5703512,Montgomery,"$47,000,000.00","$47,000,000.00","$4,000,000.00",Construction,Jan-26,11,3,STD/EC,SWDO
-Dayton,Design of Additional 6-8 Production Wells at Miami Wellfield,OH5703512,Montgomery,"$2,000,000.00","$2,000,000.00",*,Design,Jan-26,11,2,DES/EC,SWDO
-Dayton,Water Quality Lab Expansion,OH5703512,Montgomery,"$6,000,000.00","$6,000,000.00",Bypass1,Construction,Jan-26,11,1,STD/EC,SWDO
-Dayton,"48"" Interconnect between Miami Wellfield & Ottowa Plant Ps 1",OH5703512,Montgomery,"$10,000,000.00","$10,000,000.00",Bypass1,Construction,Oct-25,11,1,STD/EC,SWDO
-Dayton,"Advanced PFAS Treatment @Ottawa WTP, CMAR Construction",OH5703512,Montgomery,"$250,000,000.00","$250,000,000.00",Bypass1,Construction,Apr-26,11,1,STD/EC,SWDO
-Indian Hill,WTP PFAS Study,OH3101112,Hamilton,"$405,550.00","$405,550.00",*,Planning,Jul-25,11,0,PLN/EC,SWDO
-Phillipsburg,PFAS Remediation Project,OH5702112,Montgomery,"$9,700,000.00","$9,700,000.00","$4,000,000.00",Construction,Oct-25,9,4,SML/EC,SWDO
-Newport Water and Sewer District,Connect to Village of Matamoras,OH8400612,Washington,"$3,230,500.00","$3,230,500.00",Bypass2,Construction,Oct-25,9,3,DIS/REG/EC,SEDO
-Ironton,PFAS General Plan,OH4400711,Lawrence,"$149,000.00","$149,000.00",*,Planning,Jul-25,9,0,PLN/EC,SEDO
-Shadyside,Comprehensive PFAS Contamination Reduction Study,OH0701612,Belmont,"$728,440.00","$728,440.00",*,Planning,Jul-25,9,0,PLN/EC,SEDO
-Dayton,Miami Water Treatment Plant Basins - CMAR,OH5703512,Montgomery,"$25,000,000.00","$25,000,000.00","$4,000,000.00",Construction,Dec-25,8,3,STD/EC,SWDO
-South Point,PFAS General Plan,OH4401212,Lawrence,"$70,000.00","$70,000.00","$70,000.00",Planning,Sep-25,8,0,PLN/EC,SEDO
-Putnam Community Water Corp.,PFAS Well Mitigation,OH8400712,Washington,"$1,086,030.00","$1,086,030.00",Bypass2,Construction,Sep-25,7,3,DIS/REG/EC,SEDO
-Matamoras,New Water Treatment Plant,OH8400512,Washington,"$522,200.00","$522,200.00","$522,200.00",Design,Aug-25,7,1,DES/EC,SEDO
-Matamoras,New Water Treatment Plant,OH8400512,Washington,"$5,630,000.00","$5,630,000.00",$0.00,Construction,Jun-26,7,1,DIS/REG/EC,SEDO
-Gallia County Rural Water Assoc.,GAC for PFAS Removal,OH2700012,Gallia,"$227,500.00","$227,500.00","$227,500.00",Design,Oct-25,7,0,DES/EC,SEDO
-Loveland,PFAS Treatment,OH1300812,Hamilton,"$2,000,000.00","$2,000,000.00","$2,000,000.00",Design,Jul-25,7,0,DES/EC,SWDO
-Chesterhill,Water System Improvements PFAS,OH5800112,Morgan,"$2,413,600.00","$2,413,600.00",Bypass2,Construction,Jan-26,6,3,SML/EC,SEDO
-Tri-County Rural Water & Sewer Dist,PFAS Treatment,OH8403112,Washington,"$2,606,800.00","$2,606,800.00",Bypass2,Construction,Jan-26,6,3,DIS/EC,SEDO
-Little Hocking Water & Sewer Assoc.,Waterline Extension,OH8400212,Washington,"$12,603,800.00","$12,306,800.00",*,Construction,Jun-26,6,3,DIS/REG/EC,SEDO
-Little Hocking Water & Sewer Assoc.,Waterline Extension,OH8400212,Washington,"$1,298,500.00",$0.00,$0.00,Design,Aug-25,6,2,DES/EC,SEDO
-Putnam Community Water Corp.,PFAS Bypass Mitigation,OH8400712,Washington,"$350,000.00","$350,000.00",Bypass2,Construction,Sep-25,5,4,DIS/EC,SEDO
-"Del-Co Water Company, Inc.",Treatment of Emerging Contaminants at the Olentangy WTP,OH2101412,Delaware,"$8,650,000.00","$8,650,000.00","$4,000,000.00",Construction,Sep-25,5,3,STD/EC,CO
-Gallipolis,PFAS Filter Improvements,OH2700112,Gallia,"$448,600.00","$448,600.00",*,Design,Jul-25,5,1,DES/EC,SEDO
-Gallipolis,PFAS Filter Improvements,OH2700112,Gallia,"$4,809,500.00","$4,809,500.00",$0.00,Construction,Feb-26,5,1,DIS/EC,SEDO
-Stockport,Emerging Contaminants Mitigation Project,OH5800912,Morgan,"$50,000.00","$50,000.00","$50,000.00",Planning,Aug-25,5,0,PLN,SEDO
-Barnesville,PFOA General Plan,OH0700011,Belmont,"$70,000.00","$70,000.00","$70,000.00",Planning,Aug-25,5,0,PLN/EC,SEDO
-Warren Community W&S Dist,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,Washington,"$151,000.00","$151,000.00",*,Planning,Jul-25,5,1,PLN,SEDO
-Warren Community W&S Dist,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,Washington,"$412,000.00","$412,000.00",$0.00,Design,Oct-25,5,0,DES,SEDO
-Western Water Company,PFAS Treatment Process Removal,OH8300512,Warren,"$4,000,000.00","$4,000,000.00",Bypass1,Construction,May-26,5,0,STD/EC,SWDO
-Oxford,Water Treatment Plant Membrane Softening Improvements,OH0902312,Butler,"$20,488,000.00","$20,488,000.00","$4,000,000.00",Construction,Jul-25,3,3,STD/EC,SWDO
+District,epic_project_id,Project,PWSID,County,Estimated Loan Amount,Estimated EC Related Costs,Estimated EC Principal Forgiveness,Loan Type,Estimated Award Date,Project Score,Readiness to proceed,Rate,District Office
+Cleves,157,Addyston Waterline Extension,OH3100512,Hamilton,"$67,584.00",$0.00,$0.00,Design,Sep-25,13,3,DES/EC,SWDO
+Cleves,156,Addyston Waterline Extension,OH3100512,Hamilton,"$797,309.00","$797,309.00","$797,309.00",Construction,Oct-25,13,3,DIS/REG/EC,SWDO
+Wooster,539,Well S-4,OH8504512,Wayne,"$1,000,000.00","$1,000,000.00","$1,000,000.00",Construction,Dec-25,12,3,STD/EC,NEDO
+Beverly,64,PFAS Treatment,OH8400112,Washington,"$1,543,200.00","$2,733,900.00",Bypass2,Construction,Jan-26,11,3,DIS/EC,SEDO
+Dayton,210,"36"" Raw Water Main within Miami Wellfield Phase 3",OH5703512,Montgomery,"$7,000,000.00","$7,000,000.00","$4,000,000.00",Construction,Oct-25,11,3,STD/EC,SWDO
+Dayton,207,"Expansion of Miami Well Field Recharge Lagoon, Phase 2",OH5703512,Montgomery,"$47,000,000.00","$47,000,000.00","$4,000,000.00",Construction,Jan-26,11,3,STD/EC,SWDO
+Dayton,209,Design of Additional 6-8 Production Wells at Miami Wellfield,OH5703512,Montgomery,"$2,000,000.00","$2,000,000.00",*,Design,Jan-26,11,2,DES/EC,SWDO
+Dayton,205,Water Quality Lab Expansion,OH5703512,Montgomery,"$6,000,000.00","$6,000,000.00",Bypass1,Construction,Jan-26,11,1,STD/EC,SWDO
+Dayton,206,"48"" Interconnect between Miami Wellfield & Ottowa Plant Ps 1",OH5703512,Montgomery,"$10,000,000.00","$10,000,000.00",Bypass1,Construction,Oct-25,11,1,STD/EC,SWDO
+Dayton,208,"Advanced PFAS Treatment @Ottawa WTP, CMAR Construction",OH5703512,Montgomery,"$250,000,000.00","$250,000,000.00",Bypass1,Construction,Apr-26,11,1,STD/EC,SWDO
+Indian Hill,282,WTP PFAS Study,OH3101112,Hamilton,"$405,550.00","$405,550.00",*,Planning,Jul-25,11,0,PLN/EC,SWDO
+Phillipsburg,428,PFAS Remediation Project,OH5702112,Montgomery,"$9,700,000.00","$9,700,000.00","$4,000,000.00",Construction,Oct-25,9,4,SML/EC,SWDO
+Newport Water and Sewer District,398,Connect to Village of Matamoras,OH8400612,Washington,"$3,230,500.00","$3,230,500.00",Bypass2,Construction,Oct-25,9,3,DIS/REG/EC,SEDO
+Ironton,290,PFAS General Plan,OH4400711,Lawrence,"$149,000.00","$149,000.00",*,Planning,Jul-25,9,0,PLN/EC,SEDO
+Shadyside,462,Comprehensive PFAS Contamination Reduction Study,OH0701612,Belmont,"$728,440.00","$728,440.00",*,Planning,Jul-25,9,0,PLN/EC,SEDO
+Dayton,211,Miami Water Treatment Plant Basins - CMAR,OH5703512,Montgomery,"$25,000,000.00","$25,000,000.00","$4,000,000.00",Construction,Dec-25,8,3,STD/EC,SWDO
+South Point,473,PFAS General Plan,OH4401212,Lawrence,"$70,000.00","$70,000.00","$70,000.00",Planning,Sep-25,8,0,PLN/EC,SEDO
+Putnam Community Water Corp.,444,PFAS Well Mitigation,OH8400712,Washington,"$1,086,030.00","$1,086,030.00",Bypass2,Construction,Sep-25,7,3,DIS/REG/EC,SEDO
+Matamoras,357,New Water Treatment Plant,OH8400512,Washington,"$522,200.00","$522,200.00","$522,200.00",Design,Aug-25,7,1,DES/EC,SEDO
+Matamoras,356,New Water Treatment Plant,OH8400512,Washington,"$5,630,000.00","$5,630,000.00",$0.00,Construction,Jun-26,7,1,DIS/REG/EC,SEDO
+Gallia County Rural Water Assoc.,243,GAC for PFAS Removal,OH2700012,Gallia,"$227,500.00","$227,500.00","$227,500.00",Design,Oct-25,7,0,DES/EC,SEDO
+Loveland,341,PFAS Treatment,OH1300812,Hamilton,"$2,000,000.00","$2,000,000.00","$2,000,000.00",Design,Jul-25,7,0,DES/EC,SWDO
+Chesterhill,101,Water System Improvements PFAS,OH5800112,Morgan,"$2,413,600.00","$2,413,600.00",Bypass2,Construction,Jan-26,6,3,SML/EC,SEDO
+Tri-County Rural Water & Sewer Dist,491,PFAS Treatment,OH8403112,Washington,"$2,606,800.00","$2,606,800.00",Bypass2,Construction,Jan-26,6,3,DIS/EC,SEDO
+Little Hocking Water & Sewer Assoc.,334,Waterline Extension,OH8400212,Washington,"$12,603,800.00","$12,306,800.00",*,Construction,Jun-26,6,3,DIS/REG/EC,SEDO
+Little Hocking Water & Sewer Assoc.,333,Waterline Extension,OH8400212,Washington,"$1,298,500.00",$0.00,$0.00,Design,Aug-25,6,2,DES/EC,SEDO
+Putnam Community Water Corp.,445,PFAS Bypass Mitigation,OH8400712,Washington,"$350,000.00","$350,000.00",Bypass2,Construction,Sep-25,5,4,DIS/EC,SEDO
+"Del-Co Water Company, Inc.",215,Treatment of Emerging Contaminants at the Olentangy WTP,OH2101412,Delaware,"$8,650,000.00","$8,650,000.00","$4,000,000.00",Construction,Sep-25,5,3,STD/EC,CO
+Gallipolis,247,PFAS Filter Improvements,OH2700112,Gallia,"$448,600.00","$448,600.00",*,Design,Jul-25,5,1,DES/EC,SEDO
+Gallipolis,248,PFAS Filter Improvements,OH2700112,Gallia,"$4,809,500.00","$4,809,500.00",$0.00,Construction,Feb-26,5,1,DIS/EC,SEDO
+Stockport,479,Emerging Contaminants Mitigation Project,OH5800912,Morgan,"$50,000.00","$50,000.00","$50,000.00",Planning,Aug-25,5,0,PLN,SEDO
+Barnesville,54,PFOA General Plan,OH0700011,Belmont,"$70,000.00","$70,000.00","$70,000.00",Planning,Aug-25,5,0,PLN/EC,SEDO
+Warren Community W&S Dist,508,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,Washington,"$151,000.00","$151,000.00",*,Planning,Jul-25,5,1,PLN,SEDO
+Warren Community W&S Dist,509,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,Washington,"$412,000.00","$412,000.00",$0.00,Design,Oct-25,5,0,DES,SEDO
+Western Water Company,526,PFAS Treatment Process Removal,OH8300512,Warren,"$4,000,000.00","$4,000,000.00",Bypass1,Construction,May-26,5,0,STD/EC,SWDO
+Oxford,419,Water Treatment Plant Membrane Softening Improvements,OH0902312,Butler,"$20,488,000.00","$20,488,000.00","$4,000,000.00",Construction,Jul-25,3,3,STD/EC,SWDO

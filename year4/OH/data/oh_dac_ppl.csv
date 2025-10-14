@@ -1,60 +1,60 @@
-Entity,Project,PWSID,Population,County,Estimated Loan Amount,Estimated Principal Forgiveness,Loan Type,Estimated Award Date,Project Score,Readiness to Proceed,Rate,District Office
-Williamsport,Water Treatment Plant & Water Distribution Imp,OH6503012,1038,Pickaway,"$344,781.00","$344,781.00",Design,Oct-25,14,1,DES,CO
-Tiltonsville,Water System Improvement and Regionalization,OH4102712,1372,Jefferson,"$3,404,646.00","$1,702,323.00",Construction,May-26,13,3,DIS/REG,SEDO
-Hamler,Water Treatment Plant Improvements,OH3500312,580,Henry,"$2,628,973.00","$1,314,487.00",Construction,Dec-25,11,4,DIS,NWDO
-Wellston,Water Treatment Plant Phase 2,OH4001912,7000,Jackson,"$9,362,000.00","$4,000,000.00",Construction,Jan-26,10,5,DIS,SEDO
-Holgate,Regionalization Project,OH3500512,1150,Henry,"$14,400,000.00","$4,000,000.00",Construction,Oct-25,10,4,DIS/REG,NWDO
-Clark County,Donnelsville Water System,OH1201112,4221,Clark,"$4,000,000.00","$2,000,000.00",Construction,May-26,10,3,DIS/REG,SWDO
-Pomeroy,Breezy Heights Tank/ New Wells / Water Line Rplmt,OH5300212,1800,Meigs,"$3,219,700.00","$1,359,350.00",Construction,Aug-25,9,3,DIS/LSL,SEDO
-Bowerston,New WTP and Raw Water Imp Project,OH3400112,517,Harrison,"$6,000,000.00","$3,000,000.00",Construction,Mar-26,9,3,DIS/REG,SEDO
-Lowell,Water Tank and Watermain Replacement,OH8400312,603,Washington,"$1,066,995.00","$533,498.00",Construction,Jun-26,8,5,DIS,SEDO
-Kenton,WTP Design Build Rehab and Repairs,OH3300612,8360,Hardin,"$6,160,000.00","$3,080,000.00",Construction,Jul-25,8,4,DIS,NWDO
-Ashtabula County,S River Road Waterline Extension Phase 2,OH0400803,13972,Ashtabula,"$2,000,000.00","$1,000,000.00",Construction,Aug-25,7,5,DIS/REG,NEDO
-Washingtonville,Elevated Tank Replacement,OH1502812,801,Columbiana,"$1,474,420.00","$737,210.00",Construction,Feb-26,7,3,DIS,NEDO
-Nashville,New Water Storage Tank and Supply,OH3801012,197,Holmes,"$250,000.00",Bypass1,Construction,Oct-25,7,2,DIS,NEDO
-Windham,Water Line Extension,OH6704812,1777,Portage,"$205,500.00",Bypass1,Design,Jul-25,7,2,DES,NEDO
-Windham,Water Line Extension,OH6704812,1777,Portage,"$2,274,350.00",Bypass1,Construction,Mar-26,7,2,DIS/REG,NEDO
-Lisbon,North End & SR 45 Waterline Extensions,OH1501512,2821,Columbiana,"$480,848.00","$240,424.00",Construction,Apr-26,6,5,DIS/REG,NEDO
-Trumbull County,Blueprint Phase 2 Water Regionalization,OH7806503,835,Trumbull,"$8,468,625.00","$4,000,000.00",Construction,Oct-25,6,5,DIS/REG,NEDO
-Muskingum County,SR 555 Waterline Extension - Phase 2,OH6000412,21540,Muskingum,"$469,355.00","$234,678.00",Construction,Jan-26,6,3,DIS/REG,SEDO
-Frazeysburg,2024 Water Treatment Plant Improvements,OH6000612,1340,Muskingum,"$750,000.00","$375,000.00",Construction,Aug-25,6,3,DIS,SEDO
-Barnesville,North Waterline Extension,OH0700011,6500,Belmont,"$3,761,147.00","$1,880,574.00",Construction,Jun-26,6,3,DIS/REG,SEDO
-Tri-County Rural Water & Sewer Dist,Phase 7 Waterline Extensions,OH8403112,3000,Washington,"$375,800.00",Bypass 3,Design,Jul-25,6,3,DES,SEDO
-Tri-County Rural Water & Sewer Dist,Phase 7 Waterline,OH8403112,3000,Washington,"$4,115,000.00",Bypass 3,Construction,Mar-26,6,3,DIS/REG,SEDO
-Bainbridge,Waterline Replacement Project,OH7100012,900,Ross,"$4,975,000.00","$2,940,074.00",Construction,Dec-25,6,3,DIS/LSL,SEDO
-Perry County,Phase 6 Water Line Extension,OH6402703,1476,Perry,"$555,900.00",Bypass 3,Design,Aug-25,6,3,DES,SEDO
-Perry County,Phase 6 Water Line Extension,OH6402703,1476,Perry,"$5,413,000.00",Bypass 3,Construction,Mar-26,6,3,DIS/REG,SEDO
-Newport Water and Sewer District,Bells Run Water System Extension,OH8400612,1582,Washington,"$429,500.00",Bypass 3,Design,Sep-25,6,3,DES,SEDO
-Newport Water and Sewer District,Bells Run Water System Extension,OH8400612,1582,Washington,"$6,300,000.00",Bypass 3,Construction,Jun-26,6,3,DIS/REG,SEDO
-Ashtabula County,Northeast Regional Waterline Extension,OH0400803,13972,Ashtabula,"$10,432,000.00",Bypass2,Construction,Jun-26,6,3,DIS/REG,NEDO
-Muskingum County,Dozer Ridge Water Main Extension,OH6000412,21540,Muskingum,"$566,300.00",Bypass1,Construction,Dec-25,6,2,DIS/REG,SEDO
-Twin City Water and Sewer District,Moravian Trail,OH7901711,9224,Tuscarawas,"$100,000.00",$0.00,Planning,Jul-25,6,2,PLN,SEDO
-Twin City Water and Sewer District,Moravian Trail,OH7901711,9224,Tuscarawas,"$821,560.00",$0.00,Design,Sep-25,6,2,DES,SEDO
-Twin City Water and Sewer District,Moravian Trail,OH7901711,9224,Tuscarawas,"$4,107,810.00",Bypass1,Construction,Feb-26,6,2,DIS,SEDO
-Hecla Water Association,Water for Waterloo,OH4401612,34942,Lawrence,"$40,000.00",$0.00,Planning,Dec-25,6,1,PLN,SEDO
-Hecla Water Association,Water for Waterloo,OH4401612,34942,Lawrence,"$515,000.00",$0.00,Design,Jun-26,6,1,DES,SEDO
-Catawba,Water Treatment Plant Aeration and Filtration,OH1200312,241,Clark,"$64,763.00",$0.00,Design,Sep-25,6,1,DES,SWDO
-Catawba,Water Treatment Plant Aeration and Filtration,OH1200312,241,Clark,"$845,733.00",Bypass1,Construction,Jun-26,6,1,DIS,SWDO
-Malta,Water Treatment Plant Project,OH5800412,671,Morgan,"$1,300,000.00",$0.00,Design,Aug-25,6,1,DES,SEDO
-Ada,Water Treatment Plant Improvements,OH3300012,5334,Hardin,"$7,165,000.00","$3,582,500.00",Construction,Oct-25,5,4,DIS,NWDO
-Roseville,Storage Tank Replacement,OH6002112,1852,Perry,"$1,007,375.00","$503,688.00",Construction,Aug-25,5,3,DIS,SEDO
-West Farmington,New Water Wells,OH7803911,908,Trumbull,"$309,700.00",Bypass 3,Design,Aug-25,5,3,DES,NEDO
-Nelsonville,Water System Improvements Phase 4,OH0501214,6656,Athens,"$289,400.00",Bypass 3,Design,Aug-25,5,3,DES,SEDO
-Nelsonville,Water System Improvements Phase 4,OH0501214,6656,Athens,"$4,841,900.00",Bypass 3,Construction,May-26,5,3,DIS,SEDO
-Put-in-Bay,WTP Pump Riser and Piping,OH6203311,700,Ottawa,"$75,000.00",Bypass1,Construction,Jul-25,5,2,DIS,NWDO
-Forest,New Wells Design,OH3300312,1652,Hardin,"$39,670.00",$0.00,Design,Jul-25,5,1,DES,NWDO
-Forest,New Wells Construction,OH3300312,1652,Hardin,"$861,575.00",Bypass1,Construction,May-26,5,1,DIS,NWDO
-Payne,Water Treatment Plant Improvements,OH6300712,1594,Paulding,"$227,250.00",$0.00,Design,Aug-25,5,1,DES,NWDO
-Payne,Water Treatment Plant Improvements,OH6300712,1594,Paulding,"$1,984,000.00",Bypass1,Construction,May-26,5,1,DIS,NWDO
-Put-in-Bay,Ground Storage Tank Construction,OH6203311,700,Ottawa,"$1,574,000.00",Bypass1,Construction,Jan-26,5,1,DIS/HAB,NWDO
-Put-in-Bay,WTP Rehabilitation,OH6203311,700,Ottawa,"$448,350.00",Bypass1,Construction,Dec-25,5,0,DIS,NWDO
-Catawba,Standpipe Storage Tank Repair,OH1200312,241,Clark,"$46,600.00","$23,300.00",Construction,Oct-25,4,5,DIS,SWDO
-Ansonia,Water Tower Rehab,OH1900012,1174,Darke,"$587,000.00","$293,500.00",Construction,Aug-25,4,4,DIS,SWDO
-Felicity,Water Storge Tank Rehab,OH1300612,3700,Clermont,"$750,000.00","$375,000.00",Construction,Dec-25,4,4,DIS,SWDO
-Adena,Blairmont Road Waterline,OH4100003,820,Jefferson,"$814,200.00","$407,100.00",Construction,Sep-25,4,3,DIS,SEDO
-Bremen,Water Distribution Replacement,OH2300212,1425,Fairfield,"$889,900.00",Bypass 3,Design,Sep-25,4,3,DES,CO
-Bremen,Water Distribution Replacement,OH2300212,1425,Fairfield,"$12,995,600.00",Bypass 3,Construction,Dec-25,4,3,DIS,CO
-Lyons,Water Tower Replacement,OH2600603,562,Fulton,"$2,116,800.00","$1,058,400.00",Construction,Dec-25,4,3,DIS,NWDO
-Sabina,Water System Improvements,OH1400912,2493,Clinton,"$722,000.00",$0.00,Design,Sep-25,4,1,DES,SWDO
-Sabina,Water System Improvements,OH1400912,2493,Clinton,"$7,036,000.00",Bypass1,Construction,Jun-26,4,1,DIS/REG,SWDO
-Attica1,REG Waterline with Northern Ohio Rural Water,OH7400011,1148,Seneca,"$1,600,000.00","$800,000.00",Construction,Feb-26,3,1,REG,NWDO
+Entity,epic_project_id,Project,PWSID,Population,County,Estimated Loan Amount,Estimated Principal Forgiveness,Loan Type,Estimated Award Date,Project Score,Readiness to Proceed,Rate,District Office
+Williamsport,528,Water Treatment Plant & Water Distribution Imp,OH6503012,1038,Pickaway,"$344,781.00","$344,781.00",Design,Oct-25,14,1,DES,CO
+Tiltonsville,487,Water System Improvement and Regionalization,OH4102712,1372,Jefferson,"$3,404,646.00","$1,702,323.00",Construction,May-26,13,3,DIS/REG,SEDO
+Hamler,266,Water Treatment Plant Improvements,OH3500312,580,Henry,"$2,628,973.00","$1,314,487.00",Construction,Dec-25,11,4,DIS,NWDO
+Wellston,518,Water Treatment Plant Phase 2,OH4001912,7000,Jackson,"$9,362,000.00","$4,000,000.00",Construction,Jan-26,10,5,DIS,SEDO
+Holgate,278,Regionalization Project,OH3500512,1150,Henry,"$14,400,000.00","$4,000,000.00",Construction,Oct-25,10,4,DIS/REG,NWDO
+Clark County,122,Donnelsville Water System,OH1201112,4221,Clark,"$4,000,000.00","$2,000,000.00",Construction,May-26,10,3,DIS/REG,SWDO
+Pomeroy,433,Breezy Heights Tank/ New Wells / Water Line Rplmt,OH5300212,1800,Meigs,"$3,219,700.00","$1,359,350.00",Construction,Aug-25,9,3,DIS/LSL,SEDO
+Bowerston,67,New WTP and Raw Water Imp Project,OH3400112,517,Harrison,"$6,000,000.00","$3,000,000.00",Construction,Mar-26,9,3,DIS/REG,SEDO
+Lowell,342,Water Tank and Watermain Replacement,OH8400312,603,Washington,"$1,066,995.00","$533,498.00",Construction,Jun-26,8,5,DIS,SEDO
+Kenton,305,WTP Design Build Rehab and Repairs,OH3300612,8360,Hardin,"$6,160,000.00","$3,080,000.00",Construction,Jul-25,8,4,DIS,NWDO
+Ashtabula County,41,S River Road Waterline Extension Phase 2,OH0400803,13972,Ashtabula,"$2,000,000.00","$1,000,000.00",Construction,Aug-25,7,5,DIS/REG,NEDO
+Washingtonville,510,Elevated Tank Replacement,OH1502812,801,Columbiana,"$1,474,420.00","$737,210.00",Construction,Feb-26,7,3,DIS,NEDO
+Nashville,384,New Water Storage Tank and Supply,OH3801012,197,Holmes,"$250,000.00",Bypass1,Construction,Oct-25,7,2,DIS,NEDO
+Windham,529,Water Line Extension,OH6704812,1777,Portage,"$205,500.00",Bypass1,Design,Jul-25,7,2,DES,NEDO
+Windham,530,Water Line Extension,OH6704812,1777,Portage,"$2,274,350.00",Bypass1,Construction,Mar-26,7,2,DIS/REG,NEDO
+Lisbon,328,North End & SR 45 Waterline Extensions,OH1501512,2821,Columbiana,"$480,848.00","$240,424.00",Construction,Apr-26,6,5,DIS/REG,NEDO
+Trumbull County,496,Blueprint Phase 2 Water Regionalization,OH7806503,835,Trumbull,"$8,468,625.00","$4,000,000.00",Construction,Oct-25,6,5,DIS/REG,NEDO
+Muskingum County,380,SR 555 Waterline Extension - Phase 2,OH6000412,21540,Muskingum,"$469,355.00","$234,678.00",Construction,Jan-26,6,3,DIS/REG,SEDO
+Frazeysburg,241,2024 Water Treatment Plant Improvements,OH6000612,1340,Muskingum,"$750,000.00","$375,000.00",Construction,Aug-25,6,3,DIS,SEDO
+Barnesville,53,North Waterline Extension,OH0700011,6500,Belmont,"$3,761,147.00","$1,880,574.00",Construction,Jun-26,6,3,DIS/REG,SEDO
+Tri-County Rural Water & Sewer Dist,492,Phase 7 Waterline Extensions,OH8403112,3000,Washington,"$375,800.00",Bypass 3,Design,Jul-25,6,3,DES,SEDO
+Tri-County Rural Water & Sewer Dist,493,Phase 7 Waterline,OH8403112,3000,Washington,"$4,115,000.00",Bypass 3,Construction,Mar-26,6,3,DIS/REG,SEDO
+Bainbridge,47,Waterline Replacement Project,OH7100012,900,Ross,"$4,975,000.00","$2,940,074.00",Construction,Dec-25,6,3,DIS/LSL,SEDO
+Perry County,426,Phase 6 Water Line Extension,OH6402703,1476,Perry,"$555,900.00",Bypass 3,Design,Aug-25,6,3,DES,SEDO
+Perry County,425,Phase 6 Water Line Extension,OH6402703,1476,Perry,"$5,413,000.00",Bypass 3,Construction,Mar-26,6,3,DIS/REG,SEDO
+Newport Water and Sewer District,399,Bells Run Water System Extension,OH8400612,1582,Washington,"$429,500.00",Bypass 3,Design,Sep-25,6,3,DES,SEDO
+Newport Water and Sewer District,400,Bells Run Water System Extension,OH8400612,1582,Washington,"$6,300,000.00",Bypass 3,Construction,Jun-26,6,3,DIS/REG,SEDO
+Ashtabula County,37,Northeast Regional Waterline Extension,OH0400803,13972,Ashtabula,"$10,432,000.00",Bypass2,Construction,Jun-26,6,3,DIS/REG,NEDO
+Muskingum County,381,Dozer Ridge Water Main Extension,OH6000412,21540,Muskingum,"$566,300.00",Bypass1,Construction,Dec-25,6,2,DIS/REG,SEDO
+Twin City Water and Sewer District,498,Moravian Trail,OH7901711,9224,Tuscarawas,"$100,000.00",$0.00,Planning,Jul-25,6,2,PLN,SEDO
+Twin City Water and Sewer District,499,Moravian Trail,OH7901711,9224,Tuscarawas,"$821,560.00",$0.00,Design,Sep-25,6,2,DES,SEDO
+Twin City Water and Sewer District,500,Moravian Trail,OH7901711,9224,Tuscarawas,"$4,107,810.00",Bypass1,Construction,Feb-26,6,2,DIS,SEDO
+Hecla Water Association,271,Water for Waterloo,OH4401612,34942,Lawrence,"$40,000.00",$0.00,Planning,Dec-25,6,1,PLN,SEDO
+Hecla Water Association,272,Water for Waterloo,OH4401612,34942,Lawrence,"$515,000.00",$0.00,Design,Jun-26,6,1,DES,SEDO
+Catawba,94,Water Treatment Plant Aeration and Filtration,OH1200312,241,Clark,"$64,763.00",$0.00,Design,Sep-25,6,1,DES,SWDO
+Catawba,93,Water Treatment Plant Aeration and Filtration,OH1200312,241,Clark,"$845,733.00",Bypass1,Construction,Jun-26,6,1,DIS,SWDO
+Malta,349,Water Treatment Plant Project,OH5800412,671,Morgan,"$1,300,000.00",$0.00,Design,Aug-25,6,1,DES,SEDO
+Ada,1,Water Treatment Plant Improvements,OH3300012,5334,Hardin,"$7,165,000.00","$3,582,500.00",Construction,Oct-25,5,4,DIS,NWDO
+Roseville,449,Storage Tank Replacement,OH6002112,1852,Perry,"$1,007,375.00","$503,688.00",Construction,Aug-25,5,3,DIS,SEDO
+West Farmington,522,New Water Wells,OH7803911,908,Trumbull,"$309,700.00",Bypass 3,Design,Aug-25,5,3,DES,NEDO
+Nelsonville,385,Water System Improvements Phase 4,OH0501214,6656,Athens,"$289,400.00",Bypass 3,Design,Aug-25,5,3,DES,SEDO
+Nelsonville,386,Water System Improvements Phase 4,OH0501214,6656,Athens,"$4,841,900.00",Bypass 3,Construction,May-26,5,3,DIS,SEDO
+Put-in-Bay,443,WTP Pump Riser and Piping,OH6203311,700,Ottawa,"$75,000.00",Bypass1,Construction,Jul-25,5,2,DIS,NWDO
+Forest,234,New Wells Design,OH3300312,1652,Hardin,"$39,670.00",$0.00,Design,Jul-25,5,1,DES,NWDO
+Forest,235,New Wells Construction,OH3300312,1652,Hardin,"$861,575.00",Bypass1,Construction,May-26,5,1,DIS,NWDO
+Payne,422,Water Treatment Plant Improvements,OH6300712,1594,Paulding,"$227,250.00",$0.00,Design,Aug-25,5,1,DES,NWDO
+Payne,423,Water Treatment Plant Improvements,OH6300712,1594,Paulding,"$1,984,000.00",Bypass1,Construction,May-26,5,1,DIS,NWDO
+Put-in-Bay,442,Ground Storage Tank Construction,OH6203311,700,Ottawa,"$1,574,000.00",Bypass1,Construction,Jan-26,5,1,DIS/HAB,NWDO
+Put-in-Bay,441,WTP Rehabilitation,OH6203311,700,Ottawa,"$448,350.00",Bypass1,Construction,Dec-25,5,0,DIS,NWDO
+Catawba,95,Standpipe Storage Tank Repair,OH1200312,241,Clark,"$46,600.00","$23,300.00",Construction,Oct-25,4,5,DIS,SWDO
+Ansonia,28,Water Tower Rehab,OH1900012,1174,Darke,"$587,000.00","$293,500.00",Construction,Aug-25,4,4,DIS,SWDO
+Felicity,233,Water Storge Tank Rehab,OH1300612,3700,Clermont,"$750,000.00","$375,000.00",Construction,Dec-25,4,4,DIS,SWDO
+Adena,8,Blairmont Road Waterline,OH4100003,820,Jefferson,"$814,200.00","$407,100.00",Construction,Sep-25,4,3,DIS,SEDO
+Bremen,76,Water Distribution Replacement,OH2300212,1425,Fairfield,"$889,900.00",Bypass 3,Design,Sep-25,4,3,DES,CO
+Bremen,77,Water Distribution Replacement,OH2300212,1425,Fairfield,"$12,995,600.00",Bypass 3,Construction,Dec-25,4,3,DIS,CO
+Lyons,344,Water Tower Replacement,OH2600603,562,Fulton,"$2,116,800.00","$1,058,400.00",Construction,Dec-25,4,3,DIS,NWDO
+Sabina,452,Water System Improvements,OH1400912,2493,Clinton,"$722,000.00",$0.00,Design,Sep-25,4,1,DES,SWDO
+Sabina,453,Water System Improvements,OH1400912,2493,Clinton,"$7,036,000.00",Bypass1,Construction,Jun-26,4,1,DIS/REG,SWDO
+Attica1,45,REG Waterline with Northern Ohio Rural Water,OH7400011,1148,Seneca,"$1,600,000.00","$800,000.00",Construction,Feb-26,3,1,REG,NWDO

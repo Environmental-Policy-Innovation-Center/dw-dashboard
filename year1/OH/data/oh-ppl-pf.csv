@@ -1,44 +1,44 @@
-Entity,Project,County,Estimated.Loan.Amount,Estimated.Principal.Forgiveness,Loan.Type,Estimated.Award.Date,Project.Score,Readiness.To.Proceed,Rate
-Fairport Harbor,Water System Regionalization,Lake,"$4,420,000","$2,210,000",Construction,Feb-23,13,3,DIS/REG
-Hebron,U.S. 40/S.R. 37 Water Line Extension,Licking,"$3,460,000","$1,730,000",Construction,Aug-22,11,4,DIS/REG
-Piketon,Piketon Water Treatment Plant,Pike,"$7,989,433","$3,994,717",Construction,Mar-23,11,3,DIS
-Coshocton,Warsaw Waterline Replacement and Extension,Coshocton,"$960,300","$480,150",Design,Jun-23,11,2,DIS/REG
-Hamler,Water Tower and Distribution System Improvements,Henry,"$1,768,078","$884,039",Construction,Dec-22,9,3,DIS
-Lisbon,Water Tank & North End Pressure Improvements,Columbiana,"$3,267,750","$1,633,875",Construction,Jun-23,9,3,DIS
-Portage County,Village of Mantua Water Distribution Replacement,Portage,"$300,000","$150,000",Design,Sep-22,9,2,PLN/DES
-East Palestine,Waterline Replacement Project2,Columbiana,"$5,605,510","$2,302,755",Construction,Apr-23,8,3,DIS/LSL
-La Rue,Water Treatment Plant Improvements1,Marion,"$108,000","$54,000",Design,Jul-22,8,2,PLN/DES
-Bowerston,New Water Treatment Plant and Raw Water Improvements Project1,Harrison,"$386,650","$193,325",Design,Jul-22,8,2,PLN/DES
-Malvern,Phase 1 Waterline Replacement2,Carroll,"$769,855","$367,178",Construction,Sep-22,7,4,DIS/LSL
-Rittman,Water Transmission Main Replacement,Wayne,"$4,346,966","$2,173,483",Construction,Aug-22,7,4,DIS
-Brown County Rural Water Association,Village of Ripley / Ripley Union Water System Improvements,Brown,"$5,446,050","$2,723,025",Construction,Oct-22,7,3,DIS/REG
-Nelsonville,Water System Improvements Phase 2,Athens,"$5,518,600","$2,759,300",Construction,Apr-23,7,3,DIS
-Malvern,Waterline Replacement Phase 23,Carroll,"$3,886,000",BYPASS,Construction,Jun-23,7,2,DIS/LSL
-Fayette County,Lakewood Hills Area Water System Project,Fayette,"$1,319,886","$659,943",Construction,Jul-22,6,5,DIS/REG
-Tri-County Rural Water & Sewer District,Phase 6 Waterline Extension,Washington,"$3,949,700","$1,974,850",Construction,Aug-22,6,5,DIS/REG
-Trumbull County,Braceville/Southington/Farmington Regionalization Project,Trumbull,"$1,657,315","$828,658",Construction,Oct-22,6,4,DIS/REG
-Muskingum County,Norfield and Arch Hill Waterline Extension,Muskingum,"$1,741,200","$870,600",Construction,May-23,6,4,DIS/REG
-Tuppers Plains/Chester Water District,"Young, Featherstone, and Blackwood Rd. Water Line Extensions",Meigs,"$1,932,500","$966,250",Construction,Dec-22,6,4,DIS/REG
-Muskingum County,"Philo, Virginia Ridge and Irish Ridge Rd Main Extension",Muskingum,"$3,211,550","$1,605,775",Construction,Mar-23,6,4,DIS/REG
-Hecla Water Association,Macedonia Hill Water Main Extension & Booster Station,Lawrence,"$5,297,000",,Construction,Oct-22,6,4,DIS/REG
-Madison County,"S.R. 56, US 40 and Summerford Waterline Extension Project",Madison,"$7,553,989",,Construction,Jan-23,6,4,DIS/REG
-Lowell,Lowell Water Treatment Plant Installation,Washington,"$2,011,791",,Construction,Aug-22,6,4,DIS
-Perry County,NPCW - Water System Improvements Phase 5,Perry,"$4,533,300",,Construction,Mar-23,6,4,DIS
-Burr Oak Regional Water District,Morgan County- Bishopville Expansion,Athens,"$665,800",,Construction,Mar-23,6,3,DIS/REG
-"Jackson County Water Company, Inc.",Garrett Ridge Improvements,Jackson,"$5,965,300",,Construction,Oct-22,6,2,DIS/REG
-Ripley,Filtering Media Replacement,Brown,"$440,000",,Construction,Oct-22,6,1,DIS
-Southern Perry County Water District,Oakfield Area Water Line Improvements,Perry,"$459,360",,Construction,Sep-22,5,,DIS
-Highland Ridge Water & Sewer Assoc.,St. Rt. 821 Waterline Relocation,Washington,"$663,400",,Construction,Aug-22,5,,DIS
-Spencerville,Phase I Waterline Replacement,Allen,"$895,304",,Construction,Jun-23,5,,DIS
-Old Straitsville Water Association,"State Route 93, Arnold & Price Road Waterline Replacement",Perry,"$973,500",,Construction,Jun-23,5,,DIS
-Sunday Creek Valley Water,St. Rt. 550 WL Repl & Tank Rehab,Athens,"$1,307,236",,Construction,Aug-22,5,,DIS
-Nevada,Water Tower and Water Lines,Wyandot,"$1,592,135",,Construction,Oct-22,5,,DIS
-Brilliant Water and Sewer District,2022-2023 Waterline Replacement,Jefferson,"$2,030,300",,Construction,Mar-23,5,,DIS
-Pomeroy,Water System Improvements,Meigs,"$2,040,400",,Construction,Mar-23,5,,DIS
-Logan,2022 Water System Improvements,Hocking,"$2,816,954",,Construction,Jan-23,5,,DIS/REG
-Manchester,Water Line Improvements Phase 2,Adams,"$2,943,260",,Construction,Mar-23,5,,DIS
-London,Water Wells Development,Madison,"$3,685,000",,Construction,Feb-23,5,,DIS
-Kenton,Downtown Revitalization Phase 2 (WL and LSLR),Hardin,"$6,519,108",,Construction,Dec-22,5,,DIS/LSL
-Fayette,Water Distribution System Replacement,Fulton,"$7,740,000",,Construction,May-23,5,,DIS
-Beaver,2022 Waterline Replacement,Pike,"$799,663",,Construction,Apr-23,4,,DIS
-Midvale,WTP Filtration Improvement,Tuscarawas,"$2,537,765",,Construction,Dec-22,4,,DIS
+Entity,epic_project_id,Project,County,Estimated.Loan.Amount,Estimated.Principal.Forgiveness,Loan.Type,Estimated.Award.Date,Project.Score,Readiness.To.Proceed,Rate
+Beaver,42,2022 Waterline Replacement,Pike,"$799,663.00",,Construction,Apr-23,4,,DIS
+Bowerston,53,New Water Treatment Plant and Raw Water Improvements Project1,Harrison,"$386,650.00","$193,325.00",Design,Jul-22,8,2,PLN/DES
+Brilliant Water and Sewer District,61,2022-2023 Waterline Replacement,Jefferson,"$2,030,300.00",,Construction,Mar-23,5,,DIS
+Brown County Rural Water Association,62,Village of Ripley / Ripley Union Water System Improvements,Brown,"$5,446,050.00","$2,723,025.00",Construction,Oct-22,7,3,DIS/REG
+Burr Oak Regional Water District,65,Morgan County- Bishopville Expansion,Athens,"$665,800.00",,Construction,Mar-23,6,3,DIS/REG
+Coshocton,133,Warsaw Waterline Replacement and Extension,Coshocton,"$960,300.00","$480,150.00",Design,Jun-23,11,2,DIS/REG
+East Palestine,145,Waterline Replacement Project2,Columbiana,"$5,605,510.00","$2,302,755.00",Construction,Apr-23,8,3,DIS/LSL
+Fairport Harbor,153,Water System Regionalization,Lake,"$4,420,000.00","$2,210,000.00",Construction,Feb-23,13,3,DIS/REG
+Fayette,154,Water Distribution System Replacement,Fulton,"$7,740,000.00",,Construction,May-23,5,,DIS
+Fayette County,155,Lakewood Hills Area Water System Project,Fayette,"$1,319,886.00","$659,943.00",Construction,Jul-22,6,5,DIS/REG
+Hamler,195,Water Tower and Distribution System Improvements,Henry,"$1,768,078.00","$884,039.00",Construction,Dec-22,9,3,DIS
+Hebron,203,U.S. 40/S.R. 37 Water Line Extension,Licking,"$3,460,000.00","$1,730,000.00",Construction,Aug-22,11,4,DIS/REG
+Hecla Water Association,204,Macedonia Hill Water Main Extension & Booster Station,Lawrence,"$5,297,000.00",,Construction,Oct-22,6,4,DIS/REG
+Highland Ridge Water & Sewer Assoc.,206,St. Rt. 821 Waterline Relocation,Washington,"$663,400.00",,Construction,Aug-22,5,,DIS
+"Jackson County Water Company, Inc.",227,Garrett Ridge Improvements,Jackson,"$5,965,300.00",,Construction,Oct-22,6,2,DIS/REG
+Kenton,242,Downtown Revitalization Phase 2 (WL and LSLR),Hardin,"$6,519,108.00",,Construction,Dec-22,5,,DIS/LSL
+La Rue,249,Water Treatment Plant Improvements1,Marion,"$108,000.00","$54,000.00",Design,Jul-22,8,2,PLN/DES
+Lisbon,268,Water Tank & North End Pressure Improvements,Columbiana,"$3,267,750.00","$1,633,875.00",Construction,Jun-23,9,3,DIS
+Logan,275,2022 Water System Improvements,Hocking,"$2,816,954.00",,Construction,Jan-23,5,,DIS/REG
+London,278,Water Wells Development,Madison,"$3,685,000.00",,Construction,Feb-23,5,,DIS
+Lowell,284,Lowell Water Treatment Plant Installation,Washington,"$2,011,791.00",,Construction,Aug-22,6,4,DIS
+Madison County,286,"S.R. 56, US 40 and Summerford Waterline Extension Project",Madison,"$7,553,989.00",,Construction,Jan-23,6,4,DIS/REG
+Malvern,295,Phase 1 Waterline Replacement2,Carroll,"$769,855.00","$367,178.00",Construction,Sep-22,7,4,DIS/LSL
+Malvern,296,Waterline Replacement Phase 23,Carroll,"$3,886,000.00",BYPASS,Construction,Jun-23,7,2,DIS/LSL
+Manchester,298,Water Line Improvements Phase 2,Adams,"$2,943,260.00",,Construction,Mar-23,5,,DIS
+Midvale,313,WTP Filtration Improvement,Tuscarawas,"$2,537,765.00",,Construction,Dec-22,4,,DIS
+Muskingum County,320,Norfield and Arch Hill Waterline Extension,Muskingum,"$1,741,200.00","$870,600.00",Construction,May-23,6,4,DIS/REG
+Muskingum County,321,"Philo, Virginia Ridge and Irish Ridge Rd Main Extension",Muskingum,"$3,211,550.00","$1,605,775.00",Construction,Mar-23,6,4,DIS/REG
+Nelsonville,325,Water System Improvements Phase 2,Athens,"$5,518,600.00","$2,759,300.00",Construction,Apr-23,7,3,DIS
+Nevada,326,Water Tower and Water Lines,Wyandot,"$1,592,135.00",,Construction,Oct-22,5,,DIS
+Old Straitsville Water Association,342,"State Route 93, Arnold & Price Road Waterline Replacement",Perry,"$973,500.00",,Construction,Jun-23,5,,DIS
+Perry County,351,NPCW - Water System Improvements Phase 5,Perry,"$4,533,300.00",,Construction,Mar-23,6,4,DIS
+Piketon,355,Piketon Water Treatment Plant,Pike,"$7,989,433.00","$3,994,717.00",Construction,Mar-23,11,3,DIS
+Pomeroy,358,Water System Improvements,Meigs,"$2,040,400.00",,Construction,Mar-23,5,,DIS
+Portage County,363,Village of Mantua Water Distribution Replacement,Portage,"$300,000.00","$150,000.00",Design,Sep-22,9,2,PLN/DES
+Ripley,372,Filtering Media Replacement,Brown,"$440,000.00",,Construction,Oct-22,6,1,DIS
+Rittman,373,Water Transmission Main Replacement,Wayne,"$4,346,966.00","$2,173,483.00",Construction,Aug-22,7,4,DIS
+Southern Perry County Water District,389,Oakfield Area Water Line Improvements,Perry,"$459,360.00",,Construction,Sep-22,5,,DIS
+Spencerville,390,Phase I Waterline Replacement,Allen,"$895,304.00",,Construction,Jun-23,5,,DIS
+Sunday Creek Valley Water,395,St. Rt. 550 WL Repl & Tank Rehab,Athens,"$1,307,236.00",,Construction,Aug-22,5,,DIS
+Tri-County Rural Water & Sewer District,403,Phase 6 Waterline Extension,Washington,"$3,949,700.00","$1,974,850.00",Construction,Aug-22,6,5,DIS/REG
+Trumbull County,404,Braceville/Southington/Farmington Regionalization Project,Trumbull,"$1,657,315.00","$828,658.00",Construction,Oct-22,6,4,DIS/REG
+Tuppers Plains/Chester Water District,410,"Young, Featherstone, and Blackwood Rd. Water Line Extensions",Meigs,"$1,932,500.00","$966,250.00",Construction,Dec-22,6,4,DIS/REG

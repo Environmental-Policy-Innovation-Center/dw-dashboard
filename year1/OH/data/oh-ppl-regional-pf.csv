@@ -1,48 +1,48 @@
-Entity,Project,County,Estimated.Loan.Amount,Estimated.Principal.Forgiveness,Loan.Type,Estimated.Award.Date,Project.Score,Readiness.To.Proceed,Rate
-Walnut Creek Water Company,Cherry Ridge Water Line Extension,Holmes,"$4,140,000","$2,070,000",Construction,Jun-23,15,3,REG
-Fairport Harbor,Water System Regionalization,Lake,"$4,420,000",BYPASS,Construction,Feb-23,13,3,DIS/REG
-Hebron,U.S. 40/S.R. 37 Water Line Extension,Licking,"$3,460,000",BYPASS,Construction,Aug-22,11,4,DIS/REG
-Coshocton,Warsaw Waterline Replacement Extension,Coshocton,"$13,531,700",BYPASS,Construction,Jun-23,11,2,DIS/REG
-Licking County,Eagle Wings Water Line Extension2,Licking,"$222,434","$222,434",Construction,Oct-22,10,5,REG/PFAS
-Ashtabula County,S River Road Waterline Extension,Ashtabula,"$1,792,000","$174,926",Construction,Jan-23,9,4,REG
-Northwestern Water & Sewer District,Eastwood Local School District Regional Waterline,Wood,"$2,350,000",,Construction,May-23,9,2,REG
-Brown County Rural Water Association,Village of Ripley / Ripley Union Water System Improvements,Brown,"$5,446,050",,Construction,Oct-22,7,3,DIS/REG
-Ashtabula County,Northeast Regional Waterline Extension,Ashtabula,"$10,432,000",,Construction,Mar-23,7,3,REG
-Fayette County,Lakewood Hills Area Water System Project,Fayette,"$1,319,886",,Construction,Jul-22,6,5,DIS/REG
-Tri-County Rural Water & Sewer District,Phase 6 Waterline Extension,Washington,"$3,949,700",,Construction,Aug-22,6,5,DIS/REG
-Trumbull County,Braceville/Southington/Farmington Regionalization Project,Trumbull,"$1,657,315",,Construction,Oct-22,6,4,DIS/REG
-Muskingum County,Norfield and Arch Hill Waterline Extension,Muskingum,"$1,741,200",,Construction,May-23,6,4,DIS/REG
-Tuppers Plains/Chester Water District,"Young, Featherstone, and Blackwood Rd. Water Line Extensions",Meigs,"$1,932,500",,Construction,Dec-22,6,4,DIS/REG
-Muskingum County,"Philo, Virginia Ridge and Irish Ridge Rd Main Extension",Muskingum,"$3,211,550",,Construction,Mar-23,6,4,DIS/REG
-Hecla Water Association,Macedonia Hill Water Main Extension & Booster Station,Lawrence,"$5,297,000",,Construction,Oct-22,6,4,DIS/REG
-Marblehead,Johnson's Island Waterline Extension,Ottawa,"$7,000,000",,Construction,Jun-23,6,4,REG
-Madison County,"S.R. 56, US 40 and Summerford Waterline Extension Project",Madison,"$7,553,989",,Construction,Jan-23,6,4,DIS/REG
-Burr Oak Regional Water District,Morgan County- Bishopville Expansion,Athens,"$665,800",,Construction,Mar-23,6,3,DIS/REG
-"Jackson County Water Company, Inc.",Garrett Ridge Improvements,Jackson,"$5,965,300",,Construction,Oct-22,6,2,DIS/REG
-Licking County,Newark - Hanover Water Line Extension (Distribution),Licking,"$18,893,213",,Construction,Jun-23,6,2,REG
-Licking County,Newark - Hanover Water Line Ext. (Dist and Trans),Licking,"$36,871,213",,Construction,Jun-23,6,2,REG
-Elmore,Regional Water Supply Connection,Ottawa,"$332,976",,Construction,Oct-22,5,,REG
-Logan,2022 Water System Improvements,Hocking,"$2,816,954",,Construction,Jan-23,5,,DIS/REG
-Saint Clairsville,Water Distribution System Improvements - Phases 1 and 2,Belmont,"$1,796,685",,Construction,Oct-22,1,,REG
-"Jackson County Water Company, Inc.",McCoy Road Waterline Connection,Jackson,"$65,000",,Construction,Aug-22,1,,REG
-Coal Grove,Coal Grove Interconnection with Ironton,Lawrence,"$326,600",,Construction,Sep-22,1,,REG
-Hebron,Canyon Rd. Water Line Extension,Licking,"$500,000",,Construction,Apr-23,1,,REG
-Trumbull County,Stillwagon Road Waterline Improvements,Trumbull,"$501,793",,Construction,Oct-22,1,,REG
-"Jackson County Water Company, Inc.",Kitchen Tank Waterline Connection,Jackson,"$539,000",,Construction,Aug-22,1,,REG
-Elmore,Dischinger Road Waterline Extension,Ottawa,"$569,039",,Construction,May-23,1,,REG
-Northwestern Water & Sewer District,Henry County Regional Waterline,Wood,"$938,000",,Construction,Aug-22,1,,REG
-Trumbull County,Elm Road Waterline Improvements,Trumbull,"$1,097,337",,Construction,Oct-22,1,,REG
-Northwestern Water & Sewer District,Custar Waterline Loop,Wood,"$1,600,000",,Construction,Jun-23,1,,REG
-Bucyrus,Nevada Waterline Extension,Crawford,"$1,636,518",,Construction,Aug-22,1,,REG
-Ottawa County,Water Line Extension to Elmore,Ottawa,"$1,735,567",,Construction,Jan-23,1,,REG
-Twin City Water and Sewer District,Water Regionalization,Tuscarawas,"$2,030,300",,Construction,Mar-23,1,,REG
-Madison Water District,Waterline Service to Heatherwood,Richland,"$2,189,075",,Construction,Jan-23,1,,REG
-"Del-Co Water Company, Inc.",Hartford Fairgrounds Water Supply,Delaware,"$2,200,000",,Construction,Jun-23,1,,REG
-Adams County Regional Water District,Winchester Industrial Park Water System Improvements,Adams,"$2,434,000",,Construction,Oct-22,1,,REG
-Ironton,Waterline Improvements & Regionalization Interconnect,Lawrence,"$2,929,279",,Construction,Sep-22,1,,REG
-Somerset,Water System Improvements & Extensions,Perry,"$3,146,000",,Construction,Mar-23,1,,REG
-Port William,Water System Improvements,Clinton,"$4,528,876",,Construction,May-23,1,,REG
-Northwestern Water & Sewer District,Village of McComb Regional Water Line,Wood,"$4,800,000",,Construction,Oct-22,1,,REG/HAB
-Port Clinton,Water and Sanitary Sewer Infrastructure Improvements,Ottawa,"$10,704,265",,Construction,Jun-23,1,,REG/LSL
-Madison County,US 42 and Plain City Waterline Extension,Madison,"$14,355,294",,Construction,Jan-23,1,,REG
-Wellston,2022 Water System Improvements,Jackson,"$25,000,000",,Construction,Jun-23,1,,REG
+Entity,epic_project_id,Project,County,Estimated.Loan.Amount,Estimated.Principal.Forgiveness,Loan.Type,Estimated.Award.Date,Project.Score,Readiness.To.Proceed,Rate
+Adams County Regional Water District,2,Winchester Industrial Park Water System Improvements,Adams,"$2,434,000.00",,Construction,Oct-22,1,,REG
+Ashtabula County,30,S River Road Waterline Extension,Ashtabula,"$1,792,000.00","$174,926.00",Construction,Jan-23,9,4,REG
+Ashtabula County,29,Northeast Regional Waterline Extension,Ashtabula,"$10,432,000.00",,Construction,Mar-23,7,3,REG
+Brown County Rural Water Association,62,Village of Ripley / Ripley Union Water System Improvements,Brown,"$5,446,050.00",,Construction,Oct-22,7,3,DIS/REG
+Bucyrus,64,Nevada Waterline Extension,Crawford,"$1,636,518.00",,Construction,Aug-22,1,,REG
+Burr Oak Regional Water District,65,Morgan County- Bishopville Expansion,Athens,"$665,800.00",,Construction,Mar-23,6,3,DIS/REG
+Coal Grove,101,Coal Grove Interconnection with Ironton,Lawrence,"$326,600.00",,Construction,Sep-22,1,,REG
+Coshocton,134,Warsaw Waterline Replacement Extension,Coshocton,"$13,531,700.00",BYPASS,Construction,Jun-23,11,2,DIS/REG
+"Del-Co Water Company, Inc.",141,Hartford Fairgrounds Water Supply,Delaware,"$2,200,000.00",,Construction,Jun-23,1,,REG
+Elmore,150,Regional Water Supply Connection,Ottawa,"$332,976.00",,Construction,Oct-22,5,,REG
+Elmore,147,Dischinger Road Waterline Extension,Ottawa,"$569,039.00",,Construction,May-23,1,,REG
+Fairport Harbor,153,Water System Regionalization,Lake,"$4,420,000.00",BYPASS,Construction,Feb-23,13,3,DIS/REG
+Fayette County,155,Lakewood Hills Area Water System Project,Fayette,"$1,319,886.00",,Construction,Jul-22,6,5,DIS/REG
+Hebron,203,U.S. 40/S.R. 37 Water Line Extension,Licking,"$3,460,000.00",BYPASS,Construction,Aug-22,11,4,DIS/REG
+Hebron,200,Canyon Rd. Water Line Extension,Licking,"$500,000.00",,Construction,Apr-23,1,,REG
+Hecla Water Association,204,Macedonia Hill Water Main Extension & Booster Station,Lawrence,"$5,297,000.00",,Construction,Oct-22,6,4,DIS/REG
+Ironton,221,Waterline Improvements & Regionalization Interconnect,Lawrence,"$2,929,279.00",,Construction,Sep-22,1,,REG
+"Jackson County Water Company, Inc.",227,Garrett Ridge Improvements,Jackson,"$5,965,300.00",,Construction,Oct-22,6,2,DIS/REG
+"Jackson County Water Company, Inc.",232,McCoy Road Waterline Connection,Jackson,"$65,000.00",,Construction,Aug-22,1,,REG
+"Jackson County Water Company, Inc.",230,Kitchen Tank Waterline Connection,Jackson,"$539,000.00",,Construction,Aug-22,1,,REG
+Licking County,260,Eagle Wings Water Line Extension2,Licking,"$222,434.00","$222,434.00",Construction,Oct-22,10,5,REG/PFAS
+Licking County,266,Newark - Hanover Water Line Extension (Distribution),Licking,"$18,893,213.00",,Construction,Jun-23,6,2,REG
+Licking County,264,Newark - Hanover Water Line Ext. (Dist and Trans),Licking,"$36,871,213.00",,Construction,Jun-23,6,2,REG
+Logan,275,2022 Water System Improvements,Hocking,"$2,816,954.00",,Construction,Jan-23,5,,DIS/REG
+Madison County,286,"S.R. 56, US 40 and Summerford Waterline Extension Project",Madison,"$7,553,989.00",,Construction,Jan-23,6,4,DIS/REG
+Madison County,289,US 42 and Plain City Waterline Extension,Madison,"$14,355,294.00",,Construction,Jan-23,1,,REG
+Madison Water District,291,Waterline Service to Heatherwood,Richland,"$2,189,075.00",,Construction,Jan-23,1,,REG
+Marblehead,300,Johnson's Island Waterline Extension,Ottawa,"$7,000,000.00",,Construction,Jun-23,6,4,REG
+Muskingum County,320,Norfield and Arch Hill Waterline Extension,Muskingum,"$1,741,200.00",,Construction,May-23,6,4,DIS/REG
+Muskingum County,321,"Philo, Virginia Ridge and Irish Ridge Rd Main Extension",Muskingum,"$3,211,550.00",,Construction,Mar-23,6,4,DIS/REG
+Northwestern Water & Sewer District,333,Eastwood Local School District Regional Waterline,Wood,"$2,350,000.00",,Construction,May-23,9,2,REG
+Northwestern Water & Sewer District,335,Henry County Regional Waterline,Wood,"$938,000.00",,Construction,Aug-22,1,,REG
+Northwestern Water & Sewer District,332,Custar Waterline Loop,Wood,"$1,600,000.00",,Construction,Jun-23,1,,REG
+Northwestern Water & Sewer District,339,Village of McComb Regional Water Line,Wood,"$4,800,000.00",,Construction,Oct-22,1,,REG/HAB
+Ottawa County,345,Water Line Extension to Elmore,Ottawa,"$1,735,567.00",,Construction,Jan-23,1,,REG
+Port Clinton,359,Water and Sanitary Sewer Infrastructure Improvements,Ottawa,"$10,704,265.00",,Construction,Jun-23,1,,REG/LSL
+Port William,361,Water System Improvements,Clinton,"$4,528,876.00",,Construction,May-23,1,,REG
+Saint Clairsville,375,Water Distribution System Improvements - Phases 1 and 2,Belmont,"$1,796,685.00",,Construction,Oct-22,1,,REG
+Somerset,384,Water System Improvements & Extensions,Perry,"$3,146,000.00",,Construction,Mar-23,1,,REG
+Tri-County Rural Water & Sewer District,403,Phase 6 Waterline Extension,Washington,"$3,949,700.00",,Construction,Aug-22,6,5,DIS/REG
+Trumbull County,404,Braceville/Southington/Farmington Regionalization Project,Trumbull,"$1,657,315.00",,Construction,Oct-22,6,4,DIS/REG
+Trumbull County,406,Stillwagon Road Waterline Improvements,Trumbull,"$501,793.00",,Construction,Oct-22,1,,REG
+Trumbull County,405,Elm Road Waterline Improvements,Trumbull,"$1,097,337.00",,Construction,Oct-22,1,,REG
+Tuppers Plains/Chester Water District,410,"Young, Featherstone, and Blackwood Rd. Water Line Extensions",Meigs,"$1,932,500.00",,Construction,Dec-22,6,4,DIS/REG
+Twin City Water and Sewer District,416,Water Regionalization,Tuscarawas,"$2,030,300.00",,Construction,Mar-23,1,,REG
+Walnut Creek Water Company,422,Cherry Ridge Water Line Extension,Holmes,"$4,140,000.00","$2,070,000.00",Construction,Jun-23,15,3,REG
+Wellston,429,2022 Water System Improvements,Jackson,"$25,000,000.00",,Construction,Jun-23,1,,REG

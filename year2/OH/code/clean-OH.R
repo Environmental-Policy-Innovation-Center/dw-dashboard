@@ -1,13 +1,14 @@
 clean_oh_y2 <- function() {
+  
   base_path <- file.path("year2", "OH", "data")
   
-  # ohio EC string from data dictionary 
-  oh_ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule|DBP|HAA5|haloacetic acid"
-  
-  #NOTE: Because Ohio does not provide a project_id and does not maintain consistent entries for projects across tables
+  # NOTE: Because Ohio does not provide a project_id and does not maintain consistent entries for projects across tables
   # where borrower/descriptions/pwsid/funding amount can all vary slightly, an "epic_project_id" was manually created by
   # comparing and validating projects to join projects to the comprehensive table
   
+  # ohio EC string from data dictionary 
+  oh_ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule|DBP|disinfection byproducts|HAA5|haloacetic acid"
+
   # Comprehensive Project List
   oh_fundable <- fread(file.path(base_path, "oh-comprehensive-ppl.csv"),
                    colClasses = "character", na.strings = "") %>%
@@ -18,6 +19,7 @@ clean_oh_y2 <- function() {
            requested_amount = funding_amount,
            population = clean_numeric_string(sdwis_population),
            pwsid = str_squish(pws_id),
+           # these are all expecting funding
            expecting_funding = "Yes",
            community_served = str_squish(county)) %>%
     select(epic_project_id, borrower, project_description, funding_amount, 
@@ -25,43 +27,75 @@ clean_oh_y2 <- function() {
 
   
   # DAC Principal Forgiveness List
-  # note there is one epic_project_id == NA in Muskingum County
   oh_dac_ppl <- fread(file.path(base_path, "oh-ppl-pf.csv"),
                       colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    rename(dac_pf = estimated_principal_forgiveness) %>%
-    mutate(dac_pf = ifelse(dac_pf == "BYPASS 1", "BYPASS", dac_pf), 
+    filter(epic_project_id != "503") %>%
+    # rename(dac_pf = estimated_principal_forgiveness) %>%
+    mutate(dac_pf = ifelse(estimated_principal_forgiveness == "BYPASS 1", "BYPASS", estimated_principal_forgiveness), 
            # population = clean_numeric_string(population),
            disadvantaged = "Yes", 
            project_score = str_squish(project_score)) %>% 
-    select(epic_project_id, dac_pf, disadvantaged, project_score)
+    select(epic_project_id, dac_pf, disadvantaged, project_score, rate)
+  
+  # there is one project that just doesn't show up on the fundable list in 
+  # Muskingum county - prepping for a bind_rows later: 
+  extra_dac <- fread(file.path(base_path, "oh-ppl-pf.csv"),
+                      colClasses = "character", na.strings = "") %>%
+    clean_names() %>%
+    filter(epic_project_id == "503") %>%
+    # this project isn't expecting funding but is DAC
+    mutate(project_type = "General", 
+           expecting_funding = "No", 
+           disadvantaged = "Yes", 
+           community_served = str_squish(county)) %>%
+    rename(principal_forgiveness = estimated_principal_forgiveness, 
+           borrower = entity, 
+           project_description = project, 
+           pwsid = pws_id, 
+           funding_amount = estimated_loan_amount) %>%
+    select(-c(loan_type, estimated_award_date, readiness_to_proceed, 
+              district_office, county, rate))
   
   
   # Regional Principal Forgiveness List
   oh_reg_ppl <- fread(file.path(base_path, "oh-ppl-regional-pf.csv"),
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    rename(reg_pf = estimated_principal_forgiveness) %>%
-    mutate(reg_pf = ifelse(reg_pf == "BYPASS 1", "BYPASS", reg_pf), 
+    # rename(reg_pf = estimated_principal_forgiveness) %>%
+    mutate(reg_pf = ifelse(estimated_principal_forgiveness == "BYPASS 1", "BYPASS", estimated_principal_forgiveness), 
            project_score = str_squish(project_score)) %>%
-    select(epic_project_id, reg_pf, project_score)
+    select(epic_project_id, reg_pf, project_score, rate)
+  
+  # combining dac and regional 
+  oh_dac_reg <- merge(oh_dac_ppl, oh_reg_ppl, all = T) %>%
+    # fixing pf overlaps: 
+    mutate(principal_forgiveness = case_when(!is.na(reg_pf) & !(reg_pf %in% c("See DIS List", "BYPASS")) ~ reg_pf, 
+                                             TRUE ~ dac_pf)) %>%
+    select(-c(dac_pf, reg_pf))
+  
   
   # combining fundable, dac, and regionalization ppls:
-  oh_comp <- oh_fundable %>%
-    left_join(oh_dac_ppl, by="epic_project_id") %>%
-    left_join(oh_reg_ppl, by="epic_project_id") %>%
+  oh_comp <- merge(oh_fundable, oh_dac_reg, by ="epic_project_id", all = T) %>%
+    mutate(rate = paste0(rate.x, rate.y)) %>% 
+    # left_join(oh_dac_ppl, by="epic_project_id") %>%
+    # left_join(oh_reg_ppl, by="epic_project_id") %>%
     mutate(project_type = case_when(grepl(oh_ec_str, project_description) | grepl("HAB|PFAS|EC", rate) ~ "Emerging Contaminants",
                                     grepl("lead|LSL", rate) ~ "Lead",
-                                    TRUE ~ "General"), 
-           project_score = case_when(!is.na(project_score.x) ~ project_score.x, 
-                                     !is.na(project_score.y) ~ project_score.y)) %>%
-    select(-c(project_score.x, project_score.y))
-
+                                    TRUE ~ "General")) %>% 
+    select(-c(rate.x, rate.y, rate))
   
+  # adding that extra dac project: 
+  oh_comp_ext <- bind_rows(oh_comp, extra_dac)
+  
+
   # Emerging Contaminants List
   oh_ec <- fread(file.path(base_path, "oh-ppl-ecr.csv"),
                  colClasses = "character", na.strings = "") %>%
     clean_names() %>%
+    # these are projects that will join to comp 
+    filter(grepl("$", estimated_ec_amount)) %>%
+    # these are all ec projects
     mutate(project_type = "Emerging Contaminants",
            project_score = str_squish(score_total_points)) %>%
     select(epic_project_id, project_type, 
@@ -85,7 +119,8 @@ clean_oh_y2 <- function() {
            funding_amount = "No Information",
            principal_forgiveness = "No Information",
            population = "No Information") %>%
-    select(borrower, project_description, pwsid, community_served, project_score, project_type, disadvantaged,
+    select(borrower, project_description, pwsid, community_served, 
+           project_score, project_type, disadvantaged,
            expecting_funding, funding_amount, principal_forgiveness, population)
 
 
@@ -100,42 +135,40 @@ clean_oh_y2 <- function() {
   oh_ec_lsl <- bind_rows(oh_ec, oh_lsl)
   
   # add onto comp list with epic id, then process the conditional columns
-  oh_comp_almostclean <- oh_comp %>%
-    left_join(oh_ec_lsl, by="epic_project_id") %>%
+  oh_comp_almostclean <- merge(oh_comp_ext, oh_ec_lsl, 
+                               by = "epic_project_id", all = T) %>%
     mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
                                     TRUE ~ project_type.x), 
+           # these two columns don't overlap 
            project_score = case_when(!is.na(project_score.x) ~ project_score.x, 
                                      !is.na(project_score.y) ~ project_score.y),
-           project_score = clean_numeric_string(project_score), 
-           disadvantaged = case_when(!is.na(epic_project_id) & epic_project_id %in% oh_dac_ppl$epic_project_id ~ "Yes",
-                                     TRUE ~ "No"),
-           # before processing PF, get rid of non-numeric strings 
-           dac_pf = clean_numeric_string(dac_pf),
-           reg_pf = clean_numeric_string(reg_pf),
            # non-numeric strings have been set to No Info by clean_numeric_string
-           principal_forgiveness = case_when(dac_pf != "No Information" ~ dac_pf,
-                                             reg_pf != "No Information" ~ reg_pf,
-                                             !is.na(est_ec_principal_forgiveness) ~ clean_numeric_string(est_ec_principal_forgiveness),
-                                             TRUE ~ "No Information")) %>%
+           principal_forgiveness = case_when(!is.na(est_ec_principal_forgiveness) ~ clean_numeric_string(est_ec_principal_forgiveness),
+                                             TRUE ~ principal_forgiveness)) %>%
     select(-c(project_type.x, project_type.y, project_score.x, project_score.y,
-              dac_pf, reg_pf, est_ec_principal_forgiveness)) 
+              est_ec_principal_forgiveness)) 
   
   # add extra EC rows back in and finish cleaning up columns
   oh_clean <- bind_rows(oh_comp_almostclean, oh_ec_extra) %>%
-    mutate(
-      state = "Ohio",
-      state_fiscal_year = "2024",
-      project_id = as.character(NA),
-      project_name = as.character(NA),
-      project_cost = as.character(NA),
-      requested_amount = as.character(NA),
-      project_rank = as.character(NA),
-      # project_score = replace_na(project_score, "No Information")
-    ) %>%
+    mutate(state = "Ohio",
+           state_fiscal_year = "2024",
+           project_id = as.character(NA),
+           project_name = as.character(NA),
+           project_cost = as.character(NA),
+           project_rank = as.character(NA),
+           # cleaning numeric strings
+           project_score = clean_numeric_string(project_score), 
+           # the warning message here is okay - just weird strings that 
+           # got replaced with "No Information"
+           principal_forgiveness = clean_numeric_string(principal_forgiveness), 
+           requested_amount = clean_numeric_string(requested_amount), 
+           funding_amount = clean_numeric_string(funding_amount), 
+           population = clean_numeric_string(population),
+           disadvantaged = ifelse(is.na(disadvantaged), "No", disadvantaged)) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
-    
+  
   # Run validation tests
   run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))

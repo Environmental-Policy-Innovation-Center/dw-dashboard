@@ -1,0 +1,441 @@
+Entity,epic_project_id,Project,PWSID,Population,County,Estimated.Loan.Amount,Loan.Type,Estimated.Award.Date,Rate
+Adams County Regional Water Dist,1,ARPA Water System Improvements,OH0100012,"6,500",Adams,"$2,120,600.00",Construction,Oct-22,STD
+Adams County Regional Water Dist,2,Winchester Industrial Park Water System Improvements,OH0100012,"25,000",Adams,"$2,434,000.00",Construction,Oct-22,REG
+Addyston,3,Distribution and Transmission Main Replacement,OH3100012,884,Hamilton,"$421,674.00",Design,Aug-22,PLN/DES
+Addyston,4,Distribution and Transmission Main Replacement,OH3100012,900,Hamilton,"$6,248,572.00",Construction,Jun-23,SML
+Addyston,5,Lead Service Line Replacement,OH3100012,884,Hamilton,"$88,269.00",Design,Aug-22,PLN/DES
+Addyston,6,Lead Service Line Replacement,OH3100012,900,Hamilton,"$1,881,488.00",Construction,Jun-23,LSL
+Addyston,7,Sekitan Avenue Lead Service Line Replacement,OH3100012,900,Hamilton,"$558,394.00",Construction,Jun-23,LSL
+Addyston,8,Sekitan Avenue Water Main and LSL Replacement,OH3100012,884,Hamilton,"$79,233.00",Design,Aug-22,PLN/DES
+Addyston,9,Sekitan Avenue Water Main Replacement,OH3100012,900,Hamilton,"$795,577.00",Construction,Jun-23,SML
+Akron,10,Archwood Pumping Station Improvement,OH7700011,"280,000",Summit,"$830,000.00",Construction,Jun-23,STD
+Akron,11,Brittain Road Reservoir Replacement Construction,OH7700011,"280,000",Summit,"$20,000,000.00",Construction,Aug-22,STD
+Akron,12,Caustic Soda Feed System Replacement,OH7700011,"280,000",Summit,"$1,726,903.00",Construction,Jul-22,STD
+Akron,13,Emergency Connection to Cleveland Water,OH7700011,"280,000",Summit,"$100,000,000.00",Construction,May-23,STD
+Akron,14,Home Avenue Utility Crossing over the Little Cuyahoga River,OH7700011,"280,000",Summit,"$317,400.00",Construction,Sep-22,STD
+Akron,15,Lead Service Line Replacement Program 2022,OH7700011,"280,000",Summit,"$5,000,000.00",Construction,Sep-22,LSL
+Akron,16,NSSM Booster Station Replacement,OH7700011,"280,000",Summit,"$1,520,990.00",Construction,Jul-22,STD
+Akron,17,Pumping Station Improvements Quayle,OH7700011,"280,000",Summit,"$500,000.00",Construction,Sep-22,STD
+Akron,18,Raw Water Intake Valve Replacement & Repair ph 1,OH7700011,"280,000",Summit,"$315,900.00",Construction,Oct-22,STD
+Akron,19,University of Akron Water Main Rehabilitation 2023,OH7700011,"280,000",Summit,"$1,975,953.00",Construction,Sep-22,STD
+Akron,20,Water Main Replacement Program 2022,OH7700011,"280,000",Summit,"$970,109.00",Construction,Aug-22,STD
+Akron,21,Water Plant Water Main Upgrade,OH7700011,"280,000",Summit,"$172,800.00",Construction,Oct-22,STD
+Alliance,22,"Lead Service Line Replacement Project, Phase 3",OH760011,"25,153",Stark,"$1,000,000.00",Construction,Jun-23,LSL
+Amanda,23,New Wellfield,OH2300012,737,Fairfield,"$112,900.00",Design,Sep-22,PLN/DES
+Amanda,24,New Wellfield,OH2300012,737,Fairfield,"$668,800.00",Construction,Jun-23,SML
+Amesville,25,Water Distribution Improvements,OH0500112,120,Athens,"$203,000.00",Design,Aug-22,PLN/DES
+Amesville,26,Water Distribution Improvements,OH0500112,120,Athens,"$2,420,000.00",Construction,Jun-23,SML
+Arlington,27,Watermain Replacement,OH3200012,"1,451",Hancock,"$425,000.00",Construction,Aug-22,SML
+Ashtabula County,28,Harpersfield Water Tower,OH0400803,"98,622",Ashtabula,"$3,300,000.00",Construction,Oct-22,STD
+Ashtabula County,29,Northeast Regional Waterline Extension,OH0400803,"14,200",Ashtabula,"$10,432,000.00",Construction,Mar-23,REG
+Ashtabula County,30,S River Road Waterline Extension,OH0400803,"14,200",Ashtabula,"$1,792,000.00",Construction,Jan-23,REG
+Ashtabula County,31,SR 307 and College Street Waterline Replacement,OH0400803,"14,200",Ashtabula,"$1,192,369.00",Construction,Sep-22,STD
+Ashtabula County,32,Water Storage Tank Improvements,OH0400803,"14,200",Ashtabula,"$1,117,000.00",Construction,Oct-22,STD
+Athens,33,Court St & Congress St WL Improvements,OH0500212,"32,725",Athens,"$900,000.00",Construction,Jun-23,STD
+Athens,34,Dairy Lane Water Line Extension,OH0500212,"32,725",Athens,"$1,027,250.00",Construction,Jan-23,STD
+Athens,35,Longview Heights Water Line Improvements,OH0500212,"32,725",Athens,"$400,000.00",Construction,Jan-23,STD
+Athens,36,North Area & Madison Water Line Improvements,OH0500212,"32,725",Athens,"$1,314,966.00",Construction,Jun-23,STD
+Athens,37,Southwest Water Line Area Improvements,OH0500212,"32,725",Athens,"$75,000.00",Design,Jan-23,STD
+Athens,38,Southwest Water Line Area Improvements,OH0500212,"32,725",Athens,"$2,000,000.00",Construction,Jun-23,STD
+Athens,39,West Union Street Water Line Improvements,OH0500212,"32,725",Athens,"$1,750,372.00",Construction,Apr-23,STD
+Avon Lake,40,Eastern Transmission Line Redundancy Project,OH4700311,"25,206",Lorain,"$35,000,000.00",Construction,Dec-22,STD
+Baltimore,41,W. Washington St. Waterline Replacement,OH2300112,"2,966",Fairfield,"$695,000.00",Construction,Mar-23,SML
+Beaver,42,2022 Waterline Replacement,OH6600012,434,Pike,"$799,663.00",Construction,Apr-23,DIS
+Bellaire,43,Lead Service Line Replacement,OH0700114,"4,097",Belmont,"$1,000,000.00",Construction,Sep-22,LSL
+Belpre,44,2.5 MG Water Storage Tank,OH8400012,"7,051",Washington,"$146,045.00",Design,Aug-22,PLN/DES
+Belpre,45,2.5 MG Water Storage Tank,OH8400012,"7,051",Washington,"$4,534,807.00",Construction,Dec-22,SML
+Belpre,46,Water Main Replacement - Clement Avenue to Lockhart Street,OH8400012,500,Washington,"$550,000.00",Construction,Jun-23,SML
+Blanchester,47,Lazenby Street Water Main Replacement,OH1400111,"4,243",Clinton,"$389,950.00",Construction,Jun-23,SML
+Blanchester,48,Orchard View Lane & Orchard Circle Water Main Repl,OH1400111,"4,243",Clinton,"$742,200.00",Construction,Jun-23,SML
+Blanchester,49,Reservoir 3 Improvements2,OH1400111,"4,243",Clinton,"$431,952.00",Construction,Sep-22,SML
+Blanchester,50,Vine Street Water Tower Rehabilitation,OH1400111,"4,243",Clinton,"$695,000.00",Construction,Oct-22,SML
+Bloomingburg,51,Bloomingburg Water Treatment Plant Replacement,OH2400012,919,Fayette,"$254,950.00",Design,Aug-22,PLN/DES
+Bloomingburg,52,Bloomingburg Water Treatment Plant Replacement,OH2400012,919,Fayette,"$2,238,300.00",Construction,Apr-23,SML
+Bowerston,53,New Water Treatment Plant and Raw Water Improvements Project1,OH3400112,437,Harrison,"$386,650.00",Design,Jul-22,PLN/DES
+Bowerston,54,Water System (LSLR) Improvements Project,OH34001121,437,Harrison,"$225,000.00",Construction,Mar-23,LSL
+Bowerston,55,Water System Improvements Project,OH34001121,740,Harrison,"$447,764.00",Design,Aug-22,PLN/DES
+Bowling Green,56,Low Service Pump Station #1 Improvements HAB,OH8700311,"31,529",Wood,"$2,600,000.00",Construction,Dec-22,HAB
+Bowling Green,57,The Village Subdivision Waterline Improvements,OH8700311,"31,578",Wood,"$1,750,000.00",Construction,Sep-22,STD
+Bremen,58,Water Meter Replacement,OH2300212,"1,425",Fairfield,"$459,600.00",Construction,May-23,SML
+Brilliant Water and Sewer District,59,2022-2023 Water Line Replacement,OH4100412,"2,100",Jefferson,"$55,000.00",Planning,Aug-22,PLN/DES
+Brilliant Water and Sewer District,60,2022-2023 Waterline Replacement,OH4100412,"2,100",Jefferson,"$437,000.00",Design,Sep-22,PLN/DES
+Brilliant Water and Sewer District,61,2022-2023 Waterline Replacement,OH4100412,"2,100",Jefferson,"$2,030,300.00",Construction,Mar-23,DIS
+Brown County Rural Water Association,62,Village of Ripley / Ripley Union Water System Improvements,OH0802012,"5,000",Brown,"$5,446,050.00",Construction,Oct-22,DIS/REG
+Brown County Rural Water Association,63,Wahlsburg Tank,OH0802012,"22,000",Brown,"$5,800,000.00",Construction,Oct-22,STD
+Bucyrus,64,Nevada Waterline Extension,OH1700011,733,Crawford,"$1,636,518.00",Construction,Aug-22,REG
+Burr Oak Regional Water District,65,Morgan County- Bishopville Expansion,OH0501311,761,Athens,"$665,800.00",Construction,Mar-23,DIS/REG
+Cadiz,66,Lead Service Line Replacement Project,OH3400214,"3,550",Harrison,"$578,000.00",Construction,Sep-22,LSL
+Cadiz,67,Phase II & Phase III Water System Improvements,OH3400214,"3,268",Harrison,"$3,677,000.00",Construction,Jun-23,SML
+Caldwell,68,Water Main To East Tank,OH6100011,"7,550",Noble,"$1,497,117.00",Construction,Mar-23,SML
+Caldwell,69,Water Main to East Tank,OH6100011,"2,334",Noble,"$120,000.00",Design,Sep-22,PLN/DES
+Caldwell,70,Water Main to East Tank,OH6100011,"2,334",Noble,"$30,000.00",Planning,Aug-22,PLN/DES
+Caldwell,71,WTP & Raw Well Source Improvements,OH6100011,"2,334",Noble,"$40,000.00",Planning,Aug-22,PLN/DES
+Caldwell,72,WTP & Raw Well Source Improvements,OH6100011,"2,334",Noble,"$600,000.00",Design,Sep-22,PLN/DES
+Caldwell,73,WTP & Raw Well Source Improvements,OH6100011,"2,334",Noble,"$6,000,000.00",Construction,Mar-23,SML
+Canal Winchester,74,2023 Waterline Improvements,OH2500312,"9,286",Franklin,"$2,610,000.00",Construction,Mar-23,SML
+Canfield,75,Canfield Tank Rehabilitation/Asset Management Program,OH5000503,"7,423",Mahoning,"$2,713,000.00",Construction,Jan-23,SML
+Canton,76,Canton Water Dept. Service  Center Shop Renovations,OH7608112,"107,500",Stark,"$8,600,000.00",Construction,May-23,STD
+Canton,77,Sugar Creek WTP and Wellfield Improvements,OH7608112,"107,500",Stark,"$32,000,000.00",Construction,Jul-22,STD
+Carey,78,Water Line Replacement,OH8800012,"3,565",Wyandot,"$132,583.00",Construction,Apr-23,SML
+Chagrin Falls,79,Maple Street Waterline Replacement,OH1800212,"5,000",Cuyahoga,"$560,000.00",Construction,Jan-23,SML
+Chagrin Falls,80,Walnut Street Waterline Replacement,OH1800212,"5,000",Cuyahoga,"$140,000.00",Design,Jan-23,PLN/DES
+Chagrin Falls,81,Walnut Street Waterline Replacement,OH1800212,"5,000",Cuyahoga,"$560,000.00",Construction,Jan-23,SML
+Cincinnati,82,Apple Cooper Hanfield Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,307,000.00",Construction,May-23,STD/LSL
+Cincinnati,83,Bevis Bonaparte Clarion Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,665,000.00",Construction,May-23,STD/LSL
+Cincinnati,84,Burch East Hill Shaw Water Main Replacement,OH3102612,"450,200",Hamilton,"$2,422,000.00",Construction,May-23,STD/LSL
+Cincinnati,85,Cappel Drive Waterline Replacement,OH3102612,"301,394",Hamilton,"$2,422,000.00",Construction,May-23,STD/LSL
+Cincinnati,86,Carson Avenue Waterline Replacement,OH3102612,"301,394",Hamilton,"$2,485,000.00",Construction,May-23,STD/LSL
+Cincinnati,87,CUF Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,111,000.00",Construction,May-23,STD/LSL
+Cincinnati,88,Dayton Horace Naeher Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,979,000.00",Construction,May-23,STD/LSL
+Cincinnati,89,Dunore Road Waterline Replacement,OH3102612,"301,394",Hamilton,"$593,000.00",Construction,May-23,STD/LSL
+Cincinnati,90,E. McMillan Street Waterline Replacement,OH3102612,"301,394",Hamilton,"$1,614,000.00",Construction,May-23,STD/LSL
+Cincinnati,91,East Price Hill Water Main Replacement,OH3102612,"750,200",Hamilton,"$3,321,000.00",Construction,May-23,STD/LSL
+Cincinnati,92,Fairview Graham Probasco Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,817,000.00",Construction,May-23,STD/LSL
+Cincinnati,93,Fire Flow Collection Waterline Replacement,OH3102612,"750,200",Hamilton,"$2,913,000.00",Construction,May-23,STD/LSL
+Cincinnati,94,Hyde Park Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,688,000.00",Construction,May-23,STD/LSL
+Cincinnati,95,Lisbon Avenue Waterline Replacement,OH3102612,"301,394",Hamilton,"$2,006,000.00",Construction,May-23,STD/LSL
+Cincinnati,96,Symmes Fowler Water Main Replacement,OH3102612,"750,200",Hamilton,"$5,561,000.00",Construction,May-23,STD/LSL
+Cincinnati,97,West Price Hill Water Main Replacement,OH3102612,"750,200",Hamilton,"$2,810,000.00",Construction,May-23,STD/LSL
+Cleveland,98,Boosted 3rd High System - Pump Station,OH1801212,"389,165",Cuyahoga,"$5,500,000.00",Construction,Sep-22,STD
+Cleveland,99,Boosted 3rd High System - Tower,OH1801212,"1,300,000",Cuyahoga,"$12,000,000.00",Construction,Jul-22,STD
+Coal Grove,100,Coal Grove Interconnection with Ironton,OH4400012,"1,913",Lawrence,"$126,600.00",Design,Aug-22,REG
+Coal Grove,101,Coal Grove Interconnection with Ironton,OH4400012,"2,167",Lawrence,"$326,600.00",Construction,Sep-22,REG
+Columbus,102,Aragon Ave Area Water Line Improvements,OH2504412,"837,038",Franklin,"$3,000,000.00",Construction,Oct-22,STD
+Columbus,103,Atwood Terrace Area WL Improvements,OH2504412,"837,038",Franklin,"$3,500,000.00",Construction,Sep-22,STD
+Columbus,104,Brixham Road WL Imp,OH2504412,"1,233,879",Franklin,"$3,000,000.00",Construction,Apr-23,STD
+Columbus,105,DRWP Laboratory Upgrades CIP 690523-100000,OH2504412,"1,233,879",Franklin,"$2,000,000.00",Construction,Feb-23,STD
+Columbus,106,"Dublin Road 30-lnch Water Line Extension, CIP 690502-100000",OH2504412,"837,038",Franklin,"$10,000,000.00",Construction,Oct-22,STD
+Columbus,107,"English Way WL Imprs, CIP 690236-100153",OH2504412,"1,233,879",Franklin,"$115,620.00",Construction,Sep-22,STD
+Columbus,108,"Enhanced Meter Equip (AMI) Phase 2, CIP 690358-100000",OH2504412,"837,038",Franklin,"$33,000,000.00",Construction,Jul-22,STD
+Columbus,109,Eureka-Fremont Area WL Imprs CIP #690236-100143,OH2504412,"852,144",Franklin,"$2,000,000.00",Construction,Dec-22,STD
+Columbus,110,"Greenway Ave Area WL Improvements, CIP 690236-100100",OH2504412,"837,038",Franklin,"$3,450,000.00",Construction,Sep-22,STD
+Columbus,111,"HCWP Hypochlorite Disinfection Imps,  CIP 690486-100000",OH2504412,"837,038",Franklin,"$29,000,000.00",Construction,Oct-22,STD
+Columbus,112,HCWP Lime & Soda Ash Dust Coll Sys Imprs CIP #690545-100000,OH5200412,"852,144",Franklin,"$3,000,000.00",Construction,Oct-22,STD
+Columbus,113,Kent-Fairwood Area WL Imprs CIP #690236-10014,OH2504412,"852,144",Franklin,"$1,000,000.00",Construction,Jan-23,STD
+Columbus,114,"Manchester Ave WL Improvements, CIP 690236-100113",OH2504412,"837,038",Franklin,"$1,000,000.00",Construction,Sep-22,STD
+Columbus,115,Miller Ave Area WL Imprs CIP 690236-100122,OH2504412,"1,233,879",Franklin,"$3,000,000.00",Construction,Mar-23,STD
+Columbus,116,"Norris Dr. Area WL Imprs, CIP 690236-100124",OH2504412,"1,233,879",Franklin,"$3,500,000.00",Construction,Jan-23,STD
+Columbus,117,PAWP Control Room Renovation CIP #690291-100003,OH2504412,"852,144",Franklin,"$2,500,000.00",Construction,Jan-23,STD
+Columbus,118,PAWP Hypochlorite Disinfection Improvements; 690487-100000,OH2504412,"837,038",Franklin,"$22,000,000.00",Construction,Dec-22,STD
+Columbus,119,"PAWP Lime Staker & Soda Ash Feeder Repl,  CIP 690291-100002",OH2504412,"837,038",Franklin,"$12,400,000.00",Construction,Oct-22,STD
+Columbus,120,Plant Drain & Water System Improvements,OH2504412,"852,144",Franklin,"$7,500,000.00",Construction,Feb-23,STD
+Columbus,121,"Residuals Turnkey Dewatering Services, CIP 690540-100002",OH2504412,"1,233,879",Franklin,"$46,000,000.00",Construction,Dec-22,STD
+Columbus,122,"Riverview Dr. Area WL Imprs, CIP 690236-100125",OH2504412,"1,233,879",Franklin,"$3,000,000.00",Construction,Jun-23,STD
+Columbus,123,Roosevelt Ave Area WL Imprs CIP 690236-100123,OH2504412,"1,233,879",Franklin,"$3,000,000.00",Construction,Oct-22,STD
+Columbus,124,Roswell Drive Area WL Imprs CIP #690236-100107,OH5200412,"852,144",Franklin,"$3,400,000.00",Construction,Sep-22,STD
+Columbus,125,South Hampton Rd. Area WL Improvements,OH2504412,"1,281,510",Franklin,"$3,400,000.00",Construction,Aug-22,STD
+Columbus,126,Varsity Ave Area WL Imprs CIP #690236-100106,OH5200412,"852,144",Franklin,"$3,000,000.00",Construction,Sep-22,STD
+Columbus,127,"Wellington Blvd Area WL Imprs, CIP 690236-100127",OH2504412,"1,233,879",Franklin,"$3,000,000.00",Construction,Mar-23,STD
+Conneaut,128,Clark Street Water Tower Replacement,OH0400411,"12,613",Ashtabula,"$318,725.00",Design,Aug-22,STD
+Conneaut,129,Clark Street Water Tower Replacement,OH0400411,"12,567",Ashtabula,"$3,985,000.00",Construction,May-23,STD
+Conneaut,130,Park & Day Streets Waterline Replacement,OH0400411,"12,613",Ashtabula,"$300,000.00",Design,Aug-22,STD
+Conneaut,131,Park & Day Streets Waterline Replacement,OH0400411,"12,567",Ashtabula,"$3,100,000.00",Construction,Apr-23,STD
+Corning,132,TWP Road 291 WL Replacement,OH6400003,490,Perry,"$755,700.00",Construction,May-23,SML
+Coshocton,133,Warsaw Waterline Replacement and Extension,OH1600012,783,Coshocton,"$960,300.00",Design,Mar-23,PLN/DES
+Coshocton,134,Warsaw Waterline Replacement and Extension,OH1600012,783,Coshocton,"$13,531,700.00",Construction,Jun-23,DIS/REG
+Creston,135,Factory Street Drainage and Waterline Improvements,OH8500312,"2,171",Wayne,"$821,314.00",Construction,Oct-22,SML
+Danville,136,Danville WTP Upgrades,OH4200112,"1,124",Knox,"$85,000.00",Design,Sep-22,PLN/DES
+Danville,137,Market Street Water Line Improvements Project,OH4200112,"1,014",Knox,"$70,000.00",Design,Oct-22,PLN/DES
+Danville,138,Market Street Water Line Improvements Project,OH4200112,"1,124",Knox,"$840,000.00",Construction,Mar-23,SML
+DeGraff,139,Water Treatment Plant Rehabilitation,OH4600512,"1,501",Logan,"$1,024,100.00",Construction,Sep-22,SML
+"Del-Co Water Company, Inc.",140,Centerburg Lead Service Line Replacement,OH2101412,"1,773",Delaware,"$175,450.00",Construction,Oct-22,LSL
+"Del-Co Water Company, Inc.",141,Hartford Fairgrounds Water Supply,OH2101412,"10,040",Delaware,"$2,200,000.00",Construction,Jun-23,REG
+Delphos,142,South Main Street Water Service Replacement,OH0200412,"7,123",Allen,"$1,433,515.00",Construction,Jul-22,SML/LSL
+Dunkirk,143,Lead Service Line and Water Line Replacement,OH3300212,875,Hardin,"$4,621,200.00",Construction,Jun-23,SML/LSL
+Dunkirk,144,Lead Service Line and Water Line Replacement,OH3300212,875,Hardin,"$407,000.00",Design,Aug-22,PLN/DES
+East Palestine,145,Waterline Replacement Project,OH1500912,"2,300",Columbiana,"$5,605,510.00",Construction,Apr-23,DIS/LSL
+Edgerton,146,WTP Improvements,OH8600312,"2,162",Williams,"$700,000.00",Construction,Mar-23,SML
+Elmore,147,Dischinger Road Waterline Extension,OH6200712,"1,370",Ottawa,"$569,039.00",Construction,May-23,REG
+Elmore,148,Dischinger Road Waterline Extension,OH6200712,"1,419",Ottawa,"$94,413.00",Design,Jul-22,REG
+Elmore,149,Lincoln Street Improvements,OH6200712,"1,370",Ottawa,"$531,314.00",Construction,Jun-23,SML
+Elmore,150,Regional Water Supply Connection,OH6200712,"1,370",Ottawa,"$332,976.00",Construction,Oct-22,REG
+Elyria,151,Chemical Feed Improvements 30 MGD,OH4700411,"68,000",Lorain,"$400,000.00",Construction,Sep-22,STD
+Elyria,152,City of Elyria Lead Service Line Replacement Project #3,OH4700411,"68,000",Lorain,"$1,000,000.00",Construction,Jul-22,LSL
+Fairport Harbor,153,Water System Regionalization,OH-4300411,"3,180",Lake,"$4,420,000.00",Construction,Feb-23,DIS/REG
+Fayette,154,Water Distribution System Replacement,OH2600412,"1,250",Fulton,"$7,740,000.00",Construction,May-23,DIS
+Fayette County,155,Lakewood Hills Area Water System Project,OH2438714,200,Fayette,"$1,319,886.00",Construction,Jul-22,DIS/REG
+Fayette County,156,Rattlesnake Water Treatment Plant Replacement,OH2437412,"6,635",Fayette,"$4,400,000.00",Construction,Apr-23,SML
+Fletcher,157,New Water Tower,OH5500412,358,Miami,"$875,000.00",Construction,Sep-22,SML
+Fort Loramie,158,Park Street Water Main Replacement,OH7562499,"1,524",Shelby,"$941,520.00",Construction,Mar-23,SML
+Frankfort,159,WTP / Well #3 Rehabilitation,OH7100712,"1,100",Ross,"$35,160.00",Design,Aug-22,PLN/DES
+Frankfort,160,WTP / Well #3 Rehabilitation,OH7100712,"1,100",Ross,"$460,000.00",Construction,Sep-22,SML
+Franklin,161,Millard Drive and Bryant Avenue Water Main Replacement,OH8300412,"11,785",Warren,"$1,500,000.00",Construction,Sep-22,STD
+Franklin,162,Sixth Street Water Tower,OH8300412,"11,785",Warren,"$2,300,000.00",Construction,Jan-23,STD
+Franklin,163,South Main Street Water Main Replacement,OH8300412,"11,785",Warren,"$750,000.00",Construction,Oct-22,STD
+Fredericksburg,164,Water Treatment Plant & Wells,OH8500812,"2,493",Wayne,"$3,070,000.00",Construction,Jun-23,SML
+Freeport,165,Water System Improvements,OH3400412,364,Harrison,"$441,750.00",Construction,Feb-23,SML
+Germantown,166,Fire Hydrant and Valve Replacement,OH5701012,"5,796",Montgomery,"$489,488.00",Construction,Dec-22,SML
+Germantown,167,High Service Area Water Tower Rehab,OH5701012,"5,796",Montgomery,"$580,850.00",Construction,Mar-23,SML
+Germantown,168,Maple Park Watermain Phase 2,OH701012,"5,796",Montgomery,"$340,000.00",Construction,Dec-22,SML
+Germantown,169,Wellfield Generator,OH5701012,"5,796",Montgomery,"$83,485.00",Construction,Jan-23,SML
+Glendale,170,Water Treatment System Upgrades,OH3100712,"2,500",Hamilton,"$2,003,883.00",Construction,Jun-23,SML/LSL
+Glenmont,171,Water Line and Household Lead Line Replacement,OH3800312,282,Holmes,"$1,766,850.00",Construction,Jan-23,SML/LSL
+Glenmont,172,Water Line and Household Lead Line Replacement,OH3800312,282,Holmes,"$365,700.00",Design,Jul-22,PLN/DES
+Gnadenhutten,173,Water Treatment Plant,OH7900512,"1,300",Tuscarawas,"$1,777,738.00",Construction,Aug-22,SML
+Grafton,174,Washington Drive Waterline Replacement,OH4700511,"2,769",Lorain,"$165,755.00",Construction,Apr-23,SML
+Granville,175,Weaver Drive Water Line Extension,OH4500612,300,Licking,"$255,000.00",Construction,Jan-23,SML
+Granville,176,WTP Filter Rehabilitation,OH4500612,"5,771",Licking,"$130,000.00",Construction,Oct-22,SML
+Granville,177,WTP Lime Sludge Holding Improvements,OH4500612,"5,500",Licking,"$750,000.00",Construction,Mar-23,SML
+Granville,178,WTP Sanitary Improvements,OH4500612,"5,500",Licking,"$400,000.00",Construction,Mar-23,SML
+Greene County,179,Hilltop Wellfield Development,OH2903512,"36,855",Greene,"$4,050,000.00",Construction,Jun-23,STD
+Greene County,180,Watermain Improvements Bundle 4 - Oleva Drive Watermain,OH2903512,"50,000",Greene,"$256,952.00",Construction,Oct-22,STD
+Greene County,181,"Watermain Improvements Bundle 6 - Wagner, Kemp, PRV",OH2903512,"50,000",Greene,"$1,000,065.00",Construction,Jun-23,STD
+Greene County,182,Watermain Imps Bun. 1 - Grange Hall Booster Station Wtr Mns,OH2903512,"50,000",Greene,"$1,583,435.00",Construction,Jul-22,STD
+Greene County,183,"Watermain Imps Bun. 2 - Darst, Sunbeam, and Beaver Valley WM",OH2903512,"50,000",Greene,"$1,743,697.00",Construction,Sep-22,STD
+Greene County,184,Watermain Imps Bun. 3 - Membrane Concentrate Discharge Wtrmn,OH2903512,"50,000",Greene,"$2,805,660.00",Construction,Aug-22,STD
+Greene County,185,"Watermain Imps Bun. 5 - Wagner, Feedwire, and Clyo Wtrmns",OH2903512,"50,000",Greene,"$2,400,398.00",Construction,Oct-22,STD
+Greene County,186,"Wellfield Imps Bun 4 - Rehab of PW-8, PW-9, PW-10, and PW-11",OH2903512,"36,855",Greene,"$1,019,071.00",Construction,Jul-22,STD
+Greene County,187,"Wellfield Imps Bun. 3 - Rehab of PW-1,PW-4R,PW-5R PW-6,PW-7R",OH2903512,"36,855",Greene,"$1,379,002.00",Construction,Jul-22,STD
+Greenfield,188,Phase 1 Water System Improvements,OH3655021,"4,683",Highland,"$2,500,000.00",Construction,Dec-22,SML
+Greenville,189,New Water Tower - East,OH1900714,"12,824",Darke,"$54,040.00",Design,Sep-22,STD
+Greenville,190,New Water Tower - East HAB,OH1900714,"13,227",Darke,"$7,243,505.00",Construction,Feb-23,HAB
+Hamilton,191,South Water Treatment Aerator Roof Replacement,OH0904012,"63,000",Butler,"$200,000.00",Construction,Sep-22,STD
+Hamilton,192,South Water Treatment Plant Boiler Replacement,OH0904012,"63,000",Butler,"$650,000.00",Construction,Mar-23,STD
+Hamilton,193,South Water Well Rehabillitation 2022,OH0904012,"63,000",Butler,"$160,000.00",Construction,Sep-22,STD
+Hamilton,194,Williams Avenue Water Main Replacement,OH0904012,"63,000",Butler,"$765,000.00",Construction,Oct-22,STD
+Hamler,195,Water Tower and Distribution System Improvements,OH3500312,627,Henry,"$1,768,078.00",Construction,Dec-22,DIS
+Hayesville,196,Water Treatment Plant and Meters,OH0300712,434,Ashland,"$1,441,000.00",Construction,Aug-22,SML
+Hebron,197,2022 Water Line Replacements,OH4501012,"2,360",Licking,"$195,000.00",Design,Aug-22,PLN/DES
+Hebron,198,2022 Water Line Replacements,OH4501012,"2,360",Licking,"$1,283,000.00",Construction,Mar-23,SML
+Hebron,199,Canyon Rd. Water Line Extension,OH4501012,10,Licking,"$55,000.00",Design,Oct-22,REG
+Hebron,200,Canyon Rd. Water Line Extension,OH4501012,10,Licking,"$500,000.00",Construction,Apr-23,REG
+Hebron,201,New Well #7 / SWAP,OH4501012,"2,360",Licking,"$100,000.00",Design,Aug-22,PLN/DES
+Hebron,202,New Well #7 / SWAP,OH4501012,"2,360",Licking,"$400,000.00",Construction,Jan-23,SML
+Hebron,203,U.S. 40/S.R. 37 Waterline Extension,OH4501012,"2,389",Licking,"$3,460,000.00",Construction,Aug-22,DIS/REG
+Hecla Water Association,204,Macedonia Hill Water Main Extension & Booster Station,OH4401612,"30,170",Lawrence,"$5,297,000.00",Construction,Oct-22,DIS/REG
+Hicksville,205,"250,000 Elevated Water Tank",OH2000212,"3,110",Defiance,"$1,254,550.00",Construction,Sep-22,SML
+Highland Ridge Water & Sewer Assoc.,206,St. Rt. 821 Waterline Relocation,OH8403203,"2,745",Washington,"$663,400.00",Construction,Aug-22,DIS
+Hillsboro,207,2023 Water System Improvements,OH3600614,"6,481",Highland,"$5,000.00",Planning,Oct-22,PLN/DES
+Hillsboro,208,2023 Water System Improvements,OH3600614,"6,481",Highland,"$87,270.00",Design,Dec-22,PLN/DES
+Hillsboro,209,2023 Water System Improvements,OH3600614,"6,481",Highland,"$1,199,105.00",Construction,May-23,SML
+Hiram,210,Water Tower Replacement,OH6701612,"1,294",Portage,"$600,000.00",Construction,Sep-22,SML
+Hopedale,211,Water Storage Tank Replacement and Booster Pump Station,OH3400811,943,Harrison,"$2,388,690.00",Construction,Oct-22,SML
+Hubbard,212,2022 Lead Service Line Replacement,OH7801415,"8,512",Trumbull,"$180,000.00",Construction,Dec-22,LSL
+Hubbard,213,2023 Lead Service Line Replacement Project,OH7801415,"8,606",Trumbull,"$250,000.00",Construction,Apr-23,LSL
+Hubbard,214,South Main Street Water Line Replacement (Lincoln to Helen),OH7801415,"8,606",Trumbull,"$60,000.00",Design,Dec-22,PLN/DES
+Hubbard,215,South Main Street Waterline Replacement (Lincoln to Helen),OH7801415,"8,606",Trumbull,"$680,000.00",Construction,Jun-23,SML/LSL
+Huber Heights,216,2022 Water Main Replacement Program,OH5703612,"43,500",Montgomery,"$1,500,000.00",Construction,Sep-22,STD
+Ironton,217,10th Street Waterline Improvements,OH4400711,"10,599",Lawrence,"$290,550.00",Design,Sep-22,STD
+Ironton,218,10th Street Waterline Improvements,OH4400711,"10,599",Lawrence,"$3,174,385.00",Construction,Sep-22,STD
+Ironton,219,3rd Street Waterline Improvements,OH4400711,"11,129",Lawrence,"$1,694,489.00",Construction,Sep-22,STD
+Ironton,220,Waterline Improvements & Regionalization Interconnect,OH4400711,"11,129",Lawrence,"$268,120.00",Design,Sep-22,REG
+Ironton,221,Waterline Improvements & Regionalization Interconnect,OH4400711,"11,129",Lawrence,"$2,929,279.00",Construction,Sep-22,REG
+Jackson,222,Florence Avenue Reconstruction - Water,OH4000111,"9,691",Jackson,"$600,000.00",Construction,Jun-23,SML
+Jackson,223,Mill Street Waterline Replacement,OH4000111,"9,691",Jackson,"$120,000.00",Design,Sep-22,PLN/DES
+Jackson,224,Mill Street Waterline Replacement,OH4000111,"9,691",Jackson,"$1,230,000.00",Construction,Jan-23,SML
+Jackson,225,South Street Waterline Replacement,OH4000111,"9,691",Jackson,"$1,736,919.00",Construction,Dec-22,SML
+"Jackson County Water Company, Inc.",226,Chestnut Grove Tank Replacement,OH4002012,"15,903",Jackson,"$719,000.00",Construction,Aug-22,STD
+"Jackson County Water Company, Inc.",227,Garrett Ridge Improvements,OH4002012,"15,903",Jackson,"$5,965,300.00",Construction,Oct-22,DIS/REG
+"Jackson County Water Company, Inc.",228,Jackson County Water System Master Plan,OH4002012,"15,903",Jackson,"$135,000.00",Planning,Sep-22,STD
+"Jackson County Water Company, Inc.",229,Kitchen Tank Waterline Connection,OH4002012,"15,903",Jackson,"$110,000.00",Design,Sep-22,REG
+"Jackson County Water Company, Inc.",230,Kitchen Tank Waterline Connection,OH4002012,"15,903",Jackson,"$539,000.00",Construction,Aug-22,REG
+"Jackson County Water Company, Inc.",231,McCoy Road Waterline Connection,OH4002012,"15,903",Jackson,"$20,000.00",Design,Sep-22,REG
+"Jackson County Water Company, Inc.",232,McCoy Road Waterline Connection,OH4002012,"15,903",Jackson,"$65,000.00",Construction,Aug-22,REG
+Jefferson County,233,Hammondsville Water Storage Tank Rehab,OH4101103,"13,983",Jefferson,"$93,400.00",Design,Aug-22,STD
+Jefferson County,234,Hammondsville Water Storage Tank Rehab,OH4101103,"13,983",Jefferson,"$1,057,368.00",Construction,Mar-23,STD
+Jefferson County,235,J and Bloomingdale Water Storage Tanks Rehabilitation,OH4101103,"13,983",Jefferson,"$1,824,990.00",Construction,Aug-22,STD
+Jefferson Regional Water Authority,236,Water Treatment Plant Improvements,OH5703012,"4,620",Montgomery,"$3,322,310.00",Construction,Oct-22,SML
+Jefferson Regional Water Authority,237,Water Treatment Plant Improvements,OH5703012,"4,620",Montgomery,"$152,250.00",Design,Aug-22,PLN/DES
+Jefferson W&SD,238,Water Treatment Plant Improvements,OH2504012,"11,294",Franklin,"$13,191,000.00",Construction,Dec-22,STD
+Johnstown,239,Water Treatment Plant Expansion1,OH4501512,"5,182",Licking,"$1,500,000.00",Design,Aug-22,PLN/DES
+Johnstown,240,Water Treatment Plant Expansion,OH4501512,"5,182",Licking,"$14,900,000.00",Construction,Jan-23,SML
+Kelleys Island,241,Huntington Lane Waterline Replacement,OH2201111,"3,125",Erie,"$435,010.00",Construction,Sep-22,SML
+Kenton,242,Downtown Revitalization Phase 2 (WL and LSLR),OH3300612,"8,284",Hardin,"$6,519,108.00",Construction,Dec-22,DIS/LSL
+Killbuck,243,Water Line Loop Improvement Project,OH3800712,879,Holmes,"$55,000.00",Planning,Oct-22,PLN/DES
+Killbuck,244,Water Line Upgrades,OH3800712,879,Holmes,"$55,000.00",Planning,Oct-22,PLN/DES
+Killbuck,245,Waterline Loop Improvement Project,OH3800712,879,Holmes,"$3,664,650.00",Construction,Mar-23,SML
+Killbuck,246,Waterline Loop Improvement Project,OH3800712,879,Holmes,"$421,100.00",Design,Dec-22,PLN/DES
+Killbuck,247,Waterline Upgrades,OH3800712,879,Holmes,"$272,350.00",Design,Dec-22,PLN/DES
+Killbuck,248,Waterline Upgrades,OH3800712,879,Holmes,"$2,121,340.00",Construction,Mar-23,SML
+La Rue,249,Water Treatment Plant Improvements,OH5100312,676,Marion,"$936,000.00",Construction,Aug-22,SML
+Lakeview,250,Grove and Park Street Waterline Improvements,OH4601512,"1,083",Logan,"$482,003.00",Construction,Sep-22,SML
+Lakeview,251,Midway Water System Improvements,OH4601512,"1,184",Logan,"$1,100,688.00",Construction,Dec-22,SML
+Lancaster,252,North Water Treatment Plant Replacement,OH2301012,"40,400",Fairfield,"$83,000,000.00",Construction,Sep-22,STD
+Lancaster,253,South Water Plant Filter Backwash Modifications,OH2301012,"40,400",Fairfield,"$10,000,000.00",Construction,Feb-23,STD
+Lancaster,254,South Water Plant Improvements,OH2301012,"40,400",Fairfield,"$10,000,000.00",Construction,Jun-23,STD
+Le-Ax Regional Water District,255,Le-ax Water District Tank 6 Replacement Project,OH0501111,777,Athens,"$720,000.00",Construction,Sep-22,STD
+"Leipsic, Village of",256,Water Treatment Plant,OH6900612,"2,598",Putnam,"$11,000,000.00",Construction,May-23,SML
+Liberty Center,257,"100,000 Gallon Elevated Tank Rehabilitation",OH3500603,"1,234",Henry,"$508,593.00",Construction,Oct-22,SML
+Liberty Center,258,SR 109 Waterline Replacement,OH3500603,"1,327",Henry,"$92,056.00",Design,Oct-22,PLN/DES
+Liberty Center,259,SR 109 Waterline Replacement,OH3500603,"1,180",Henry,"$613,707.00",Construction,May-23,SML
+Licking County,260,Eagle Wings Water Line Extension,OH4500812,100,Licking,"$222,434.00",Construction,Oct-22,REG/PFAS
+Licking County,261,Harbor Hills Watermain and Lead Service Line Replacement,OH4500812,"1,050",Licking,"$11,000,000.00",Construction,Jan-23,SML/LSL
+Licking County,262,Harbor Hills Watermain and Lead Service Line Replacement,OH4500812,"1,050",Licking,"$950,000.00",Design,Aug-22,PLN/DES
+Licking County,263,Newark - Hanover Water Line Ext. (Dist and Trans),OH4502314,"2,100",Licking,"$3,376,721.00",Design,Sep-22,REG
+Licking County,264,Newark - Hanover Water Line Ext. (Dist and Trans),OH4502314,"2,100",Licking,"$36,871,213.00",Construction,Jun-23,REG
+Licking County,265,Newark - Hanover Water Line Extension (Distribution),OH4502314,"2,100",Licking,"$1,889,321.00",Design,Sep-22,REG
+Licking County,266,Newark - Hanover Water Line Extension (Distribution),OH4502314,"2,100",Licking,"$18,893,213.00",Construction,Jun-23,REG
+Licking County,267,Prescott Estates Water Line and New Tank,OH4501712,732,Licking,"$2,901,300.00",Construction,Feb-23,SML/LSL
+Lisbon,268,Water Tank & North End Pressure Improvements,OH1501512,"2,695",Columbiana,"$3,267,750.00",Construction,Jun-23,DIS
+Lithopolis,269,SCADA Replacement,OH2301112,"1,954",Fairfield,"$13,810.00",Design,Aug-22,PLN/DES
+Lithopolis,270,SCADA Replacement,OH2301112,"1,573",Fairfield,"$146,600.00",Construction,Mar-23,SML
+Lithopolis,271,Water Treatment Plant Filter Addition,OH2301112,"1,954",Fairfield,"$54,380.00",Design,Sep-22,PLN/DES
+Lithopolis,272,Water Treatment Plant Filter Addition,OH2301112,"1,573",Fairfield,"$691,650.00",Construction,Mar-23,SML
+Lockland,273,Water Treatment System Upgrades,OH3101212,"3,407",Hamilton,"$9,900,000.00",Construction,Jun-23,SML/LSL
+Lodi,274,Water System Improvements,OH5200412,"2,823",Medina,"$1,044,150.00",Construction,Aug-22,SML
+Logan,275,2022 Water System Improvements,OH3700612,"7,205",Hocking,"$2,816,954.00",Construction,Jan-23,DIS/REG
+Logan,276,East Wellfield Emergency Power Supply - Generator,OH3700612,"7,152",Hocking,"$359,200.00",Construction,Feb-23,SML
+London,277,Raw Water Transmission Main and Water Main Extension,OH4900712,"9,394",Madison,"$2,666,772.00",Construction,Feb-23,SML
+London,278,Water Wells Development,OH4900712,"9,394",Madison,"$3,685,000.00",Construction,Feb-23,DIS
+London,279,Water Treatment Plant Rehabilitation,OH4900712,"9,394",Madison,"$1,510,650.00",Construction,Aug-22,SML
+Lorain,280,2023 Lead Service line Replacement Project,OH4700711,"72,773",Lorain,"$5,000,000.00",Construction,May-23,LSL
+Lordstown,281,Lordstown Water Extension Phase 2,OH7804403,"3,197",Trumbull,"$1,500,000.00",Design,Aug-22,PLN/DES
+Lordstown,282,Lordstown Water Extension Phase 2,OH7804403,"3,197",Trumbull,"$20,000,000.00",Construction,Mar-23,SML
+Lowell,283,Iron and Manganese Containerized Unit,OH8400312,638,Washington,"$110,000.00",Design,Oct-22,PLN/DES
+Lowell,284,Lowell Water Treatment Plant Installation,OH8400312,638,Washington,"$2,011,791.00",Construction,Aug-22,DIS
+Madison County,285,"S.R. 56, US 40 and Summerford Waterline Extension Project",OH4901012,"5,176",Madison,"$483,630.00",Design,Oct-22,PLN/DES
+Madison County,286,"S.R. 56, US 40 and Summerford Waterline Extension Project",OH4901012,"5,176",Madison,"$7,553,989.00",Construction,Jan-23,DIS/REG
+Madison County,287,SR-56 London Interconnect,OH4901012,"5,176",Madison,"$833,509.00",Construction,Oct-22,SML
+Madison County,288,US 42 and Plain City Waterline Extension,OH4901012,"5,176",Madison,"$890,037.00",Design,Oct-22,REG
+Madison County,289,US 42 and Plain City Waterline Extension,OH4901012,"5,176",Madison,"$14,355,294.00",Construction,Jan-23,REG
+Madison Water District,290,Waterline Service to Heatherwood,OH7006712,"11,168",Richland,"$145,000.00",Design,Aug-22,REG
+Madison Water District,291,Waterline Service to Heatherwood,OH7006712,"1,500",Richland,"$2,189,075.00",Construction,Jan-23,REG
+Mahoning Valley Sanitary District,292,Mineral Ridge Dam Rehabilitation,OH7801811,"220,000",Trumbull,"$13,800,000.00",Construction,Dec-22,SML
+Malinta,293,Malinta Water Tower Rehabilitation,OH3501403,265,Henry,"$250,000.00",Construction,Jun-23,SML
+Malta,294,2022 Water Distribution System Improvements,OH5800412,671,Morgan,"$1,820,000.00",Construction,Jan-23,SML
+Malvern,295,Phase 1 Waterline Replacement,OH1000112,"1,343",Carroll,"$769,855.00",Construction,Sep-22,DIS/LSL
+Malvern,296,Waterline Replacement Phase 2,OH1000112,"1,302",Carroll,"$3,886,000.00",Construction,Jun-23,DIS/LSL
+Manchester,297,Water Line Improvements Phase 2,OH0100112,"2,120",Adams,"$195,000.00",Design,Sep-22,PLN/DES
+Manchester,298,Water Line Improvements Phase 2,OH0100112,"2,120",Adams,"$2,943,260.00",Construction,Mar-23,DIS
+Marblehead,299,Johnson's Island Waterline Extension,OH6202411,"3,010",Ottawa,"$521,142.00",Design,Aug-22,REG
+Marblehead,300,Johnson's Island Waterline Extension,OH6202411,"3,010",Ottawa,"$7,000,000.00",Construction,Jun-23,REG
+Marblehead,301,North Water Tower Improvements,OH6202411,"3,010",Ottawa,"$320,000.00",Construction,Jun-23,SML
+Marblehead,302,Village of Marblehead Water Tower,OH6202411,903,Ottawa,"$2,469,583.00",Construction,Sep-22,HAB
+Marietta,303,WTP Replacement,OH8400412,"13,954",Washington,"$22,654,831.00",Construction,Dec-22,PFAS
+Marshallville,304,Water Treatment Plant Replacement,OH8501912,811,Wayne,"$1,260,031.00",Construction,Jun-23,SML
+Mechanicsburg,305,Water Distribution System Improvements - Phase 3,OH1100712,"1,681",Champaign,"$2,271,713.00",Construction,Apr-23,SML
+Miamisburg,306,WTF Softening Improvements Well #14,OH701212,"20,000",Montgomery,"$2,000,000.00",Construction,Jan-23,STD
+Miamisburg,307,WTF Softening Improvements Well #14,OH701212,"20,092",Montgomery,"$750,000.00",Design,Aug-22,STD
+Middlefield,308,Water Well No. 3 Completion,OH2802012,"2,699",Geauga,"$2,447,000.00",Construction,Dec-22,SML
+Middletown,309,Backup Generators - WTP and Yankee Pump Station,OH0901712,"50,000",Butler,"$1,740,000.00",Construction,May-23,STD
+Middletown,310,Lime Processing Facility,OH0901712,"50,000",Butler,"$13,500,000.00",Construction,Jun-23,STD
+Middletown,311,Water Line Replacements,OH0901712,"50,000",Butler,"$3,100,000.00",Construction,Jun-23,STD
+Middletown,312,Water Storage Tank,OH0901712,"50,000",Butler,"$7,000,000.00",Construction,Jun-23,STD
+Midvale,313,WTP Filtration Improvement,OH7900612,"2,376",Tuscarawas,"$2,537,765.00",Construction,Dec-22,DIS
+Midvale,314,WTP Filtration Improvement,OH7900612,"1,353",Tuscarawas,"$342,138.00",Design,Jul-22,PLN/DES
+Millersport,315,Water Treatment Plant Filter Addition,OH2301212,"3,200",Fairfield,"$978,530.00",Construction,Oct-22,SML
+Monroeville,316,Water System Improvements - Waterline,OH3900811,"1,400",Huron,"$323,000.00",Construction,Sep-22,SML
+Morgan-Meigsville Rural Water District,317,SR 60 Waterline Extension,OH5801003,700,Morgan,"$1,540,000.00",Construction,Feb-23,SML
+Mount Sterling,318,"150,000 Gallon Elevated Storage Facility",OH4900812,"2,000",Madison,"$109,100.00",Design,Sep-22,PLN/DES
+Mount Sterling,319,"150,000 Gallon Elevated Storage Facility",OH4900812,"2,000",Madison,"$1,369,900.00",Construction,Jan-23,SML
+Muskingum County,320,Norfield and Arch Hill Waterline Extension,OH6000412,150,Muskingum,"$1,741,200.00",Construction,May-23,DIS/REG
+Muskingum County,321,"Philo, Virginia Ridge and Irish Ridge Rd Main Extension",OH6000412,"21,464",Muskingum,"$3,211,550.00",Construction,Mar-23,DIS/REG
+Muskingum County,322,SR 555 Waterline Extension - Phase 2,OH6000412,80,Muskingum,"$734,900.00",Construction,Apr-23,STD
+Muskingum County,323,Sunflower Rd and Getz Rd Water Main Extension,OH6000412,"21,464",Muskingum,"$591,400.00",Construction,Mar-23,STD
+Nelsonville,324,Water System Improvements Phase 2,OH0501214,"5,816",Athens,"$318,600.00",Design,Aug-22,PLN/DES
+Nelsonville,325,Water System Improvements Phase 2,OH0501214,"5,816",Athens,"$5,200,000.00",Construction,Apr-23,DIS
+Nevada,326,Water Tower and Water Lines,OH8800312,733,Wyandot,"$1,592,135.00",Construction,Oct-22,DIS
+New Concord,327,WTP Clarifier #2 Rehabilitation,OH6001711,"2,209",Muskingum,"$379,600.00",Construction,Aug-22,SML
+New Holland,328,2022 Water System Improvements,OH6501612,801,Pickaway,"$1,240,000.00",Construction,Jun-23,SML
+New London,329,Coleman Court/Clinton Street Lead Waterline Replacement,OH3902611,"2,416",Huron,"$369,204.00",Construction,Jun-23,LSL
+Noble Water Company,330,Water Meter Upgrade,OH6100203,815,Noble,"$142,000.00",Construction,Dec-22,SML
+North Baltimore,331,Watermain Replacement Project,OH8701611,"3,432",Wood,"$4,838,251.00",Construction,Oct-22,SML/LSL
+Northwestern Water & Sewer Dist,332,Custar Waterline Loop,OH8703211,"5,073",Wood,"$1,600,000.00",Construction,Jun-23,REG
+Northwestern Water & Sewer Dist,333,Eastwood Local School District Regional Waterline,OH8752812,905,Wood,"$2,350,000.00",Construction,May-23,REG
+Northwestern Water & Sewer Dist,334,Emergency Water Interconnection/Back-up,OH8752812,"25,278",Wood,"$800,000.00",Construction,Jun-23,HAB
+Northwestern Water & Sewer Dist,335,Henry County Regional Waterline,OH8703211,"2,472",Wood,"$938,000.00",Construction,Aug-22,REG
+Northwestern Water & Sewer Dist,336,Liberty Hi Road Water Line,OH8703211,"2,472",Wood,"$1,081,833.00",Construction,Jul-22,SML
+Northwestern Water & Sewer Dist,337,Lime City Waterline Loop,OH8752812,"19,758",Wood,"$823,014.00",Construction,Jan-23,STD
+Northwestern Water & Sewer Dist,338,Miltonville Waterline Replacement,OH8752812,"19,758",Wood,"$3,868,342.00",Construction,Jun-23,SML
+Northwestern Water & Sewer Dist,339,Village of McComb Regional Water Line,OH3200411,"1,756",Wood,"$4,800,000.00",Construction,Oct-22,REG/HAB
+Norwood,340,Water System Improvements,OH3101703,"19,870",Hamilton,"$900,000.00",Construction,Oct-22,STD
+Obetz,341,Water Treatment System Upgrades,OH2502212,"3,167",Franklin,"$14,200,000.00",Construction,Jun-23,SML
+Old Straitsville Water Association,342,"State Route 93, Arnold & Price Road Waterline Replacement",OH6401403,"2,950",Perry,"$973,500.00",Construction,Jun-23,DIS
+Oregon,343,"Water Line Repl. Program - Seaman Rd, Norden Rd, and Wynn Rd",OH4800911,"21,000",Lucas,"$3,435,000.00",Construction,Mar-23,STD
+Ottawa County,344,Secondary Feed Water Line Eastern Ottawa County,OH6205011,"17,348",Ottawa,"$2,097,000.00",Construction,Jan-23,STD
+Ottawa County,345,Water Line Extension to Elmore,OH6205011,"1,500",Ottawa,"$1,735,567.00",Construction,Jan-23,REG
+Payne,346,Meter Replacement,OH6300712,"1,192",Paulding,"$193,500.00",Construction,Apr-23,SML
+Pemberville,347,Downtown Business Alley Waterline Replacement,OH8701712,"1,590",Wood,"$152,500.00",Construction,May-23,SML
+Pemberville,348,Downtown Waterline Replacement,OH8701712,"1,360",Wood,"$1,920,000.00",Construction,Jun-23,SML
+Pemberville,349,East Front Street Waterline Improvements,OH8701712,"1,360",Wood,"$182,000.00",Construction,Aug-22,SML
+Pemberville,350,New Water Tower Improvements,OH8701712,"1,360",Wood,"$1,348,500.00",Construction,Jun-23,SML
+Perry County,351,NPCW - Water System Improvements Phase 5,OH402703,"1,476",Perry,"$4,533,300.00",Construction,Mar-23,DIS
+Philo,352,Water Line and Booster Replacement,OH6001912,866,Muskingum,"$6,700,000.00",Construction,Feb-23,SML
+Pike Water Inc,353,SR 124 Waterline Replacement,OH6602412,"15,487",Pike,"$1,991,500.00",Construction,Feb-23,STD
+Piketon,354,Piketon Water Treatment Plant,OH6600712,"2,137",Pike,"$792,210.00",Design,Sep-22,PLN/DES
+Piketon,355,Piketon Water Treatment Plant,OH6600712,"2,181",Pike,"$7,197,223.00",Construction,Mar-23,DIS
+Pleasantville,356,Water Tanks Rehabilitation,OH2301712,960,Fairfield,"$659,000.00",Construction,Jun-23,SML
+Pomeroy,357,Water System Improvements,OH5300212,"1,953",Meigs,"$208,300.00",Design,Aug-22,PLN/DES
+Pomeroy,358,Water System Improvements,OH5300212,"1,953",Meigs,"$2,040,400.00",Construction,Mar-23,DIS
+Port Clinton,359,Water and Sanitary Sewer Infrastructure Improvements,OH6203211,"5,928",Ottawa,"$10,704,265.00",Construction,Jun-23,REG/LSL
+Port William,360,Water System Improvements,OH1435013,250,Clinton,"$316,976.00",Design,Oct-22,REG
+Port William,361,Water System Improvements,OH1435013,250,Clinton,"$4,528,876.00",Construction,May-23,REG
+Portage County,362,Mantua Emergency Water Interconnect,OH6757292,"1,043",Portage,"$1,550,000.00",Construction,Oct-22,SML
+Portage County,363,Village of Mantua Water Distribution Replacement,OH6702212,"1,207",Portage,"$300,000.00",Design,Sep-22,PLN/DES
+Portage County,364,Village of Mantua Water Distribution Replacement,OH6702212,"1,207",Portage,"$7,014,623.00",Construction,May-23,DIS
+Portage County,365,Village of Mantua Water Treatment Plant Liquid Chlorine,OH6702212,"1,207",Portage,"$300,000.00",Construction,May-23,SML
+Portersville East Branch Water Co,366,Water System Improvements - Meter Replacement,OH6402303,"2,340",Perry,"$801,500.00",Construction,May-23,SML
+Portsmouth,367,Water Treatment Plant - HAB,OH7300111,"40,475",Scioto,"$67,000,000.00",Construction,Dec-22,HAB
+Proctorville,368,Lead Service Line Replacement,OH4400912,574,Lawrence,"$150,000.00",Construction,Oct-22,LSL
+Proctorville,369,Water System Improvements,OH4400912,574,Lawrence,"$1,850,560.00",Construction,Oct-22,SML
+Put-in-Bay,370,Elevated Water Storage Tank Rehab Improvements,OH6203311,141,Ottawa,"$25,180.00",Design,Aug-22,PLN/DES
+Put-in-Bay,371,Elevated Water Storage Tank Rehab Improvements,OH6203311,141,Ottawa,"$678,870.00",Construction,Jan-23,SML
+Ripley,372,Filtering Media Replacement,OH0801112,"1,591",Brown,"$440,000.00",Construction,Oct-22,DIS
+Rittman,373,Water Transmission Main Replacement,OH8503012,"6,503",Wayne,"$4,047,375.00",Construction,Aug-22,DIS
+Saint Clairsville,374,I-70 Underpass Water Main,OH0701516,"5,012",Belmont,"$874,635.00",Construction,Aug-22,SML
+Saint Clairsville,375,Water Distribution System Improvements - Phases 1 and 2,OH0701516,"5,184",Belmont,"$1,796,685.00",Construction,Oct-22,REG
+Salem,376,City of Salem Water Treatment Plant Rehabilitation Project,OH1502011,"16,850",Columbiana,"$15,536,745.00",Construction,Sep-22,HAB
+Salem,377,Water Treatment Plant Rehabilitation Project,OH1502011,"16,850",Columbiana,"$1,894,725.00",Design,Sep-22,STD
+Scio,378,Waterline and Household Line Replacement,OH3401312,730,Harrison,"$258,890.00",Construction,Aug-22,LSL
+Scioto Water Inc.,379,2022 Rose Hill Transmission Main Replacement,OH7300303,"6,000",Scioto,"$1,435,000.00",Construction,Sep-22,SML
+Seville,380,Center Street Waterline Replacement,OH5201412,"2,296",Medina,"$1,400,000.00",Construction,Oct-22,SML
+Shiloh,381,W. Main Street Water Line Improvements,OH7004712,619,Richland,"$178,750.00",Design,Aug-22,PLN/DES
+Shiloh,382,"Water Line, Meter, and Tank Dismantling Project",OH7004712,619,Richland,"$2,217,420.00",Construction,Jun-23,SML
+Somerset,383,Water System Improvement & Extensions,OH6401111,"1,490",Perry,"$608,000.00",Design,Sep-22,PLN/DES
+Somerset,384,Water System Improvements & Extensions,OH6401111,"1,490",Perry,"$3,146,000.00",Construction,Mar-23,REG
+South Charleston,385,Water Treatment Systems Upgrades,OH1204212,"1,950",Clark,"$1,950,000.00",Construction,Jun-23,SML
+South Point,386,Water Line Improvements Phase 3,OH4401212,"4,133",Lawrence,"$2,386,700.00",Construction,Sep-22,SML
+South Point,387,Waterline Improvements Phase 3,OH4401212,"4,133",Lawrence,"$433,900.00",Design,Aug-22,PLN/DES
+South Vienna,388,Elevated Water Tower Rehab,OH1253246,527,Clark,"$431,300.00",Construction,Jul-22,SML
+Southern Perry County Water District,389,Oakfield Area Water Line Improvements,OH6401603,"4,029",Perry,"$459,360.00",Construction,Sep-22,DIS
+Spencerville,390,Phase I Waterline Replacement,OH0201312,"2,161",Allen,"$895,304.00",Construction,Jun-23,DIS
+Steubenville,391,2023 Waterline Replacement,OH4102411,"17,753",Jefferson,"$4,300,000.00",Construction,May-23,STD
+Steubenville,392,Maryland Avenue Water Tank Maintenance,OH4102411,"17,753",Jefferson,"$1,710,000.00",Construction,Mar-23,STD
+Steubenville,393,Water Filtration Plant Process and SCADA Improvements,OH4102411,"17,753",Jefferson,"$15,210,000.00",Construction,May-23,STD
+Steubenville,394,West End Water Project,OH4102411,"18,194",Jefferson,"$4,850,609.00",Construction,Aug-22,STD
+Sunday Creek Valley Water,395,St. Rt. 550 WL Repl & Tank Rehab,OH0501503,"5,451",Athens,"$1,307,236.00",Construction,Aug-22,DIS
+Thornville,396,Critical Valve Replacement & Looping Line Project,OH6401212,991,Perry,"$60,839.00",Design,Sep-22,PLN/DES
+Thornville,397,Critical Valve Replacement & Looping Line Project,OH6401212,991,Perry,"$693,589.00",Construction,Aug-22,SML
+Toledo,398,Toledo Lucas County - Frankfort Water Main Looping Project,OH4801411,"20,000",Lucas,"$50,000.00",Design,Jan-23,STD
+Toledo,399,Toledo Lucas County -Crissey Road Water Main Looping Project,OH4801411,"20,000",Lucas,"$40,000.00",Design,Jan-23,STD
+Toledo,400,Toledo Lucas County -Nebraska Ave Water Main Looping Project,OH4801411,"20,000",Lucas,"$35,000.00",Design,Jan-23,STD
+Toronto,401,E. 5th/Myers Street Waterline & Lead Line Replacement,OH4102811,"4,923",Jefferson,"$1,694,047.00",Construction,Jan-23,SML/LSL
+Toronto,402,Walton Acres Phase 1 Waterline Improvements,OH4102811,"4,923",Jefferson,"$1,731,000.00",Construction,Jan-23,SML
+Tri-County Rural Water & Sewer District,403,Phase 6 Waterline Extension,OH8103112,"3,225",Washington,"$3,949,700.00",Construction,Aug-22,DIS/REG
+Trumbull County,404,Braceville/Southington/Farmington Regionalization Project,OH7806503,65,Trumbull,"$1,657,315.00",Construction,Oct-22,DIS/REG
+Trumbull County,405,Elm Road Waterline Improvements,OH7804303,"7,576",Trumbull,"$1,097,337.00",Construction,Oct-22,REG
+Trumbull County,406,Stillwagon Road Waterline Improvements,OH7803203,"8,860",Trumbull,"$501,793.00",Construction,Oct-22,REG
+Tuppers Plains/Chester Water District,407,New Well #7,OH5300612,"16,087",Meigs,"$430,100.00",Construction,Dec-22,STD
+Tuppers Plains/Chester Water District,408,"Success Rd, SR 248, and Bashan Rd Water Line Imp.",OH5300612,"16,087",Meigs,"$8,676,700.00",Construction,Dec-22,STD
+Tuppers Plains/Chester Water District,409,Vanderhoof  Waterline Repl. & Booster Pump Station Upgrade,OH5300612,"14,000",Meigs,"$2,000,000.00",Construction,Feb-23,STD
+Tuppers Plains/Chester Water District,410,"Young, Featherstone, and Blackwood Rd. Water Line Extensions",OH5300612,"16,087",Meigs,"$1,932,500.00",Construction,Dec-22,DIS/REG
+Tuscarawas,411,Cherry Street,OH7901512,"1,056",Tuscarawas,"$20,000.00",Planning,Aug-22,PLN/DES
+Tuscarawas,412,Cherry Street,OH7901512,"1,056",Tuscarawas,"$335,000.00",Design,Sep-22,PLN/DES
+Tuscarawas,413,Cherry Street,OH7901512,"1,056",Tuscarawas,"$1,154,200.00",Construction,Mar-23,SML
+Twin City Water and Sewer District,414,Water Regionalization,OH79001711,"3,373",Tuscarawas,"$20,000.00",Planning,Aug-22,REG
+Twin City Water and Sewer District,415,Water Regionalization,OH7901711,"3,373",Tuscarawas,"$335,000.00",Design,Sep-22,REG
+Twin City Water and Sewer District,416,Water Regionalization,OH7901711,"3,323",Tuscarawas,"$2,030,300.00",Construction,Mar-23,REG
+Utica,417,Riverside Drive Watermain Replacement,OH4503012,"2,260",Licking,"$67,526.00",Design,Sep-22,PLN/DES
+Utica,418,Riverside Drive Watermain Replacement,OH4503012,"2,260",Licking,"$624,312.00",Construction,Sep-22,SML/LSL
+Wadsworth,419,Water Treatment Plant Improvements - Phase 1,OH5201712,"24,356",Medina,"$977,805.00",Construction,Aug-22,STD
+Wakeman,420,Farmer Street and Cooper Street Waterline Improvements,OH3901411,"1,032",Huron,"$249,439.00",Construction,Sep-22,SML
+Walnut Creek Water Company,421,Cherry Ridge Water Line Extension,OH3801512,"1,170",Holmes,"$190,000.00",Design,Jul-22,REG
+Walnut Creek Water Company,422,Cherry Ridge Water Line Extension,OH3801512,"1,170",Holmes,"$3,950,000.00",Construction,Jun-23,REG
+Wapakoneta,423,Industrial Park Water Distribution System Improvements,OH0600712,"9,954",Auglaize,"$11,122,800.00",Construction,Jan-23,STD
+Warren,424,2022 Waterline Replacement Program,OH7803811,"55,500",Trumbull,"$2,424,000.00",Construction,May-23,STD/LSL
+Washingtonville,425,Water Tower Replacement,OH1502812,801,Columbiana,"$1,261,400.00",Construction,Oct-22,SML
+Wellington,426,West Street Improvements,OH4701511,"4,802",Lorain,"$47,830.00",Design,Aug-22,PLN/DES
+Wellington,427,West Street Improvements,OH4701511,"4,802",Lorain,"$348,835.00",Construction,Dec-22,SML
+Wellston,428,2022 Water System Improvements,OH4001912,"7,000",Jackson,"$2,109,840.00",Design,Aug-22,REG
+Wellston,429,2022 Water System Improvements,OH4001912,"7,000",Jackson,"$25,000,000.00",Construction,Jun-23,REG
+West Union,430,North Street Water Line Replacement,OH0100503,"2,616",Adams,"$1,235,000.00",Construction,Sep-22,SML/LSL
+Willard,431,Park Street Water Line Replacement,OH3901511,"9,979",Huron,"$895,295.00",Construction,Oct-22,SML/LSL
+Willard,432,Water System Improvements,OH3901511,"9,979",Huron,"$6,910,000.00",Construction,Dec-22,SML
+Wilmington,433,Raw Water Main Relocation,OH1401211,"12,401",Clinton,"$1,200,000.00",Construction,Jan-23,STD
+Woodville,434,Elevated Water Storage Tank,OH7200912,"2,135",Sandusky,"$1,417,370.00",Construction,Jun-23,SML
+Woodville,435,Elevated Water Storage Tank,OH7200912,"2,135",Sandusky,"$67,055.00",Design,Jul-22,PLN/DES
+Woodville,436,Lime Lagoon Rehabilitation,OH7200912,"2,135",Sandusky,"$416,745.00",Construction,Jun-23,SML
+Woodville,437,Water Line Improvements Phase 3,OH7200912,"2,135",Sandusky,"$80,560.00",Design,Jul-22,PLN/DES
+Woodville,438,Water Line Improvements Phase 3,OH7200912,"2,135",Sandusky,"$557,530.00",Construction,Jan-23,SML/LSL
+Woodville,439,Waterline Improvements Phase 4,OH7200912,"2,135",Sandusky,"$114,990.00",Design,Mar-23,PLN/DES
+Zanesville,440,Pioneer Water Reservoir Replacement,OH6002712,"25,470",Muskingum,"$3,547,300.00",Construction,Sep-22,STD

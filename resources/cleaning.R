@@ -51,6 +51,7 @@ lsli_str <- paste(c(
 lslr_str <- paste(c(
   "lslr",
   "lead service line replacement",
+  "service repl",
   "replac\\w*\\s+(?:\\w+\\s+){0,5}?lead"
 ), 
 collapse = "|")

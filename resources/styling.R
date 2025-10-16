@@ -26,9 +26,10 @@ format_percent <- function(x) {
 ## and the state_name provided at the top of the notebook
 ## and formats the subtitle for a given plot
 get_subtitle_str <- function(sfy_column, state_name) {
+  sfy_column_ordered <- sfy_column[order(sfy_column)]
   # get the first and last two years of the first year in the list
-  first_year <- str_sub(as.character(head(sfy_column, n=1)), -2)
-  last_year <- str_sub(as.character(tail(sfy_column, n=1)), -2)
+  first_year <- str_sub(as.character(head(sfy_column_ordered, n=1)), -2)
+  last_year <- str_sub(as.character(tail(sfy_column_ordered, n=1)), -2)
   
   subtitle_str <- ifelse(first_year == last_year, 
                          paste0(state_name, ", SFY", first_year),
@@ -150,3 +151,20 @@ ef_dac_comp_colors <- c(
 )
 
 ef_dac_hm_colors <- c("#172f60", "#B9D1FF")
+
+sf_colors <- c(
+  "DWSRF Funds" = "#172f60",
+  "State Funds" = "#4ea324"
+)
+
+base_pf_colors<- c(
+  "Allocated DAC PF" = "#526489",
+  "Unallocated DAC PF" = "#528989ff",
+  "Allocated Discretionary PF" = "#172f60",
+  "Unallocated Discretionary PF" ="#176050ff"
+  )
+
+lslr_pf_colors <- c(
+  "Allocated IIJA - LSLR" = "#4ea324",
+  "Unallocated IIJA - LSLR" = "#4ea32487"
+)

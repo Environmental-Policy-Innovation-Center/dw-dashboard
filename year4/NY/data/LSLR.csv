@@ -1,0 +1,109 @@
+Project #,County,System Name/Borrower,Description,Pop.,Project Cost,Score,Cumulative Total,CODES,List
+19994,Rensselaer,TROY (C) / Troy (C),"Lead Service Line Inventory., Upgrade Distribution System","12,750","$3,517,000",70,"$3,517,000",DAC,IIJA LSLR
+19993,Rensselaer,TROY (C) / Troy (C),"Lead Service Line Replacement., Upgrade Distribution System","4,300","$19,580,000",70,"$23,097,000",DAC,IIJA LSLR
+19992,Albany,ALBANY (C) / Albany MWFA,"Lead Service Line Replacement., Upgrade Distribution System","3,300","$14,175,102",70,"$37,272,102",DAC,IIJA LSLR
+19893,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Replacement (Area L)., Upgrade Distribution System","53,316","$13,465,367",40,"$50,737,469",DAC,IIJA LSLR
+19892,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Replacement (Area K)., Upgrade Distribution System","37,906","$8,677,681",40,"$59,415,150",DAC,IIJA LSLR
+19894,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Replacement (Area M)., Upgrade Distribution System","31,867","$9,292,766",40,"$68,707,916",DAC,IIJA LSLR
+19318,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Replacement (Area C)., Upgrade Distribution System","24,872","$5,686,580",40,"$74,394,496",DAC,IIJA LSLR
+19620,Otsego,ONEONTA (C) / Oneonta (C),"Lead Service Line Replacement, Upgrade Distribution System","16,000","$1,445,000",40,"$75,839,496",DAC,IIJA LSLR
+19319,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Replacement (Area D)., Upgrade Distribution System","15,929","$9,780,120",40,"$85,619,616",DAC,IIJA LSLR
+19619,Genesee,BATAVIA (C) / Batavia (C),"Lead Service Line Inventory, Upgrade Distribution System","15,600","$772,500",40,"$86,392,116",DAC,IIJA LSLR
+19321,NY City,NEW YORK CITY / NYCMWFA,"Lead service line replacement (Area F)., Upgrade Distribution System","15,168","$8,365,970",40,"$94,758,086",DAC,IIJA LSLR
+19895,Monroe,ROCHESTER (C) / Rochester (c),"Lead Service Line Replacement, Upgrade Distribution System","13,000","$24,000,000",40,"$118,758,086",DAC,IIJA LSLR
+19906,Broome,JOHNSON CITY (V) / Johnson City (V),"Lead Service Line Inventory., Upgrade Distribution System","9,205","$2,510,000",40,"$121,268,086",DAC,IIJA LSLR
+19917,Dutchess,POUGHKEEPSIE (C) / Poughkeepsie (C),"Lead Service Line Replacement (Zones 5, 6, and 7 Round 1)., Upgrade Distribution System","4,688","$21,091,860",40,"$142,359,946",DAC,IIJA LSLR
+19916,Tompkins,ITHACA (C) / Ithaca (C),"Lead Service Line Replacement., Upgrade Distribution System","4,640","$14,910,000",40,"$157,269,946",DAC,IIJA LSLR
+19919,Dutchess,POUGHKEEPSIE (C) / Poughkeepsie (C),"Lead Service Line Replacement (Zones 8, 9, and 10 Round 1)., Upgrade Distribution System","4,503","$19,699,080",40,"$176,969,026",DAC,IIJA LSLR
+19915,Tompkins,ITHACA (C) / Ithaca (C),"Lead Service Line Inventory., Upgrade Distribution System","4,100","$1,210,000",40,"$178,179,026",DAC,IIJA LSLR
+19991,Oneida,MOHAWK VALLEY WATER AUTH / MVWA,"Lead Service Line Replacement., Upgrade Distribution System","4,048","$11,016,500",40,"$189,195,526",DAC,IIJA LSLR
+19990,Herkimer,LITTLE FALLS (C) / Little Falls (C),"Lead Service Line Replacement., Upgrade Distribution System","3,340","$9,541,000",40,"$198,736,526",DAC,IIJA LSLR
+19903,Ontario,GENEVA (C) / Geneva (C),"Lead Service Line Replacement, Upgrade Distribution System","2,250","$12,459,138",40,"$211,195,664",DAC,IIJA LSLR
+19789,Dutchess,POUGHKEEPSIE (C) / Poughkeepsie (C),"Lead Service Line Replacement (Zone 3, Round 1)., Upgrade Distribution System","2,180","$9,584,438",40,"$220,780,102",DAC,IIJA LSLR
+19909,Broome,JOHNSON CITY (V) / Johnson City (V),"Lead Service Line Replacement., Upgrade Distribution System","1,570","$10,590,000",40,"$231,370,102",DAC,IIJA LSLR
+19791,Dutchess,POUGHKEEPSIE (C) / Poughkeepsie (C),"Lead Service Line Replacement (Zone 4, Round 1)., Upgrade Distribution System","1,567","$8,516,534",40,"$239,886,636",DAC,IIJA LSLR
+19622,Oswego,OSWEGO (C) / Oswego (C),"Lead Service Line Replacement, Upgrade Distribution System","1,461","$6,096,000",40,"$245,982,636",DAC,IIJA LSLR
+19823,Orange,PORT JERVIS WD / Port Jervis (C),"Lead Service Line Replacement., Upgrade Distribution System","1,414","$10,308,852",40,"$256,291,488",DAC,IIJA LSLR
+19899,Niagara,NIAGARA FALLS (C) / Niagara Falls Water Board,"Lead Service Line Replacement, Upgrade Distribution System","1,200","$4,881,623",40,"$261,173,111",DAC,IIJA LSLR
+19930,Cattaraugus,OLEAN (C) / Olean (C),"Lead Serivce Line Inventory, Upgrade Distribution System","1,140","$5,147,157",40,"$266,320,268",DAC,IIJA LSLR
+19605,Orange,NEWBURGH (C) / Newburgh (C),"Lead Service Line Replacement, Upgrade Distribution System",984,"$4,636,400",40,"$270,956,668",DAC,IIJA LSLR
+19409,Erie,BUFFALO WATER BOARD / Buffalo (C),"Lead Service Line Replacement., Upgrade Distribution System",900,"$5,460,000",40,"$276,416,668",DAC,IIJA LSLR
+19464,Lewis,PORT LEYDEN (V) / Port Leyden (V),"Lead service line inventory., Upgrade Distribution System",820,"$301,778",40,"$276,718,446",DAC,IIJA LSLR
+19366,Sullivan,WOODRIDGE (V) / Woodridge (V),"Lead Service Line Inventory, Upgrade Distribution System",747,"$256,470",40,"$276,974,916",DAC,IIJA LSLR
+19628,Orange,PORT JERVIS WD / Port Jervis (C),"Lead Service Line Replacement., Upgrade Distribution System",735,"$10,308,112",40,"$287,283,028",DAC,IIJA LSLR
+19639,Montgomery,ST. JOHNSVILLE (V) / St. Johnsville (V),"Lead service line inventory., Upgrade Distribution System",648,"$340,537",40,"$287,623,565",DAC,IIJA LSLR
+19617,Cattaraugus,FRANKLINVILLE (V) / Franklinville (V),"Lead Service Line Replacement, Upgrade Distribution System",293,"$2,626,000",40,"$290,249,565",DAC,IIJA LSLR
+19607,Albany,WATERVLIET (C) / Watervliet (C),"Lead service line replacement., Upgrade Distribution System",120,"$518,000",40,"$290,767,565",DAC,IIJA LSLR
+19911,Oneida,ROME (C) / Rome (C),"Lead Service Line Replacement., Upgrade Distribution System","32,000","$5,664,000",35,"$296,431,565",DAC,IIJA LSLR
+19472,Oneida,ROME (C) / Rome (C),"Lead service line inventory., Upgrade Distribution System","32,000","$1,566,000",35,"$297,997,565",DAC,IIJA LSLR
+19597,Ulster,KINGSTON (CITY) WATER DEPARTMENT / Kingston (C),"Lead Service Line Inventory., Upgrade Distribution System","24,069","$540,000",35,"$298,537,565",DAC,IIJA LSLR
+19631,Warren,GLENS FALLS (C) / Glens Falls (C),"Lead service line inventory., Upgrade Distribution System","14,784","$533,540",35,"$299,071,105",,IIJA LSLR
+19292,Ontario,CANANDAIGUA (C) / Canandaigua (C),"Lead Service Line Inventory., Upgrade Distribution System","11,000","$869,300",35,"$299,940,405",DAC,IIJA LSLR
+19410,Seneca,SENECA FALLS (T) / Seneca Falls (T),"Lead Service Line Inventory., Upgrade Distribution System","9,000","$1,088,710",35,"$301,029,115",DAC,IIJA LSLR
+19924,Ulster,KINGSTON WATER DISTRICT / Kingston (C),"Lead Service Line Replacement, Upgrade Distribution System","8,410","$30,144,000",35,"$331,173,115",DAC,IIJA LSLR
+19921,Ulster,KINGSTON WATER DEPARTMENT / Kingston (C),"Lead Service Line Inventory., Upgrade Distribution System","6,301","$2,471,000",35,"$333,644,115",DAC,IIJA LSLR
+19861,Erie,(C) BUFFALO / (C) Buffalo,"Lead Service Line Replacement, Upgrade Distribution System","4,400","$16,372,000",35,"$350,016,115",DAC,IIJA LSLR
+19862,Genesee,BATAVIA (C) / (C) Batavia,"Lead Service Line Replecement, Upgrade Distribution System","3,110","$10,744,805",35,"$360,760,920",DAC,IIJA LSLR
+19422,Herkimer,FRANKFORT (V) / Frankfort (V),"Lead service line replacement., Upgrade Distribution System","2,502","$551,050",35,"$361,311,970",DAC,IIJA LSLR
+19446,Herkimer,DOLGEVILLE (V) / Dolgeville (V),"Lead service line inventory., Upgrade Distribution System","2,042","$352,260",35,"$361,664,230",DAC,IIJA LSLR
+19613,Cattaraugus,RANDOLPH (T) / Randolph (T),"Lead Service Line Inventory, Upgrade Distribution System","1,960","$563,000",35,"$362,227,230",,IIJA LSLR
+19281,Niagara,NORTH TONAWANDA (C) / North Tonawanda (C),"Lead service line inventory., Upgrade Distribution System","1,000","$173,100",35,"$362,400,330",DAC,IIJA LSLR
+19877,Lewis,CROGHAN (V) / Croghan (V),"Lead service line inventory., Upgrade Distribution System",900,"$267,800",35,"$362,668,130",DAC,IIJA LSLR
+19931,Cattaraugus,OLEAN (C) / Olean (C),"Lead Service Line Replacement , Upgrade Distribution System",840,"$2,776,782",35,"$365,444,912",DAC,IIJA LSLR
+19632,Warren,GLENS FALLS (C) / Glens Falls (C),"Lead service line replacement., Upgrade Distribution System",42,"$241,500",35,"$365,686,412",,IIJA LSLR
+19367,Westchester,PEEKSKILL (C) / Peekskill (C),"Lead Service Line Inventory, Upgrade Distribution System","24,075","$1,465,690",30,"$367,152,102",DAC,IIJA LSLR
+19641,Schenectady,SCOTIA (V) / Scotia (V),"Lead service line inventory., Upgrade Distribution System","12,800","$61,800",30,"$367,213,902",,IIJA LSLR
+19400,Onondaga,JORDAN (V) / Jordan (V),"Lead Service Line Inventory., Upgrade Distribution System","3,600","$313,200",30,"$367,527,102",,IIJA LSLR
+19421,Essex,LAKE PLACID (V) / Lake Placid (V),"Lead service line inventory., Upgrade Distribution System","2,229","$440,632",30,"$367,967,734",DAC,IIJA LSLR
+19445,Clinton,ROUSES POINT WATER DISTRICT / Rouses Point (V),"Lead service line inventory., Upgrade Distribution System","2,195","$273,980",30,"$368,241,714",DAC,IIJA LSLR
+19461,Jefferson,ADAMS (V) / Adams (V),"Lead service line inventory., Upgrade Distribution System","1,775","$519,120",30,"$368,760,834",DAC,IIJA LSLR
+19808,Greene,COXSACKIE (V) / Coxsackie (V),"Lead Service Line Inventory., Upgrade Distribution System","1,300","$41,450",30,"$368,802,284",,IIJA LSLR
+19637,Steuben,CASTILE (V) / Castile (V),"Lead Service Line Inventory., Upgrade Distribution System","1,135","$315,000",30,"$369,117,284",DAC,IIJA LSLR
+19612,Cattaraugus,YORKSHIRE (T) / Yorkshire (T),"Lead Service Line Inventory, Upgrade Distribution System","1,000","$206,000",30,"$369,323,284",DAC,IIJA LSLR
+19815,Greene,COXSACKIE (V) / Coxsackie (V),"Lead Service Line Replacement., Upgrade Distribution System",210,"$1,294,945",30,"$370,618,229",,IIJA LSLR
+19615,Erie,ERIE COUNTY WA / Erie County Water Authority,"Lead Service Line Replacement, Upgrade Distribution System",117,"$910,000",30,"$371,528,229",,IIJA LSLR
+19397,Monroe,MONROE COUNTY WATER AUTH / Monroe County WA,"Lead Service Line Inventory., Upgrade Distribution System","558,818","$25,390,000",25,"$396,918,229",,IIJA LSLR
+19293,Seneca,WATERLOO (V) / Waterloo (V),"Lead Service Line Inventory., Upgrade Distribution System","4,924","$502,310",25,"$397,420,539",DAC,IIJA LSLR
+19404,Cortland,HOMER (V) / Homer (V),"Lead Service Line Inventory., Upgrade Distribution System","4,000","$1,050,600",25,"$398,471,139",,IIJA LSLR
+19403,Onondaga,ELBRIDGE (V) / Elbridge (V),"Lead Service Line Inventory., Upgrade Distribution System","3,600","$288,144",25,"$398,759,283",DAC,IIJA LSLR
+19401,Onondaga,ELBRIDGE (T) / Elbridge (T),"Lead Service Line Inventory., Upgrade Distribution System","3,600","$442,656",25,"$399,201,939",,IIJA LSLR
+19443,Albany,RAVENA (V) / Ravena (V),"Lead service line inventory., Upgrade Distribution System","3,271","$345,050",25,"$399,546,989",,IIJA LSLR
+19449,Warren,LAKE LUZERNE (T) / Lake Luzerne (T),"Lead service line inventory., Upgrade Distribution System","2,500","$650,342",25,"$400,197,331",DAC,IIJA LSLR
+19593,Westchester,MT. VERNON BOARD OF WATER SUPPLY / Mt. Vernon (C),"Lead Service Line Replacement, Upgrade Distribution System","2,302","$15,620,000",25,"$415,817,331",DAC,IIJA LSLR
+19630,Delaware,FRANKLIN (V) / Franklin (V),"Lead Service Line Inventory., Upgrade Distribution System",342,"$201,465",25,"$416,018,796",,IIJA LSLR
+19602,NY City,NEW YORK CITY / NYCMWFA,"Lead Service Line Inventory., Upgrade Distribution System","215,564","$4,716,862",20,"$420,735,658",DAC,IIJA LSLR
+19336,Westchester,YONKERS (C) / Yonkers (C),"Lead Service Line Inventory., Upgrade Distribution System","211,569","$3,115,750",20,"$423,851,408",DAC,IIJA LSLR
+19286,Oneida,SHERRILL - KENWOOD WD / Sherrill (C),"Lead service line inventory., Upgrade Distribution System","3,500","$25,750",20,"$423,877,158",,IIJA LSLR
+19380,Dutchess,MILLERTON (V) / Millerton (V),"Lead Service Line Inventory, Upgrade Distribution System","2,000","$128,000",20,"$424,005,158",DAC,IIJA LSLR
+19989,Herkimer,FRANKFORT (T) / Frankfort (T),"Lead Service Line Inventory., Upgrade Distribution System","1,493","$403,400",20,"$424,408,558",,IIJA LSLR
+19875,Saratoga,WATERFORD WATER WORKS / Waterford (T),"Lead service line replacement., Upgrade Distribution System",366,"$1,438,456",20,"$425,847,014",,IIJA LSLR
+19374,Nassau,HEMPSTEAD (T) / Hempstead (T),"Lead service line inventory., Upgrade Distribution System","130,000","$741,600",15,"$426,588,614",,IIJA LSLR
+19880,Albany,LATHAM WATER DISTRICT / Colonie (T),"Lead service line inventory., Upgrade Distribution System","85,590","$2,039,679",15,"$428,628,293",,IIJA LSLR
+19359,Nassau,JERICHO WD / Jericho WD,"Lead service line replacement., Upgrade Distribution System","58,000","$9,292,000",15,"$437,920,293",,IIJA LSLR
+19358,Nassau,JERICHO WD / Jericho WD,"Lead service line inventory., Upgrade Distribution System","58,000","$1,372,000",15,"$439,292,293",,IIJA LSLR
+19356,Nassau,FREEPORT (V) / Freeport (V),"Lead service line inventory., Upgrade Distribution System","44,199","$500,000",15,"$439,792,293",,IIJA LSLR
+19388,Westchester,OSSINING WATER DEPARTMENT / Ossining (V),"Lead Service Line Inventory, Upgrade Distribution System","32,000","$134,000",15,"$439,926,293",DAC,IIJA LSLR
+19325,Nassau,PORT WASHINGTON WD / Port Washington WD,"Lead service line inventory., Upgrade Distribution System","30,000","$1,236,000",15,"$441,162,293",,IIJA LSLR
+19329,Orange,NEW WINDSOR CWD / New Windsor (T),"Lead Service Line Inventory, Upgrade Distribution System","29,500","$275,000",15,"$441,437,293",,IIJA LSLR
+19601,Nassau,GLEN COVE (C) / Glen Cove (C),"Lead Service Line Inventory., Upgrade Distribution System","28,000","$309,000",15,"$441,746,293",DAC,IIJA LSLR
+19386,Orange,NEWBURGH CWD / Newburgh (T),"Lead Service Line Inventory, Upgrade Distribution System","23,000","$374,525",15,"$442,120,818",,IIJA LSLR
+19363,Nassau,GARDEN CITY (V) / Garden City (V),"Lead service line inventory., Upgrade Distribution System","22,384","$3,468,100",15,"$445,588,918",,IIJA LSLR
+19375,Nassau,MINEOLA (V) / Mineola (V),"Lead service line inventory., Upgrade Distribution System","20,600","$1,194,000",15,"$446,782,918",,IIJA LSLR
+19322,Nassau,WESTBURY WD / Westbury WD,"Lead service line inventory., Upgrade Distribution System","20,500","$1,186,000",15,"$447,968,918",,IIJA LSLR
+19353,Nassau,ROSLYN WD / Roslyn WD,"Lead service line inventory., Upgrade Distribution System","18,619","$3,811,510",15,"$451,780,428",,IIJA LSLR
+19625,Rockland,SUFFERN (V) / Suffern (V),"Lead Service Line Inventory., Upgrade Distribution System","12,000","$662,545",15,"$452,442,973",,IIJA LSLR
+19324,Nassau,CARLE PLACE WD / Carle Place WD,"Lead service line inventory., Upgrade Distribution System","9,000","$1,145,000",15,"$453,587,973",,IIJA LSLR
+19377,Nassau,WILLISTON PARK (V) / Williston Park (V),"Lead service line replacement., Upgrade Distribution System","7,300","$7,307,070",15,"$460,895,043",,IIJA LSLR
+19376,Nassau,WILLISTON PARK (V) / Williston Park (V),"Lead service line inventory., Upgrade Distribution System","7,300","$1,137,000",15,"$462,032,043",,IIJA LSLR
+19344,Westchester,LARCHMONT (V) / Larchmont (V),"Lead Service Line Inventory, Upgrade Distribution System","6,630","$2,510,728",15,"$464,542,771",,IIJA LSLR
+19427,Franklin,SARANAC LAKE (V) / Saranac Lake (V),"Lead service line inventory., Upgrade Distribution System","5,800","$1,151,160",15,"$465,693,931",DAC,IIJA LSLR
+19355,Nassau,OLD WESTBURY (V) / Old Westbury (V),"Lead service line inventory., Upgrade Distribution System","4,600","$1,122,000",15,"$466,815,931",,IIJA LSLR
+19390,Ulster,PORT EWEN WD / Esopus (T),"Lead Service Line Inventory, Upgrade Distribution System","4,500","$228,000",15,"$467,043,931",,IIJA LSLR
+19348,Tompkins,BOLTON POINT / Cayuga Heights (V),"Lead Service Line Replacement, Upgrade Distribution System","3,600","$540,377",15,"$467,584,308",,IIJA LSLR
+19898,Dutchess,TOWN OF EAST FISHKILL / East Fishkill (T),"Lead Service Line Inventory., Upgrade Distribution System","3,500","$1,706,179",15,"$469,290,487",,IIJA LSLR
+19394,Ulster,NEW PALTZ WD / New Paltz (T),"Lead Service Line Inventory., Upgrade Distribution System","1,775","$90,125",15,"$469,380,612",DAC,IIJA LSLR
+19389,Dutchess,RED HOOK WATER DISTRICT NO. 1 / Red Hook (T),"Lead Service Line Inventory, Upgrade Distribution System","1,600","$178,000",15,"$469,558,612",,IIJA LSLR
+19439,Orange,MONROE (T) / Monroe (T),"Lead Service Line Inventory, Upgrade Distribution System","1,500","$91,250",15,"$469,649,862",,IIJA LSLR
+19434,Columbia,KINDERHOOK (V) / Kinderhook (V),"Lead service line inventory., Upgrade Distribution System","1,100","$192,000",15,"$469,841,862",,IIJA LSLR
+19373,Westchester,OSSINING (V) / Ossining (V),"Lead Service Line Replacement, Upgrade Distribution System",810,"$4,559,650",15,"$474,401,512",DAC,IIJA LSLR
+19381,Orange,FIRTHCLIFFE HEIGHTS WD / Cornwall (T),"Lead Service Line Inventory, Upgrade Distribution System",460,"$59,625",15,"$474,461,137",,IIJA LSLR

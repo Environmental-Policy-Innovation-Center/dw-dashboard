@@ -13,11 +13,11 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 ```
 
@@ -285,15 +285,15 @@ if (nrow(project_counts %>% filter(!is.na(ef_projects))) > 0) {
   efp_p <- ggplot(ef_project_comp, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") +
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
-    labs(title="What proportion of projects expect funding?",
+                      name = "On Fundable List") + 
+    labs(title="What proportion of projects get on the fundable list?",
          subtitle=get_subtitle_str(ef_project_comp$state_fiscal_year, state_name),
          x="State Fiscal Year",
          y="Projects") + 
     epic_chart_theme
   
   efp_gp <- ggplotly(efp_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What proportion of projects expect funding?",
+    layout(title = list(text = paste0("What proportion of projects get on the fundable list?",
                                       '<br>',
                                       get_subtitle_str(ef_project_comp$state_fiscal_year, state_name)
                                       )))
@@ -624,14 +624,14 @@ if(nrow(project_counts %>% filter(!is.na(dac_ef_projects))) > 0 & nrow(project_c
     geom_bar(stat="identity", position="stack") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many DAC projects expect funding?",
+         title="How many DAC projects are on the fundable list?",
          subtitle=get_subtitle_str(ef_dac_comps$state_fiscal_year, state_name)) + 
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
+                      name = "On Fundable List") + 
     epic_chart_theme
   
   ef_dac_gp <- ggplotly(ef_dac_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many DAC projects expect funding?",
+    layout(title = list(text = paste0("How many DAC projects are on the fundable list?",
                                       '<br>',
                                       get_subtitle_str(ef_dac_comps$state_fiscal_year, state_name))))
   
@@ -666,24 +666,24 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
       expecting_funding = factor(expecting_funding, levels=c("No Info", "No", "Yes")),
       pct_str = as.character(round(value/dac_projects,3)*100),
       plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>",
-                        "DAC Expecting Funding: ", expecting_funding, "<br>",
+                        "DAC on Fundable List: ", expecting_funding, "<br>",
                         value, " ", " projects (", pct_str, "%)")
     )
   
   ef_dac_comp_facet_p <- ggplot(ef_dac_comp_facet, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
+                      name = "On Fundable List") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="What proportion of DAC projects expect funding?",
+         title="What proportion of DAC projects are on the fundable list?",
          subtitle=get_subtitle_str(ef_dac_comp_facet$state_fiscal_year, state_name)) +
     epic_chart_theme + 
     facet_wrap(~project_type, strip.position="bottom") + 
     theme(strip.placement = "outside")
   
   ef_dac_comp_facet_gp <- ggplotly(ef_dac_comp_facet_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What proportion of DAC projects expect funding?",
+    layout(title = list(text = paste0("What proportion of DAC projects are on the fundable list?",
                                       ' — ', get_subtitle_str(ef_dac_comp_facet$state_fiscal_year, state_name))))
   
   if (save_plots) {
@@ -722,15 +722,15 @@ if (nrow(project_type_df %>% filter(project_type == "General" & !is.na(dac_proje
   ef_dac_gen_p <- ggplot(ef_dac_gen, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
+                      name = "On Fundable List") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many General DAC projects expect funding?",
+         title="How many General DAC projects are on the fundable list?",
          subtitle=get_subtitle_str(ef_dac_gen$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   ef_dac_gen_gp <- ggplotly(ef_dac_gen_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many General DAC projects expect funding?",
+    layout(title = list(text = paste0("How many General DAC projects are on the fundable list?",
                                       '<br>', get_subtitle_str(ef_dac_gen$state_fiscal_year, state_name))))
   
   if (save_plots) {
@@ -767,15 +767,15 @@ if (nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_projects
   ef_dac_lead_p <- ggplot(ef_dac_lead, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
+                      name = "On Fundable List") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many Lead DAC projects expect funding?",
+         title="How many Lead DAC projects are on the fundable list?",
          subtitle=get_subtitle_str(ef_dac_lead$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   ef_dac_lead_gp <- ggplotly(ef_dac_lead_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many Lead DAC projects expect funding?",
+    layout(title = list(text = paste0("How many Lead DAC projects are on the fundable list?",
                                       '<br>', get_subtitle_str(ef_dac_lead$state_fiscal_year, state_name))))
   
   if (save_plots) {
@@ -812,15 +812,15 @@ if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !i
   ef_dac_ec_p <- ggplot(ef_dac_ec, aes(x=state_fiscal_year, y=value, fill=expecting_funding, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
     scale_fill_manual(values = ef_dac_sc_colors, 
-                      name = "Expecting Funding") + 
+                      name = "On Fundable List") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="How many Emerging Contaminants DAC projects expect funding?",
+         title="How many Emerging Contaminants DAC projects are on the fundable list?",
          subtitle=get_subtitle_str(ef_dac_ec$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   ef_dac_ec_gp <- ggplotly(ef_dac_ec_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many Emerging Contaminants DAC projects expect funding?",
+    layout(title = list(text = paste0("How many Emerging Contaminants DAC projects are on the fundable list?",
                                       '<br>', get_subtitle_str(ef_dac_ec$state_fiscal_year, state_name))))
   
   if (save_plots) {
@@ -912,14 +912,14 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
                       name = "Disadvantaged") + 
     labs(x="State Fiscal Year",
          y="Projects",
-         title="What proportion of projects expecting funding are DACs?",
+         title="What proportion of projects on the fundable list serve DACs?",
          subtitle=get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name)) +
     epic_chart_theme + 
     facet_wrap(~project_type, strip.position="bottom") + 
     theme(strip.placement = "outside")
   
   dac_ef_comp_facet_gp <- ggplotly(dac_ef_comp_facet_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What proportion of projects expecting funding are DACs?",
+    layout(title = list(text = paste0("What proportion of projects on the fundable list serve DACs?",
                                       ' — ', get_subtitle_str(dac_ef_comp_facet$state_fiscal_year, state_name))))
   
   if (save_plots) {
@@ -963,13 +963,13 @@ if(nrow(project_type_df %>% filter(project_type == "General" & !is.na(dac_ef_pro
     labs(x="State Fiscal Year",
          y="",
          fill="Disadvantaged",
-         title="How many General projects expecting funding serve DACs?",
+         title="How many General projects on the fundable list serve DACs?",
          subtitle=get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name)) +
     scale_fill_manual(values=ef_dac_sc_colors) + 
     epic_chart_theme
   
   dac_ef_gen_gp <- ggplotly(dac_ef_gen_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many General projects expecting funding serve DACs?",
+    layout(title = list(text = paste0("How many General projects on the fundable list serve DACs?",
                                       '<br>',
                                       get_subtitle_str(dac_ef_gen$state_fiscal_year, state_name)
                                       )))
@@ -1013,13 +1013,13 @@ if(nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_ef_projec
     labs(x="State Fiscal Year",
          y="",
          fill="Disadvantaged",
-         title="How many Lead projects expecting funding serve DACs?",
+         title="How many Lead projects on the fundable list serve DACs?",
          subtitle=get_subtitle_str(dac_ef_lead$state_fiscal_year, state_name)) +
     scale_fill_manual(values=ef_dac_sc_colors) + 
     epic_chart_theme
   
   dac_ef_lead_gp <- ggplotly(dac_ef_lead_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many Lead projects expecting funding serve DACs?",
+    layout(title = list(text = paste0("How many Lead projects on the fundable list serve DACs?",
                                       '<br>',
                                       get_subtitle_str(dac_ef_lead$state_fiscal_year, state_name)
                                       )))
@@ -1062,13 +1062,13 @@ if(nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is
     labs(x="State Fiscal Year",
          y="",
          fill="Disadvantaged",
-         title="How many Emerging Contaminant projects expecting funding serve DACs?",
+         title="How many Emerging Contaminant projects on the fundable list serve DACs?",
          subtitle=get_subtitle_str(dac_ef_ec$state_fiscal_year, state_name)) +
     scale_fill_manual(values=ef_dac_sc_colors) + 
     epic_chart_theme
   
   dac_ef_ec_gp <- ggplotly(dac_ef_ec_p, tooltip="text") %>%
-    layout(title = list(text = paste0("How many Emerging Contaminant projects expecting funding serve DACs?",
+    layout(title = list(text = paste0("How many Emerging Contaminant projects on the fundable list serve DACs?",
                                       '<br>',
                                       get_subtitle_str(dac_ef_ec$state_fiscal_year, state_name)
                                       )))
@@ -1106,7 +1106,7 @@ dac_ef_hm <- project_counts %>%
       name %in% c("dac_nef_projects", "ndac_nef_projects", "dac_ni_nef_projects") ~ "No",
       TRUE ~ "No Info") 
   ) %>%
-  mutate(plot_str = paste0("DAC: ", dac, ", Expecting Funding: ", expecting_funding, "<br>",
+  mutate(plot_str = paste0("DAC: ", dac, ", On Fundable List: ", expecting_funding, "<br>",
                            value, " projects in ", state_fiscal_year),
          dac = factor(dac, levels=c("Yes", "No", "No Info")),
          expecting_funding = factor(expecting_funding, levels=c("Yes", "No", "No Info"))) %>%
@@ -1116,15 +1116,15 @@ if (sum(dac_ef_hm$value, na.rm=TRUE) > 0) {
   
   dac_ef_hm_p <- ggplot(dac_ef_hm, aes(x=expecting_funding, y=dac, fill=value, text=plot_str)) + 
     geom_tile(color="white") + 
-    labs(title="Projects based on DAC Status and Expecting Funding",
+    labs(title="Projects based on DAC Status and on the fundable list",
          subtitle=get_subtitle_str(dac_ef_hm$state_fiscal_year, state_name),
-         x="Expecting Funding", y="Disadvantaged", fill="Projects") + 
+         x="On Fundable List", y="Disadvantaged", fill="Projects") + 
     scale_fill_gradient(low=ef_dac_hm_colors[1], high=ef_dac_hm_colors[2]) + 
     theme_minimal() + 
     facet_wrap(~state_fiscal_year, ncol=2)
   
   dac_ef_hm_gp <- ggplotly(dac_ef_hm_p, tooltip="text") %>%
-    layout(title = list(text = paste0("Projects by DAC Status and Expecting Funding, ",
+    layout(title = list(text = paste0("Projects by DAC Status and on the fundable list, ",
                                       get_subtitle_str(dac_ef_hm$state_fiscal_year, state_name)
                                       )))
   
@@ -1300,14 +1300,14 @@ tpc_ef_pt_p <- ggplot(pt_project_cost_ef, aes(x=state_fiscal_year, y=total_proje
   scale_y_continuous(labels=label_dollar()) + 
   scale_fill_manual(values = pt_colors, 
                       name = "Project Type") + 
-  labs(title="What are the total project costs of projects expecting funding?",
+  labs(title="What are the total project costs of projects on the fundable list?",
        subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
        x="State Fiscal Year",
        y="Project Cost") + 
   epic_chart_theme
 
 tpc_ef_pt_gp <- ggplotly(tpc_ef_pt_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What are the total project costs of projects expecting funding?",
+  layout(title = list(text = paste0("What are the total project costs of projects on the fundable list?",
                                     '<br>',
                                     get_subtitle_str(project_dollars$state_fiscal_year, state_name)
                                     )))
@@ -1635,7 +1635,7 @@ sc_ef <- sc_dac_ef |>
   dplyr::ungroup() |>
   dplyr::group_by(state_fiscal_year, small_community) |>
   dplyr::summarise(total_projects = sum(n)) |>
-  dplyr::mutate(text = paste0("Small Community: ", small_community, "<br>", "Projects in Fundable List: ", total_projects))
+  dplyr::mutate(text = paste0("Small Community: ", small_community, "<br>", "Projects on Fundable List: ", total_projects))
 
 sc_dac_ef_sub <- sc_dac_ef |> dplyr::filter(disadvantaged =="Yes" & small_community =="Yes")
 
@@ -1854,12 +1854,12 @@ if (sum(lead_project_cost_ef$value, na.rm=TRUE) > 0) {
                       name = "") + 
     labs(x="State Fiscal Year",
          y="",
-         title="What's the project cost for lead service line projects expecting funding?",
+         title="What's the project cost for lead service line projects on the fundable list?",
          subtitle=get_subtitle_str(lead_project_cost_ef$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   lead_pc_ef_gp <- ggplotly(lead_pc_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the project cost for lead service line projects expecting funding?",
+    layout(title = list(text = paste0("What's the project cost for lead service line projects on the fundable list?",
                                       '<br>',
                                       get_subtitle_str(lead_project_cost_ef$state_fiscal_year, state_name))))
   
@@ -1952,12 +1952,12 @@ if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
                       name = "") + 
     labs(x="State Fiscal Year",
          y="",
-         title="What's the project funding amount for lead service line projects expecting funding?",
+         title="What's the project funding amount for lead service line projects on the fundable list?",
          subtitle=get_subtitle_str(lead_total_funding_amount_ef$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   lead_fa_ef_gp <- ggplotly(lead_fa_ef_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the project funding amount for lead service line projects expecting funding?",
+    layout(title = list(text = paste0("What's the project funding amount for lead service line projects on the fundable list?",
                                       '<br>',
                                       get_subtitle_str(lead_total_funding_amount_ef$state_fiscal_year, state_name))))
   
@@ -2022,12 +2022,13 @@ dac_pc <- project_dollars |>
       ggplot2::scale_fill_manual(
         values = ef_dac_sc_colors ,
         name = "") +
+      ggplot2::scale_x_discrete(drop = FALSE) +
       epic_chart_theme
 
     dac_pc_gp <- ggplotly(dac_pc_p, tooltip="plot_str") %>%
     layout(title = list(text = paste0("What's the project cost for DAC projects?",
                                       '<br>',
-                                      get_subtitle_str(dac_pc$state_fiscal_year, state_name))))
+                                      get_subtitle_str(levels(dac_pc$state_fiscal_year), state_name))))
 
     if (save_plots) {
     run_save_plots(gg_plot = dac_pc_p,

@@ -9,11 +9,11 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 ```
 
@@ -176,10 +176,10 @@ compare_requested_amount_all <- year_table %>%
     select(state, state_fiscal_year, total_demand, total_funding_available, total_funding_amount) %>%
     pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) %>%
     mutate(name=case_when(
-      name == "total_funding_available" ~ "Total Available",
-      name == "total_funding_amount" ~ "Expected Funding",
-      name == "total_demand" ~ "Total Demand"),
-      name = factor(name, levels=c("Expected Funding", "Total Available", "Total Demand")),
+      name == "total_funding_available" ~ "Available Funds",
+      name == "total_funding_amount" ~ "On Fundable List",
+      name == "total_demand" ~ "Demand for Funds"),
+      name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
 
 
@@ -189,16 +189,20 @@ if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {
   comp_dem_avail_fund_p <- ggplot(compare_demand_available_funding, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
     geom_bar(stat="identity", position="dodge") + 
     scale_y_continuous(labels=label_currency()) + 
-    scale_fill_manual(values = comp_colors, 
-                      name = "") + 
+    ggplot2::scale_fill_manual(values = 
+    c(
+      "Available Funds" = "#4ea324",
+      "Demand for Funds" = "#172f60",
+      "On Fundable List" = "#791a7b"
+    ), name = "") + 
     labs(x="", y="", 
-         title="Comparing Demand to Available Funds and Expected Funding", 
+         title="Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List", 
          subtitle=get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)) + 
     epic_chart_theme + 
     theme(legend.position="bottom")
   
   comp_dem_avail_fund_gp <- ggplotly(comp_dem_avail_fund_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Comparing Demand to Available Funds and Expected Funding',
+    layout(title = list(text = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List',
                                       '<br>',
                                       get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)))
            )
@@ -243,31 +247,43 @@ comp_dem_avail_fund_type <- project_type_df |>
   tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) |>
   dplyr::mutate(
       name = dplyr::case_when(
-      name == "total_funding_available" ~ "Total Available",
-      name == "total_funding_amount" ~ "Expected Funding",
-      name == "total_demand" ~ "Total Demand"),
-      name = factor(name, levels=c("Expected Funding", "Total Available", "Total Demand")),
+      name == "total_funding_available" ~ "Available Funds",
+      name == "total_funding_amount" ~ "On Fundable List",
+      name == "total_demand" ~ "Demand for Funds"),
+      name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),
       project_type = factor(project_type, levels = c("General", "Lead", "Emerging Contaminants")),
       plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value)))
 
 for (type in levels(comp_dem_avail_fund_type$project_type)){
 
-  comp_dem_avail_fund_type_p<- comp_dem_avail_fund_type |>
+filtered_data <- comp_dem_avail_fund_type |>
+    dplyr::filter(project_type == type)
+  
+  # Skip if no data for this type
+  if(nrow(filtered_data) == 0) {
+    next
+  }
+
+  comp_dem_avail_fund_type_p<- filtered_data |>
     dplyr::filter(project_type == type) |>
     ggplot2::ggplot(ggplot2::aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
     ggplot2::geom_bar(stat="identity", position="dodge") + 
     ggplot2::scale_y_continuous(labels=label_currency()) + 
     ggplot2::scale_x_discrete(drop = FALSE) +
-    ggplot2::scale_fill_manual(values = comp_colors, 
-                      name = "") + 
+    ggplot2::scale_fill_manual(values = 
+    c(
+      "Available Funds" = "#4ea324",
+      "Demand for Funds" = "#172f60",
+      "On Fundable List" = "#791a7b"
+    ), name = "") + 
     labs(x="", y="", 
-         title= paste0("Comparing Demand to Available Funds and Expected Funding: ",type ), 
+         title= paste0("Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ",type ), 
          subtitle=get_subtitle_str(comp_dem_avail_fund_type$state_fiscal_year, state_name)) + 
     epic_chart_theme + 
     theme(legend.position="bottom")
 
   comp_dem_avail_fund_type_gp <- plotly::ggplotly(comp_dem_avail_fund_type_p, tooltip="text") |>
-    plotly::layout(title = list(text = paste0('Comparing Demand to Available Funds and Expected Funding: ', type,
+    plotly::layout(title = list(text = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ', type,
                                       '<br>',
                                       get_subtitle_str(comp_dem_avail_fund_type$state_fiscal_year, state_name)))
            )

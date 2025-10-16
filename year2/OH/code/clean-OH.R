@@ -6,9 +6,6 @@ clean_oh_y2 <- function() {
   # where borrower/descriptions/pwsid/funding amount can all vary slightly, an "epic_project_id" was manually created by
   # comparing and validating projects to join projects to the comprehensive table
   
-  # ohio EC string from data dictionary 
-  oh_ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule|DBP|disinfection byproducts|HAA5|haloacetic acid"
-
   # Comprehensive Project List
   oh_fundable <- fread(file.path(base_path, "oh-comprehensive-ppl.csv"),
                    colClasses = "character", na.strings = "") %>%
@@ -80,7 +77,7 @@ clean_oh_y2 <- function() {
     mutate(rate = paste0(rate.x, rate.y)) %>% 
     # left_join(oh_dac_ppl, by="epic_project_id") %>%
     # left_join(oh_reg_ppl, by="epic_project_id") %>%
-    mutate(project_type = case_when(grepl(oh_ec_str, project_description) | grepl("HAB|PFAS|EC", rate) ~ "Emerging Contaminants",
+    mutate(project_type = case_when(grepl(ec_str, project_description, ignore.case=TRUE) | grepl("HAB|PFAS|EC", rate) ~ "Emerging Contaminants",
                                     grepl("lead|LSL", rate) ~ "Lead",
                                     TRUE ~ "General")) %>% 
     select(-c(rate.x, rate.y, rate))
@@ -169,6 +166,17 @@ clean_oh_y2 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+    ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  ####### Decision: No project id
+  
+  # Check for disinfection byproduct in description
+  oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision: No disinfection byproduct string
+    
+  ####### SANITY CHECKS END #######
+
   # Run validation tests
   run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))

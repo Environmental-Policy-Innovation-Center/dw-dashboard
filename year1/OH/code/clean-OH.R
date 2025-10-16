@@ -4,9 +4,6 @@ clean_oh_y1 <- function() {
   # where borrower/descriptions/pwsid/funding amount can all vary slightly, an "epic_project_id" was manually created by
   # comparing and validating projects to join projects to the comprehensive table
   
-  # ohio EC string from data dictionary 
-  oh_ec_str <- "cyanotoxin|dioxane|emerging contaminant|lithium|manganese|Mn|Perfluoro-n-pentanoic acid|PFPeA|PFAS|PFOA|PFOS|trihalomethanes|THM|Unregulated Contaminant Monitoring Rule|DBP|disinfection byproducts|HAA5|haloacetic acid"
-  
   ## Base fundable list 
   oh_fundable <- fread("year1/OH/data/oh-ppl-base-id.csv",
                    colClasses = "character", na.strings = "") %>%
@@ -40,7 +37,7 @@ clean_oh_y1 <- function() {
     mutate(rate = paste0(rate.x, rate.y), 
            project_type = case_when(grepl("LSL", rate) ~ "Lead", 
                                     grepl("HAB|PFAS", rate) ~ "Emerging Contaminants", 
-                                    grepl(oh_ec_str, project) ~ "Emerging Contaminants", 
+                                    grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
                                     # this project gets incorrectly categorized in the string match 
                                     project == "Watermain Imps Bun. 1 - Grange Hall Booster Station Wtr Mns" ~ "General", 
                                     TRUE ~ "General")) 
@@ -110,6 +107,17 @@ clean_oh_y1 <- function() {
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, requested_amount,
            funding_amount, principal_forgiveness, population, project_description, disadvantaged, project_rank,
            project_score, expecting_funding, state, state_fiscal_year)
+
+    ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  ####### Decision: No project id
+  
+  # Check for disinfection byproduct in description
+  oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision: No disinfection byproduct string
+    
+  ####### SANITY CHECKS END #######
 
   run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))

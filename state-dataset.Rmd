@@ -116,6 +116,7 @@ project_counts <- all_projects %>%
 small_community_df <- all_projects %>%
   mutate(small_community = case_when(
     population == "No Information" ~ "No Information",
+    is.na(population) ~ "No Information", 
     convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 ~ "Yes",
     TRUE ~ "No"
   )) %>%

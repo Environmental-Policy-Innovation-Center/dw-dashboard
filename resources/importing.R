@@ -40,6 +40,7 @@ get_financial <- function(state_name) {
            leveraged_funds = convert_to_numeric(leveraged_funds),
            funds_reserved_leveraging = convert_to_numeric(funds_reserved_leveraging),
            total_funding_available = convert_to_numeric(total_funding_available),
+           total_funding_available_state_funds = convert_to_numeric(total_funding_available_state_funds),
            gpr_cost = convert_to_numeric(gpr_cost))
   
   return(financial)

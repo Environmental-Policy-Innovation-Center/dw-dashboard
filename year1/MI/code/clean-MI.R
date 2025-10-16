@@ -68,6 +68,18 @@ clean_mi_y1 <- function() {
     
   ####### SANITY CHECKS END #######
   
+
+  mi_clean <- mi_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_id == "7704-01" ~ "WM and LSLR looping",
+        .default = project_description
+      )
+    )
+  
+  mi_clean |>
+    dplyr::filter(project_id == "7704-01")
+  
   run_tests(mi_clean)
   rm(list=setdiff(ls(), "mi_clean"))
   

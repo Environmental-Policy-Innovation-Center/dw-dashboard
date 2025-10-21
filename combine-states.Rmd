@@ -43,7 +43,7 @@ states <- c(
   "MS",
   #"NJ", 
   "NY", 
-  #"OH", 
+  "OH", 
   #"PA",
   "TN", 
   "TX"

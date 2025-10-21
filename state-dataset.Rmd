@@ -99,16 +99,75 @@ project_counts <- all_projects %>%
             # no info dacs x expecting funding outcomes
             dac_ni_ef_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="Yes"),0),
             dac_ni_nef_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No"),0),
-            dac_ni_ef_ni_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No Information"),0),
-            
-            lsli_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), lsli_str), 0)),
-            lslr_projects = replace_na(sum(project_type=="Lead" & str_detect(tolower(project_description), lslr_str), 0)),
-            
-            lsli_ef_projects = replace_na(sum(project_type=="Lead" & expecting_funding=="Yes" & 
-                                                str_detect(tolower(project_description), lsli_str), 0)),
-            lslr_ef_projects = replace_na(sum(project_type=="Lead" & expecting_funding=="Yes" & 
-                                                str_detect(tolower(project_description), lslr_str), 0))
+            dac_ni_ef_ni_projects = replace_na(sum(disadvantaged=="No Information" & expecting_funding=="No Information"),0)
   )
+
+# subset to Lead projects to identify inventory and replacement projects
+# 2025-07-11: added survey to lead_type designation for lsli
+# see: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752240945744229?thread_ts=1752092342.154789&cid=C08LXGF02AE
+lsl_projects <- all_projects |>
+  dplyr::filter(project_type=="Lead") |>
+  dplyr::mutate(
+    state_fiscal_year = as.character(state_fiscal_year),
+    lead_type = dplyr::case_when(
+    stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+    stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+    stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+   # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+   stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+   stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+    TRUE ~ "unknown"
+  )) |>
+    # lead sub type exceptions (after inspection of project description classified as "both" lead types) 
+    dplyr::left_join(
+      tibble::tibble(
+        borrower = c("Mart", "Alice", "Dog Ridge WSC", "Texarkana", "Bandera", "Varner Creek UD", "New Orleans - Carrolton Water Works (Loan 3)", "Goliad", "Brazoria", "Alice", "Cumby", "Hempstead"),
+        project_id = c("No Information", "No Information", "No Information", "No Information", "No Information", "No Information", "1071009-03-LSLR", "16050", "16081", "16057", "16082", "16083"),
+        pwsid = c("TX1550005", "TX1250001", "TX0140044", "TX0190004", "TX0100012", "TX0200070", "LA1071009", "TX0880001", "TX0200003", "TX1250001", "TX1120001", "TX2370001"),
+        project_type = c("Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead"),
+        project_score = c("48.49", "42.34", "40.42", "16.43", "15.91", "13.32", "12", "62.99", "58.17", "46.20", "29.29", "25.26"),
+        state = c("Texas", "Texas", "Texas", "Texas", "Texas", "Texas", "Louisiana", "Texas", "Texas", "Texas", "Texas", "Texas"),
+        state_fiscal_year = c("2023", "2023", "2023", "2023", "2023", "2023", "2025", "2025", "2025", "2025", "2025", "2025"),
+        lead_type_new = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
+        ) 
+    ) |>
+    dplyr::mutate(lead_type = if_else(lead_type == "both" & !is.na(lead_type_new), 
+                              lead_type_new, 
+                              lead_type)) |>
+    dplyr::select(-lead_type_new)
+
+
+lead_type_count_summary <- lsl_projects |>
+  dplyr::group_by(state, state_fiscal_year, lead_type) |>
+  dplyr::summarise(
+    lslb_projects = sum(lead_type == "both"),
+    lsli_projects = sum(lead_type == "lsli"),
+    lslr_projects = sum(lead_type == "lslr"),
+    lslu_projects = sum(lead_type == "unknown"),
+
+    lslb_ef_projects = sum(lead_type == "both" & expecting_funding=="Yes"),
+    lsli_ef_projects = sum(lead_type == "lsli" & expecting_funding=="Yes"),
+    lslr_ef_projects = sum(lead_type == "lslr" & expecting_funding=="Yes"),
+    lslu_ef_projects = sum(lead_type == "unknown" & expecting_funding=="Yes")
+    ) |>
+  dplyr::mutate(dplyr::across(dplyr::everything(), ~tidyr::replace_na(., 0))) |>
+  dplyr::select(-lead_type) |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  dplyr::summarise(
+    lslb_projects = sum(lslb_projects),
+    lsli_projects = sum(lsli_projects),
+    lslr_projects = sum(lslr_projects),
+    lslu_projects = sum(lslu_projects),
+
+    lslb_ef_projects = sum(lslb_ef_projects),
+    lsli_ef_projects = sum(lsli_ef_projects),
+    lslr_ef_projects = sum(lslr_ef_projects),
+    lslu_ef_projects = sum(lslu_ef_projects)
+  )
+
+
+project_counts <- project_counts |>
+  dplyr::left_join(lead_type_count_summary |> dplyr::mutate(state_fiscal_year = as.numeric(state_fiscal_year)))
 ```
 
 ### Small Community
@@ -295,19 +354,6 @@ pc_by_ef_type <- all_projects %>%
   rename(total_project_cost_ef = total_project_cost)
 
 
-# subset to Lead projects to identify inventory and replacement projects
-# 2025-07-11: added survey to lead_type designation for lsli
-# see: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752240945744229?thread_ts=1752092342.154789&cid=C08LXGF02AE
-lsl_projects <- all_projects %>%
-  filter(project_type=="Lead") %>%
-  mutate(lead_type = case_when(
-   str_detect(tolower(project_description), lsli_str) ~ "lsli",
-   str_detect(tolower(project_description), lslr_str) ~ "lslr",
-   # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-   str_detect(tolower(project_description), "replacement") & str_detect(tolower(project_description), lead_str) ~ "lslr",
-   str_detect(tolower(project_description), "inventory") & str_detect(tolower(project_description), lead_str) ~ "lsli",
-    TRUE ~ "other"
-  ))
 
 # group by lsl project type for project cost calculations
 pc_by_lsl <- lsl_projects %>%
@@ -315,9 +361,11 @@ pc_by_lsl <- lsl_projects %>%
   group_by(state, state_fiscal_year, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  rename(project_cost_lslr = lslr,
+  rename(
+        project_cost_lslb = both,
+        project_cost_lslr = lslr,
          project_cost_lsli = lsli,
-         project_cost_lslu = other)
+         project_cost_lslu = unknown)
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
@@ -326,9 +374,11 @@ pc_by_lsl_ef <- lsl_projects %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>% 
   filter(expecting_funding == "Yes") %>%
   pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  rename(project_cost_ef_lslr = lslr,
+  rename(
+    project_cost_ef_lslb = both, 
+    project_cost_ef_lslr = lslr,
          project_cost_ef_lsli = lsli,
-         project_cost_ef_lslu = other) %>%
+         project_cost_ef_lslu = unknown) %>%
   ungroup() %>%
   select(-expecting_funding)
 
@@ -387,22 +437,28 @@ fa_by_lsl <- lsl_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
   dplyr::group_by(state, state_fiscal_year, lead_type) |>
   dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
-  tidyr::pivot_wider(names_from="lead_type", values_from="total_funding_amount") |>
-  dplyr::rename(funding_amount_lslr = lslr,
-         funding_amount_lsli = lsli,
-         funding_amount_lslu = other) |>
-  dplyr::select(state, state_fiscal_year, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu)
+  tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
+  dplyr::mutate(
+    funding_amount_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
+    funding_amount_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
+    funding_amount_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
+    funding_amount_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
+  ) |>
+  dplyr::select(state, state_fiscal_year, funding_amount_lslb, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu)
 
 fa_by_lsl_ef <-  lsl_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
   dplyr::group_by(state, state_fiscal_year, expecting_funding, lead_type) |>
   dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
   dplyr::filter(expecting_funding == "Yes") |>
-  tidyr::pivot_wider(names_from="lead_type", values_from="total_funding_amount") |>
-  dplyr::rename(funding_amount_ef_lslr = lslr,
-         funding_amount_ef_lsli = lsli,
-         funding_amount_ef_lslu = other) |>
-  dplyr::select(state, state_fiscal_year, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)
+  tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
+  dplyr::mutate(
+    funding_amount_ef_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
+    funding_amount_ef_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
+    funding_amount_ef_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
+    funding_amount_ef_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
+  ) |>
+  dplyr::select(state, state_fiscal_year, funding_amount_ef_lslb, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)
 
 fa_by_sc <- sc_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>

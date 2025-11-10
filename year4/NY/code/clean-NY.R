@@ -14,6 +14,8 @@ clean_ny_y4 <- function() {
       ),
       expecting_funding = dplyr::case_when(
         cumulative_total <= 1885161283 ~ "Yes", #expanded subsidized interest rate funding line
+        # if one of the BEC/BLSLR/BGS codes are present, expecting_funding
+        !is.na(codes) & !(codes %in% c("FMP", "EQ")) ~ "Yes",
         .default = "No"
       ),
       description = stringr::str_squish(description)
@@ -51,7 +53,7 @@ clean_ny_y4 <- function() {
   ny_annual <- ny_annual |>
     dplyr::mutate(
       project_type = dplyr::case_when(
-        !is.na(project_type) & project_type !="General" ~ project_type,
+        !is.na(project_type) ~ project_type,
         grepl(lead_str, description, ignore.case=TRUE)  ~ "Lead",
         grepl(ec_str, description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General")
@@ -101,7 +103,7 @@ clean_ny_y4 <- function() {
       project_id = str_squish(project_number),
       project_name = as.character(NA),
       project_type = project_type, #already processed
-      project_cost = project_cost, #drop project cost =0 downstream
+      project_cost = clean_numeric_string(project_cost), #drop project cost =0 downstream
       requested_amount = as.character(NA),
       funding_amount = as.character(NA),
       principal_forgiveness = as.character(NA), #SFY26 additional subsidies procided as grants, not PF
@@ -123,10 +125,7 @@ clean_ny_y4 <- function() {
         project_score == "H" ~ "No Information",
         .default = project_score
       ),
-      expecting_funding = dplyr::case_when(
-        !is.na(expecting_funding) ~ expecting_funding,
-        .default = "No"
-      ),
+      expecting_funding = expecting_funding, #already processed
       state_fiscal_year = "2026",
       state = "New York"
     )

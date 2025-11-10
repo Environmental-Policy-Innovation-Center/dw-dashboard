@@ -54,8 +54,8 @@ clean_ny_y2 <- function() {
   ny_lead_on_annual <- ny_lead_combined %>%
     filter(on_annual == TRUE) %>% 
     select(project_number, project_type, dac, list, expecting_funding, funding_amount, principal_forgiveness)
-  # for projects only on Lead PPL, keep all columns
   
+  # for projects only on Lead PPL, keep all columns
   ny_lead_other <- ny_lead_combined %>%
     filter(on_annual == FALSE) %>%
     # if they are not already Yes for expecting funding, fill for No

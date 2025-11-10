@@ -47,8 +47,8 @@ clean_ny_y0 <- function() {
       project_id = stringr::str_squish(project_number),
       project_name = as.character(NA),
       project_type = dplyr::case_when(
-        grepl(lead_str, description) ~ "Lead",
-        grepl(ec_str, description) ~ "Emerging Contaminants",
+        grepl(lead_str, description, ignore.case = TRUE) ~ "Lead",
+        grepl(ec_str, description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
       project_cost = clean_numeric_string(project_cost)

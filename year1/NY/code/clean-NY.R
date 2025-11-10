@@ -43,9 +43,6 @@ clean_ny_y1 <- function() {
     select(project_number, county, system_name, borrower, description, population, project_cost,
            score, project_type, disadvantaged, funding_amount, principal_forgiveness, expecting_funding)
   
-  
-  
-
 ## Lead PPL
   ny_lslr <- fread("year1/NY/data/32-NewYork_lead.csv",
                    colClass="character", na.strings="") %>%

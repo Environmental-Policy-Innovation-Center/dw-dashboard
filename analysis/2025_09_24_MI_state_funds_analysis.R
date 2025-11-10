@@ -19,12 +19,12 @@ mi_y3_raw <-  data.table::fread("year3/MI/data/MI-FY2025-DWSRF-Final-IUP.csv",
   janitor::clean_names() |>
     dplyr::mutate(state_fiscal_year = "2025")
 
-mi_y4_raw <- data.table::fread("year4/MI/data/MI-FY26-DWSRF-DRAFT-IUP-PPL.csv",
+mi_y4_raw <- data.table::fread("year4/MI/data/Final-SFY26 Comprehensive PPL.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
   dplyr::mutate(state_fiscal_year = "2026")
 
-mi_y4_raw_lead <- data.table::fread("year4/MI/data/MI-FY26-DWSRF-DRAFT-IUP-Lead-PPL.csv",
+mi_y4_raw_lead <- data.table::fread("year4/MI/data/Final-SFY26 LSLR PPL.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
   dplyr::mutate(
@@ -90,7 +90,6 @@ mi_general_funds_lead <- mi_raw_full_gen  |>
   dplyr::filter(project_type == "Lead") |>
   dplyr::select(
     -project_type,
-   # -project_name,
     -project_description
   ) |>
   dplyr::mutate(
@@ -176,6 +175,7 @@ mi_raw_full_lead <- dplyr::bind_rows(
     bil_lslr_pf_allocation,
     bil_dwsrf_lslr_loan, 
     bil_dwsrf_lslr_pf,    
+    lead_infrastructure_grant,
     state_fiscal_year,
     project_type,
     emerging_contaminant_ec_cost,
@@ -223,8 +223,11 @@ mi_lead_funds_lead <- mi_raw_full_lead  |>
     lead_specific_funds = sum(
       bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023","2024", "2025")) +
       bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023","2024", "2025")) +
-      bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
-      bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,
+      lead  
+      # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
+      # bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,  
+      # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
+      # bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,
       na.rm = TRUE
     )
   )

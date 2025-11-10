@@ -1,7 +1,7 @@
-clean_ar_y0 <- function() {
+clean_ar_y2 <- function() {
   
   #comprehensive ppl
-  ar_ppl <- data.table::fread("year0/AR/data/ar-fy22-dwsrf-ppl.csv",
+  ar_ppl <- data.table::fread("year2/AR/data/Comprehensive.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
@@ -25,7 +25,7 @@ clean_ar_y0 <- function() {
            population, disadvantaged, project_score)
   
   # Fundable list
-  ar_c3 <- data.table::fread("year0/AR/data/ar-fy22-dwsrf-iup-chart3.csv",
+  ar_c3 <- data.table::fread("year2/AR/data/Chart3.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
@@ -54,7 +54,7 @@ clean_ar_y0 <- function() {
       project_cost = as.character(sum(as.numeric(project_cost)),.groups = "drop"))
   
   # DAC/PF Fundable List
-  ar_c4 <- data.table::fread("year0/AR/data/ar-fy22-dwsrf-iup-chart4.csv",
+  ar_c4 <- data.table::fread("year2/AR/data/Chart4.csv",
                  colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
@@ -101,7 +101,7 @@ clean_ar_y0 <- function() {
       pwsid = replace_na(pwsid, "No Information"),
         project_rank = as.character(NA),
       state = "Arkansas",
-      state_fiscal_year = "2022"
+      state_fiscal_year = "2024"
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type,
            project_cost, requested_amount, funding_amount, principal_forgiveness,

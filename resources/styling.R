@@ -106,7 +106,7 @@ pf_colors <- c("DAC PF"="#526489",
                "IIJA - LSLR_FFY22"="#6bc842",
                "IIJA - LSLR_FFY23"="#3d7f1c",
                "IIJA Gen Supp"="#1054a8",
-               "Remaining Loans" = "lightgrey")
+               "Remaining Base Grants" = "lightgrey")
 
 # Project YOY Colors
 pt_colors <- c("General"="#526489",
@@ -117,9 +117,11 @@ ef_dac_sc_colors <- c("No"="#526489",
                       "Yes"="#82AB6E",
                       "No Info"="lightgrey")
 
-lead_colors <- c("Inventory"="#B077B2",
-                 "Replacement"="#82AB6E",
-                 "Other"="#526489")
+lead_colors <- c(
+  "Both" = "#999190",
+  "Inventory"="#B077B2",
+  "Replacement"="#82AB6E",
+  "Unknown"="#526489")
 
 # Combined Colors
 comp_colors <- c("Total Available"="#4ea324",

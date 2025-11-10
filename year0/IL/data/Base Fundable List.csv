@@ -1,0 +1,93 @@
+Loan Applicant,L17#,Project Description             ,Facility No.,"Estimated Construction
+Start","Projected
+Loan Amount","Disadvantaged Community
+Principal
+Forgiveness","Service
+Population","Loan Priority
+Score"
+Assumption,5867,Treatment plant and watermain upgrades.,IL0210050,2021-07-15 0:00:00,4006000,"$400,000",1228,435
+Carrollton,4008,Replace treatmetn plant and booster pump station improvements.,IL0610D50,2021-09-01 0:00:00,3570000,"$400,000",2398,405
+Morrison,3474,"New watermains, meters and meter read system. {Phase 2)",IL19503S0,2022-03-01 0:00:00,1419000,"$400,000",3988,400
+Galena,5811,"Demolish water tower & pump station, install watermaln",ll0850200,2021-09-06 0:00:00,1283000,"$400,000",6006,370
+Mason City,4309,Construct new well No. 8.,IL1250350,2022-03-01 0:00:00,500000,"$250,000",2119,370
+North Chicago,5812,"New transmission main, replace watermalns.",IL0971250,2021-12-01 0:00:00,7100000,"$400,000",16667,355
+Milledgeville,5662,Replace and loop watermain.,IL0150150,2022-03-04 0:00:00,289000,"$144,500",966,345
+Loda,5928,"New ground water storage tank, treatment plant improvements.",IL0750550,2021-10-01 0:00:00,1064853,"$400,000",398,340
+Mt. Carmel,5779,Update and replace treatment plant. (Phase 1),IL1850200,2021-10-15 0:00:00,9040000,"$400,000",6537,340
+Tolono,5880,"Replace watermalns, hydrants and valves and looping.",IL0191000,2022-01-15 0:00:00,1453000,NIE,3449,330
+Cissna Park,5784,"New watermain, hydrants and water services and abandon existing main.",IL0750200,2022-02-14 0:00:00,460000,"$230,000",800,320
+Cullom,5780,Replace water tower.,IL1050200,2022-02-14 0:00:00,1150000,"$400,000",550,315
+Cullom,5877,Replace filtration system and install water meters.,!L1050200,2022-02-14 0:00:00,1150000,N/E,550,315
+Lima,5738,Install a meter interconnect and water mains.,1L0010400,2022-03-01 0:00:00,360000,"$180,000",148,315
+Sibley,2037,Upgrades to treatment plant and distribution system.,JL0530400,2021-06-15 0:00:00,612000,"$306,000",272,315
+Dawson,5817,"New water treatment plant, new pumps at well site, raw water line.",IL1670400,2021-10-30 0:00:00,4240000,"$400,000",2340,310
+Potomac,5901,Replace water meters and meter system.,IL18306S0,2021-09-30 0:00:00,250000,"$125,000",690,310
+Forreston,5892,Install water meters and meter software.,!L1410200,2021-08-02 0:00:00,450000,"$225,000",1446,305
+Marshall,3484,New well and well building. (Phase 1),!L0230100,2021-09-01 0:00:00,665000,"$332,500",7786,305
+Mount Carroll,5616,"Replace and loop watermain, replace service lines. {Phase 1)",!L0150200,2021-08-16 0:00:00,1164000,"$400,000",1571,305
+Gibson City,5712,New elevated water tower.,ll0530100,2021-08-01 0:00:00,3230000,"$400,000",3185,300
+Macon,5736,"Replace meters, watermains, new well, chlorine building and aerator.",IL1150250,2021-09-01 0:00:00,1838571,"$400,000",1112,300
+Evanston,5106,Transmission main rehab.,IL0310810,2021-10-01 0:00:00,9948923,NIE,73473,300
+Beecher,5879,Replace water meters.,IL1970050,2021-07-15 0:00:00,500000,"$250,000",4460,295
+Carmi,5832,Install two pressure reducing stations and replace undersized watermains.,IL1930100,2021-01-15 0:00:00,1500000,"$400,000",4811,295
+LaSalle,3779,Paint water tower.,!L0990300,2021-07-19 0:00:00,996000,"$400,000",9120,295
+Pingree Grove,4601,New treatment plant and well.,!L0890160,2022-03-01 0:00:00,6891000,"$400,000",8107,290
+Blue Mound,5761,"Water tower rehab, replace filters and watermalns. {Phase 2)",!L1150100,2022-03-01 0:00:00,1370100,"$400,000",1072,285
+Dolton,5270,Replace meters and meter read system.,ll0310690,2021-09-08 0:00:00,2000000,"$400,000",22348,285
+Pleasant Plains,3225,Replace elevated water tower.,IL1670900,2021-10-30 0:00:00,1390000,NIE,800,285
+Prophetstown,3559,Construct new well and treatment plant to reduce Iron and manganese.,ll1950400,2021-10-15 0:00:00,4107000,"$400,000",2080,280
+Chicago,5652,Watermain replacement for District 1-6,ll0316000,2021-10-02 0:00:00,87500000,NIE,2693976,275
+Elizabeth,5787,Well No. 1 and well house Improvements. (Phase 2),!L0850150,2022-03-31 0:00:00,385000,"$192,500",761,275
+Lee,3252,"Replace water storage tank, watermains and well.",!L1034600,2021-09-01 0:00:00,1284000,"$400,000",319,275
+Cobden,5845,Watermain replacement.,IL1810150,2021-10-15 0:00:00,957000,"$400,000",1309,270
+Rock Falls,5718,Watermain replacement. (Phase 1),IL19504SO,2022-03-01 0:00:00,931000,"$400,000",8740,255
+Manlius,5773,Install watermains.,IL0110600,2022-03-01 0:00:00,647000,"$323,500",334,250
+South Chicago Heights,5741,SCADA system upgrade.,IL0312940,2021-07-09 0:00:00,282373,"$141,187",4139,250
+Rushville,5778,"Replace ground storage tank, rehab pump station and water tower.",!L1690200,2021-09-01 0:00:00,2120000,"$400,000",2847,240
+Crestwood,552S,Waterma!n replacement and looping.,ll0310600,2021-10-01 0:00:00,5293180,400000,10706,235
+Downs,5234,"Upgrade treatment plant, and new well.",IL1130500,2021-08-15 0:00:00,3574000,NIE,1005,235
+Forsyth,5864,New we!! and raw watermain.,IL1150200,2021-08-01 0:00:00,964000,NIE,3479,235
+Stillman Valley,5640,Watermain and water service line replacement. (Phase 2),IL1410550,2022-03-01 0:00:00,719000,"$359,500",1200,230
+Vandalia,4177,New water treatment plant and system improvements.,!L0510350,2022-03-01 0:00:00,21099000,400000,8925,230
+Dixon,5647,Rehab watermains with cured-in-place lining system. (Phase 2),!L1030200,2022-03-01 0:00:00,2464000,"$400,000",15733,215
+Oak Lawn,5083,Construct transmission watermain.,!L0312220,2022-02-07 0:00:00,55300000,NIE,330971,205
+Oak Lawn,5085,Connect watermaln.,ll0312220,2022-03-01 0:00:00,32200000,NIE,330971,205
+Oak Lawn,5395,Construct transmission watermaln.,IL0312220,2021-12-06 0:00:00,0,NIE,330971,205
+St. Charles,5775,"Interconnect Well No. 7 and Well No. 13, replace well pump and filters.",IL0894830,2021-02-01 0:00:00,8500000,NIE,32974,205
+East Dubuque,4205,Replace water tower.,IL0850100,2021-08-13 0:00:00,2700000,"$400,000",1569,200
+Bluffs,5782,"Demolish/replace ground storagte tank, SCADA & high service pumps",!L1710100,2021-09-17 0:00:00,1300000,"$400,000",659,195
+Donovan,5803,"Treatment plant upgrades, rehab water tower, mains, meters.",IL0750400,2022-02-14 0:00:00,1460000,"$400,000",306,195
+CouJtervilJe,3205,New scree of finished water and replacing meters and meter software.,IL1570150,2021-07-15 0:00:00,1500000,"$400,000",900,185
+Broadview,5637,Replace watermains and service connections.,IL0310300,2021-08-01 0:00:00,6000000,"$400,000",7618,180
+Dixmoor,5975,Water meter replacement. (Phase 1),IL0310660,2021-10-15 0:00:00,576000,"$288,000",3563,180
+Broughton,5818,Watermain rephicement. (Phase 2),!L0650100,2021-11-01 0:00:00,650000,"$325,000",250,170
+Anna,4689,"Rehab water tank, replace watermain, hydrants & install master meter.",!L1810050,2021-11-01 0:00:00,800000,"$400,000",4100,165
+Shabbona,4172,New WTP with filters to remove arsenic. Watermain replacement,JL0370450,2021-09-01 0:00:00,1296900,"$400,000",900,165
+Bloomington,5685,Replacing and looping watermains. (Phase 3),ll1130200,2022-03-01 0:00:00,900000,N/E,77330,150
+Gallat!n White Water District,5805,New water meter system,IL0595100,2022-03-01 0:00:00,220128,"$110,064",3429,150
+Pana,4318,"New Powdered Activated Carbon building, feed and storage system.",IL0210500,2021-04-01 0:00:00,983000,"$400,000",5376,150
+Ivesdale,5883,"Replace watermains, hydrants and valves. (Phase 1)",ll0194560,2021-09-15 0:00:00,800000,"$400,000",2867,145
+Milford,5804,"New watermain, hydrants, valves, abandon raw watermain",ll0750650,2022-02-14 0:00:00,850000,"$400,000",1306,140
+Galatia,5765,"Replace water mains, valves and hydrants. (Phase 2)",IL1650150,2021-12-01 0:00:00,1500000,"$400,000",6006,135
+Palos Park,5228,Replace watermains.,ll0311000,2022-01-01 0:00:00,2290000,N/E,4736,135
+Ladd,5751,Replace watermains.,ll0110450,2021-11-22 0:00:00,1125195,"$400,000",1195,135
+New Lenox,5907,Replace watermains and hydrants.,ll1970700,2022-03-01 0:00:00,1410000,N/E,26926,130
+Addison,5897,"New meters, software and meter network.",ll0430050,2021-03-01 0:00:00,4900000,N/E,36482,125
+Belle Rive,5679,Install meters and meter read system.,IL0810050,2021-12-01 0:00:00,629000,"$314,500",2125,125
+Butler,5992,Water system rehab. (Phase 2),ll1350050,2021-11-01 0:00:00,625000,"$312,500",180,125
+Harristown,5990,"toop watermains, repair existing storage tank.",IL1150210,2021-10-01 0:00:00,1001000,"$127,699",761,125
+Moultrie County Rural PWD,5999,Replace watermains. (Phase lb),ll1395150,2021-08-02 0:00:00,922000,Funding Exhausted,2699,125
+Park Forest,5814,Replace water storage tank.,ll0314740,2021-10-05 0:00:00,3080000,Funding Exhausted,21210,125
+Park Forest,5067,"Replace watermain, hydrants, valves and water services",IL0314740,2022-03-14 0:00:00,1920000,N/E･,21210,125
+Prospect Water District,5724,Replace water meters and watermain.,JL1655110,2021-12-01 0:00:00,602350,Funding Exhausted,1084,125
+Schram City,5802,Watermain replacement. (Phase 2),IL1350600,2021-11-01 0:00:00,800000,Funding Exhausted,586,125
+West Frankfort,5675,New water meters and meter read system. (Phase 1),ll0550700,2021-12-01 0:00:00,1100000,Funding Exhausted,10485,125
+Chester,3507,Treatment plant renovations with lime silo. (Phase 1),IL1570100,2021-07-01 0:00:00,2673000,Funding Exhausted,8702,120
+Elkville,5286,Repair and repaint interior and exterior of water tank.,ll0770300,2021-11-07 0:00:00,307500,Funding Exhausted,1164,120
+Heyworth,4221,Replace watermains and upgrade treatment plant.,!L1130650,2021-08-01 0:00:00,2400000,N/E,244,120
+St. Anne,5785,Watermain replacement and looplng.,!L0910700,2022-02-14 0:00:00,1525000,Funding Exhausted,1209,120
+Hardin County WO #1,5704,Watermaln replacement. (Phase 2),!l0695000,2021-11-05 0:00:00,815000,Funding Exhausted,4527,115
+Taylor Springs,5788,Watermain replacement. (Phase 2},!L1350650,2021-12-01 0:00:00,800000,Funding Exhausted,690,115
+Westfield,5781,New meter read system.,!l0230200,2021-08-03 0:00:00,162828,Funding Exhausted,558,115
+Atkinson,4401,Meter replacement and update meter software and network. (Phase 1),!L0730200,2021-08-02 0:00:00,305000,Funding Exhausted,972,110
+Enfield,5841,"Replace water meters, meter system and watermalns.",IL1930200,2021-11-01 0:00:00,975000,Funding Exhausted,552,110

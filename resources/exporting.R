@@ -73,6 +73,9 @@ save_to_aws <- function(gp_object, name, object_url) {
 
 get_gs_urls <- function() {
   ## Create simple dataframe of states and the pre-generated spreadsheets to store AWS links for easy access
+  ## spreadsheets are located in the corresponding state folder here: https://drive.google.com/drive/u/0/folders/1zVFPuJGHTyapqb3v0hsMkZXcTx5-uIww
+  ## if a state does not yet exist, create folder, and save a new spreadsheet as `{state_abb} Data Viz`. 
+  ## The spreadsheet must contain a tab titled `Overview` with the following column headers: Name	Link	Updated
   gs_urls <- data.frame(state=c(""), url=c("")) %>%
     add_row(state="TX", url="https://docs.google.com/spreadsheets/d/1rlw0zeu1hmw2rNO1d1lJEihvVM3raUs7C_wfnGy4Jd4") %>%
     add_row(state="AL", url="https://docs.google.com/spreadsheets/d/1PZO5UfGZ_FHhDKnyVVtu6G_E2HJEegVmw7FGIuWQHNk") %>%
@@ -84,7 +87,8 @@ get_gs_urls <- function() {
     add_row(state="PA", url="https://docs.google.com/spreadsheets/d/1-MrH5VRuPABvovqz9fHBGufc-Zz2vpEqZcrPgQyNQzI") %>%
     add_row(state="TN", url="https://docs.google.com/spreadsheets/d/1mCDIMe41m4vJDnekpigRfB_sEvN74Z646J5a4VTvKKU") %>%
     add_row(state="LA", url="https://docs.google.com/spreadsheets/d/17jeMqu1AznH8ns52A5ZbdYQou39u7PLCC_s2DS5i44c") |>
-    add_row(state="MS", url="https://docs.google.com/spreadsheets/d/1ajQLY_iwzIUW4vVV6JQKrayWml2fYSn0BBnB4As9Dzk")
+    add_row(state="MS", url="https://docs.google.com/spreadsheets/d/1ajQLY_iwzIUW4vVV6JQKrayWml2fYSn0BBnB4As9Dzk") |>
+    add_row(state="AR", url="https://docs.google.com/spreadsheets/d/1bL_CQwlZAmGLqdNix0YZBe6xQ034ijyyIR486MZGD8s")
   
   return(gs_urls)
 }

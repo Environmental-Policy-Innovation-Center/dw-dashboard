@@ -18,8 +18,8 @@ clean_al_y4 <- function() {
       project_id = as.character(project_number),
       project_name = str_squish(attachment_project_name),
       project_type = case_when(
-        grepl(lead_str, attachment_description) ~ "Lead",
-        grepl(ec_str, attachment_description) ~ "Emerging Contaminants",
+        grepl(lead_str, attachment_description, ignore.case = TRUE) ~ "Lead",
+        grepl(ec_str, attachment_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
       project_cost = as.character(NA),

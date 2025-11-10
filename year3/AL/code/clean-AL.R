@@ -34,8 +34,8 @@ clean_al_y3 <- function() {
       project_type = dplyr::case_when(
         source_file == "LSL" ~ "Lead",
         source_file == "EC" ~ "Emerging Contaminants",
-        grepl(lead_str, attachment_project_description) ~ "Lead",
-        grepl(ec_str, attachment_project_description) ~ "Emerging Contaminants",
+        grepl(lead_str, attachment_project_description, ignore.case = TRUE) ~ "Lead",
+        grepl(ec_str, attachment_project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       )
     )|>

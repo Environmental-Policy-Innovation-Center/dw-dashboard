@@ -116,6 +116,8 @@ dfs <- sapply(.GlobalEnv, is.data.frame)
 # for each TRUE, add the dataframe rows to a single data.frame
 combined_clean <- do.call(bind_rows, mget(names(dfs)[dfs]))
 
+combined_clean <- dplyr::arrange(combined_clean, state, state_fiscal_year)
+
 ```
 
 ```{r}

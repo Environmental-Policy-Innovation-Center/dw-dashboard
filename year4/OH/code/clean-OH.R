@@ -61,13 +61,19 @@ clean_oh_y4 <- function() {
                                     TRUE ~ project_type.x), 
            # project scores don't overlap, so just combining columns here
            project_score = case_when(!is.na(project_score.y) ~ project_score.y, 
-                                    TRUE ~ project_score.x),
+                                     TRUE ~ project_score.x),
            # pf cols don't overlap, so just combining columns here
            principal_forgiveness = case_when(!is.na(dac_pf) ~ dac_pf, 
                                              !is.na(ec_pf) ~ ec_pf, 
                                              TRUE ~ NA)) %>%
     select(-c(project_type.y, project_type.x, dac_pf, ec_pf, project_score.x, 
-              project_score.y))
+              project_score.y)) %>%
+    # fixing the expecting funding columns based on the presence of "Bypass" 
+    # or "*" in the PF columns 
+    # TODO - figure out how this affects the funding amount column, asked Q at 
+    # 2pm Nov 10th and awaiting consensus from FT team
+    mutate(expecting_funding = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No", 
+                                         TRUE ~ expecting_funding))
   
   # lead list: 
   oh_lead <- fread(file.path(base_path, "oh_lead_ppl.csv")) %>%

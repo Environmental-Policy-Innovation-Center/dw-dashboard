@@ -1,0 +1,76 @@
+"Single Audit
+ Required","Equivalency
+ Project","Categorical
+ Green or
+ Business Case
+ Green",Loan #,epic_merge_id,Project Name,"Total
+ Assistance
+ Amount",Loan,"Principal
+ Forgiveness",Green,"Small
+ System","PPL
+ Rank
+ (DEP)",Disadvantage EJ Area,List
+yes,"Equivalency
+ Project","Energy
+ Efficiency",82402,15, Somerset Borough Municipal Authority,"19,203,530","14,595,231","5,404,769","100,000",yes,,,base_fundable
+,"Non-
+ Equivalency",,82236,47,Linesville Borough,"775,994",-,"775,994",,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",Water Efficiency,82233,10,Knox Township Municipal Authority,"3,320,997","483,372","2,837,625","313,575",yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,82230,4,"Southwest Warren County Municipal Authority (Split funding
+ offer)","1,008,000","731,400","276,600",,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85196,8,Ligonier Township Municipal Authority,"5,525,000","5,525,000",-,,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85211,26,Hollidaysburg Borough Authority,"2,920,487","1,395,900","1,524,587",,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85218,49,Roaring Spring Municipal Authority,"3,050,000","1,186,450","1,863,550",,yes,,,iija_gen_supp_fundable
+,Equivalency,Water Efficiency,82238,34,Redbank Valley Municipal Authority,"830,800","56,369","774,431","536,100",yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85219,51,Knox Borough,"2,018,855","785,335","1,233,520",,yes,,,iija_gen_supp_fundable
+,"non-
+ Equivalency",,85217,48,Linesville Borough,"917,253","356,812","560,441",,yes,,,iija_gen_supp_fundable
+,Equivalency,Water Efficiency,82237,32,Alexandria Borough Water Authority,"9,450,000","4,419,285","5,030,715","175,000",yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85209,30,Brookville Municipal Authority,"1,950,000","758,550","1,191,450",,yes,,,iija_gen_supp_fundable
+,Equivalency,,80201,40,"1
+ City of Philadelphia","355,602","40,355,602",-,,no,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85204,3,The Borough of Hooversville,"4,636,000",-,"4,636,000",,yes,,,iija_gen_supp_fundable
+,"non-
+ Equivalency",,85201,2,Borough of Glen Campbell,"1,111,000","187,384","923,616",,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,pend,21,"Hazleton City Authority 2022 Operational Upgrade Part ""B""","3,500,000",-,"3,500,000",,no,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,pend,?,"Haines-Aaronsburg Municipal Authority Water System
+ 2
+ Improvement Project","648,100","5,153,491","746,509",,yes,,,iija_gen_supp_fundable
+,"Non-
+ Equivalency",,85202,46,Freedom Township Water and Sewer Authority,"1,750,282","477,850","1,272,432",,yes,,,iija_gen_supp_fundable
+yes,Equivalency Project,,pending,7,PFAs Susquehanna Area Reg. Airport Authority - Water Treatment Plant and Well Upgrades,"6,708,809",,"6,708,809",,Yes,,No,ec_fundable
+yes,Equivalency Project,,pending,61,PA Water Company - Frackville Division,"5,443,351",,"12,000,000",,No,,Yes,ec_fundable
+yes,Equivalency Project,,pending,59,Saegertown Borough,"3,900,000",,"3,900,000",,Yes,,No,ec_fundable
+,Non Equival,,85198,44,Coraopolis Water and Sewer Authority,"1,117,000",-,"1,117,000",No,Yes,,,lead_fundable
+,Non Equival,,82234,27 or 52,Ford City Borough,"1,343,000",-,"1,343,000",No,Yes,,,lead_fundable
+,Non Equival,,85197,37,Bellwood Borough Authority,"1,569,904",-,"1,569,904",No,Yes,,,lead_fundable
+,Non Equival,,85199,39,Towanda Municipal Authority,"2,234,500",-,"2,234,500",No,Yes,,,lead_fundable
+,Non Equival,,85200,50,Hastings Municipal Authority,"2,054,884",-,"2,054,884",No,Yes,,,lead_fundable
+,Non Equival,,82235,36,Erie City Water Authority,"6,500,000",-,"6,500,000",No,No,,,lead_fundable
+,Non Equival,,82232,22,Bradford City Water Authority,"8,520,000",-,"8,520,000",No,Yes,,,lead_fundable
+,Non Equival,,82231,35,The Municipal Authority of the Borough of Greenville,"3,816,220",-,"3,816,220",No,Yes,,,lead_fundable
+,Non Equival,,85205,5,1Pittsburgh Water and Sewer Authority,"4,706,512","1,830,833","618,784",No,No,,,lead_fundable
+,Non Equival,,85206,18,The Municipal Authority of the Borough of Edgeworth,"645,000","250,905","394,095",No,Yes,,,lead_fundable
+,Non Equival,,85203,1,Municipal Water Authority of Aliquippa,"3,129,000","1,217,181","1,911,819",No,Yes,,,lead_fundable
+,Non Equival,,85214,41,Bedford Borough Municipal Authority,"1,203,642","563,077","640,565",No,Yes,,,lead_fundable
+,Non Equival,,85215,38,Bellwood Borough Authority,"1,157,062","450,097","706,965",No,Yes,,,lead_fundable
+,Non Equival,,85208,23,Ebensburg Municipal Authority,"2,771,375","1,505,765","1,265,610",No,Yes,,,lead_fundable
+,Non Equival,,85210,28,Hastings Municipal Authority,"676,240","263,057","413,183",No,Yes,,,lead_fundable
+,Non Equival,,85212,25,Nanty Glo Water Authority,"2,242,000","872,138","1,369,862",No,Yes,,,lead_fundable
+,Non Equival,,85207,29,Rimersburg Borough Municipal Authority,"999,985","388,994","610,991",No,Yes,,,lead_fundable
+,Non Equival,,85216,42,Pottstown Borough Authority,"6,072,000","2,362,008","3,709,992",No,No,,,lead_fundable
+,Non Equival,,85213,33,The Municipal Authority of the Borough of Minersville,"2,745,100","1,067,844","1,677,256",No,Yes,,,lead_fundable
+,Non Equival,,85220,53,Youngsville Borough,"534,000","411,800","122,200",No,Yes,,,lead_fundable
+,Non Equival,,85221,14,"Curryville Water Authority Interconnection and Water Tank
+ Rehabilitation","2,389,000","210,790","2,178,210",No,Yes,,,lead_fundable
+,Equivalency,,pend,58, Erie City Water Authority,"3,807,816","7,000,000.00",0,No,No,,,lead_fundable

@@ -56,7 +56,7 @@ clean_pa_y0 <- function() {
               dep_project_ranking, funding_source))
   
   
-  # bringing the final peices togehter:
+  # bringing the final bits together:
   pa_clean <- merge(pa_comp, pa_fund, by.x = "borrower", 
                     by.y = "project_name", all = T) %>%
     mutate(project_id = clean_numeric_string(loan_number), 

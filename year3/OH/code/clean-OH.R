@@ -29,21 +29,25 @@ clean_oh_y3 <- function() {
     clean_names() %>%
     # removing numeric strings from estimated pf for the clean_numeric_string
     # function later
-    mutate(dac_pf = ifelse(estimated_principal_forgiveness %in% c("Bypass 1", "Bypass 2"), "Bypass", estimated_principal_forgiveness), 
+    mutate(dac_pf = ifelse(estimated_principal_forgiveness %in% 
+                             c("Bypass 1", "Bypass 2"), 
+                           "Bypass", estimated_principal_forgiveness), 
            # these are all disadvantaged 
            disadvantaged = "Yes") %>% 
     select(epic_project_id, disadvantaged, project_score, rate, 
            dac_pf)
-
+  
   # Regionalization Principal Forgiveness List
   oh_reg <- fread(file.path(base_path, "oh-ppl-regional-pf.csv"),
-                     colClasses = "character", na.strings = "") %>%
+                  colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     # NOTE - there was one project "Phillipsburg - Drinking Water PFAS Remediation"
     # that didn't have a project ID but ends up on the ec_extra list, so it's safe
     # to filter here
     filter(!is.na(epic_project_id)) %>%
-    mutate(reg_pf = ifelse(estimated_principal_forgiveness %in% c("Bypass 1", "Bypass 2"), "Bypass", estimated_principal_forgiveness)) %>%
+    mutate(reg_pf = ifelse(estimated_principal_forgiveness %in% 
+                             c("Bypass 1", "Bypass 2"), "
+                           Bypass", estimated_principal_forgiveness)) %>%
     select(epic_project_id, reg_pf, project_score, rate)
   
   # discount list - NOTE - this table is not really mentioned in the DD (except
@@ -70,8 +74,8 @@ clean_oh_y3 <- function() {
   # merging these together for project types:
   oh_main <- merge(oh_fundable, oh_dac_reg, by = "epic_project_id", all = T) %>%
     mutate(rate = paste0(rate.x, rate.y),
-           project_type = case_when(grepl("LSL", rate) ~ "Lead", 
-                                    grepl("HAB|EC|PFAS", rate) ~ "Emerging Contaminants", 
+           project_type = case_when(grepl("LSL", rate, ignore.case = T) ~ "Lead", 
+                                    grepl("HAB|EC|PFAS", rate, ignore.case = T) ~ "Emerging Contaminants", 
                                     grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
                                     TRUE ~ "General")) %>%
     # trim extra columns
@@ -84,7 +88,8 @@ clean_oh_y3 <- function() {
     # these are all not on the fundable list but will be added later
     filter(grepl("$", estimated_ec_amount)) %>%
     mutate(project_type = "Emerging Contaminants",
-           ec_pf = ifelse(est_ec_principal_forgiveness %in% c("Bypass 1", "Bypass 2"), "Bypass", est_ec_principal_forgiveness),
+           ec_pf = ifelse(est_ec_principal_forgiveness %in% 
+                            c("Bypass 1", "Bypass 2"), "Bypass", est_ec_principal_forgiveness),
            project_score = str_squish(score_total_points)) %>%
     select(epic_project_id, ec_pf, project_score, project_type)
 
@@ -104,7 +109,8 @@ clean_oh_y3 <- function() {
            disadvantaged = "No",
            expecting_funding = "No",
            funding_amount = "No Information",
-           principal_forgiveness = clean_numeric_string(est_ec_principal_forgiveness),
+           # principal_forgiveness = clean_numeric_string(est_ec_principal_forgiveness),
+           principal_forgiveness = "No Information",
            population = "No Information") %>%
     select(borrower, project_description, pwsid, community_served,
            project_score, project_type, disadvantaged,requested_amount,
@@ -144,6 +150,15 @@ clean_oh_y3 <- function() {
   
   # Add extra EC projects and final cleanup
   oh_clean <- bind_rows(oh_comp, oh_ec_extra) %>%
+    # fixing the expecting funding columns based on the presence of "Bypass" 
+    # or "*" in the PF columns 
+    # link to thread where we decided this: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1762974431302769?thread_ts=1759336213.263239&cid=C08LXGF02AE
+    mutate(expecting_funding = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No", 
+                                         TRUE ~ expecting_funding), 
+           funding_amount = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                      TRUE ~ funding_amount),
+           principal_forgiveness = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                             TRUE ~ principal_forgiveness)) %>%
     mutate(state = "Ohio",
            state_fiscal_year = "2025",
            # cleaning numeric strings: 

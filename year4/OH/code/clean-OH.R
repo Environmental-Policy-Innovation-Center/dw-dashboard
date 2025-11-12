@@ -32,12 +32,12 @@ clean_oh_y4 <- function() {
   #   clean_names()
   
   # merging fundable and dac lists: 
-  oh_fund_dac <- merge(oh_fundable, oh_dac, by = "epic_project_id", all = T) %>%
+  oh_fund_dac <- merge(oh_fundable, oh_dac, by = "epic_project_id", all = TRUE) %>%
     # pasting the rates together for string matching
     mutate(rate = paste0(rate.x, rate.y), 
            # string matching based on rate or project 
-           project_type = case_when(grepl("LSL", rate) ~ "Lead",
-                                    grepl("HAB|PFAS|EC", rate) ~ "Emerging Contaminants", 
+           project_type = case_when(grepl("LSL", rate, ignore.case = TRUE) ~ "Lead",
+                                    grepl("HAB|PFAS|EC", rate, ignore.case = TRUE) ~ "Emerging Contaminants", 
                                     grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
                                     TRUE ~ "General")) %>%
     select(-c("rate.x", "rate.y"))
@@ -70,10 +70,13 @@ clean_oh_y4 <- function() {
               project_score.y)) %>%
     # fixing the expecting funding columns based on the presence of "Bypass" 
     # or "*" in the PF columns 
-    # TODO - figure out how this affects the funding amount column, asked Q at 
-    # 2pm Nov 10th and awaiting consensus from FT team
+    # link to thread where we decided this: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1762974431302769?thread_ts=1759336213.263239&cid=C08LXGF02AE
     mutate(expecting_funding = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No", 
-                                         TRUE ~ expecting_funding))
+                                         TRUE ~ expecting_funding), 
+           funding_amount = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                             TRUE ~ estimated_loan_amount),
+           principal_forgiveness = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                             TRUE ~ principal_forgiveness))
   
   # lead list: 
   oh_lead <- fread(file.path(base_path, "oh_lead_ppl.csv")) %>%
@@ -90,8 +93,8 @@ clean_oh_y4 <- function() {
            # process numeric cols:
            population = clean_numeric_string(sdwis_population), 
            project_score = clean_numeric_string(project_score), 
-           funding_amount = clean_numeric_string(estimated_loan_amount), 
-           requested_amount = funding_amount, 
+           funding_amount = clean_numeric_string(funding_amount), 
+           requested_amount =  clean_numeric_string(estimated_loan_amount), 
            principal_forgiveness = clean_numeric_string(principal_forgiveness),
            # process character cols: 
            pwsid = pws_id, 
@@ -109,7 +112,7 @@ clean_oh_y4 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
-    ####### SANITY CHECKS START #######
+  ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
   ####### Decision: No project id

@@ -45,12 +45,14 @@ clean_oh_y2 <- function() {
     mutate(project_type = "General", 
            expecting_funding = "No", 
            disadvantaged = "Yes", 
-           community_served = str_squish(county)) %>%
-    rename(principal_forgiveness = estimated_principal_forgiveness, 
-           borrower = entity, 
+           community_served = str_squish(county), 
+           principal_forgiveness = "No Information", 
+           funding_amount = "No Information") %>%
+    # rename(principal_forgiveness = estimated_principal_forgiveness, 
+    # funding_amount = estimated_loan_amount) %>%
+    rename(borrower = entity, 
            project_description = project, 
-           pwsid = pws_id, 
-           funding_amount = estimated_loan_amount) %>%
+           pwsid = pws_id) %>%
     select(-c(loan_type, estimated_award_date, readiness_to_proceed, 
               district_office, county, rate))
   
@@ -59,7 +61,6 @@ clean_oh_y2 <- function() {
   oh_reg_ppl <- fread(file.path(base_path, "oh-ppl-regional-pf.csv"),
                      colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    # rename(reg_pf = estimated_principal_forgiveness) %>%
     mutate(reg_pf = ifelse(estimated_principal_forgiveness == "BYPASS 1", "BYPASS", estimated_principal_forgiveness), 
            project_score = str_squish(project_score)) %>%
     select(epic_project_id, reg_pf, project_score, rate)
@@ -75,10 +76,8 @@ clean_oh_y2 <- function() {
   # combining fundable, dac, and regionalization ppls:
   oh_comp <- merge(oh_fundable, oh_dac_reg, by ="epic_project_id", all = T) %>%
     mutate(rate = paste0(rate.x, rate.y)) %>% 
-    # left_join(oh_dac_ppl, by="epic_project_id") %>%
-    # left_join(oh_reg_ppl, by="epic_project_id") %>%
-    mutate(project_type = case_when(grepl(ec_str, project_description, ignore.case=TRUE) | grepl("HAB|PFAS|EC", rate) ~ "Emerging Contaminants",
-                                    grepl("lead|LSL", rate) ~ "Lead",
+    mutate(project_type = case_when(grepl(ec_str, project_description, ignore.case=TRUE) | grepl("HAB|PFAS|EC", rate, ignore.case = T) ~ "Emerging Contaminants",
+                                    grepl("lead|LSL", rate, ignore.case = T) ~ "Lead",
                                     TRUE ~ "General")) %>% 
     select(-c(rate.x, rate.y, rate))
   
@@ -147,6 +146,15 @@ clean_oh_y2 <- function() {
   
   # add extra EC rows back in and finish cleaning up columns
   oh_clean <- bind_rows(oh_comp_almostclean, oh_ec_extra) %>%
+    # fixing the expecting funding columns based on the presence of "Bypass" 
+    # or "*" in the PF columns 
+    # link to thread where we decided this: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1762974431302769?thread_ts=1759336213.263239&cid=C08LXGF02AE
+    mutate(expecting_funding = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No", 
+                                         TRUE ~ expecting_funding), 
+           funding_amount = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                      TRUE ~ funding_amount),
+           principal_forgiveness = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+                                             TRUE ~ principal_forgiveness)) %>%
     mutate(state = "Ohio",
            state_fiscal_year = "2024",
            project_id = as.character(NA),

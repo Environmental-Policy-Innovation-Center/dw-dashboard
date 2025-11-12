@@ -35,8 +35,8 @@ clean_oh_y1 <- function() {
   oh_base_dac_reg <- merge(oh_fundable, oh_dac_reg, by = "epic_project_id", 
                            all = T) %>%
     mutate(rate = paste0(rate.x, rate.y), 
-           project_type = case_when(grepl("LSL", rate) ~ "Lead", 
-                                    grepl("HAB|PFAS", rate) ~ "Emerging Contaminants", 
+           project_type = case_when(grepl("LSL", rate, ignore.case = T) ~ "Lead", 
+                                    grepl("HAB|PFAS", rate, ignore.case = T) ~ "Emerging Contaminants", 
                                     grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
                                     # this project gets incorrectly categorized in the string match 
                                     project == "Watermain Imps Bun. 1 - Grange Hall Booster Station Wtr Mns" ~ "General", 
@@ -61,13 +61,14 @@ clean_oh_y1 <- function() {
   # there is one project that does not appear on the fundable list - prepping 
   # it for a bind_rows
   oh_lead_extra <- fread("year1/OH/data/oh-lslr.csv",
-                                         colClasses = "character", na.strings = "") %>%
+                         colClasses = "character", na.strings = "") %>%
     clean_names() %>% 
     filter(epic_project_id == "441") %>%
     mutate(project_type.y = "Lead", 
            expecting_funding = "No", 
            pwsid = "No Information", 
            population = "No Information",
+           funding_amount = "No Information",
            diadvantaged = "No") %>%
     select(-c(estimated_lsl_eligible_costs:rate))
   
@@ -82,6 +83,13 @@ clean_oh_y1 <- function() {
 
   # final cleaning 
   oh_clean <- oh_full %>%
+    # fixing the expecting funding columns based on the presence of "Bypass" 
+    # or "*" in the PF columns 
+    # link to thread where we decided this: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1762974431302769?thread_ts=1759336213.263239&cid=C08LXGF02AE
+    mutate(expecting_funding = case_when(estimated_principal_forgiveness %in% c("BYPASS", "*") ~ "No", 
+                                         TRUE ~ expecting_funding), 
+           principal_forgiveness = case_when(estimated_principal_forgiveness %in% c("BYPASS", "*") ~ "No Information", 
+                                             TRUE ~ estimated_principal_forgiveness)) %>%
     mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
                                     TRUE ~ project_type.x), 
            borrower = str_squish(entity),
@@ -89,7 +97,8 @@ clean_oh_y1 <- function() {
            project_name = as.character(NA),
            principal_forgiveness = clean_numeric_string(estimated_principal_forgiveness),
            requested_amount = clean_numeric_string(estimated_loan_amount),
-           funding_amount = requested_amount,
+           funding_amount = case_when(estimated_principal_forgiveness %in% c("BYPASS", "*") ~ "No Information", 
+                                      TRUE ~ funding_amount),
            project_description = str_squish(project),
            community_served = str_squish(county),  
            project_cost = as.character(NA),
@@ -107,8 +116,8 @@ clean_oh_y1 <- function() {
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, requested_amount,
            funding_amount, principal_forgiveness, population, project_description, disadvantaged, project_rank,
            project_score, expecting_funding, state, state_fiscal_year)
-
-    ####### SANITY CHECKS START #######
+  
+  ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
   ####### Decision: No project id
@@ -116,9 +125,9 @@ clean_oh_y1 <- function() {
   # Check for disinfection byproduct in description
   oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
-    
+  
   ####### SANITY CHECKS END #######
-
+  
   run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))
   

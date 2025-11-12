@@ -1,0 +1,62 @@
+epic_merge_id,"Single Audit
+Required","Equivalency
+Project","Categorical
+Green or
+Business Case
+Green",Loan #,Project Name,"Total
+Assistance
+Amount",Loan,"Principal
+Forgiveness",Green,"Small
+System","PPL
+Rank
+(DEP)","Disadvantage
+EJ Area",list
+25,yes,"Equivalency
+Project",Water Efficiency,82242,Eldred Borough Water Authority Water System Replacements,"$3,519,618",$0,"$3,519,618","$3,519,618",yes,,,base
+9,yes,"Equivalency
+Project",Water Efficiency,82247,"Municipal Authority of Buffalo Township - Route 228 West
+Extension and Freeport Borough Non-Lead Dis","$1,344,565","$1,344,565",$0,"$1,344,565",yes,,,base
+16,yes,"Equivalency
+Project",Water Efficiency,82248,Ebensburg Municipal Authority- WaterLine Replacement Project,"$7,906,091","$4,922,366","$2,983,725",$                 -,yes,,,base
+15,yes,"Equivalency
+Project",Water Efficiency,82249,Erie City Water Authority - Asbury Tank Pump Station and Pro-Fi1,"$3,682,626","$20,000,000",$0,"$9,000,000",no,,,base
+3,Yes,"Equivalency
+Project",Water Efficiency,82241,HSWA TriTwp Water System Improvements Project,"$13,734,480","$2,220,780","$11,513,700","$13,734,480",Yes,,,gen_supp
+17,Yes,"Equivalency
+Project",Water Efficiency,82243,Indiana County Municipal Services Authority - Water Renovation 21,"$6,820,650",$                     -,"$6,820,650","494,570",Yes,,,gen_supp
+5,Yes,"Equivalency
+Project",Water Efficiency,82245,"Pittsburgh Water and Sewer Authority - 2020 Small Diameter
+Water Main Replacement - Contract A1","$17,523,216","$34,159,707",$                     -,"34,159,707",No,,,gen_supp
+8,Yes,"Equivalency
+Project",Water Efficiency,82246,Conemaugh Twp MA -SR 0985 Waterline Replacement Project2,"$11,819,679","$5,989,495","$5,830,184","13,645,150",Yes,,,gen_supp
+22,Yes,"Equivalency
+Project",Water Efficiency,80242,Ford City Borough - Cast Iron Waterline Replacement,"$14,325,000","$4,770,500","$9,554,500","13,870,000",Yes,,,gen_supp
+14,Yes,"Equivalency
+Project",,80243,Bellwood Borough Authority Phase 3 CIP Waterline Replacement,"$5,847,745","$2,410,569","$3,437,176",-,Yes,,,gen_supp
+4,yes,"Equivalency
+Project",,Pending,Aqua Pennsylvania - Edgely PFAS Removal,"$6,770,000",,"$6,770,000",$                -,No,,Yes,ec_list
+32,yes,"Equivalency
+Project",,Started,Perkasie Regional Authority Well #4 Treatment,"$2,000,000",,"$2,000,000",$                -,Yes,,No,ec_list
+26,yes,"Equivalency
+Project",,Started,"Doylestown Township Municipal Authority Central Wells #5 and #7
+PFAS Treatment","$5,000,000",,"$5,000,000",$                -,Yes,,No,ec_list
+29,yes,"Equivalency
+Project",,Started,"Borough of Emmaus PFAS Drinking Water System Improvements
+Wells No. 1 & 2","$11,086,720",,"$11,086,720",$                -,No,,No,ec_list
+1,Yes,Equivalency,,80233,"Pittsburgh Water and Sewer Authority - 2022 Small Diameter
+Water Main Replacement (LSL) Contract A","3,160,825","$686,353","$2,474,472",No,No,,,lead_list
+2,Yes,Equivalency,,80238,"Pittsburgh Water and Sewer Authority - 2024A PWSA
+Neighborhood LSLR","32,058,100","$18,278,381","$13,779,719",No,No,,,lead_list
+18,Yes,Equivalency,,80236,"Ebensburg Municipal Authority - Lead Service Line Replacement
+Project","432,234","$61,693","$370,541",No,Yes,,,lead_list
+20,Yes,Equivalency,,80237,Ford City Borough - Lead Service Replacement,"5,600,000","$3,192,919","$2,407,081",No,Yes,,,lead_list
+12,Yes,Equivalency,,80235,"Erie City Water Authority - Lead Service Line Replacement Phase
+4","18,000,000","$3,908,584","$14,091,416",No,No,,,lead_list
+23,Yes,Equivalency,,80239,"Easton Suburban Water Authority South Side Lead Line
+Replacements","3,293,000","$2,190,901","$1,102,099",No,No,,,lead_list
+21,Yes,Equivalency,,80240,Bellwood Borough Authority Lead Service Line Replacement,"491,120","$280,019","$            2 11,101",No,Yes,,,lead_list
+13,Yes,Equivalency,,pending,"Erie City Water Authority - Lead Service Line Replacement Phase
+5","710,000","$471,795","$238,205",No,No,,,lead_list
+10,Yes,Equivalency,,pending,Wampum Borough - Lead Service Line Replacement,"1,600,000",$                  -,"$1,600,000",No,Yes,,,lead_list
+,Yes,Equivalency,,pending,"PENNVEST and DEP are working to identify projects that have
+completed LSL inventories","97,361,721","53,909,925","43,451,796",,,,,lead_list

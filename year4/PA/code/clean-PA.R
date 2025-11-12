@@ -1,24 +1,24 @@
-clean_pa_y3 <- function() {
+clean_pa_y4 <- function() {
   
   # NOTE: because PA does not provide a project ID and the applicant 
   # name changes across lists in unpredictable ways, an epic_project_id
   # was created to match projects on the fundable list to the comprehensive 
   # list 
   
-  pa_fundable <- fread("year3/PA/data/pa_fundable.csv",
+  pa_fundable <- fread("year4/PA/data/pa-fundable.csv",
                        colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    # this removes 3 projects that are the PENNVEST / pending projects 
-    filter(!is.na(epic_merge_id)) %>%
     # all of these are expecting funding 
     mutate(expecting_funding = "Yes") %>%
     rename(project_id = loan_number, 
-           funding_amount = total_assistance_amount, 
-           disadvantaged = disadvantage_ej_area) 
+           funding_amount = total_assistance_amount) %>%
+    select(-c(green:small_system, project_name, loan,
+              single_audit_required:categorical_green_or_business_case_green, 
+              loan)) 
   
   # comp list: note there was some light tidying of borrower column manually 
   # (i.e., adding "-" between borrower and project)
-  pa_comp <- fread("year3/PA/data/pa_base.csv",
+  pa_comp <- fread("year4/PA/data/pa-base.csv",
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(community_served = paste0(str_to_title(city), ", ", 
@@ -29,16 +29,19 @@ clean_pa_y3 <- function() {
            project_cost = clean_numeric_string(project_cost),
            project_score = clean_numeric_string(dep_project_rating),
            pwsid = paste0("PA", trimws(pwsid)), 
+           disadvantaged = "No Information", 
            project_description = paste0("Project Description: ", proj_description, 
-                                        "; Problem Description: ", prob_description)) 
+                                        "; Problem Description: ", prob_description)) %>%
+    select(-c(pv_rating:green_amount, region, dep_project_rating, projrank, 
+              prob_description, proj_description, project_type, 
+              mtgdate, street_address, city, county))
   
   # bring it back
   pa_clean <- merge(pa_comp, pa_fundable, all = T) %>%
     mutate(principal_forgiveness = clean_numeric_string(principal_forgiveness), 
+           expecting_funding = replace_na(expecting_funding, "No"),
            project_id = clean_numeric_string(project_id), 
            funding_amount = clean_numeric_string(funding_amount), 
-           expecting_funding = replace_na(expecting_funding, "No"),
-           disadvantaged = replace_na(disadvantaged, "No Information"), 
            project_type = case_when(grepl(lead_str, project_description, ignore.case = T) ~ "Lead", 
                                     grepl(ec_str, project_description, ignore.case = T) ~ "Emerging Contaminants", 
                                     # the presence of a project on a list should 

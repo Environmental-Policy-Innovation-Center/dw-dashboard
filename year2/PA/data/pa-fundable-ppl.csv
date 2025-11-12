@@ -1,0 +1,40 @@
+epic_merge_id,single audit required,Equivalency Project,categorical green or business caes green,loan #,project name,total assistance amount,loan,principal forgiveness,green,small system,ppl rank dep,disadvantaged,list
+17,yes,Equivalency Project,,80227,Municipal Authority of the Borough of Bedford- Phase 2 Cast Iron Water Line Replacement Project,"$10,600,000","$6,325,000","$4,275,000",,yes,,,base_fundable
+6,yes,Equivalency Project,,80222,Cresson Twp MA Munster Water System Extension,"$1,850,000","$525,024","$1,324,976",,yes,,,base_fundable
+21,yes,Equivalency Project,,80208,Pittsburgh Water and Sewer Authority - Water Security Upgrades,"$2,022,060","$9,978,156",$0,,no,,,base_fundable
+4,no,non-Equivalency Project,,85224,Benton Municipal Water and Sewer Authority - Automatic Shutdown and Distillery Hill Water Storage Tank,"$2,300,000","$1,770,500","$529,500",,yes,,,base_fundable
+3,Yes,Equivalency Project,No,80202,Northern Cambria Municipal Authority,"$11,739,155","1,128,459","10,610,696",,Yes,,,gen_sup_fundable
+22,Yes,Equivalency Project,No,80204,Linesville Borough - Water System Improvements,"$6,037,729","2,792,754","3,244,975",,Yes,,,gen_sup_fundable
+25,Yes,Equivalency Project,No,80205,Sharpsville Borough 2022-2023 Water,"$9,800,000","3,805,859","5,994,141",,Yes,,,gen_sup_fundable
+14,Yes,Equivalency Project,No,80220,East Cocalico Township Authority - ProFi Drinking Water System1,"$5,937,866","9,000,000",-,,Yes,,,gen_sup_fundable
+24,Yes,Equivalency Project,No,80221,Bear Valley Franklin County Pennsylvania Joint Authority,"$8,500,000","8,500,000",-,,Yes,,,gen_sup_fundable
+15,Yes,Equivalency Project,No,80219,Northampton Borough Municipal Authority,"$5,407,500","5,407,500",-,,No,,,gen_sup_fundable
+12,Yes,Equivalency Project,No,80224,Clintonville Borough Sewer and Water Authority - New Water Tank,"$3,159,300","474,023","2,685,277",,Yes,,,gen_sup_fundable
+20,Yes,Equivalency Project,No,80228,Cowanshannock Township Municipal Authority - Yatesboro Water Treatment Plant Improvements,"$2,724,000","1,436,439","1,287,561",,Yes,,,gen_sup_fundable
+23,Yes,Equivalency Project,No,80212,Hazelton City Authority,"2,275,000","2,275,000",-,,No,,,gen_sup_fundable
+,Yes,Equivalency Project,pending,pending,Future Projects to be identified by PENNVEST and DEP in 2023,"10,213,730",-,"10,213,730",,,,,gen_sup_fundable
+11,yes,"Equivalency
+Project",,80218,Perkasie Regional Authority,"3,680,000",,"3,680,000",0,No,,No,ec_fundable
+,yes,"Equivalency
+Project",,pending,"PENNVEST and DEP are working to identify additional Emerging
+Contaminant Projects1","20,012,700",,"20,012,700",0,pending,,pending,ec_fundable
+2,Yes,Equivalency,,80210,"Pittsburgh Water and Sewer Authority - 2022 Small Diameter
+Water Main Replacement (LSL)","7,836,396","$1,349,427","$6,486,969",No,No,,,lead_fundable
+1,Yes,Equivalency,,80214,"Pittsburgh Water and Sewer Authority - 2023 PWSA Neighborhood
+Lead Service Line Replacement Program","13,354,750","$3,707,279","$9,647,471",No,No,,,lead_fundable
+13,Yes,Equivalency,,80215,"Wilkinsburg-Penn Joint Water Authority - Lead Service Line
+Replacements Phase 2","9,691,212","$3,370,720","$6,320,492",No,No,,,lead_fundable
+10,Yes,Equivalency,,80216,"West View Water Authority - Lead Service Line Replacement -
+Phase 2","8,000,000","$2,580,019","$5,419,981",No,No,,,lead_fundable
+8,Yes,Equivalency,,80217,"Aqua Pennsylvania, Inc. - Lead and Galvanized Service Line
+Replacement West Chester","6,000,000","$6,000,000",$                     -,No,Yes,,,lead_fundable
+19,Yes,Equivalency,,80225,"Municipal Authority of Buffalo Township - Freeport Borough Lead
+Line Replacements","742,947",$                -,"$742,947",No,Yes,,,lead_fundable
+16,Yes,Equivalency,,80223,"Schuylkill County Municipal Authority Pottsville Lead Service Line
+Replacement -2023","5,240,100",$                -,"$         5 ,240,100",No,Yes,,,lead_fundable
+29,Yes,Equivalency,,pend,Erie City Water Authority - Phase 3,"6,000,000",$                  -,"$6,000,000",No,No,,,lead_fundable
+27,Yes,Equivalency,,pend,"Pittsburgh Water and Sewer Authority - 2023 PWSA Neighborhood
+Lead Service Line Replacement Program B","14,605,000",$                  -,"$14,605,000",No,No,,,lead_fundable
+28,Yes,Equivalency,,pend,Lehigh County Authority - Allentown,"4,939,400",$                  -,"$4,939,400",No,No,,,lead_fundable
+,Yes,Equivalency,,pend,"PENNVEST and DEP are working to identify projects that have
+completed LSL inventories","72,347,955","55,821,875","16,526,080",,,,,lead_fundable

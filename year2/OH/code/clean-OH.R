@@ -149,11 +149,14 @@ clean_oh_y2 <- function() {
     # fixing the expecting funding columns based on the presence of "Bypass" 
     # or "*" in the PF columns 
     # link to thread where we decided this: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1762974431302769?thread_ts=1759336213.263239&cid=C08LXGF02AE
-    mutate(expecting_funding = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No", 
+    # please note there is a project id == "83" serving Cambridge that exists 
+    # on the fundable list  & DAC PPL with a "See EC List" in the PF column,
+    # but it does not show up on the EC list & therefore PF is no infomration
+    mutate(expecting_funding = case_when(principal_forgiveness %in% c("BYPASS", "*") ~ "No", 
                                          TRUE ~ expecting_funding), 
-           funding_amount = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+           funding_amount = case_when(principal_forgiveness %in% c("BYPASS", "*") ~ "No Information", 
                                       TRUE ~ funding_amount),
-           principal_forgiveness = case_when(principal_forgiveness %in% c("Bypass", "*") ~ "No Information", 
+           principal_forgiveness = case_when(principal_forgiveness %in% c("BYPASS", "*") ~ "No Information", 
                                              TRUE ~ principal_forgiveness)) %>%
     mutate(state = "Ohio",
            state_fiscal_year = "2024",

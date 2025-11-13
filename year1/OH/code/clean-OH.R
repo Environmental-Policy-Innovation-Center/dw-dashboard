@@ -98,7 +98,7 @@ clean_oh_y1 <- function() {
            principal_forgiveness = clean_numeric_string(estimated_principal_forgiveness),
            requested_amount = clean_numeric_string(estimated_loan_amount),
            funding_amount = case_when(estimated_principal_forgiveness %in% c("BYPASS", "*") ~ "No Information", 
-                                      TRUE ~ funding_amount),
+                                      TRUE ~ clean_numeric_string(funding_amount)),
            project_description = str_squish(project),
            community_served = str_squish(county),  
            project_cost = as.character(NA),

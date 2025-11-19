@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Indiana"
-state_abbr <- "IN"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -584,11 +584,20 @@ for (category in names(grant_sets)) {
     dplyr::filter(fed_cap_grant %in% grant_sets[[category]])
 
   p <-  cap_grant_subset |>
-    ggplot2::ggplot(aes(x = state_fiscal_year, y = value, label= name, fill=fed_cap_grant, alpha=name,  text = format_currency(value))) +
-    ggplot2::geom_col() +
+    ggplot2::ggplot(
+      aes(
+        x = state_fiscal_year, 
+        y = value, 
+        fill = fed_cap_grant)
+        ) +
+    ggplot2::geom_col(
+      aes(alpha = name), width = 1) +
     ggplot2::geom_text(
+      aes(
+        label = name, 
+        group = fed_cap_grant),
       color = "white", 
-      position = position_stack(vjust = .5), 
+      position = position_stack(vjust = 0.5), 
       show.legend = FALSE) +
     ggplot2::labs(
       x = "", y = "",
@@ -640,16 +649,62 @@ for (category in names(grant_sets)) {
   gp
 
 }
+```
 
-  
+```{r eval=FALSE, include=FALSE}
+## TN specific plot for EC category 
+##TODO: revisit
+# p <- cap_grant_subset |>
+#     ggplot2::ggplot(
+#       aes(
+#         x = state_fiscal_year, 
+#         y = value, 
+#         fill = fed_cap_grant)
+#     ) +
+#     ggplot2::geom_col(aes(alpha = name), width = 1) +
+#     ggplot2::geom_text(
+#       aes(label = name,
+#         y = value/2
+#       ),
+#       color = "white", 
+#       position = position_stack(vjust = 0.5),
+#       show.legend = FALSE) +
+#     ggplot2::labs(
+#       x = "", y = "",
+#       title = "Federal Capitalization Grants",
+#       subtitle = paste(state_name, "-", category)  # show category in subtitle
+#     ) +
+#     ggplot2::scale_fill_manual(values = fed_cap_grant_colors, name="") +  
+#     ggplot2::scale_y_continuous(labels = label_dollar()) +
+#     ggplot2::scale_x_discrete(drop = FALSE) +
+#     ggplot2::scale_alpha_manual(values = c(
+#                                           "FFY21"= 1 ,
+#                                           "FFY22" = 0.9,
+#                                           "FFY23" = 1,
+#                                           "FFY24"= 0.9,
+#                                           "FFY25" = 1,
+#                                           "FFY26" = 0.9
+#                                           )) +
+#     ggplot2::guides(alpha = FALSE, label = FALSE) +                                           
+#     epic_chart_theme 
 
+#   gp <- plotly::ggplotly(p, tooltip="text") |>
+#     plotly::layout(title = list(text = paste0('Federal Capitalization Grants',
+#                                       '<br>',
+#                                       paste(state_name, "-", category)
+#                                       )))
+
+#   if (save_plots) {
+#     run_save_plots(gg_plot = p,
+#                    gp_object = gp,
+#                    name = paste0("fed-cap-grant-yoy-", category)
+#                    )
+#     }
+#   gp
 ```
 
 ### Leveraged Funds
-  
 ```{r}
-
-
 if(sum(financial$leveraged_funds, na.rm=TRUE) > 0) {
   
   leveraged <- financial %>%
@@ -857,13 +912,13 @@ base_pf_calc <- base_pf_combined %>%
   group_by(fed_cap_grant, state_fiscal_year) %>%
   summarize(combined_pf_amt = sum(total_pf_amt, na.rm=TRUE),
             total_fcg = max(total_fcg)) %>%
-  mutate(pf_category = "Remaining Loans",
+  mutate(pf_category = "Remaining Base Grants",
          total_pf_amt = total_fcg - combined_pf_amt) 
 
 base_pf_combined <- bind_rows(base_pf_combined, base_pf_calc) %>%
   select(-combined_pf_amt) %>%
   mutate(
-    pf_category = factor(pf_category, levels=c("Remaining Loans", "Discretionary PF", "DAC PF")),
+    pf_category = factor(pf_category, levels=c("Remaining Base Grants", "Discretionary PF", "DAC PF")),
     amt_value_str = format_currency(total_pf_amt),
     pct_value = total_pf_amt / total_fcg,
     pct_value_str = format_percent(pct_value),
@@ -1001,7 +1056,8 @@ if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
                        guide="none") + 
     epic_chart_theme
 
-  set_asides_pct_p2 <- ggplot(set_asides_percent, aes(x=state_fiscal_year, y=total_sa_pct, color=fed_cap_grant)) + 
+  set_asides_pct_p2 <- set_asides_percent |>
+    ggplot(aes(x=state_fiscal_year, y=total_sa_pct, color=fed_cap_grant)) + 
     geom_line(aes(group =fed_cap_grant, linetype = fed_cap_grant ), linewidth=1.5, show.legend = FALSE) + 
     geom_point(size=4) + 
     scale_y_continuous(labels=label_percent(), limits=c(0, max(set_asides_percent$total_sa_pct)+.02 )) + 
@@ -1023,7 +1079,7 @@ if(sum(set_asides_percent$total_sa_pct, na.rm=TRUE) > 0) {
                                       get_subtitle_str(set_asides_percent$state_fiscal_year, state_name)
                                       )))
 
-  set_asides_pct_gp2 <- ggplotly(set_asides_pct_p2, tooltip="text") %>%
+  set_asides_pct_gp2 <- ggplotly(set_asides_pct_p2, tooltip="total_sa_pct_str") %>%
     layout(title = list(text = paste0('Percent of set-asides taken per fed cap grant',
                                       '<br>',
                                       get_subtitle_str(set_asides_percent$state_fiscal_year, state_name)

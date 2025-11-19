@@ -1,40 +1,240 @@
 # Read in raw data -----
 mi_y0_raw <-  data.table::fread("year0/MI/data/mi-fy22-iup-final.csv", 
           colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-    dplyr::mutate(state_fiscal_year = "2022")
+  janitor::clean_names() |>
+  dplyr::mutate(state_fiscal_year = "2022")
 
 mi_y1_raw <- data.table::fread("year1/MI/data/22-Michigan_PPL.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-    dplyr::mutate(state_fiscal_year = "2023")
+  janitor::clean_names() |>
+  dplyr::mutate(state_fiscal_year = "2023")
 
 mi_y2_raw <- data.table::fread("year2/MI/data/mi-sfy24-iup.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-    dplyr::mutate(state_fiscal_year = "2024")
+  janitor::clean_names() |>
+  dplyr::mutate(state_fiscal_year = "2024") |>
+  dplyr::rename(project_description = "project_components")
 
 mi_y3_raw <-  data.table::fread("year3/MI/data/MI-FY2025-DWSRF-Final-IUP.csv",
                   colClasses = "character", na.strings = "") |>
   janitor::clean_names() |>
-    dplyr::mutate(state_fiscal_year = "2025")
+  dplyr::mutate(state_fiscal_year = "2025") |>
+  dplyr::rename(project_description = "project_scope")
 
 mi_y4_raw <- data.table::fread("year4/MI/data/Final-SFY26 Comprehensive PPL.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-  dplyr::mutate(state_fiscal_year = "2026")
+  janitor::clean_names() |>
+  dplyr::mutate(state_fiscal_year = "2026") |>
+  dplyr::rename(project_description = "scope_of_work")
 
 mi_y4_raw_lead <- data.table::fread("year4/MI/data/Final-SFY26 LSLR PPL.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
+  janitor::clean_names() |>
   dplyr::mutate(
     state_fiscal_year = "2026",
-    project_type = "Lead"
+    project_type = "Lead",
+    list = "LSLR PPL"
+  ) |>
+  dplyr::rename(project_description = "scope_of_work")
+
+# Bind all IUPs (note: any data frame that starts with mi_y will be bound) -----
+dfs <- mget(ls(pattern = "^mi_y"), envir = .GlobalEnv)
+dfs <- dfs[sapply(dfs, is.data.frame)]
+mi_raw <- dplyr::bind_rows(dfs)
+
+# Clean raw data -----
+#colnames check
+colnames(mi_raw)[grepl("ec_", colnames(mi_raw))]
+colnames(mi_raw)[grepl("emerging", colnames(mi_raw))]
+
+mi_clean <- mi_raw |>
+  mutate(project_type =  dplyr::case_when(
+        !is.na(project_type) ~ project_type,
+        grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(bil_lslr_eligible_costs, TRUE)>0 | !is.na(lead_service_line_costs) | !is.na(lslr_costs) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case=TRUE)  | convert_to_numeric(emerging_contaminant_costs)>0 |convert_to_numeric(ec_related_costs)>0 ~ "Emerging Contaminants",
+        TRUE ~ "General")
+  ) |>
+  dplyr::filter(!is.na(project_description)) |>
+  dplyr::filter(project_description != "")  
+ 
+
+# Data Viz -----
+
+# Lauren Kwan Oct 29th at 3:11 PM
+# we need a data viz that shows amount of lead funds available for projects vs. amount of lead funds going to meet demand vs. amount of general funds going towards lead projects
+# For amount of lead funds available for projects, this would be the total_funding_available column for LSLR fed_cap_grant
+# For amount of lead funds going to meet demand, this would be the items we'd discussed a while back, copying below so you don't have to scroll:
+# Year 4: Projects with Funding Amounts for LSLR BIL Loan and LSLR BIL PF (from the LSLR PPL only, since there are two PPLs this year)
+# Year 3: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 2: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 1: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# And lastly, for general funds going towards lead projects, this would be:
+# Year 4: Lead projects with Funding Amounts for DWSRF Loan Allocation, DWSRF PF Allocation, BIL Loan Allocation, and BIL PF Allocation in the Comprehensive PPL. Also, lead projects with DWSRF Loan, BIL PF, BIL Loan Allocation, and BIL PF Allocation in the LSLR PPL.
+# Year 3: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 2: Lead projects with Funding Amounts for DWSRF Traditional Loan, DWSRF Traditional PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 1: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+
+
+## Amount of lead fund available (financial sheet) 
+financial_lslr <- get_financial("Michigan") |>
+  dplyr::filter(fed_cap_grant == "LSLR") |>
+  dplyr::select(state_fiscal_year, total_funding_available) 
+
+## Amount of lead funds going to meet demand 
+
+# Year 4: Projects with Funding Amounts for LSLR BIL Loan and LSLR BIL PF (from the LSLR PPL only, since there are two PPLs this year) [2026]
+# Year 3: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF [2025]
+# Year 2: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF [2024]
+# Year 1: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF [2023]
+demand_lslr <- mi_clean |>
+  dplyr::filter(
+    !state_fiscal_year == "2022", #Y0
+    project_type == "Lead" 
+  ) |>
+  dplyr::select(
+    state_fiscal_year,
+    list,
+    lslr_bil_loan,
+    lslr_bil_pf,
+    bil_dwsrf_lslr_loan,
+    bil_dwsrf_lslr_pf
+  ) |>
+  dplyr::mutate(
+    dplyr:: across(
+      .cols = -c(state_fiscal_year, list),
+      .fns = ~ convert_to_numeric(.x, TRUE)
+    )
+  ) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::summarise(
+    lead_funds = sum(
+      bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023", "2024", "2025")) +
+      bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023", "2024", "2025")) +
+      lslr_bil_pf * (state_fiscal_year == "2026") +
+      lslr_bil_loan * (state_fiscal_year == "2026"),
+      na.rm = TRUE
+    )
   )
 
+## Amount of general funds going towards lead projects
+# Year 4: Lead projects with Funding Amounts for DWSRF Loan Allocation, DWSRF PF Allocation, BIL Loan Allocation, and BIL PF Allocation in the Comprehensive PPL. Also, lead projects with DWSRF Loan, BIL PF, BIL Loan Allocation, and BIL PF Allocation in the LSLR PPL. [2026]
+# Year 3: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF [2025]
+# Year 2: Lead projects with Funding Amounts for DWSRF Traditional Loan, DWSRF Traditional PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF [2024]
+# Year 1: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF [2023]
+general_to_lead <- mi_clean |>
+  dplyr::filter(
+    !state_fiscal_year == "2022",
+    project_type == "Lead"
+) |>
+  dplyr::select(
+    state_fiscal_year,
+    list, 
+    dwsrf_loan_allocation,
+    dwsrf_pf_allocation,
+    bil_loan_allocation,
+    bil_pf_allocation,
+    dwsrf_loan,
+    bil_pf,
+    dwsrf_pf,
+    bil_dwsrf_supplemental_loan,
+    bil_dwsrf_supplemental_pf,
+    dwsrf_traditional_loan,
+    dwsrf_traditional_pf
+  ) |>
+  dplyr::mutate(
+    dplyr:: across(
+      .cols = -c(state_fiscal_year, list),
+      .fns = ~ convert_to_numeric(.x, TRUE)
+    )
+  ) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::summarise(
+    general_funds = sum(
+      dwsrf_loan * (state_fiscal_year %in% c("2023", "2025", "2026")) +
+      dwsrf_pf * (state_fiscal_year %in% c("2023", "2025")) +
+      bil_dwsrf_supplemental_loan * (state_fiscal_year %in% c("2023", "2024","2025")) +
+      bil_dwsrf_supplemental_pf * (state_fiscal_year %in% c("2023", "2024", "2025")) +
+      dwsrf_traditional_loan * (state_fiscal_year == "2024") +
+      dwsrf_traditional_pf  * (state_fiscal_year == "2024") +
+      dwsrf_loan_allocation * (state_fiscal_year == "2026") +
+      dwsrf_pf_allocation * (state_fiscal_year == "2026") +
+      bil_loan_allocation * (state_fiscal_year == "2026") +
+      bil_pf * (state_fiscal_year == "2026") +
+      bil_pf_allocation * (state_fiscal_year == "2026"),
+      na.rm = TRUE
+    )
+  )
+
+# Combine all summaries
+lead_summary <- financial_lslr |>
+dplyr::left_join(demand_lslr) |>
+dplyr::left_join(general_to_lead) |>
+tidyr::pivot_longer(-state_fiscal_year) |>
+  dplyr::mutate(
+    name = dplyr::case_when(
+      name == "total_funding_available" ~ "Available LSLR Funds", 
+      name == "lead_funds" ~ "LSLR Funds Demand", 
+      name == "general_funds" ~ "General Funds Demand", 
+    )) |>
+  dplyr::mutate(
+    name = forcats::as_factor(name),
+    name = forcats::fct_relevel(name, "LSLR Funds Demand", "General Funds Demand", "Available LSLR Funds")
+  ) 
+
+lead_summary |>
+  ggplot2::ggplot() +
+  ggplot2::geom_col(ggplot2::aes(
+    state_fiscal_year,
+    value,
+    fill= name
+  ),
+    position = "dodge") +
+  ggplot2::scale_y_continuous(labels=label_dollar()) + 
+  ggplot2::scale_fill_manual(values = c("Available LSLR Funds" = "#172f60", "LSLR Funds Demand" = "#82AB6E", "General Funds Demand" = "gray")) +
+  ggplot2::labs(x="State Fiscal Year",
+         y="",
+         title="Fund Sources meeting Lead Projects Demand vs Available LSLR Funds",
+         subtitle=get_subtitle_str(lead_summary$state_fiscal_year, "Michigan"),
+        fill = ""
+        ) +
+  ggplot2::guides(
+    label = FALSE
+  ) +
+    epic_chart_theme
+
+
+# breakdown_gp <- ggplotly(breakdown_p, tooltip="text") |>
+#   layout(title = list(text = paste0('Breakdown of Lead specific and General purpose funds towards Lead projects',
+#                                       '<br>',
+#                                       get_subtitle_str(breakdown$state_fiscal_year, "Michigan")
+#                                       )))
+
+#   if (save_plots) {
+#     run_save_plots(gg_plot = breakdown_p,
+#                    gp_object = breakdown_gp, 
+#                    name = "breakdown-general-lead-funds-to-lead-yoy")
+#     }
+
+
+
+
+
+
 # Bind rows for general purpose funds -----
+
+# Lauren Kwan
+# Sep 24th at 3:30 PM
+# I'm thinking, to capture lead projects expecting funding from General Purpose funds for Years 1-4:
+# Year 4:
+# Lead projects with Funding Amounts for DWSRF Loan Allocation, DWSRF PF Allocation, BIL Loan Allocation, and BIL PF Allocation
+# Year 3:
+# Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 2:
+# Lead projects with Funding Amounts for DWSRF Traditional Loan, DWSRF Traditional PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 1:
+# Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+
 mi_raw_full_gen <- dplyr::bind_rows(
-  #mi_y0_raw,
   mi_y1_raw,
   mi_y2_raw,
   mi_y3_raw,
@@ -42,7 +242,6 @@ mi_raw_full_gen <- dplyr::bind_rows(
   mi_y4_raw_lead
 ) |>
   dplyr::select(
-    #project_name, 
     project_description, 
     project_scope,
     project_components,
@@ -156,7 +355,18 @@ gen_funds_lead_gp <- ggplotly(gen_funds_lead_p, tooltip="text") |>
 
 
 # Bind rows for lead purpose funds -----
-
+# Lauren Kwan
+#   Sep 25th at 12:10 PM
+# Thanks, Maria!
+# LSLR dedicated funds as follows:
+# Year 4:
+# Projects with Funding Amounts for BIL LSLR Loan Allocation and BIL LSLR PF Allocation
+# Year 3:
+# Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 2:
+# Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 1:
+# Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
 mi_raw_full_lead <- dplyr::bind_rows(
   #mi_y0_raw,
   mi_y1_raw,
@@ -222,8 +432,8 @@ mi_lead_funds_lead <- mi_raw_full_lead  |>
   dplyr::summarise(
     lead_specific_funds = sum(
       bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023","2024", "2025")) +
-      bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023","2024", "2025")) +
-      lead  
+      bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023","2024", "2025")) ,
+        +
       # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
       # bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,  
       # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +

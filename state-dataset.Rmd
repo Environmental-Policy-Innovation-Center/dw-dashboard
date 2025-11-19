@@ -17,7 +17,8 @@ run_code_from_file("aws.txt")
 ```{r}
 # import project-level data
 all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
-  clean_names()
+  clean_names() |>
+  dplyr::mutate(state_fiscal_year = as.character(state_fiscal_year))
 ```
 
 ## Create Column Status Features
@@ -108,7 +109,6 @@ project_counts <- all_projects %>%
 lsl_projects <- all_projects |>
   dplyr::filter(project_type=="Lead") |>
   dplyr::mutate(
-    state_fiscal_year = as.character(state_fiscal_year),
     lead_type = dplyr::case_when(
     stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
     stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
@@ -167,7 +167,7 @@ lead_type_count_summary <- lsl_projects |>
 
 
 project_counts <- project_counts |>
-  dplyr::left_join(lead_type_count_summary |> dplyr::mutate(state_fiscal_year = as.numeric(state_fiscal_year)))
+  dplyr::left_join(lead_type_count_summary)
 ```
 
 ### Small Community
@@ -266,9 +266,8 @@ pc_by_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`
-        #  ,
-        #  project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`
          )
 
 
@@ -279,9 +278,8 @@ pc_by_dac_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="disadvantaged", values_from="total_project_cost") %>%
   rename(project_costs_dac = Yes,
          project_costs_ndac = No,
-         project_costs_dac_ni = `No Information`
-        #  ,
-        #  project_costs_dac_na = `NA`
+         project_costs_dac_ni = `No Information`,
+         project_costs_dac_na = `NA`
          ) 
  
 pc_by_dac_ef_sc <- sc_projects |>
@@ -291,8 +289,8 @@ pc_by_dac_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from=c("expecting_funding", "disadvantaged"), values_from="total_project_cost")|> 
   dplyr::rename(
     project_costs_ef_dac = Yes_Yes,
-    # project_costs_ef_ndac = Yes_No,
-    # project_costs_ef_dac_ni = `Yes_No Information`,
+    project_costs_ef_ndac = Yes_No,
+    project_costs_ef_dac_ni = `Yes_No Information`,
     # project_costs_ef_dac_na = `Yes_NA`,
 
     project_costs_nef_dac = No_Yes,
@@ -301,7 +299,9 @@ pc_by_dac_ef_sc <- sc_projects |>
     # project_costs_nef_dac_na = `No_NA`,
 
     project_costs_ef_ni_dac = `No Information_Yes`,
-    # project_costs_ef_NA_dac_na = `NA_NA`
+    project_costs_ef_na_dac_na = `NA_NA`,
+    project_costs_ef_na_dac = `NA_Yes`,
+    project_costs_ef_na_ndac = `NA_No`
     ) 
 
 # filter project costs by expecting funding for both tables
@@ -312,9 +312,8 @@ pc_by_ef <- all_projects %>%
   pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`
-        #  ,
-        #  project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`
          )
 
 pc_by_dac <- all_projects %>%
@@ -324,9 +323,8 @@ pc_by_dac <- all_projects %>%
   tidyr::pivot_wider(names_from="disadvantaged", values_from="project_cost_dac") %>%
   rename(project_cost_dac = Yes,
          project_cost_ndac = No,
-         project_cost_dac_ni = `No Information`
-        #  ,
-        #  project_cost_dac_na = `NA`
+         project_cost_dac_ni = `No Information`,
+         project_cost_dac_na = `NA`
          )
 
 pc_by_dac_type <- all_projects %>%
@@ -360,12 +358,19 @@ pc_by_lsl <- lsl_projects %>%
   filter(!is.na(project_cost) & project_cost !="No Information") %>%
   group_by(state, state_fiscal_year, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>%
-  pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  rename(
-        project_cost_lslb = both,
-        project_cost_lslr = lslr,
-         project_cost_lsli = lsli,
-         project_cost_lslu = unknown)
+  tidyr::pivot_wider(
+    names_from = "lead_type", 
+    values_from = "total_project_cost", 
+    values_fill = 0,
+    names_prefix = "project_cost_",
+    names_glue = "project_cost_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
+  )
+  # pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
+  # rename(
+  #       project_cost_lslb = both,
+  #       project_cost_lslr = lslr,
+  #        project_cost_lsli = lsli,
+  #        project_cost_lslu = unknown)
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
@@ -373,12 +378,19 @@ pc_by_lsl_ef <- lsl_projects %>%
   group_by(state, state_fiscal_year, expecting_funding, lead_type) %>%
   summarize(total_project_cost = sum(as.numeric(project_cost))) %>% 
   filter(expecting_funding == "Yes") %>%
-  pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  rename(
-    project_cost_ef_lslb = both, 
-    project_cost_ef_lslr = lslr,
-         project_cost_ef_lsli = lsli,
-         project_cost_ef_lslu = unknown) %>%
+  tidyr::pivot_wider(
+    names_from = "lead_type", 
+    values_from = "total_project_cost", 
+    values_fill = 0,
+    names_prefix = "project_cost_ef",
+    names_glue = "project_cost_ef_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
+  ) |>
+  # pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
+  # rename(
+  #   project_cost_ef_lslb = both, 
+  #   project_cost_ef_lslr = lslr,
+  #        project_cost_ef_lsli = lsli,
+  #        project_cost_ef_lslu = unknown) %>%
   ungroup() %>%
   select(-expecting_funding)
 
@@ -437,28 +449,51 @@ fa_by_lsl <- lsl_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
   dplyr::group_by(state, state_fiscal_year, lead_type) |>
   dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
-  tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
-  dplyr::mutate(
-    funding_amount_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
-    funding_amount_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
-    funding_amount_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
-    funding_amount_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
+   tidyr::pivot_wider(
+    names_from = "lead_type", 
+    values_from = "total_funding_amount", 
+    values_fill = 0,
+    names_prefix = "funding_amount_",
+    names_glue = "funding_amount_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
   ) |>
-  dplyr::select(state, state_fiscal_year, funding_amount_lslb, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu)
+#   tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
+# dplyr::mutate(
+#     funding_amount_lslb = if(exists("both", inherits = FALSE)) both else NA_real_,
+#     funding_amount_lslr = if(exists("lslr", inherits = FALSE)) lslr else NA_real_,
+#     funding_amount_lsli = if(exists("lsli", inherits = FALSE)) lsli else NA_real_,
+#     funding_amount_lslu = if(exists("unknown", inherits = FALSE)) unknown else NA_real_
+#   ) |>
+  dplyr::select(state, state_fiscal_year, 
+  dplyr::any_of(c("funding_amount_lslb", 
+                             "funding_amount_lslr", 
+                             "funding_amount_lsli", 
+                             "funding_amount_lslu")))
 
 fa_by_lsl_ef <-  lsl_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount !="No Information") |>
   dplyr::group_by(state, state_fiscal_year, expecting_funding, lead_type) |>
   dplyr::summarize(total_funding_amount = sum(as.numeric(funding_amount), na.rm=TRUE), .groups = "drop") |>
   dplyr::filter(expecting_funding == "Yes") |>
-  tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
-  dplyr::mutate(
-    funding_amount_ef_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
-    funding_amount_ef_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
-    funding_amount_ef_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
-    funding_amount_ef_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
-  ) |>
-  dplyr::select(state, state_fiscal_year, funding_amount_ef_lslb, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)
+   tidyr::pivot_wider(
+    names_from = "lead_type", 
+    values_from = "total_funding_amount", 
+    values_fill = 0,
+    names_prefix = "funding_amount_ef_",
+    names_glue = "funding_amount_ef_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
+  ) |> 
+ # tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
+  # dplyr::mutate(
+  #   funding_amount_ef_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
+  #   funding_amount_ef_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
+  #   funding_amount_ef_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
+  #   funding_amount_ef_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
+  # ) |>
+  dplyr::select(state, state_fiscal_year, 
+  dplyr::any_of(c("funding_amount_ef_lslb", 
+                             "funding_amount_ef_lslr", 
+                             "funding_amount_ef_lsli", 
+                             "funding_amount_ef_lslu")))
+
 
 fa_by_sc <- sc_projects |>
   dplyr::filter(!is.na(funding_amount) & funding_amount != "No Information") |>
@@ -510,10 +545,24 @@ requested_amount_aggregation <- all_projects %>%
             median_requested_amount = median_wo_zero(as.numeric(requested_amount)),
             avg_requested_amount = mean(as.numeric(requested_amount)))
 
+ra_by_ef <- all_projects |>
+  dplyr::filter(!is.na(requested_amount) & requested_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, expecting_funding) |>
+  dplyr::summarize(total_requested_amount_ef = sum(as.numeric(requested_amount), na.rm = TRUE))|> 
+  dplyr::filter(expecting_funding == "Yes") |>
+  dplyr::select(-expecting_funding) 
+
 ra_by_type <- all_projects %>%
   filter(!is.na(requested_amount) & requested_amount != "No Information") %>%
   group_by(state, state_fiscal_year, project_type) %>%
   summarize(total_requested_amount = sum(as.numeric(requested_amount)))
+
+ra_by_ef_type <- all_projects |>
+  dplyr::filter(!is.na(requested_amount) & requested_amount != "No Information") |>
+  dplyr::group_by(state, state_fiscal_year, project_type, expecting_funding) |>
+  dplyr::summarize(total_requested_amount_ef = sum(as.numeric(requested_amount), na.rm = TRUE))|> 
+  dplyr::filter(expecting_funding == "Yes") |>
+  dplyr::select(-expecting_funding) 
 
 ```
 
@@ -560,20 +609,25 @@ project_dollars <- feature_coverage %>%
   left_join(pc_by_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_ef_dac, by=c("state", "state_fiscal_year")) %>%
   left_join(pc_by_lsl, by=c("state", "state_fiscal_year")) %>%
-  left_join(pc_by_lsl_ef, by=c("state", "state_fiscal_year")) %>%
-  left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year"))
+  left_join(pc_by_lsl_ef , by=c("state", "state_fiscal_year")) %>%
+  left_join(requested_amount_aggregation, by=c("state", "state_fiscal_year")) |>
+  left_join(ra_by_ef, by=c("state", "state_fiscal_year")) |>
+  dplyr::arrange(state, state_fiscal_year)
 
 project_type_df <- project_type_counts %>%
   left_join(fa_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(pc_by_type, by=c("state", "state_fiscal_year", "project_type")) %>% 
   left_join(pc_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) %>%
   left_join(ra_by_type, by=c("state", "state_fiscal_year", "project_type")) %>%
+  left_join(ra_by_ef_type, by=c("state", "state_fiscal_year", "project_type")) |>
   left_join(pf_by_type, by=c("state", "state_fiscal_year", "project_type")) |>
   left_join(pc_by_dac_type, by=c("state", "state_fiscal_year", "project_type")) |>
-  left_join(fa_by_type_dac,  by=c("state", "state_fiscal_year", "project_type"))
+  left_join(fa_by_type_dac,  by=c("state", "state_fiscal_year", "project_type")) |>
+  dplyr::arrange(state, state_fiscal_year)
   
 project_counts <- project_counts %>%
-  left_join(pf_projects, by=c("state", "state_fiscal_year"))
+  left_join(pf_projects, by=c("state", "state_fiscal_year")) |>
+  dplyr::arrange(state, state_fiscal_year)
 
 small_community_df <- small_community_df |>
   left_join(pc_by_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
@@ -583,7 +637,8 @@ small_community_df <- small_community_df |>
   left_join(fa_by_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
   left_join(fa_by_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
   left_join(fa_by_dac_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
-  left_join(fa_by_dac_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) 
+  left_join(fa_by_dac_ef_sc, by=c("state", "state_fiscal_year", "small_community") ) |>
+  dplyr::arrange(state, state_fiscal_year)
 ```
 
 ## Exporting AWS

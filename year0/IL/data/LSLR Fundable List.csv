@@ -1,11 +1,11 @@
 Loan Applicant,L17#,Project Description,Facility No.,Estimated Construction Start,Estimated Loan Amount  ,Loan Priority Score
-Rockford,5689,lead service line replacement. (Phase 4),IL2010300,2022-03-01 0:00:00,4000000,450
-Assumption,5909,locate and replace 140 lead service lines.,IL0210050,2021-07-15 0:00:00,1360000,355
-Marshall,3485,locate and replace lead service lines.,IL0230100,2021-09-01 0:00:00,1583960,355
+Rockford,5689,Lead service line replacement. (Phase 4),IL2010300,2022-03-01 0:00:00,4000000,450
+Assumption,5909,Locate and replace 140 lead service lines.,IL0210050,2021-07-15 0:00:00,1360000,355
+Marshall,3485,Locate and replace lead service lines.,IL0230100,2021-09-01 0:00:00,1583960,355
 Chicago,5843,Replace lead service lines. (Phase 1),IL0316000,2022-01-01 0:00:00,4000000,325
 Sycamore,5795,Replace lead service lines.,IL0370550,2021-09-01 0:00:00,1700000,315
 Itasca,5870,Replace lead service lines.,ll0430500,2021-10-30 0:00:00,4000000,295
-Frankfort,3466,Replace lead service lines. {Phase 2),ll1970400,2021-07-15 0:00:00,2000000,285
+Frankfort,3466,Replace lead service lines. (Phase 2),ll1970400,2021-07-15 0:00:00,2000000,285
 Robbins,5893,Replace lead service lines. (Phase 1),IL0312700,2021-10-15 0:00:00,2000000,270
 Elgin,5836,Replace lead service lines.,IL0894380,2021-06-01 0:00:00,4000000,245
 Freeport,5920,Replace lead service lines. (Phase 2),ll1770200,2021-05-01 0:00:00,4000000,235

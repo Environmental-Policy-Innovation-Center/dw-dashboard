@@ -1,0 +1,57 @@
+Loan Applicant,L17#,Project Description,"Estimated
+Construction Start Date",Projected Loan Amount,Project Manager,"Loan
+Priority Score",Facility No
+Dolton,6556,Replacement of 125 lead service lines.,2025-12-01 0:00:00,1250000,,235,IL0310690
+Lanark,6561,Replacement of approximately 400 lead service lines.,2025-08-30 0:00:00,4000000,,230,IL0150100
+Brookfield,7463,Replacement of approximately 600 lead service lines.,2025-10-01 0:00:00,12000000,"Jordal, Ellen",230,IL031330
+Oregon,7126,Replacement of approximately 300 lead service lines.,2025-10-01 0:00:00,4250000,,230,IL1410400
+Berwyn,6320,Replacement of 400 lead service lines.,2025-12-01 0:00:00,4000000,"Fowler, Jillian",225,IL0310210
+Carlinville,7576,"Phase 3 - Replacement of approximately 282 lead
+service lines.",2025-11-30 0:00:00,3027000,"Rice, Chad",225,IL1170150
+East Moline,6995,"Phase 1 - Replacement of approximately 482 lead
+service lines.",2026-01-01 0:00:00,5000000,"Holtsclaw, Kaitlyn",220,IL1610250
+South Holland,7611,Replacement of approximately 300 lead service lines.,2025-12-01 0:00:00,4000000,"VanPelt, Kim",215,
+Joliet,6080,Replacement of approximately 560 lead service lines.,2026-02-28 0:00:00,4547200,"Mallory, Jasmine",210,IL1970450
+Mount Olive,6241,"Phase 1 - Replacement of approximately 324 lead
+service lines.",2025-08-15 0:00:00,1795860,"Heaton, Rachael",210,IL1170700
+DeKalb,6267,Replacement of approximately 100 lead service lines.,2026-03-31 0:00:00,1500000,"Rice, Chad",210,IL0370100
+Elgin,5874,Replacement of approximately 870 lead service lines.,2026-03-31 0:00:00,15000000,"Jordal, Ellen",205,IL0894380
+Aqua Illinois Inc.,6970,"Replacement of approximately 400 lead service lines and 57 customer-side only replacements due to history
+of lead.",2026-03-30 0:00:00,8371000,"Huffman, Brandon",200,IL0915030
+West Chicago,7215,Replacement of approximately 375 lead service lines.,2025-11-01 0:00:00,7745000,"Huffman, Brandon",200,IL0430900
+Riverside,7587,Replacement of lead service lines.,2026-03-01 0:00:00,4000000,"Smith, Bryan",195,IL0318670
+Oak Lawn,3938,Replacement of approximately 417 lead service lines.,2025-05-05 0:00:00,679250,"Clark, Lanina",190,IL0312220
+Genoa,6374,Replacement of approximately 224 lead service lines.,2025-05-15 0:00:00,3000000,"Blanford, Frederick",185,IL0370150
+Lincolnwood,7592,Replacement of approximately 130 lead service lines.,2026-03-02 0:00:00,1420000,"Blanford, Frederick",180,IL0311650
+Posen,6991,Replacement of approximately 294 lead service lines.,2026-03-31 0:00:00,5000000,"Jordal, Ellen",175,IL0312520
+Fox Lake,6245,Phase 2: Replacement of lead service lines.,2025-06-16 0:00:00,3180000,"Blanford, Frederick",165,IL0970200
+Elmwood Park,7581,Replacement of approximately 300 lead service lines.,2026-03-01 0:00:00,3100000,"Rice, Chad",165,IL0310780
+Downers Grove,7422,Replacement of approximately 250 lead service lines.,2026-03-31 0:00:00,4774588,"Smith, Bryan",160,IL0430300
+Crystal Lake,6129,"Phase 1 - Replacement of approximately 267 lead
+service lines.",2025-12-01 0:00:00,4000000,"Jordal, Ellen",155,IL1110150
+Norridge,6330,Replacement of 100 lead service lines.,2025-12-01 0:00:00,1000000,"Clark, Lanina",155,IL0312040
+Morris,7086,Replacement of lead service lines.,2025-08-01 0:00:00,16055200,"Matthews, Julie",155,IL0630300
+LaGrange,6547,"Phase 1 - Replacement of approximately 246 lead
+service lines.",2026-03-02 0:00:00,3986000,"Smith, Bryan",150,IL0311530
+Brookfield,7464,Replacement of approximately 130 lead service lines.,2025-10-01 0:00:00,2600000,"Jordal, Ellen",150,IL031330
+Wyanet,6572,Replacement of approximately 190 lead service lines.,2025-03-01 0:00:00,2314053,"Covert, Chris",145,IL0111150
+West Chicago,7216,Replacement of approximately 321 lead service lines.,2025-11-01 0:00:00,6700000,"Huffman, Brandon",145,IL0430900
+Brookfield,6369,"Replacement of approximately 1,300 Lead Service
+Lines.",2025-10-01 0:00:00,26000000,"Jordal, Ellen",140,IL031330
+Plainfield,6809,Replacement of approximately 25 lead service lines.,2026-03-23 0:00:00,390000,"Mallory, Jasmine",140,IL1970800
+Harwood Heights,6281,Replacement of approximately 300 lead service lines.,2025-12-01 0:00:00,5000000,"Heaton, Rachael",125,IL0311140
+River Forest,6284,"Phase 1 - Replacement of approximately 500 lead
+service lines.",2025-09-01 0:00:00,4000000,"Covert, Chris",125,IL0312610
+Highland Park,3785,"Replacement of approximately 1,150 lead service
+lines.",2025-12-01 0:00:00,16000000,"Jordal, Ellen",120,IL0970500
+Elmhurst,6944,Replacement of lead service lines.,2025-06-15 0:00:00,2000000,"Covert, Chris",120,IL0430350
+Wilmette,7308,"Phase 1 - Replacement of approximately 74 lead
+service lines.",2026-03-15 0:00:00,1700000,"Covert, Chris",115,IL0313300
+Lemont,7507,Replacement of approximately 26 lead service lines.,2026-03-01 0:00:00,452386,"Otto, David",110,IL0311620
+Western Springs,3761,"Phase 2 - Replacement of approximately 45 lead
+service lines.",2026-03-02 0:00:00,1285000,"Covert, Chris",105,IL0313180
+St. Charles,5905,Replacement of approximately 468 lead service lines.,2026-01-01 0:00:00,8000000,"Rice, Chad",90,IL0894830
+West Dundee,6563,Replacement of approximately 92 lead service lines.,2026-03-15 0:00:00,1882000,"VanPelt, Kim",80,
+Geneva,6748,Replacement of approximately 50 lead service lines.,2025-08-25 0:00:00,590000,"Huffman, Brandon",70,IL0890350
+Geneva,7515,Replacement of approximately 90 lead service lines.,2025-08-25 0:00:00,1060000,"Huffman, Brandon",70,IL0890350
+Palatine,6228,Replacement of approximately 400 lead service lines.,2025-12-01 0:00:00,4000000,"Covert, Chris",60,IL0312340

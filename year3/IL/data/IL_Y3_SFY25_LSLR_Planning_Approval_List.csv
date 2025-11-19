@@ -1,0 +1,29 @@
+Loan Applicant,Project Description,L17#,"Estimated
+Construction Start Date",Requested Loan Amount,Facility No
+Calumet City,Replacement of 500 lead service lines (Phase 2).,5766,2025-04-01 0:00:00,4000000,IL0310390
+Coal City,Replacement of 685 lead service lines.,6111,2025-04-01 0:00:00,6850000,IL0630060
+Evanston,Replacement of 500 lead service lines.,6321,2026-06-01 0:00:00,5000000,IL0310810
+Evanston,Replacment of 500 lead service lines.,6322,2027-06-01 0:00:00,5000000,IL0310810
+Evanston,Replacement of 500 lead service lines.,6323,2028-06-01 0:00:00,5000000,IL0310810
+Evanston,Replacement of 500 lead service lines.,6324,2029-06-01 0:00:00,5000000,IL0310810
+Joliet,Replacement of 560 lead service lines.,6080,2026-02-28 0:00:00,4000000,IL1970450
+Joliet,Replacement of 560 lead service lines.,6081,2027-02-28 0:00:00,4000000,IL1970450
+Joliet,Replacment of 560 lead service lines.,6084,2028-02-29 0:00:00,4000000,IL1970450
+Joliet,Replacement of 560 lead service lines.,6085,2029-02-28 0:00:00,4000000,IL1970450
+Joliet,Replacement of 560 lead service lines.,6086,2030-02-28 0:00:00,4000000,IL1970450
+LaGrange,Replacement of 246 lead service lines (Phase 2).,6548,2026-03-01 0:00:00,3986000,IL0311530
+LaGrange,Replacement of 246 lead service lines.,6549,2027-03-01 0:00:00,3986000,IL0311530
+LaGrange,Replacment of 246 lead service lines (Phase 3).,6550,2028-03-01 0:00:00,3986000,IL0311530
+LaGrange,Replacement of 246 lead service lines.,6551,2029-03-01 0:00:00,3986000,IL0311530
+Lockport,Replacement of lead service lines.,6116,2025-05-01 0:00:00,1850000,IL1970500
+Markham,Replacement of 180 lead service lines.,6347,2025-05-20 0:00:00,1015740,IL0311770
+Peoria Heights,Replacement of 111 lead service lines.,6333,2026-03-30 0:00:00,1165000,IL1434750
+Peoria Heights,Replacement of 111 lead service lines.,6334,2027-03-30 0:00:00,1200000,IL1434750
+Peoria Heights,Replacement of 111 lead service lines.,6335,2028-03-30 0:00:00,1236000,IL1434750
+Summit,Replacement of 230 lead service lines.,6952,2025-09-10 0:00:00,4554000,IL0310060
+Summit,Replacement of 230 lead service lines.,6953,2026-09-10 0:00:00,4554000,IL0310060
+Summit,Replacment of 230 lead service lines.,6954,2027-09-10 0:00:00,4554000,IL0310060
+Summit,Replacment of 230 lead service lines.,6955,2028-09-10 0:00:00,4554000,IL0310060
+West Dundee,Replacement of 158 lead service lines (Phase 2).,6563,2026-03-15 0:00:00,2398000,IL0890950
+West Dundee,Replacement of 32 lead service lines.,6564,2027-03-15 0:00:00,583600,IL0890950
+Westmont,Replacement of 332 lead service lines.,6959,2026-03-02 0:00:00,2589600,IL0430950

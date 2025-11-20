@@ -1,0 +1,59 @@
+Loan Applicant,L17#,Project Description,Facility No,"Estimated Construction
+Start Date",Requested Loan Amount
+Argenta,6363,Phase 2: Construct Well #4.,IL50050,2026-05-01 0:00:00,1200000
+Bloomington,6806,"Phase 9: 2,100' of watermain and 4,500' of new storm and sanitary sewer.",IL1130200,2026-03-01 0:00:00,3094000
+Buda,7011,"Phase 2: Purchase emergency generator for Well #6, paint interior
+elevated storage tank and replace watermain.",10100,2026-03-01 0:00:00,962000
+Carmi,6799,Phase 3: Construct two new ground water wells and well houses.,IL1930100,2027-02-01 0:00:00,2700000
+Channahon,6271,Construct a well house and transmission main for Well #7.,1970200,2025-10-31 0:00:00,5000000
+Crest Hill,6383,"Construct a pump station, receiving station and ground level storage tank.",IL1970250,2025-11-03 0:00:00,17500000
+Crest Hill,6385,"Phase 2: Line 4,000' of watermain.",IL1970250,2026-02-03 0:00:00,4000000
+Crest Hill,6386,"Phase 3: Line 4,000' of watermain.",IL1970250,2027-02-02 0:00:00,4000000
+Crest Hill,7147,"Phase 4: Line 4,000' of watermain.",IL1970250,2028-02-02 0:00:00,4000000
+Dalzell,7001,"Phase 2: Construct and loop 7,700' of 8"" and 10"" watermain. Abandon
+two wells, two storage tanks and waterworks building.",110250,2025-11-03 0:00:00,2211000
+Downers Grove,6105,"Phase 3: Install7,040' of watermain ranging in size from 8"" to 12"" .",IL0430300,2025-09-10 0:00:00,3000000
+Downers Grove,6106,"Phase 4: Install 7,040' of watermain ranging in size from 8"" to 12"".",IL0430300,2026-09-01 0:00:00,3000000
+Downers Grove,6107,"Phase 6: Install 6,600' of watermain ranging in size from 8"" to 12"".",IL0430300,2027-09-01 0:00:00,2500000
+Forsyth,5925,Repair two water towers and ground storage tank.,IL1150200,2025-05-15 0:00:00,2000000
+Forsyth,5926,Replace watermians.,IL1150200,2026-05-15 0:00:00,$        -
+Hanover Park,6355,"Phase 3: Replace 7,370' of watermain.",IL0314480,2026-03-01 0:00:00,5138000
+Hanover Park,6356,"Phase 4: Replace 9,360' of watermain.",IL0314480,2027-03-01 0:00:00,4691000
+Hanover Park,6357,"Phase 5: Replace 9,290' of watermain.",IL0314480,2028-03-31 0:00:00,4623000
+Irvington,6240,"Replace 18,400' of watermain.",1890250,2025-09-01 0:00:00,1200000
+Itasca,6243,Phase 3: Replace watermain.,IL0430500,2025-04-01 0:00:00,6500000
+Itasca,6244,Phase 4: Replace watermain.,IL0430500,2027-04-01 0:00:00,6200000
+Ivesdale,5885,"Phase 3: Install 4,000"" of watermain, valves and hydrants.",IL0194560,2025-09-15 0:00:00,850000
+Joliet,6077,"Replace/install 21 miles of watermain, hydrants, valves and service lines.",1970450,2026-02-28 0:00:00,76840000
+Joliet,6078,"Replace/install 20 miles of watermain, hydrants, valves and service lines.",1970450,2027-02-28 0:00:00,67970000
+Joliet,6087,"Replace/install 21 miles of watermain, hydrants, valves and service lines.",1970450,2028-02-29 0:00:00,95350000
+Joliet,6088,"Replace/install 20 miles of watermain, hydrants, valves and service lines.",1970450,2029-02-28 0:00:00,89208000
+Joliet,6089,"Replace/install 4 miles of watermain, hydrants, valves and service lines
+and decommission 15,600' of transmission main.",1970450,2030-02-28 0:00:00,20650000
+Kincaid,6061,Replace watermain.,IL0210250,2026-04-20 0:00:00,2100000
+Kincaid,6062,"Construct a new 100,000-gallon elevated tower, repair existing tower and
+loop watermains.",IL0210250,2027-04-22 0:00:00,2288000
+Kirkland,5851,Elevate storage tank.,IL0370300,2025-05-01 0:00:00,1000000
+Macomb,4231,"Construct a new treatment plant and four deep wells and abandon
+existing treatment plant.",IL1090350,2025-09-01 0:00:00,36000000
+Markham,6341,Phase 1: Replace watermains.,IL0311770,2025-05-20 0:00:00,2364094
+Marshall,5918,"Construct a new 500,000 gallon elevated tower.",IL0230100,2027-05-01 0:00:00,2900000
+Orient,6957,"Replace 1,200' of watermain, 180 meters and booster pump station.
+Install a backup generator and tank mixer.",IL0550350,2025-04-01 0:00:00,1000000
+Palos Heights,6286,"Replace 3,200' of 6"" watermain with 8"" watermain.",IL0312370,2025-09-02 0:00:00,1698800
+Palos Heights,6287,"Replace 4,000' of 6"" and 8"" watermain.",IL0312370,2026-09-01 0:00:00,2137500
+Palos Heights,6288,"Line 900' of 8"" watermain and loop 1,000' of watermain.",IL0312370,2027-09-01 0:00:00,1360700
+Palos Heights,6289,"Replace 6,000' of 6"" watermain with 8"" watermain.",IL0312370,2028-09-01 0:00:00,3356400
+Rock Falls,5721,"Phase 4: Construct 4,250' of 6"" watermain.",1950450,5/1/2025,1474000
+Rock Falls,5722,"Phase 5: Construct 4,800' of 6"" watermain.",1950450,5/1/2026,1526000
+Rockdale,6777,"Replace 1,585' of 8"" and 10"" watermain. Replace 1,515' of 6"" watermain
+with 10"" watermain.",1970850,8/1/2025,1290100
+Rockdale,6779,Phase 3: Construct a new .5 MG elevated storage tank.,1970850,8/1/2026,4907000
+Rockdale,6780,"Replace 4,875' of 6"" and 8"" watermain.",1970850,3/1/2027,2600600
+Rockdale,3587,"Replace 3,650' of 6"" watermain and replace 3,050' of 8"" watermain.",1970850,3/1/2028,4233500
+Rockford,6769,Drill a new well and construct a treatment plant. Install new watermain.,IL2010300,3/2/2026,24216005
+Sesser,5797,Phase 4: Watermain replacement.,IL0550450,2/1/2026,1000000
+Sparta,5881,"Replace 7.5 miles of 16"" raw watermain.",IL1570600,6/1/2025,4200000
+Tovey,6378,"Replace 12,500' of watermain and meters.",IL0210650,4/1/2025,2399000
+Tovey,6379,"Replace 12,500' of watermain.",IL0210650,4/5/2027,2289000
+Westmont,6960,Extend water service to the Liberty Park subdivision.,IL0430950,9/1/2025,4199000

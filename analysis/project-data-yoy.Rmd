@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Ohio"
-state_abbr <- "OH"
+state_name <- "Michigan"
+state_abbr <- "MI"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -176,14 +176,14 @@ if ( nrow(project_dollars %>% filter(!is.na(project_cost_ef)))  > 0 ) {
 tpc_ef_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=project_cost_ef, text=format_currency(project_cost_ef))) + 
   geom_bar(stat="identity", fill="#82AB6E") +
   scale_y_continuous(labels=label_dollar()) + 
-  labs(title="What are the total project costs of projects in funding lists?",
+  labs(title="What are the total project costs of projects in fundable lists?",
        subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
        x="State Fiscal Year",
        y="Project Cost") + 
   epic_chart_theme
 
 tpc_ef_gp <- ggplotly(tpc_ef_p, tooltip="text") %>%
-  layout(title = list(text = paste0("What are the total project costs of projects in funding lists?",
+  layout(title = list(text = paste0("What are the total project costs of projects in fundable lists?",
                                     '<br>',
                                     get_subtitle_str(project_dollars$state_fiscal_year, state_name)
                                     )))
@@ -1393,7 +1393,7 @@ if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
     epic_chart_theme
   
   tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the total amount of funding for projects on funding lists per project type?",
+    layout(title = list(text = paste0("What's the total amount of funding for projects on fundable lists per project type?",
                                       '<br>',
                                       get_subtitle_str(project_type_df$state_fiscal_year, state_name)
                                       )))
@@ -1781,17 +1781,18 @@ if (sum(avg_med_requested_amount$value, na.rm=TRUE) > 0) {
 
 ```{r}
 lead_project_cost <- project_dollars %>%
-  select(state_fiscal_year, project_cost_lsli, project_cost_lslr, project_cost_lslu) %>%
+  select(state_fiscal_year, project_cost_lslb, project_cost_lsli, project_cost_lslr, project_cost_lslu) %>%
   left_join(project_dollars %>%
-              select(state_fiscal_year, project_cost_lsli, project_cost_lslr, project_cost_lslu) %>%
+              select(state_fiscal_year, project_cost_lslb, project_cost_lsli, project_cost_lslr, project_cost_lslu) %>%
               group_by(state_fiscal_year) %>%
-              summarize(project_cost_combined = sum(project_cost_lsli, project_cost_lslr, project_cost_lslu, na.rm=TRUE))) %>%
-  pivot_longer(cols=c("project_cost_lsli", "project_cost_lslr", "project_cost_lslu")) %>%
+              summarize(project_cost_combined = sum(project_cost_lslb, project_cost_lsli, project_cost_lslr, project_cost_lslu, na.rm=TRUE))) %>%
+  pivot_longer(cols=c("project_cost_lslb","project_cost_lsli", "project_cost_lslr", "project_cost_lslu")) %>%
   mutate(name = case_when(
+    name == "project_cost_lslb" ~ "Both",
     name == "project_cost_lsli" ~ "Inventory",
     name == "project_cost_lslr" ~ "Replacement",
-    TRUE ~ "Other"),
-    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    TRUE ~ "Unknown"),
+    name = factor(name, levels=c("Both", "Replacement", "Inventory", "Unknown")),
     pct_str = as.character(round(value/project_cost_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)"))
 
@@ -1830,17 +1831,18 @@ if (sum(lead_project_cost$value, na.rm=TRUE) > 0) {
 #### Project Cost Expecting Funding
 ```{r}
 lead_project_cost_ef <- project_dollars |>
-  dplyr::select(state_fiscal_year, project_cost_ef_lslu, project_cost_ef_lsli, project_cost_ef_lslr) |>
-  tidyr::pivot_longer(cols = c("project_cost_ef_lsli", "project_cost_ef_lslr", "project_cost_ef_lslu")) |>
+  dplyr::select(state_fiscal_year, project_cost_ef_lslb, project_cost_ef_lslu, project_cost_ef_lsli, project_cost_ef_lslr) |>
+  tidyr::pivot_longer(cols = c("project_cost_ef_lslb", "project_cost_ef_lsli", "project_cost_ef_lslr", "project_cost_ef_lslu")) |>
   dplyr::group_by(state_fiscal_year, name) |>
   dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(state_fiscal_year) |>
   dplyr::mutate(project_cost_ef_combined = sum(value)) |>
   dplyr::mutate(name = case_when(
+    name == "project_cost_ef_lslb" ~ "Both",
     name == "project_cost_ef_lsli" ~ "Inventory",
     name == "project_cost_ef_lslr" ~ "Replacement",
-    TRUE ~ "Other"),
-    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    TRUE ~ "Unknown"),
+    name = factor(name, levels=c("Both", "Replacement", "Inventory", "Unknown")),
     pct_str = as.character(round(value/project_cost_ef_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
     )
@@ -1880,20 +1882,27 @@ if (sum(lead_project_cost_ef$value, na.rm=TRUE) > 0) {
 ```{r}
 
 lead_total_funding_amount <- project_dollars |>
-  dplyr::select(state_fiscal_year, funding_amount_lslr, funding_amount_lsli, funding_amount_lslu) |>
-  tidyr::pivot_longer(cols = c("funding_amount_lslr", "funding_amount_lsli", "funding_amount_lslu")) |>
+  dplyr::select(state_fiscal_year, 
+  dplyr::any_of(c("funding_amount_lslb", "funding_amount_lslr", "funding_amount_lsli", "funding_amount_lslu"))
+   ) |>
+  tidyr::pivot_longer(-state_fiscal_year) |>
   dplyr::group_by(state_fiscal_year, name) |>
   dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(state_fiscal_year) |>
   dplyr::mutate(funding_amount_combined = sum(value)) |>
   dplyr::mutate(name = case_when(
+    name == "funding_amount_lslb" ~ "Both",
     name == "funding_amount_lsli" ~ "Inventory",
     name == "funding_amount_lslr" ~ "Replacement",
-    TRUE ~ "Other"),
-    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    TRUE ~ "Unknown")
+    ) |>
+  dplyr::mutate(
+    name = factor(name, levels=c("Both", "Replacement", "Inventory", "Unknown"))) |>    
+  tidyr::complete(name, 
+                  fill = list(value = 0))  |>
+  dplyr::mutate(
     pct_str = as.character(round(value/funding_amount_combined,3)*100),
-    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
-    )
+    plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)"))
 
 if (sum(lead_total_funding_amount$value, na.rm=TRUE) > 0) {
   
@@ -1901,7 +1910,8 @@ if (sum(lead_total_funding_amount$value, na.rm=TRUE) > 0) {
     geom_bar(stat="identity", position="stack") + 
     scale_y_continuous(labels=label_dollar()) + 
     scale_fill_manual(values = lead_colors, 
-                      name = "") + 
+                      name = "",
+                      drop = FALSE) + 
     labs(x="State Fiscal Year",
          y="",
          title="What's the project funding amount for lead service line?",
@@ -1928,17 +1938,22 @@ if (sum(lead_total_funding_amount$value, na.rm=TRUE) > 0) {
 ```{r}
 
 lead_total_funding_amount_ef <- project_dollars |>
-  dplyr::select(state_fiscal_year, funding_amount_ef_lslr, funding_amount_ef_lsli, funding_amount_ef_lslu)|>
-  tidyr::pivot_longer(cols = c("funding_amount_ef_lslr", "funding_amount_ef_lsli", "funding_amount_ef_lslu")) |>
+  dplyr::select(state_fiscal_year, 
+  dplyr::any_of(c("funding_amount_ef_lslb", 
+                             "funding_amount_ef_lslr", 
+                             "funding_amount_ef_lsli", 
+                             "funding_amount_ef_lslu")))|>
+  tidyr::pivot_longer(-state_fiscal_year) |>
   dplyr::group_by(state_fiscal_year, name) |>
   dplyr::summarize(value = sum(value, na.rm = TRUE), .groups = "drop") |>
   dplyr::group_by(state_fiscal_year) |>
   dplyr::mutate(funding_amount_ef_combined = sum(value)) |>
   dplyr::mutate(name = case_when(
+    name == "funding_amount_ef_lslb" ~ "Both",
     name == "funding_amount_ef_lsli" ~ "Inventory",
     name == "funding_amount_ef_lslr" ~ "Replacement",
-    TRUE ~ "Other"),
-    name = factor(name, levels=c("Replacement", "Inventory", "Other")),
+    TRUE ~ "Unknown"),
+    name = factor(name, levels=c("Both", "Replacement", "Inventory", "Unknown")),
     pct_str = as.character(round(value/funding_amount_ef_combined,3)*100),
     plot_str = paste0(name, ", ", state_fiscal_year, ":<br>", format_currency(value), " (", pct_str, "%)")
     )
@@ -1969,7 +1984,7 @@ if (sum(lead_total_funding_amount_ef$value, na.rm=TRUE) > 0) {
                    name = "lead-funding-amount-expecting-funding-yoy")
     }
 
-  lead_fa_gp
+  lead_fa_ef_gp
   
 }
 ```

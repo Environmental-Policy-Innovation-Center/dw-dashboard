@@ -120,7 +120,42 @@ clean_oh_y4 <- function() {
   # Check for disinfection byproduct in description
   oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
-    
+  
+  # Check for lead subtypes: Both
+  oh_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "both")
+
+  ####### Decision: No lead projects classified as both
+  
+  # Check for lead subtypes: Unknown
+  oh_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "unknown")
+
+
   ####### SANITY CHECKS END #######
 
   # Run validation tests

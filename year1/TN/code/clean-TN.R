@@ -45,6 +45,53 @@ clean_tn_y1 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
+  ####### SANITY CHECKS START #######
+  
+  # Hone in on project id duplication
+  ####### Decision: No project id
+  
+  # Check for disinfection byproduct in description
+  tn_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision: Disinfection byproduct string
+  
+  # Check for lead subtypes: Both
+  tn_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "both")
+
+  ####### Decision: No lead projects classified as both
+  
+  # Check for lead subtypes: Unknown
+  tn_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "unknown")
+
+  ####### Decision: No lead projects classified as unknown
+
+  ####### SANITY CHECKS END #######
+  
   run_tests(tn_clean)
   rm(list=setdiff(ls(), "tn_clean"))
   

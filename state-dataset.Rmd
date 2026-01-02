@@ -266,8 +266,9 @@ pc_by_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`,
-         project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`
+        #  ,
+        #  project_cost_ef_na = `NA`
          )
 
 
@@ -278,8 +279,9 @@ pc_by_dac_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="disadvantaged", values_from="total_project_cost") %>%
   rename(project_costs_dac = Yes,
          project_costs_ndac = No,
-         project_costs_dac_ni = `No Information`,
-         project_costs_dac_na = `NA`
+         project_costs_dac_ni = `No Information`
+        #  ,
+        #  project_costs_dac_na = `NA`
          ) 
  
 pc_by_dac_ef_sc <- sc_projects |>
@@ -299,9 +301,9 @@ pc_by_dac_ef_sc <- sc_projects |>
     # project_costs_nef_dac_na = `No_NA`,
 
     project_costs_ef_ni_dac = `No Information_Yes`,
-    project_costs_ef_na_dac_na = `NA_NA`,
-    project_costs_ef_na_dac = `NA_Yes`,
-    project_costs_ef_na_ndac = `NA_No`
+    #project_costs_ef_na_dac_na = `NA_NA`,
+    #project_costs_ef_na_dac = `NA_Yes`,
+    #project_costs_ef_na_ndac = `NA_No`
     ) 
 
 # filter project costs by expecting funding for both tables
@@ -312,8 +314,9 @@ pc_by_ef <- all_projects %>%
   pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`,
-         project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`
+        #  ,
+        #  project_cost_ef_na = `NA`
          )
 
 pc_by_dac <- all_projects %>%
@@ -323,8 +326,9 @@ pc_by_dac <- all_projects %>%
   tidyr::pivot_wider(names_from="disadvantaged", values_from="project_cost_dac") %>%
   rename(project_cost_dac = Yes,
          project_cost_ndac = No,
-         project_cost_dac_ni = `No Information`,
-         project_cost_dac_na = `NA`
+         project_cost_dac_ni = `No Information`
+        #  ,
+        #  project_cost_dac_na = `NA`
          )
 
 pc_by_dac_type <- all_projects %>%

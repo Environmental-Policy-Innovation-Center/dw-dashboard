@@ -1,6 +1,7 @@
 # Constants ----
 state <- "Michigan"
 state_abbr <- "MI"
+save_plots <- FALSE
 
 # Read in raw data -----
 mi_y0_raw <-  data.table::fread("year0/MI/data/mi-fy22-iup-final.csv", 
@@ -118,8 +119,8 @@ demand_lslr <- mi_clean |>
     lead_funds = sum(
       bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023", "2024", "2025")) +
       bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023", "2024", "2025")) +
-      lslr_bil_pf * (state_fiscal_year == "2026") +
-      lslr_bil_loan * (state_fiscal_year == "2026"),
+      lslr_bil_pf * (state_fiscal_year == "2026" & list == "lead") +
+      lslr_bil_loan * (state_fiscal_year == "2026" & list == "lead"),
       na.rm = TRUE
     )
   )
@@ -203,7 +204,7 @@ funding_sources_demand_available_lead_p <- lead_summary |>
   ggplot2::scale_fill_manual(values = c("Available LSLR Funds" = "#172f60", "LSLR Funds Demand" = "#82AB6E", "General Funds Demand" = "gray")) +
   ggplot2::labs(x="State Fiscal Year",
          y="",
-         title="Comparison of available LSLR funds to general and LSLR funds allocated to lead projects",
+         title="Comparison of LSLR and General Demand to Available LSLR Funds",
          subtitle=get_subtitle_str(lead_summary$state_fiscal_year, "Michigan"),
         fill = ""
         ) +
@@ -213,7 +214,7 @@ funding_sources_demand_available_lead_p <- lead_summary |>
     epic_chart_theme
 
 funding_sources_demand_available_lead_gp <- plotly::ggplotly(funding_sources_demand_available_lead_p,  tooltip = "text") |>
-   plotly::layout(title = list(text = paste0('Comparison of available LSLR funds to general and LSLR funds allocated to lead projects',
+   plotly::layout(title = list(text = paste0('Comparison of LSLR and General Demand to Available LSLR Funds',
                                       '<br>',
                                       get_subtitle_str(lead_summary$state_fiscal_year, "Michigan")))
            )
@@ -336,7 +337,7 @@ dac_p <- mi_dacs |>
   dplyr::mutate(
     name = dplyr::case_when(
       name == "dwsrf_funds" ~ "DWSRF Funds" ,
-      name == "state_funds" ~ "State Funds"
+      name == "state_funds" ~ "Other Federal and State Funds"
     ),
     plt_str = paste0(name, ", ", state_fiscal_year, ": ", format_currency(value))
   ) |>
@@ -349,10 +350,10 @@ dac_p <- mi_dacs |>
   ),
     position = "dodge") +
   ggplot2::scale_y_continuous(labels=label_dollar()) + 
-  ggplot2::scale_fill_manual(values = c("DWSRF Funds" = "#172f60", "State Funds" = "#527CAF")) +
+  ggplot2::scale_fill_manual(values = c("DWSRF Funds" = "#172f60", "Other Federal and State Funds" = "#527CAF")) +
   ggplot2::labs(x="State Fiscal Year",
          y="",
-         title="Funding amounts for projects serving DACs using DWSRF funds compared to state funds",
+         title="Funding amounts for projects serving DACs using DWSRF funds compared to other federal and state funds",
          subtitle=get_subtitle_str(mi_dacs$state_fiscal_year, "Michigan"),
         fill = ""
         ) +
@@ -363,7 +364,7 @@ dac_p <- mi_dacs |>
 
 
 dac_gp <- plotly::ggplotly(dac_p,  tooltip = "text") |>
-   plotly::layout(title = list(text = paste0('Funding amounts for projects serving DACs using DWSRF funds compared to state funds',
+   plotly::layout(title = list(text = paste0('Funding amounts for projects serving DACs using DWSRF funds compared to other federal and state funds',
                                       '<br>',
                                       get_subtitle_str(mi_dacs$state_fiscal_year, "Michigan")))
            )
@@ -451,17 +452,18 @@ state_funds <- dplyr::bind_rows(
     dplyr::mutate(
       funding_type = dplyr::case_when(
         funding_category == "total_demand" ~ "Demand for Funds",
-        stringr::str_detect(funding_category, "expected") ~ "On Funding List",
+        stringr::str_detect(funding_category, "expected") ~ "On Fundable List",
         .default = "Available Funds"
       )
     ) |>
   dplyr::mutate(
     funding_type = forcats::as_factor(funding_type),
-    funding_type = forcats::fct_relevel(funding_type, "Available Funds", "On Funding List", "Demand for Funds")
+    funding_type = forcats::fct_relevel(funding_type, "Available Funds", "On Fundable List", "Demand for Funds")
   ) |>
-  dplyr::mutate(category_label = dplyr::case_when(
-    stringr::str_detect(funding_category, "state") ~ "State Funds",
-    .default = "SRF Funds"
+  dplyr::mutate(
+    category_label = dplyr::case_when(
+      stringr::str_detect(funding_category, "state") ~ "Available Other Federal and State Funds",
+      .default = "Available DWSRF Funds"
   )) 
 
 dodge_width <- 0.9
@@ -490,68 +492,518 @@ state_funds_p <- ggplot2::ggplot() +
       x = x_pos,
       y = value,
       fill = category_label,
-      group = state_fiscal_year
+      group = state_fiscal_year,
+      text = paste0(category_label, " ", state_fiscal_year, ":<br>", scales::dollar(value))
     ),
     color = "black",
     width = dodge_width / n_funding_types,
-    position = "stack",
-    alpha = 0
-  ) +
-  ggplot2::geom_text(
-    data = state_funds |> 
-      dplyr::filter(funding_type == "Available Funds") |>
-      dplyr::filter(value > 0) |>
-      dplyr::mutate(x_pos = as.numeric(factor(state_fiscal_year)) - dodge_width / 3),
-    ggplot2::aes(
-      x = x_pos,
-      y = value,
-      label = category_label,
-      group = state_fiscal_year
-    ),
-    position = ggplot2::position_stack(vjust = 0.5),
-    color = "white",
-    fontface = "bold",
-    size = 3
+    position = "stack"
   ) +
   ggplot2::scale_y_continuous(labels = scales::label_dollar()) + 
   ggplot2::labs(
     x = "State Fiscal Year",
     y = "",
-    title = "Comparison of demand for funds, available funds, and funds allocated to projects",
+    title = "Comparison of demand for funds, available funds, and funds on fundable list",
     subtitle = get_subtitle_str(state_funds$state_fiscal_year, "Michigan")
   ) +
-  ggplot2::scale_fill_manual(values = 
+  #ggplot2::scale_fill_discrete(breaks = c("Available Funds", "Available SRF Funds", "Available State Funds", "On Fundable List", "Demand for Funds")) + 
+  ggplot2::scale_fill_manual(
+    breaks = c("Available Funds", "Available DWSRF Funds", "Available Other Federal and State Funds", "On Fundable List", "Demand for Funds"),
+    values = 
     c(
       "Available Funds" = "#4ea324",
         "Demand for Funds" = "#172f60",
-        "On Funding List" = "#791a7b"
+        "On Fundable List" = "#791a7b",
+        "Available DWSRF Funds" = "#6bc842",
+        "Available Other Federal and State Funds" = "#3d7f1c"
     ), name = "") +
   epic_chart_theme
 
 # # Convert to plotly and remove specific legend items
 state_funds_gp <- plotly::ggplotly(state_funds_p,  tooltip = "text") |>
-   plotly::layout(title = list(text = paste0('Comparison of demand for funds, available funds, and funds allocated to projects',
+   plotly::layout(title = list(text = paste0('Comparison of demand for funds, available funds, and funds on fundable list',
                                       '<br>',
                                       get_subtitle_str(state_funds$state_fiscal_year, "Michigan")))
            )
+# # Reorder the traces to match your desired legend order
+# desired_order <- c("Available Funds", "Available SRF Funds", "Available State Funds", 
+#                    "On Fundable List", "Demand for Funds")
 
-# # Find and hide the SRF Funds and State Funds legend entries
-for (i in seq_along(state_funds_gp$x$data)) {
-  if (!is.null(state_funds_gp$x$data[[i]]$name) && 
-      state_funds_gp$x$data[[i]]$name %in% c("SRF Funds", "State Funds")) {
-    state_funds_gp$x$data[[i]]$showlegend <- FALSE
-  }
-}
+# # Get current trace names and reorder
+# trace_names <- sapply(state_funds_gp$x$data, function(tr) tr$name)
+# new_order <- match(desired_order, trace_names)
+# new_order <- new_order[!is.na(new_order)]  # Remove any NA values
+
+# state_funds_gp$x$data <- state_funds_gp$x$data[new_order]
+
+# Define desired order without "Available Funds"
+desired_order <- c("Available DWSRF Funds", "Available Other Federal and State Funds", 
+                   "On Fundable List", "Demand for Funds")
+
+# Get current trace names
+trace_names <- sapply(state_funds_gp$x$data, function(tr) tr$name)
+
+# Find indices of traces we want to keep
+keep_indices <- which(trace_names %in% desired_order)
+
+# Filter and reorder traces
+state_funds_gp$x$data <- state_funds_gp$x$data[keep_indices]
+new_order <- match(desired_order, trace_names[keep_indices])
+state_funds_gp$x$data <- state_funds_gp$x$data[new_order]
+
+# # # Find and hide the SRF Funds and State Funds legend entries
+# for (i in seq_along(state_funds_gp$x$data)) {
+#   if (!is.null(state_funds_gp$x$data[[i]]$name) && 
+#       state_funds_gp$x$data[[i]]$name %in% c("SRF Funds", "State Funds")) {
+#     state_funds_gp$x$data[[i]]$showlegend <- FALSE
+#   }
+# }
 
 state_funds_gp
 
-  
   if (save_plots) {
     run_save_plots(gg_plot=state_funds_p,
                    gp_object=state_funds_gp,
                    name="state-funds-compare-demand-available-funds-expected-funds-yoy")
   }
 
+
+## VIZ 3A: State Funds: Available and On Fundable breakdown ----
+
+state_fund_breakdown <- mi_total_available_summary |> #from financial worksheet
+  dplyr::mutate(
+    category_label = dplyr::case_when(
+      stringr::str_detect(funding_category, "state") ~ "Available Other Federal and State Funds",
+      .default = "Available DWSRF Funds"
+    )
+  ) |>
+  dplyr::bind_rows(
+    mi_project_dollars |> #from standardized project level data
+      dplyr::filter(state == "Michigan") |>
+      dplyr::select(state_fiscal_year, total_funding_amount) |>
+      dplyr::mutate(state_fiscal_year = as.character(state_fiscal_year)) |>
+      dplyr::left_join(mi_state_funds) |> #from state funds as defined by comms
+      dplyr::rename(DWSRF = total_funding_amount) |>
+      tidyr::pivot_longer(
+        -state_fiscal_year,
+        names_to = "funding_category"
+      ) |>
+      dplyr::mutate(
+        category_label = dplyr::case_when(
+          grepl("DWSRF", funding_category) ~ "On Fundable List DWSRF Funds",
+          .default = "On Fundable List Other Federal and State Funds"
+        )
+      )
+  ) |>
+  dplyr::mutate(
+    funding_category_ = dplyr::case_when(
+      grepl("total_funding", funding_category) ~ "Available Funds",
+      .default = "On Fundable List"
+    )
+  )
+
+state_fund_breakdown_p <- ggplot2::ggplot() +
+  ggplot2::geom_col(
+    data = state_fund_breakdown,
+    ggplot2::aes(
+      x = state_fiscal_year,
+      y = value,
+      fill = funding_category_
+    ),
+    color = "black",
+    position = ggplot2::position_dodge(width = dodge_width)
+  ) +
+  ggplot2::geom_col(
+    data = state_fund_breakdown |>
+      dplyr::filter(funding_category_ == "Available Funds") |>
+      dplyr::mutate(x_pos = as.numeric(factor(state_fiscal_year)) - dodge_width / 4),
+    ggplot2::aes(
+      x = x_pos,
+      y = value,
+      fill = category_label,
+      group = state_fiscal_year,
+      text = paste0(category_label, " ", state_fiscal_year, ":<br>", scales::dollar(value))
+    ),
+    color = "black",
+    width = dodge_width / 2,
+    position = "stack"
+  ) +
+  ggplot2::geom_col(
+    data = state_fund_breakdown |>
+      dplyr::filter(funding_category_ == "On Fundable List") |>
+      dplyr::mutate(x_pos = as.numeric(factor(state_fiscal_year)) + dodge_width / 4),
+    ggplot2::aes(
+      x = x_pos,
+      y = value,
+      fill = category_label,
+      group = state_fiscal_year,
+      text = paste0(category_label, " ", state_fiscal_year, ":<br>", scales::dollar(value))
+    ),
+    color = "black",
+    width = dodge_width / 2,
+    position = "stack"
+  ) +
+  ggplot2::scale_y_continuous(labels = scales::label_dollar()) + 
+  ggplot2::labs(
+    x = "State Fiscal Year",
+    y = "",
+    title = "Comparison of available funds to funds on funding lists from DWSRF and other federal and state funds",
+    subtitle = get_subtitle_str(state_funds$state_fiscal_year, "Michigan")
+  ) +
+  #ggplot2::scale_fill_discrete(breaks = c("Available Funds", "Available SRF Funds", "Available State Funds", "On Fundable List", "Demand for Funds")) + 
+  ggplot2::scale_fill_manual(
+    breaks = c("Available DWSRF Funds", "Available Other Federal and State Funds", "On Fundable List DWSRF Funds", "On Fundable List Other Federal and State Funds"),
+    values = 
+    c(
+        "On Fundable List DWSRF Funds" = "#791a7b",
+        "On Fundable List Other Federal and State Funds" = "#e948ebff",
+        "Available DWSRF Funds" = "#6bc842",
+        "Available Other Federal and State Funds" = "#3d7f1c"
+    ), name = "") +
+  epic_chart_theme
+
+
+state_fund_breakdown_gp <- plotly::ggplotly(state_fund_breakdown_p,  tooltip = "text") |>
+   plotly::layout(title = list(text = paste0('Comparison of available funds to funds on funding lists from DWSRF and other federal and state funds',
+                                      '<br>',
+                                      get_subtitle_str(state_fund_breakdown$state_fiscal_year, "Michigan")))
+           )
+
+# Define desired order without "Available Funds"
+desired_order <- c("Available DWSRF Funds", "Available Other Federal and State Funds", 
+                   "On Fundable List DWSRF Funds", "On Fundable List Other Federal and State Funds")
+
+# Get current trace names
+trace_names <- sapply(state_fund_breakdown_gp$x$data, function(tr) tr$name)
+
+# Find indices of traces we want to keep
+keep_indices <- which(trace_names %in% desired_order)
+
+# Filter and reorder traces
+state_fund_breakdown_gp$x$data <- state_fund_breakdown_gp$x$data[keep_indices]
+new_order <- match(desired_order, trace_names[keep_indices])
+state_fund_breakdown_gp$x$data <- state_fund_breakdown_gp$x$data[new_order]
+
+state_fund_breakdown_gp
+
+  if (save_plots) {
+    run_save_plots(gg_plot=state_fund_breakdown_p,
+                   gp_object=state_fund_breakdown_gp,
+                   name="state-funds-compare-breakdown-available-funds-expected-funds-yoy")
+  }
+   
+
+## VIZ 3 B ----
+
+state_fund_ef_breakdown_p <- ggplot2::ggplot() +
+  ggplot2::geom_col(
+    data = state_fund_breakdown |>
+      dplyr::filter(funding_category_ == "On Fundable List"),
+    ggplot2::aes(
+      x = state_fiscal_year,
+      y = value,
+      fill = category_label,
+      group = state_fiscal_year,
+      text = paste0(category_label, " ", state_fiscal_year, ":<br>", scales::dollar(value))
+    ),
+    color = "black",
+    position = "stack"
+  ) +
+  ggplot2::scale_y_continuous(labels = scales::label_dollar()) + 
+  ggplot2::labs(
+    x = "State Fiscal Year",
+    y = "",
+    title = "Total amount of funding for projects on fundable list from DWSRF and other federal and state funds",
+    subtitle = get_subtitle_str(state_funds$state_fiscal_year, "Michigan")
+  ) +
+  ggplot2::scale_fill_manual(
+    values = 
+    c(
+        "On Fundable List DWSRF Funds" = "#791a7b",
+        "On Fundable List Other Federal and State Funds" = "#e948ebff"
+    ), name = "") +
+  epic_chart_theme
+
+
+state_fund_ef_breakdown_gp <- plotly::ggplotly(state_fund_ef_breakdown_p,  tooltip = "text") |>
+   plotly::layout(title = list(text = paste0('Total amount of funding for projects on fundable list from DWSRF and other federal and state funds',
+                                      '<br>',
+                                      get_subtitle_str(state_fund_breakdown$state_fiscal_year, "Michigan")))
+           )
+
+state_fund_ef_breakdown_gp
+
+  if (save_plots) {
+    run_save_plots(gg_plot=state_fund_ef_breakdown_p,
+                   gp_object=state_fund_ef_breakdown_gp,
+                   name="state-funds-compare-breakdown-expected-funds-yoy")
+  }
+
+
+## VIZ 4 General Lead funds to lead -----
+
+# Lauren Kwan update on Oct 29 
+# For amount of lead funds going to meet demand, this would be the items we'd discussed a while back, copying below so you don't have to scroll:
+# Year 4: Projects with Funding Amounts for LSLR BIL Loan and LSLR BIL PF (from the LSLR PPL only, since there are two PPLs this year)
+# Year 3: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 2: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 1: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# And lastly, for general funds going towards lead projects, this would be:
+# Year 4: Lead projects with Funding Amounts for DWSRF Loan Allocation, DWSRF PF Allocation, BIL Loan Allocation, and BIL PF Allocation in the Comprehensive PPL. Also, lead projects with DWSRF Loan, BIL PF, BIL Loan Allocation, and BIL PF Allocation in the LSLR PPL.
+# Year 3: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 2: Lead projects with Funding Amounts for DWSRF Traditional Loan, DWSRF Traditional PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 1: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+
+# Lauren Kwan Sep 24th at 3:30 PM : # General Purpose funds
+# Lauren Kwan Sep 25th at 12:10 PM : # LSLR dedicated funds 
+
+# And lastly, for general funds going towards lead projects, this would be:
+# Year 4: Lead projects with Funding Amounts for DWSRF Loan Allocation, DWSRF PF Allocation, BIL Loan Allocation, and BIL PF Allocation in the Comprehensive PPL. Also, lead projects with DWSRF Loan, BIL PF, BIL Loan Allocation, and BIL PF Allocation in the LSLR PPL.
+# Year 3: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 2: Lead projects with Funding Amounts for DWSRF Traditional Loan, DWSRF Traditional PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+# Year 1: Lead projects with Funding Amounts for DWSRF Loan, DWSRF PF, BIL DWSRF Supplemental Loan, and BIL DWSRF Supplemental PF
+mi_general_funds_lead <- mi_clean  |>
+  dplyr::filter(project_type == "Lead") |>
+  dplyr::select(
+    state_fiscal_year,
+    dwsrf_loan, 
+    dwsrf_pf,
+    bil_dwsrf_supplemental_loan, 
+    bil_dwsrf_supplemental_pf, 
+    dwsrf_traditional_loan, 
+    dwsrf_traditional_pf, 
+    dwsrf_loan_allocation, 
+    dwsrf_pf_allocation, 
+    bil_loan_allocation, 
+    bil_pf_allocation,
+    bil_pf,
+    list
+  ) |>
+  dplyr::mutate(
+    dplyr:: across(
+      .cols = -c(state_fiscal_year, list), 
+      .fns = ~ convert_to_numeric(.x, TRUE)
+    )
+  ) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::summarise(
+    general_purpose_funds = sum(
+      dwsrf_loan * (state_fiscal_year %in% c("2023","2025")) +
+      dwsrf_pf * (state_fiscal_year %in% c("2023","2025")) +
+      bil_dwsrf_supplemental_loan * (state_fiscal_year %in% c("2023","2024","2025")) +
+      bil_dwsrf_supplemental_pf * (state_fiscal_year %in% c("2023","2024","2025")) +
+      dwsrf_traditional_loan * (state_fiscal_year == "2024") +
+      dwsrf_traditional_pf * (state_fiscal_year == "2024") +
+      dwsrf_loan * (state_fiscal_year == "2026" & list == "lead") +  
+      bil_pf * (state_fiscal_year == "2026" & list == "lead") +
+      dwsrf_loan_allocation * (state_fiscal_year == "2026") +
+      dwsrf_pf_allocation * (state_fiscal_year == "2026") +
+      bil_loan_allocation * (state_fiscal_year == "2026") +
+      bil_pf_allocation * (state_fiscal_year == "2026"),
+      na.rm = TRUE
+    )
+  )
+
+# LSLR dedicated funds as follows:
+# Year 4: Projects with Funding Amounts for LSLR BIL Loan and LSLR BIL PF (from the LSLR PPL only, since there are two PPLs this year)
+# Year 3: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 2: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+# Year 1: Projects with Funding Amounts for BIL DWSRF LSLR Loan and BIL DWSRF LSLR PF
+
+mi_lead_funds_lead <- mi_clean  |>
+  dplyr::filter(project_type == "Lead") |>
+  dplyr::select(
+    state_fiscal_year,
+    list,
+    bil_dwsrf_lslr_loan,
+    bil_dwsrf_lslr_pf,
+    lslr_bil_loan,
+    lslr_bil_pf
+  ) |>
+  dplyr::mutate(
+    dplyr:: across(
+      .cols = -c(state_fiscal_year, list), 
+      .fns = ~ convert_to_numeric(.x, TRUE)
+    )
+  ) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::summarise(
+    lead_specific_funds = sum(
+      bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023","2024", "2025")) +
+      bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023","2024", "2025"))  +
+      lslr_bil_loan * (state_fiscal_year == "2026" & list == "lead") +
+      lslr_bil_pf * (state_fiscal_year == "2026" & list == "lead"),  
+      na.rm = TRUE
+    )
+  )
+
+## Financial data for general purpose funds ----
+financial_general <- get_financial("Michigan") |>
+  dplyr::filter(fed_cap_grant %in% c("Base", "IIJA Gen Supp")) |>
+  dplyr::select(state_fiscal_year, total_funding_available) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::summarise(total_funding_available = sum(total_funding_available, na.rm = TRUE))
+
+## Amount of lead fund available (financial sheet) 
+financial_lslr <- get_financial("Michigan") |>
+  dplyr::filter(fed_cap_grant == "LSLR") |>
+  dplyr::select(state_fiscal_year, total_funding_available) 
+
+## Merged Viz -----
+funds_lead_p <- mi_general_funds_lead  |>
+  dplyr::left_join(mi_lead_funds_lead) |>
+  tidyr::pivot_longer(-state_fiscal_year, names_to = "fund_source") |>
+    dplyr::mutate(
+    fund_source = dplyr::case_when(
+      fund_source == "general_purpose_funds" ~ "General",
+      fund_source == "lead_specific_funds" ~ "Lead"
+    ),
+    fund_source = forcats::as_factor(fund_source),
+    fund_source = forcats::fct_relevel(fund_source, "Lead", "General")
+) |>
+  dplyr::left_join(financial_general |> dplyr::mutate(fund_source = "General") |> dplyr::rename(funding_general = "total_funding_available")) |>
+  dplyr::left_join(financial_lslr |> dplyr::mutate(fund_source = "Lead") |> dplyr::rename(funding_lead = "total_funding_available")) |>
+  tidyr::unite("total_funding_available", funding_general:funding_lead, na.rm = TRUE) |>
+  dplyr::mutate(
+    total_funding_available = as.numeric(total_funding_available),
+    prc_source_lead = round(100*value/total_funding_available, 2),
+    plt_str = ifelse(state_fiscal_year == "2026", 
+    paste0(fund_source, ", ", state_fiscal_year, ": ", format_currency(value)),
+    paste0(fund_source, ", ", state_fiscal_year, ": ", format_currency(value), " (", prc_source_lead, "%)"))
+    ) |>
+  dplyr::filter(!state_fiscal_year == "2022") |>
+  ggplot2::ggplot() +
+  ggplot2::geom_col(ggplot2::aes(state_fiscal_year, value, alpha = fund_source, text = plt_str), fill = "#82AB6E", position = "dodge") +
+  ggplot2::scale_alpha_manual(values = c("Lead" = 0.6, "General" = 1)) +
+  ggplot2::scale_y_continuous(labels=label_dollar()) + 
+  ggplot2::guides(alpha = ggplot2::guide_legend(title = "Source")) +
+  ggplot2::labs(x="State Fiscal Year",
+         y="",
+         title="Lead specific and General purpose funds towards Lead projects",
+         subtitle=get_subtitle_str(mi_lead_funds_lead$state_fiscal_year, "Michigan")) +
+    epic_chart_theme
+  
+
+funds_lead_gp <- ggplotly(funds_lead_p, tooltip="text") |>
+  layout(title = list(text = paste0('Lead specific and General purpose funds towards Lead projects',
+                                      '<br>',
+                                      get_subtitle_str(mi_general_funds_lead$state_fiscal_year[-1], "Michigan")
+                                      )))
+
+  if (save_plots) {
+    run_save_plots(gg_plot = funds_lead_p,
+                   gp_object = funds_lead_gp, 
+                   name = "merged-general-lead-funds-to-lead-yoy")
+    }
+
+## VIZ 5 Lead purpose funds: allocated, unallocated -----
+
+lead_allocated_unallocated <- mi_lead_funds_lead |>
+  dplyr::left_join(financial_lslr) |>
+  dplyr::mutate(
+    lead_lead_perc =round(100*lead_specific_funds/total_funding_available, 2),
+    unallocated_perc = 100-lead_lead_perc,
+    unallocated_funds = unallocated_perc*total_funding_available/100,
+  ) |>
+  dplyr::select(
+    -total_funding_available
+  ) |>
+ tidyr::pivot_longer(
+    cols = c(ends_with("_funds")),
+    names_to = c("category"),       
+    values_to = "value"
+  ) |>
+  dplyr::mutate(
+    category = dplyr::case_when(
+      category =="lead_specific_funds" ~ "Allocated",
+      category == "unallocated_funds" ~ "Unallocated"
+    )
+  ) |>
+  pivot_longer(
+    cols = c(ends_with("_perc")),
+    names_to = c("perc_cat"),       
+    values_to = "perc"
+  ) |>
+  dplyr::mutate(
+    perc_cat = dplyr::case_when(
+      perc_cat =="lead_lead_perc" ~ "Allocated",
+      perc_cat == "unallocated_perc" ~ "Unallocated"
+    )
+  ) |>
+  dplyr::mutate(cat_same = category == perc_cat) |>
+  dplyr::filter(cat_same==TRUE) |>
+  dplyr::select(-perc_cat, -cat_same) |>
+   dplyr::mutate(
+    plt_str = ifelse(state_fiscal_year == "2026", 
+    paste0("LSLR ", category, " ", state_fiscal_year, ": ", format_currency(value)),
+    paste0("LSLR ", category, " ",state_fiscal_year, ": ", format_currency(value), " (", perc, "%)")),
+    category = forcats::as_factor(category),
+    category = forcats::fct_relevel(category, "Unallocated", "Allocated")
+    ) |>
+  dplyr::filter(!state_fiscal_year == "2022")
+
+
+lead_allocated_unallocated_p <- ggplot2::ggplot(lead_allocated_unallocated) +
+  ggplot2::geom_col(ggplot2::aes(state_fiscal_year, value, alpha = category, text = plt_str), fill = "#82AB6E") +
+  ggplot2::scale_alpha_manual(values = c("Unallocated" = 0.6, "Allocated" = 1)) +
+  ggplot2::scale_y_continuous(labels=label_dollar()) + 
+  ggplot2::guides(alpha = ggplot2::guide_legend(title = "")) +
+  ggplot2::labs(x="State Fiscal Year",
+         y="",
+         title="Allocated and Unallocated LSLR Funds",
+         subtitle=get_subtitle_str(unique(lead_allocated_unallocated$state_fiscal_year), "Michigan")) +
+    epic_chart_theme 
+
+lead_allocated_unallocated_gp <- ggplotly(lead_allocated_unallocated_p, tooltip="text") |>
+  layout(title = list(text = paste0('Allocated and Unallocated LSLR Funds',
+                                      '<br>',
+                                      get_subtitle_str(lead_allocated_unallocated$state_fiscal_year, "Michigan")
+                                      )))
+
+  if (save_plots) {
+    run_save_plots(gg_plot = lead_allocated_unallocated_p,
+                   gp_object = lead_allocated_unallocated_gp, 
+                   name = "allocated-unallocated-lead-funds-to-lead-yoy")
+    }
+
+## VIZ 6: Comparison of General Purpose Demand for Lead Projects to Available General Purpose Funds -----
+
+general_demand_p <- mi_general_funds_lead  |>
+  dplyr::left_join(financial_general) |> 
+  dplyr::mutate(perc_of_available = round(100*general_purpose_funds/total_funding_available, 2)) |>
+  tidyr::pivot_longer(-c(state_fiscal_year, perc_of_available)) |>  
+  dplyr::mutate(
+    funding_category = ifelse(grepl("general_purpose", name), "Demand for Funds", "Available Funds"),
+    funding_category = forcats::as_factor(funding_category),
+    funding_category = forcats::fct_relevel(funding_category, "Demand for Funds", "Available Funds"),
+    plt_str = paste0(funding_category, ", SFY ", state_fiscal_year, ": ", format_currency(value), ifelse(name == "general_purpose_funds" &  perc_of_available !=Inf, paste0(" (", perc_of_available, "%)"), ""))
+    ) |>
+  dplyr::filter(!state_fiscal_year == "2022") |>
+  ggplot2::ggplot(ggplot2::aes(state_fiscal_year, value, fill = funding_category, text = plt_str)) +
+  ggplot2::geom_col(position = "dodge") +
+  epic_chart_theme +
+  ggplot2::scale_fill_manual(values = c("Available Funds" = "#4ea324",
+        "Demand for Funds" = "#172f60")) +
+  ggplot2::labs(
+    title = "Comparison of General Purpose Demand for Lead Projects to Available General Purpose Funds",
+    y = "",
+    x = "State Fiscal Year",
+    fill = ""
+  ) +
+  ggplot2::scale_y_continuous(labels=label_dollar())
+
+
+general_demand_gp <- ggplotly(general_demand_p, tooltip="text") |>
+  layout(title = list(text = paste0('Comparison of General Purpose Demand for Lead Projects to Available General Purpose Funds',
+                                      '<br>',
+                                      get_subtitle_str(mi_general_funds_lead$state_fiscal_year[-1], "Michigan")
+                                      )))
+
+  if (save_plots) {
+    run_save_plots(gg_plot = general_demand_p,
+                   gp_object = general_demand_gp, 
+                   name = "general-demand-available-state-funds-to-lead-yoy")
+    }
 
 ## Commented out ----
 
@@ -764,37 +1216,6 @@ state_funds_gp
 #     -lslr_costs
 #   )
 
-# mi_lead_funds_lead <- mi_raw_full_lead  |>
-#   dplyr::filter(project_type == "Lead") |>
-#   dplyr::select(
-#     -project_type,
-#    # -project_name,
-#     -project_description
-#   ) |>
-#   dplyr::mutate(
-#     dplyr:: across(
-#       .cols = -state_fiscal_year, 
-#       .fns = ~ convert_to_numeric(.x, TRUE)
-#     )
-#   ) |>
-#   dplyr::group_by(state_fiscal_year) |>
-#   dplyr::summarise(
-#     lead_specific_funds = sum(
-#       bil_dwsrf_lslr_loan * (state_fiscal_year %in% c("2023","2024", "2025")) +
-#       bil_dwsrf_lslr_pf * (state_fiscal_year %in% c("2023","2024", "2025")) ,
-#         +
-#       # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
-#       # bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,  
-#       # bil_lslr_loan_allocation * (state_fiscal_year == "2026") +
-#       # bil_lslr_pf_allocation * (state_fiscal_year == "2026") ,
-#       na.rm = TRUE
-#     )
-#   )
-
-# ## Financial data for lead purpose funds ----
-# financial_lslr <- get_financial("Michigan") |>
-#   dplyr::filter(fed_cap_grant == "LSLR") |>
-#   dplyr::select(state_fiscal_year, total_funding_available) 
 
 # ## Viz lead purpose funds ----
 # lead_funds_lead_p <- mi_lead_funds_lead |>
@@ -828,120 +1249,7 @@ state_funds_gp
 #     }
 
 
-# ### Lead purpose funds: allocated, unallocated
-# lead_allocated_unallocated <- mi_lead_funds_lead |>
-#   dplyr::left_join(financial_lslr) |>
-#   dplyr::mutate(
-#     lead_lead_perc =round(100*lead_specific_funds/total_funding_available, 2),
-#     unallocated_perc = 100-lead_lead_perc,
-#     unallocated_funds = unallocated_perc*total_funding_available/100,
-#   ) |>
-#   dplyr::select(
-#     -total_funding_available
-#   ) |>
-#  tidyr::pivot_longer(
-#     cols = c(ends_with("_funds")),
-#     names_to = c("category"),       
-#     values_to = "value"
-#   ) |>
-#   dplyr::mutate(
-#     category = dplyr::case_when(
-#       category =="lead_specific_funds" ~ "Allocated",
-#       category == "unallocated_funds" ~ "Unallocated"
-#     )
-#   ) |>
-#   pivot_longer(
-#     cols = c(ends_with("_perc")),
-#     names_to = c("perc_cat"),       
-#     values_to = "perc"
-#   ) |>
-#   dplyr::mutate(
-#     perc_cat = dplyr::case_when(
-#       perc_cat =="lead_lead_perc" ~ "Allocated",
-#       perc_cat == "unallocated_perc" ~ "Unallocated"
-#     )
-#   ) |>
-#   dplyr::mutate(cat_same = category == perc_cat) |>
-#   dplyr::filter(cat_same==TRUE) |>
-#   dplyr::select(-perc_cat, -cat_same) |>
-#    dplyr::mutate(
-#     plt_str = ifelse(state_fiscal_year == "2026", 
-#     paste0("LSLR ", category, " ", state_fiscal_year, ": ", format_currency(value)),
-#     paste0("LSLR ", category, " ",state_fiscal_year, ": ", format_currency(value), " (", perc, "%)")),
-#     category = forcats::as_factor(category),
-#     category = forcats::fct_relevel(category, "Unallocated", "Allocated")
-#     )
 
-
-# lead_allocated_unallocated_p <- ggplot2::ggplot(lead_allocated_unallocated) +
-#   ggplot2::geom_col(ggplot2::aes(state_fiscal_year, value, alpha = category, text = plt_str), fill = "#82AB6E") +
-#   ggplot2::scale_alpha_manual(values = c("Unallocated" = 0.6, "Allocated" = 1)) +
-#   ggplot2::scale_y_continuous(labels=label_dollar()) + 
-#   ggplot2::guides(alpha = ggplot2::guide_legend(title = "")) +
-#   ggplot2::labs(x="State Fiscal Year",
-#          y="",
-#          title="Allocated and Unallocated LSLR Funds",
-#          subtitle=get_subtitle_str(mi_lead_funds_lead$state_fiscal_year, "Michigan")) +
-#     epic_chart_theme 
-
-# lead_allocated_unallocated_gp <- ggplotly(lead_allocated_unallocated_p, tooltip="text") |>
-#   layout(title = list(text = paste0('Allocated and Unallocated LSLR Funds',
-#                                       '<br>',
-#                                       get_subtitle_str(test$state_fiscal_year, "Michigan")
-#                                       )))
-
-#   if (save_plots) {
-#     run_save_plots(gg_plot = lead_allocated_unallocated_p,
-#                    gp_object = lead_allocated_unallocated_gp, 
-#                    name = "allocated-unallocated-lead-funds-to-lead-yoy")
-#     }
-
-
-# # Merged Viz -----
-# funds_lead_p <- mi_general_funds_lead  |>
-#   dplyr::left_join(mi_lead_funds_lead) |>
-#   tidyr::pivot_longer(-state_fiscal_year, names_to = "fund_source") |>
-#     dplyr::mutate(
-#     fund_source = dplyr::case_when(
-#       fund_source == "general_purpose_funds" ~ "General",
-#       fund_source == "lead_specific_funds" ~ "Lead"
-#     ),
-#     fund_source = forcats::as_factor(fund_source),
-#     fund_source = forcats::fct_relevel(fund_source, "Lead", "General")
-# ) |>
-#   dplyr::left_join(financial_general |> dplyr::mutate(fund_source = "General") |> dplyr::rename(funding_general = "total_funding_available")) |>
-#   dplyr::left_join(financial_lslr |> dplyr::mutate(fund_source = "Lead") |> dplyr::rename(funding_lead = "total_funding_available")) |>
-#   tidyr::unite("total_funding_available", funding_general:funding_lead, na.rm = TRUE) |>
-#   dplyr::mutate(
-#     total_funding_available = as.numeric(total_funding_available),
-#     prc_source_lead = round(100*value/total_funding_available, 2),
-#     plt_str = ifelse(state_fiscal_year == "2026", 
-#     paste0(fund_source, ", ", state_fiscal_year, ": ", format_currency(value)),
-#     paste0(fund_source, ", ", state_fiscal_year, ": ", format_currency(value), " (", prc_source_lead, "%)"))
-#     ) |>
-#   ggplot2::ggplot() +
-#   ggplot2::geom_col(ggplot2::aes(state_fiscal_year, value, alpha = fund_source, text = plt_str), fill = "#82AB6E", position = "dodge") +
-#   ggplot2::scale_alpha_manual(values = c("Lead" = 0.6, "General" = 1)) +
-#   ggplot2::scale_y_continuous(labels=label_dollar()) + 
-#   ggplot2::guides(alpha = ggplot2::guide_legend(title = "Source")) +
-#   ggplot2::labs(x="State Fiscal Year",
-#          y="",
-#          title="Lead specific and General purpose funds towards Lead projects",
-#          subtitle=get_subtitle_str(mi_lead_funds_lead$state_fiscal_year, "Michigan")) +
-#     epic_chart_theme
-  
-
-# funds_lead_gp <- ggplotly(funds_lead_p, tooltip="text") |>
-#   layout(title = list(text = paste0('Lead specific and General purpose funds towards Lead projects',
-#                                       '<br>',
-#                                       get_subtitle_str(mi_general_funds_lead$state_fiscal_year, "Michigan")
-#                                       )))
-
-#   if (save_plots) {
-#     run_save_plots(gg_plot = funds_lead_p,
-#                    gp_object = funds_lead_gp, 
-#                    name = "merged-general-lead-funds-to-lead-yoy")
-#     }
 
 
 # # Breakdown by loan and pf ----
@@ -1087,3 +1395,4 @@ state_funds_gp
 #     }
 
 # # Bind rows for STATE funds -----
+

@@ -126,7 +126,7 @@ clean_il_y4 <- function() {
     )
 
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
-  dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs)
@@ -181,19 +181,17 @@ clean_il_y4 <- function() {
   # il_clean |> dplyr::filter(project_id %in% c("6742","6744", "6810", "7030", "7281", "7594")) |> arrange(project_id) |> View()
   
   il_clean <- il_clean |>
-    dplyr::filter(project_id %in% c("6742","6744","6810","7030","7281","7594")) |>
-    dplyr::group_by(project_id) |>
     dplyr::mutate(keep = dplyr::case_when(
       project_id == "6742" ~ TRUE, # keep both ec fundable and fundable list (funding amounts differ, may be covering different phases of larger project)
       project_id == "6744" ~ TRUE, # keep both ec fundable and fundable list (funding amounts differ, may be covering different phases of larger project)
       project_id == "6810" ~ TRUE, # keep both ec fundable and fundable list (funding amounts differ, may be covering different phases of larger project)
       project_id == "7030" ~ TRUE, # keep both ec fundable and fundable list (funding amounts differ, may be covering different phases of larger project)
       project_id == "7281" & list == "exhausted" ~ FALSE,       # default to ec exhausted
-      project_id == "7594" ~ row_number() == 1                    # keep first instance (same info)
-  )) |>
+      project_id == "7594" & list  == "lead planning approval" ~ FALSE,                    # keep first instance (same info)
+      .default = TRUE)
+  ) |>
   dplyr::filter(keep) |>
   dplyr::select(-keep) |>
-  dplyr::ungroup() |>
   dplyr::mutate(
       pwsid =ifelse(project_id == "6744", "IL0335030", pwsid),
       pwsid =ifelse(project_id == "6810", "IL1434750", pwsid),
@@ -206,24 +204,24 @@ clean_il_y4 <- function() {
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
   
   # Check for disinfection byproduct in description
-  il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  # il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
     
   # Check for lead subtypes
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: No lead projects classified as both
   
@@ -243,9 +241,18 @@ clean_il_y4 <- function() {
     ) |>
     dplyr::filter(lead_type == "unknown") 
 
-  ####### Decision: No lead projects classified as unknown 
+#   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
+#              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
+# 1:             <NA> North Aurora IL0890600       7428         <NA>         Lead         <NA>   No Information No Information        No Information No Information Replace 8,000 lf of watermain and service lines          <NA>         <NA> No Information
+#    expecting_funding    state state_fiscal_year                      list lead_type
+#               <char>   <char>            <char>                    <char>    <char>
+# 1:                No Illinois              2026 lead no planning approval   unknown
+  ####### Decision: Project is replacement?
   
   ####### SANITY CHECKS END #######
+
+  il_clean <- il_clean |>
+    dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

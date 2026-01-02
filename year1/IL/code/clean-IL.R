@@ -130,7 +130,7 @@ clean_il_y1 <- function() {
     )
   
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
-  dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs)
@@ -189,24 +189,20 @@ clean_il_y1 <- function() {
   #   dplyr::ungroup()
     
   # Hone in on project id duplication
-  il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
+  #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   # Check project id
   il_clean |> dplyr::filter(project_id == "3864")
 
   # Decision: Default to Base Fundable project
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "3864" & list =="no planning approval")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "3864" & list =="no planning approval")) 
 
   # Check project id
   il_clean |> dplyr::filter(project_id == "4594")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "4594" & list =="no planning approval")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "4594" & list =="no planning approval"))
   # Decision: Default to fundable
 
   # Check project id
@@ -221,9 +217,7 @@ clean_il_y1 <- function() {
   il_clean |> dplyr::filter(project_id == "6082")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "6082" & list =="no planning approval")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "6082" & list =="no planning approval"))
   # Decision: default to exhausted
             
   ####### Decision:  
@@ -232,42 +226,42 @@ clean_il_y1 <- function() {
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
   
   # Check for disinfection byproduct in description
-  il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 
   ####### Decision: No disinfection byproduct string
 
   # Check for lead subtypes
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
   ####### Decision: No lead projects classified as both
 
   # Check for lead subtypes: Unknown
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
 
   ####### Decision: No lead projects classified as unknonw
  

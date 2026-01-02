@@ -137,7 +137,7 @@ clean_il_y2 <- function() {
     )
 
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
-  dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs)
@@ -185,9 +185,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "4188")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "4188" & list =="exhausted")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "4188" & list =="exhausted")) 
 
   # Decision: default to ec fundable
 
@@ -195,9 +193,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "5443")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "5443" & list =="exhausted")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "5443" & list =="exhausted"))
   
   # Decision: default to ec fundable
 
@@ -205,9 +201,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "5877")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "5877" & list =="exhausted")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "5877" & list =="exhausted"))
   
   # Decision: default to ec fundable
 
@@ -215,9 +209,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "6043")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "6043" & list =="ec fundable")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "6043" & list =="ec fundable"))
   
   # Decision: default to fundable (more info)
 
@@ -235,9 +227,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "6375")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "6375" & list =="exhausted")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "6375" & list =="exhausted"))
   
   # Decision: default to ec fundable
 
@@ -245,9 +235,7 @@ clean_il_y2 <- function() {
   il_clean |> dplyr::filter(project_id == "6376")
 
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "6376" & list =="exhausted")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "6376" & list =="exhausted"))
   
   # Decision: default to ec fundable
 
@@ -257,41 +245,41 @@ clean_il_y2 <- function() {
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
   
   # Check for disinfection byproduct in description
-  il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
   
   # Check for lead subtypes
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: No lead projects classified as both
   # Check for lead subtypes: Unknown
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") |> View()
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown")
 
   ####### Decision: project with borrower == "Lemont" & state_fiscal_year == "2024" remains "unknown")
   # community_served	borrower	pwsid	project_id	project_name	project_type	project_cost	requested_amount	funding_amount	principal_forgiveness	population	project_description	disadvantaged	project_rank	project_score	expecting_funding	state	state_fiscal_year	list	lead_type

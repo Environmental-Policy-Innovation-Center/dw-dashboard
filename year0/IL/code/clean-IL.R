@@ -1,14 +1,14 @@
 clean_il_y0 <- function() {
   # Fundable Lists -----
   ## Fundable PPL -----
-  il_base_fundable <- data.table::fread("./year0/IL/data/Base Fundable List.csv", colClasses = "character") |>
+  il_base_fundable <- data.table::fread("./year0/IL/data/Base_Fundable_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
       list = "Base Fundable"
     )
   
-  il_lslr_fundable <- data.table::fread("./year0/IL/data/LSLR Fundable List.csv", colClasses = "character") |>
+  il_lslr_fundable <- data.table::fread("./year0/IL/data/LSLR_Fundable_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
@@ -18,7 +18,7 @@ clean_il_y0 <- function() {
   
   # Other Lists -----
   ## Exhausted Funding List -----
-  il_base_exhausted <- data.table::fread("./year0/IL/data/Base Exhausted Funding List.csv", colClasses = "character") |>
+  il_base_exhausted <- data.table::fread("./year0/IL/data/Base_Exhausted_Funding_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "No",
@@ -26,7 +26,7 @@ clean_il_y0 <- function() {
     )
   
   ## Ineligible Funding List -----
-  il_base_ineligible <- data.table::fread("./year0/IL/data/Base Ineligible Funding Cap List.csv", colClasses = "character") |>
+  il_base_ineligible <- data.table::fread("./year0/IL/data/Base_Ineligible_Funding_Cap_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "No",
@@ -34,7 +34,7 @@ clean_il_y0 <- function() {
     )
 
   ## Planning Approval List -----
-  il_base_planning_approval <- data.table::fread("./year0/IL/data/Base Planning Approval List.csv", colClasses = "character") |>
+  il_base_planning_approval <- data.table::fread("./year0/IL/data/Base_Planning_Approval_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "No",
@@ -42,7 +42,7 @@ clean_il_y0 <- function() {
     )
 
   ## No Planning Approval List -----
-  il_base_no_planning_approval <- data.table::fread("./year0/IL/data/Base No Planning Approval List.csv", colClasses = "character") |>
+  il_base_no_planning_approval <- data.table::fread("./year0/IL/data/Base_No_Planning_Approval_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "No",
@@ -50,7 +50,7 @@ clean_il_y0 <- function() {
     )
 
   ## Lead Planning Approval List -----
-  il_lslr_planning_approval <- data.table::fread("./year0/IL/data/LSLR Planning Approval List.csv", colClasses = "character") |>
+  il_lslr_planning_approval <- data.table::fread("./year0/IL/data/LSLR_Planning_Approval_List.csv", colClasses = "character") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "No",
@@ -59,7 +59,8 @@ clean_il_y0 <- function() {
     )
 
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
-  dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  #dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs) |>
@@ -166,15 +167,13 @@ clean_il_y0 <- function() {
   #   dplyr::ungroup()
     
   # Hone in on project id duplication
-  il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
+  #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   # Check project id
   il_clean |> dplyr::filter(project_id == "5085")
   # Decision: Default to Base Fundable project
   il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "5085" & list =="Base Ineligible")) |>
-    dplyr::ungroup()
+    dplyr::filter(!(project_id == "5085" & list =="Base Ineligible"))
 
   # Check project id
   il_clean |> dplyr::filter(project_id == "5652")
@@ -194,38 +193,38 @@ clean_il_y0 <- function() {
   ####### Decision: No disinfection byproduct string
 
   # Check for lead subtypes: Both
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: No lead projects classified as both
   
   # Check for lead subtypes: Unknown
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown")
 
   ####### Decision: No lead projects classified as unknonw
     

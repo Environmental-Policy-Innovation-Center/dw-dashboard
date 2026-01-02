@@ -121,7 +121,7 @@ clean_il_y3 <- function() {
     )
 
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
-  dfs <- mget(ls(pattern = "^il_"), envir = .GlobalEnv)
+  dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs)
@@ -168,15 +168,12 @@ clean_il_y3 <- function() {
   ####### SANITY CHECKS START #######
   #TODO check why some funding amounts for fundable lists (along with their PF) is 0
   # Hone in on project id duplication
-  il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
-
+  #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
 
   # Check project id
-  il_clean |> dplyr::filter(project_id %in% c("6024", "6308", "6375","6376","6742","6813","7109","7110","7111","7140", "7141", "7173")) |> arrange(project_id) |> View()
+  #il_clean |> dplyr::filter(project_id %in% c("6024", "6308", "6375","6376","6742","6813","7109","7110","7111","7140", "7141", "7173")) |> arrange(project_id) |> View()
 
   il_clean <- il_clean |>
-    dplyr::filter(project_id %in% c(c("6024", "6308", "6375","6376","6742","6813","7109","7110","7111","7140", "7141", "7173"))) |>
-    dplyr::group_by(project_id) |>
     dplyr::mutate(keep = dplyr::case_when(
       project_id == "6024" & list =="no planning approval" ~ FALSE , # decision: default to exhausted list
       project_id == "6308" ~ TRUE , # decision: keep both, different information (funding amounts)
@@ -194,7 +191,6 @@ clean_il_y3 <- function() {
   )) |>
   dplyr::filter(keep) |>
   dplyr::select(-keep) |>
-  dplyr::ungroup() |>
   dplyr::mutate(
       pwsid =ifelse(project_id %in% c("6308", "7109", "7110", "7111"), "IL2015500", pwsid),
       pwsid =ifelse(project_id %in% c("6375", "6376", "7140", "7141", "7173"), "IL970200", pwsid),
@@ -207,42 +203,42 @@ clean_il_y3 <- function() {
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
   
   # Check for disinfection byproduct in description
-  il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
   
   # Check for lead subtypes
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: No lead projects classified as both
   
   # Check for lead subtypes: Unknown
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
 
   ####### Decision: No lead projects classified as unknown 
   

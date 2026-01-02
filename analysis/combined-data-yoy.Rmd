@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "New Jersey"
+state_abbr <- "NJ"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -326,6 +326,7 @@ filtered_data <- compare_demand_available_funding_type |>
 # Unmet demand: requested amount or project cost compared to available funds
 
 ```{r}
+
 unmet_demand <- all_funds_to_compare |>
   dplyr::ungroup() |>
   dplyr::mutate(
@@ -402,6 +403,7 @@ if(sum(unmet_demand$value[unmet_demand$name=="Unmet Demand"], na.rm=TRUE) > 0) {
 
 unmet_demand_type <- all_funds_to_compare_type |>
   dplyr::ungroup() |>
+  
   dplyr::mutate(
     # Depicted as Demand for Funds
     total_demand = dplyr::case_when(
@@ -443,8 +445,23 @@ unmet_demand_type <- all_funds_to_compare_type |>
 
 for (type in levels(unmet_demand_type$project_type)){
 
-filtered_data <- unmet_demand_type |>
-    dplyr::filter(project_type == type)
+  if (type %in% c("Lead", "Emerging Contaminants")) {
+
+    filtered_data <- unmet_demand_type |>
+      dplyr::filter(project_type == type) |>
+      dplyr::filter(!state_fiscal_year=="2022") |>
+      dplyr::mutate(
+        state_fiscal_year = as.character(state_fiscal_year),
+        state_fiscal_year = as.factor(state_fiscal_year)
+      )
+  } else {
+
+    filtered_data <- unmet_demand_type |>
+      dplyr::filter(project_type == type) 
+
+  }
+
+
   
   # Skip if no data for this type
   if(nrow(filtered_data) == 0) {
@@ -467,7 +484,7 @@ filtered_data <- unmet_demand_type |>
   comp_unmet_avail_fund_type_gp <- plotly::ggplotly(comp_unmet_avail_fund_type_p, tooltip="text") |>
     plotly::layout(title = list(text = paste0('Comparing Demand to Available Funds: ', type,
                                       '<br>',
-                                      get_subtitle_str(unmet_demand_type$state_fiscal_year, state_name)
+                                      get_subtitle_str(filtered_data$state_fiscal_year, state_name)
                                       ))
            )
 

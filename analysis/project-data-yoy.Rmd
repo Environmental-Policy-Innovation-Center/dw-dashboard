@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Michigan"
-state_abbr <- "MI"
+state_name <- "New Jersey"
+state_abbr <- "NJ"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -208,14 +208,14 @@ if ( nrow(project_dollars %>% filter(!is.na(total_funding_amount)))  > 0 ) {
   tfa_p <- ggplot(project_dollars, aes(x=state_fiscal_year, y=total_funding_amount, text=total_funding_amount_str)) + 
     geom_bar(stat="identity", fill="#82AB6E") +
     scale_y_continuous(labels=label_dollar()) + 
-    labs(title="What's the total expected funding per year?",
+    labs(title="Total amount of funding for projects on fundable lists from DWSRF",
          subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
          x="State Fiscal Year",
          y="Expected Funding Amount") + 
     epic_chart_theme
   
   tfa_gp <- ggplotly(tfa_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the total expected funding per year?",
+    layout(title = list(text = paste0("Total amount of funding for projects on fundable lists from DWSRF",
                                       '<br>',
                                       get_subtitle_str(project_dollars$state_fiscal_year, state_name)
                                       )))
@@ -1323,6 +1323,58 @@ tpc_ef_pt_gp
 }
 ```
 
+#### MI Specific project cost and requested amounts
+```{r}
+if (state_name == "Michigan") {
+   
+   pt_pc_ra_ef <- project_type_df |>
+    dplyr::select(state_fiscal_year, project_type, total_project_cost_ef, total_requested_amount_ef) |>
+    dplyr::mutate(
+      demand = dplyr::case_when(
+        !is.na(total_project_cost_ef) ~ total_project_cost_ef,
+        .default = total_requested_amount_ef
+      ),
+      demand_rule = dplyr::case_when(
+        !is.na(total_project_cost_ef) ~ "Project Cost",
+        .default = "Requested Amount"
+      )
+    ) |>
+    dplyr::group_by(state_fiscal_year) |>
+    dplyr::mutate(total_demand = sum(demand, na.rm = TRUE)) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      pct_str = as.character(round(demand/total_demand,3)*100),
+      plot_str = paste0(project_type, " ", demand_rule, ", ", state_fiscal_year, ":<br>", format_currency(demand), " (",
+                                                      pct_str, "%)"))
+  
+  pt_pc_ra_ef_p <- ggplot(pt_pc_ra_ef, aes(x=state_fiscal_year, y=demand, 
+                                        fill=project_type, text=plot_str)) + 
+  geom_bar(stat="identity") +
+  scale_y_continuous(labels=label_dollar()) + 
+  scale_fill_manual(values = pt_colors, 
+                      name = "Project Type") + 
+  labs(title="What are the total Project Costs or Requested Amounts for Projects on the Fundable List?",
+       subtitle=get_subtitle_str(project_dollars$state_fiscal_year, state_name),
+       x="State Fiscal Year",
+       y=" ") + 
+  epic_chart_theme
+
+pt_pc_ra_ef_gp <- ggplotly(pt_pc_ra_ef_p, tooltip="text") %>%
+  layout(title = list(text = paste0("What are the total Project Costs or Requested Amounts for Projects on the Fundable List?",
+                                    '<br>',
+                                    get_subtitle_str(project_dollars$state_fiscal_year, state_name)
+                                    )))
+
+if (save_plots) {
+  
+          run_save_plots(gg_plot = pt_pc_ra_ef_p,
+                         gp_object = pt_pc_ra_ef_gp,
+                         name = "total-project-cost-requested-amounts-expecting-funding-project-type-yoy")
+  }
+
+pt_pc_ra_ef_gp
+}
+```
 
 ### Requested Amount
 ```{r}
@@ -1388,12 +1440,12 @@ if(sum(project_type_df$total_funding_amount, na.rm=TRUE) > 0) {
     scale_y_continuous(labels=label_dollar()) + 
     labs(x="State Fiscal Year",
          y="",
-         title="Funding Amount by Type",
+         title="Total amount of funding for projects on fundable lists per project type from DWSRF",
          subtitle=get_subtitle_str(project_type_df$state_fiscal_year, state_name)) +
     epic_chart_theme
   
   tfa_pt_gp <- ggplotly(tfa_pt_p, tooltip="text") %>%
-    layout(title = list(text = paste0("What's the total amount of funding for projects on fundable lists per project type?",
+    layout(title = list(text = paste0("Total amount of funding for projects on fundable lists per project type from DWSRF",
                                       '<br>',
                                       get_subtitle_str(project_type_df$state_fiscal_year, state_name)
                                       )))

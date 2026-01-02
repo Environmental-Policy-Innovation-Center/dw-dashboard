@@ -37,7 +37,7 @@ clean_mi_y4 <- function() {
       requested_amount = as.character(NA),
       funding_amount = dplyr::case_when(
         list == "traditional" ~ convert_to_numeric(total_award),
-        list == "lead" ~ convert_to_numeric(lslr_bil_loan, TRUE) +
+        list == "lead" ~ convert_to_numeric(lslr_bil_loan, TRUE) + convert_to_numeric(lslr_bil_pf, TRUE) +
         convert_to_numeric(dwsrf_loan, TRUE) + convert_to_numeric(bil_pf, TRUE) 
       ), 
       funding_amount = clean_numeric_string(funding_amount),

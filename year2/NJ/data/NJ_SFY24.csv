@@ -1,0 +1,889 @@
+Rank,Project Sponsor,Project Number,Project Name,Population,Cat A,Cat B,Cat C.a,Cat C.b,Cat C.c,Cat C.d,Cat D,Cat E,Rank Points,BIL Eligibility
+1,Newark City,0714001-012,Construction of a cover for the Cedar Grove Reservoir,285000,500,50,20,0,0,0,80,2.85,652.85,BIL (GEN)
+2,Passaic Valley Water Commission,1605002-024,Installation of a 2.0 MG storage tank next to existing Verona storage tank,347052,500,0,20,0,0,0,80,3.47052,603.47052,BIL (GEN)
+4,Newark City,0714001-020,Phase-2 Lead Service Line Replacement (LSLR) Project,280139,250,50,20,0,5,0,80,2.90139,407.90139,BIL (LSLR)
+5,Trenton City,1111001-011,Lead Service line replacement,391000,250,50,15,0,5,0,80,3.91,403.91,BIL (LSLR)
+6,Newark City,0714001-019,Phase-1 Lead Service Line Replacement (LSLR) Project,280139,250,50,15,0,5,0,80,2.80139,402.80139,BIL (LSLR)
+8,Hopatcong Borough,1912001-009,"Installation of 48-inch pipe at wells to increase chlorine contact time at
+nine wells",7900,350,0,15,0,0,0,0,0.079,365.079,
+10,Passaic Valley Water Commission,1605002-002,Lead Service Line Replacement in Main System,306707,250,0,15,0,5,0,80,3.10121,353.10121,BIL (LSLR)
+11,Orange City,0717001-015,Orange Twp |PFAS in Well 7 Drinking Water System,32000,250,80,0,5,5,0,0,0.30134,350.30133,BIL (EC)
+12,Lakewood Township Municipal Utilities Authority,1514002-001,LTMUA GAC Building (New Hampshire & Shorrock St),22000,250,80,20,0,0,0,0,0.27614,350.27615,BIL (GEN)
+13,Orange City,0717001-011,Orange Twp PFOA in Well 8 Drinking Water System,30731,250,0,0,5,5,0,80,0.30134,340.30134,BIL (EC)
+13,Orange City,0717001-013,Orange Twp | Well 5 Rehabilitation Project,30731,250,0,0,5,5,0,80,0.30134,340.30134,BIL (GEN)
+14,Newark City,0714001-022,"PROCESS AND OPERATIONAL UPGRADES AT THE PEQUANNOCK WATER
+TREATMENT PLANT",280000,250,0,0,0,0,0,80,2.94274,332.94274,BIL (GEN)
+15,Atlantic City Municipal Utilities Authority,0102001-011,Lead Service Lines Replacement,108998,175,80,15,0,0,0,0,1.08998,321.08997,BIL (LSLR)
+17,North Shore Water Association,1904004-001,Existing Well Requires Replacement,105,300,0,20,0,0,0,0,0.00105,320.00105,
+18,New Brunswick City,1214001-005,Water Treatment Plant Improvements,50000,160,80,15,5,0,0,0,0.55,315.54999,BIL (GEN)
+19,Camden City,0408001-001,PFAS Treatment Improvements at Morris-Delair Water Treatment Plant,54000,160,80,15,0,5,0,0,0.46585,315.46585,BIL (EC)
+21,Atlantic City Municipal Utilities Authority,0102001-012,"Water Treatment Plant Facility Infrastructure Replacement &
+Improvements and Well Redevolpment",108667,160,80,15,0,0,0,0,1.08667,306.08667,BIL (GEN)
+22,Bloomfield Township,0702001-003,Lead Service Line Replacement,47982,300,0,0,5,0,0,0,0.47315,305.47315,
+23,"NJ American Water Company, Inc.",1345001-017,Oak Street Treatment Plant Improvements,290470,250,50,0,0,0,0,0,2.9047,302.9047,
+24,Aqua New Jersey Incorporate,1103001-005,Addition of radium treatment at Well 9 to resolve MCL exceedance,49000,250,50,0,0,0,0,0,0.49,300.49,BIL (EC)
+26,North Shore Water Association,1904004-004,Water System Refurb,105,300,0,0,0,0,0,0,0.00105,300.00105,
+27,Wildwood City,0514001-004,Wildwood Boardwalk water main replacement,45500,175,80,15,0,0,0,0,0.454997,295.45499,BIL (GEN)
+28,Wildwood City,0514001-007,Wildwood Lead Service Replacement Program,70719,175,80,15,0,0,0,0,0.16499,295.16499,
+29,Red Bank Borough,1340001-004,Red Bank Lead Service Line Replacement,13600,175,80,15,0,0,0,0,0.1252,295.12521,
+30,Trenton City,1111001-005,5-year Lead Service Line Replacement & Verification Project,225000,250,0,15,0,5,0,15,2.17,287.17,BIL (LSLR)
+31,Manchester Utilities Authority,1603001-001,Heights Tank Rehabilitation,12028,250,0,15,0,0,0,0,0.12,280.12,
+33,Hopatcong Borough,1912001-002,Hopatcong Borough PFAS Removal Improvement Project,7000,250,0,15,0,0,0,0,0.07224,280.07224,BIL (EC)
+34,Passaic Valley Water Commission,1605002-026,PVWC Lead Service Line Replacement,147000,175,80,20,0,0,0,0,3.10483,278.10483,BIL (LSLR)
+35,Bloomfield Township,0702001-004,Interconnection Project,47315,250,0,0,5,0,0,15,0.47315,270.47315,
+35,Bloomfield Township,0702001-005,Lead Service Replacement Phases,49973,250,0,0,5,0,0,15,0.47315,270.47315,
+38,North Jersey District Water Supply Commission,1613001-013,Construction of a new 50 MGD Bellville Pump Station,872153,160,50,20,0,0,0,30,8.72153,268.72153,
+39,Jersey City Municipal Utilities Authority,0906001-035,Lead Service Line Replacement,292449,175,0,20,5,5,0,0,2.62,267.62,
+40,East Orange City,0705001-003,Lead Service Line Replacement Phase 2,-,175,80,0,5,0,0,0,0.75,265.75,
+41,Merchantville Pennsauken Water Commission,0424001-006,Frosthoffer GAC plant,50000,200,0,15,0,0,0,0,0.47144,265.47144,
+42,Winslow Township,0436007-006,"Add radium removal treatment at existing wells 1 and 8 to correct
+Maximum Contaminant Level violations",39328,250,0,15,0,0,0,0,0.39328,265.39328,
+43,Belleville Township,0701001-003,"Replacement of 7,000 lead service lines",35928,250,0,0,0,0,0,15,0.35928,265.35928,
+43,Belleville Township,0701001-004,Installation of lead corrosion control measures at four interconnections,35928,250,0,0,0,0,0,15,0.35928,265.35928,
+44,Upper Deerfield Township,0613004-001,Radium Treatment Removal for Love Lane WTP (wells # 3 & 4),4500,250,0,0,0,0,0,15,0.045,265.045,BIL (GEN)
+45,National Park Borough,0812001-005,Addition of PFOS Treatment at Exisiting Water Plant,2983,250,0,0,0,0,0,15,0.03144,265.03144,BIL (EC)
+47,ADTI Housing Corporation,2103002-001,Chlorination system,83,250,0,0,0,0,0,15,0.00083,265.00083,
+48,Sayreville Borough,1219001-009,Lead Service Line Investigation and Replacement,44243,250,0,0,0,5,0,0,0.43761,260.43761,
+49,Orange City,0717001-017,PFAS Treatment at Chestnut Street Pumping Station,34447,160,80,0,5,5,0,0,0.30134,260.30133,BIL (EC)
+50,Park Ridge Borough,0247001-001,Permanent PFAS Treatment,16500,250,0,0,5,0,0,0,0.16466,260.16466,BIL (EC)
+51,Aqua New Jersey Incorporate,0415002-001,Aqua New Jersey Blackwood Lead Service Line Replacement,4545,175,80,0,0,0,0,0,0.44396,255.44395,
+52,Newark City,0714001-001,Construction of an ozonation facility,285000,100,50,20,0,0,0,80,2.85,252.85,BIL (GEN)
+52,Newark City,0714001-013,Removal and disposal of sludge from lagoon,285000,100,50,20,0,0,0,80,2.85,252.85,BIL (GEN)
+53,Camden City,0408001-015,Morris-Delair WTP improvements - Phase II,77344,100,50,20,0,0,0,80,0.77344,250.77344,BIL (GEN)
+53,Camden City,0408001-016,Parkside WTP various improvements,77344,100,50,20,0,0,0,80,0.77344,250.77344,BIL (GEN)
+54,Ridgewood Village,0251001-001,Water Treatment Centralization for PFAS Removal,61220,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+54,Ridgewood Village,0251001-002,Water Treatment Centralization for PFAS Removal Phase 2,61200,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+54,Ridgewood Village,0251001-003,Water Treatment Centralization for PFAS Removal Phase 3,61200,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+54,Ridgewood Village,0251001-004,Water Treatment Centralization for PFAS Removal Phase 4,61220,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+54,Ridgewood Village,0251001-005,Water Treatment Centralization for PFAS Removal Phase 5,61220,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+54,Ridgewood Village,0251001-006,Water Treatment Centralization for PFAS Removal Phase 6,61220,250,0,0,0,0,0,0,0.617,250.617,BIL (EC)
+55,Perth Amboy City,1216001-011,Upgrades to the Runyon Water Treatment Plant,55436,160,80,0,0,5,0,0,0.52328,250.52328,BIL (GEN)
+56,Belleville Township,0701001-008,Belleville Lead Service Line Replacement,36069,250,0,0,0,0,0,0,0.35129,250.35129,
+57,Edison Township,1205001-002,Township Wide Lead Service Replacement,107588,250,0,0,0,0,0,0,0.35,250.35,
+58,Livingston Township,0710001-001,"Livingston PFAS Treatment - Phase A (Wells 1,2,4,8, 11)",29366,250,0,0,0,0,0,0,0.27391,250.27391,BIL (EC)
+58,Livingston Township,0710001-002,"Livingston PFAS Treatment - Phase B (Wells 10, 12)",29366,250,0,0,0,0,0,0,0.27391,250.27391,BIL (EC)
+58,Livingston Township,0710001-003,"Dorsa Wells - PFAS and 1,4-Dioxane Treatment",29366,250,0,0,0,0,0,0,0.27391,250.27391,BIL (EC)
+59,Burlington Township,0306001-001,Beverly Road Water Treatment Plant Upgrades for PFA's Treatment,23983,250,0,0,0,0,0,0,0.22594,250.22594,
+60,Moorestown Township,0322001-001,North Church Street Water Treatment Plant Upgrade,20726,250,0,0,0,0,0,0,0.20726,250.20726,BIL (EC)
+61,Ramsey Borough,0248001-009,Arsenic treatment system at the Spring Street Treatment Facility,16350,250,0,0,0,0,0,0,0.1635,250.1635,
+63,Sparta Township,1918004-003,"Installation of uranium treatment equipment at two of the existing
+Autumn Hill well house (Well 1 and Well 2)",15726,250,0,0,0,0,0,0,0.15726,250.15726,BIL (EC)
+64,Pequannock Township,1431001-001,PFOS & PFOA Treatment for Well #1 Dunn Place NJ1431001,14000,250,0,0,0,0,0,0,0.1401,250.1401,BIL (EC)
+66,Oakland Borough,0242001-001,Soons Wellfield PFAS Treatment,12653,250,0,0,0,0,0,0,0.12754,250.12754,BIL (EC)
+67,Waldwick Borough,0264001-003,Water Treatment Systems,9625,250,0,0,0,0,0,0,0.09653,250.09653,BIL (EC)
+68,Ho-Ho-Kus Borough,0228001-002,Ho-Ho-Kus Water Treatment System,4078,250,0,0,0,0,0,0,0.0406,250.0406,BIL (EC)
+69,Essex Fells Borough,0706001-002,Interim PFAS-Runnymede Site-Wells 5 &1,21937,250,0,0,0,0,0,0,0.022,250.022,BIL (EC)
+69,Essex Fells Borough,0706001-003,Permanent PFAS Treatment (Main Facility),21937,250,0,0,0,0,0,0,0.022,250.022,BIL (EC)
+69,Essex Fells Borough,0706001-004,Permanent PFAS Treatment (Additional Facilities),21937,250,0,0,0,0,0,0,0.022,250.022,BIL (EC)
+70,Bethlehem Township BOE,1002311-001,Thomas B. Conley Elementary School Treatment System PFAS,3745,250,0,0,0,0,0,0,0.00339,250.00339,BIL (EC)
+71,"Lake Stockholm Systems, Inc.",1911002-001,"Lake Stockholm Systems, Inc., PFOA/PFOS removal for NJDEP compliance",400,250,0,0,0,0,0,0,0.003,250.003,BIL (EC)
+72,Eagleswood Village MHP,1508001-001,Eagleswood Village Water Improvement,80,250,0,0,0,0,0,0,0.0008,250.00079,BIL (EC)
+73,Buttonwood Mobile Home Park,0301001-001,Buttonwood system,77,250,0,0,0,0,0,0,0.00055,250.00055,
+75,Jersey City Municipal Utilities Authority,0906001-034,"Boonton Water Treatment Plant Electric Substation/ Distribution System
+Improvements",262000,160,0,15,5,5,0,0,2.62,247.62,
+76,Newark City,0714001-023,REHABILITATION OF PEQUANNOCK AQUEDUCTS,307220,75,80,15,5,5,0,0,2.94274,242.94273,
+77,Newark City,0714001-017,Water Distribution System Upgrades,285000,75,80,20,5,0,0,0,2.94274,237.94273,BIL (GEN)
+78,Brick Township Municipal Utilities Authority,1506001-011,Granular Activated Carbon (GAC) Treatment Addition,86898,200,0,20,0,0,0,15,0.86898,235.86898,BIL (EC)
+79,East Orange City,0705001-014,Water System Improvement and Resiliency Project 2017,65078,100,50,0,5,0,0,80,0.75,235.75,BIL (GEN)
+80,Newark City,0714001-008,"Cleaning and lining of water mains, upgrading 4 inch mains to 6 & 8 inch
+mains, replace old fire hydrants",285000,75,80,15,5,0,0,0,2.94274,232.94273,BIL (GEN)
+82,Newark City,0714001-002,Rehab of 42-inch Steel water main including cleaning & lining,285000,75,50,20,0,0,0,80,2.85,227.85,BIL (GEN)
+82,Newark City,0714001-009,"Replacement of 12,000 Lead service lines",285000,75,50,20,0,0,0,80,2.85,227.85,BIL (LSLR)
+83,Atlantic City Municipal Utilities Authority,0102001-007,Water Main Replacement Program,94225,75,80,20,0,0,0,0,0.942247,225.94225,BIL (GEN)
+84,Camden City,0408001-004,"Replacement of water mains on South Merrimac Road and New
+Hampshire Road",77344,75,50,20,0,0,0,80,0.77344,225.77344,BIL (GEN)
+84,Camden City,0408001-013,Cleaning & Lining of distribution and transmission mains,77344,75,50,20,0,0,0,80,0.77344,225.77344,BIL (GEN)
+84,Camden City,0408001-014,Replacement of Lead Service Lines,77344,75,50,20,0,0,0,80,0.77344,225.77344,BIL (LSLR)
+84,Camden City,0408001-020,Cleaning and lining of a transmission mains,77344,75,50,20,0,0,0,80,0.77344,225.77344,BIL (GEN)
+85,High Bridge Borough,1014001-004,High Bridge Water System: Bunnvale Well Upgrades,3648,175,50,0,0,0,0,0,0.033,225.033,
+86,Branchville Borough,1903001-001,PFOS Treatment,75,200,0,15,0,0,0,0,0.015,225.015,BIL (EC)
+87,Bridgeton City,0601001-005,"Replacement of 2,190 LF of 6 inch with 8 inch main",22770,75,50,15,0,0,0,80,0.2277,220.2277,BIL (GEN)
+88,Dover Town,1409001-001,Lead Service Lines,16000,175,0,15,0,0,0,0,0.27806,215.27806,
+89,Netcong Borough,1428001-010,Borough of Netcong - Lead (Galvanized) Service Line Replacements,4500,175,0,15,5,0,0,0,0.03342,215.03342,BIL (GEN)
+90,Newark City,0714001-007,"Construction of a hydro-electric facility at the pre-treatment plant screen
+building",285000,45,50,20,0,0,15,80,2.85,212.85,BIL (GEN)
+91,Atlantic City Municipal Utilities Authority,0102001-006,1 MG Storage Tank Sand Blasting and painting,94225,60,50,20,0,0,0,80,0.94225,210.94225,BIL (GEN)
+92,East Orange Water Commission,0705001-002,Cleaning & Lining of mains,80468,75,50,0,5,0,0,80,0.80468,210.80468,BIL (GEN)
+92,East Orange Water Commission,0705001-006,Replacement of west well transmission main,80468,75,50,0,5,0,0,80,0.80468,210.80468,BIL (GEN)
+92,East Orange Water Commission,0705001-007,"Replacement of fifteen water mains suspended on Garden State Parkway
+bridges",80468,75,50,0,5,0,0,80,0.80468,210.80468,BIL (GEN)
+92,East Orange Water Commission,0705001-010,"Installation of 2,150 LF of 8-inch & 1,400 LF of 4-inch for a redevelopment",80468,75,50,0,5,0,0,80,0.80468,210.80468,BIL (GEN)
+93,Camden City,0408001-006,Rehabilitate the North Camden pump station,77344,60,50,20,0,0,0,80,0.77344,210.77344,BIL (GEN)
+94,Atlantic City Municipal Utilities Authority,0102001-005,Installation of solar system at offices and at WTP,47011,45,50,20,0,0,15,80,0.47011,210.47011,BIL (GEN)
+95,West Cape May Borough,0512001-001,Lead Line Remediation,1900,175,0,20,0,0,0,0,0.046,210.04601,
+96,North Jersey District Water Supply Commission,1613001-027,Expansion of Aeriation System,872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-028,Filter Bldg Pipe Gallery Dehumid,872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-029,Basins 1-4 Flocculator Rehabilitation,872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-012,"Improvement of chemical feed equipment, pressure gauges, meters and
+alarms for increased security measures",872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-014,"Construction of a 6 MG baffled clearwell and rehab of an existing
+clearwell to include baffles",872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-016,Install 6 Layer Aerators including air piping and appurtenances.,872153,100,50,20,0,0,0,30,8.72153,208.72153,
+96,North Jersey District Water Supply Commission,1613001-020,Rehabilitation of existing WTP,872153,100,50,20,0,0,0,30,8.72153,208.72153,
+97,Aqua New Jersey Incorporate,2119001-008,"Replacement of 7,080 LF of undersized water mains in Philipsburg",33560,75,50,0,0,0,0,80,0.3356,205.3356,BIL (GEN)
+98,Cape May City,0502001-002,Replacement of Existing Water Plant,18901,170,0,20,0,0,0,0,0.18901,205.18901,BIL (GEN)
+99,Newton Town,1915001-001,2023 Drinking Water Improvements,8300,160,0,20,0,0,0,0,0.083,205.083,
+100,Hightstown Borough,1104001-012,Lead Service Line Replacement,5494,175,0,15,0,0,0,0,0.054,205.054,
+101,Buena Vista Township,0660004-001,Water Main extension due to private well contamination,184,125,0,0,0,0,0,80,0.00184,205.00184,BIL (EC)
+102,Passaic Valley Water Commission,1605002-018,Upgrade residual treatment process to include belt thickners,347052,100,0,20,0,0,0,80,3.47052,203.47052,BIL (GEN)
+103,Newark City,0714001-011,"Rehabilitation of the basculate gate at the Charlotteburgh Reservoir with
+alarm and control systems",285000,45,80,15,5,0,0,0,2.94274,202.94273,BIL (GEN)
+104,Merchantville Pennsauken Water Commission,0424001-008,Park Ave GAC Plant,50000,200,0,0,0,0,0,0,0.47144,200.47144,
+104,Merchantville Pennsauken Water Commission,0424001-004,National Highway PFC plant,50000,200,0,0,0,0,0,0,0.47144,200.47144,BIL (EC)
+105,Pompton Lakes Municipal Utilities Authority,1609001-007,Well #3 Treatment,11435,200,0,0,0,0,0,0,0.11435,200.11435,
+105,Pompton Lakes Municipal Utilities Authority,1609001-008,Well #1 and #2 Treatment,11435,200,0,0,0,0,0,0,0.11435,200.11435,
+106,Berkeley Township Municipal Utilities Authority,1505004-010,Berkeley Township MUA Phase VII Water Main Installation,10800,165,0,20,0,0,0,0,0.11235,200.11235,BIL (GEN)
+107,East Greenwich Township,0803001-004,Installation of filtration system for PFC removal at #3 Well,9550,200,0,0,0,0,0,0,0.0955,200.0955,BIL (EC)
+108,Boonton Town,1401001-004,Wellfield PFAS Treatment Improvements (Boonton Town),9900,200,0,0,0,0,0,0,0.09532,200.09532,BIL (EC)
+109,Washington Township Municipal Utilities Authority,1438004-005,WTMUA Ð SM-10 and SM-17 PFAS Treatment Improvements,4900,200,0,0,0,0,0,0,0.04866,200.04866,BIL (EC)
+110,Allentown Borough,1302001-005,Allentown Lead Service Lines,1734,175,0,15,0,0,0,0,0.02,200.02,BIL (LSLR)
+111,Lakeshore Company,1413001-001,Lakeshore Water - New Well Treatment,250,200,0,0,0,0,0,0,0.0027,200.0027,
+113,Jersey City Municipal Utilities Authority,0906001-017,Boonton Plant Centrifuge,264290,100,50,15,0,0,0,30,2.62004,197.62004,
+114,East Orange Water Commission,0705001-009,Installation of solar power at water treatment plant,80468,45,50,0,5,0,15,80,0.80468,195.80468,BIL (GEN)
+115,East Orange City,0705001-013,WORPS Emergency Backup Power Generator Planning and Design,65078,60,50,0,5,0,0,80,0.65078,195.65078,BIL (GEN)
+115,East Orange City,0705001-012,WORPS SCADA Instrumentation/Controls Planning and Design,65078,60,50,0,5,0,0,80,0.65078,195.65078,BIL (GEN)
+116,Vineland City,0614003-017,2016 Water Distribution Rehabilitation Project,36848,75,80,15,0,0,0,0,0.3625,195.3625,BIL (GEN)
+117,Willingboro Municipal Utilities Authority,0338001-011,Well 6 Water Treatment Plant Upgrade,34731,160,0,20,0,0,0,0,0.35,195.35,
+118,Rahway City,2013001-003,Rahway Lead Service Line Replacement Project,29556,175,0,0,5,5,0,0,0.273,195.273,
+119,"NJ American Water Company, Inc.",2121001-001,Washington Twp. Main Extension,6492,165,0,15,0,0,0,0,0.10719,195.10719,
+120,Hopatcong Borough,1912001-001,Hudson Avenue Water Main Installation,7224,165,0,15,0,0,0,0,0.07224,195.07224,
+121,Salem City,1712001-003,Upgrades to WTP to address taste and odor problems,5857,100,0,15,0,0,0,80,0.05857,195.05857,BIL (GEN)
+122,Egg Harbor City,0107001-002,Replacement of a water treatment plant,4700,100,0,15,0,0,0,80,0.047,195.047,BIL (GEN)
+123,North Jersey District Water Supply Commission,1613001-031,Purchase and Install New Dewatering System,150,160,0,20,0,0,0,0,0.0015,195.0015,
+124,North Jersey District Water Supply Commission,1613001-032,Rehabilitation of Treatment Facility,872153,160,0,20,0,0,0,0,0,195,
+125,"NJ American Water Company, Inc.",2004002-012,"NJ American Water Lead Service Line Replacement Program PWSID
+2004002",1,125,50,0,5,5,0,0,6.1543,191.1543,
+126,Camden City,0408001-021,New Auto Meter Reading Equip for entire City,77344,25,50,20,0,0,15,80,0.77344,190.77344,BIL (GEN)
+127,Seaside Heights Borough,1526001-002,Seaside Heights - Water System Improvements - Resiliency,7667,160,0,15,0,0,0,0,0.0766667,190.07667,
+127,Seaside Heights Borough,1526001-001,Seaside Heights - Water Treatment Plant Improvements,7667,160,0,15,0,0,0,0,0.0766667,190.07667,BIL (GEN)
+128,Mount Arlington Borough,1426005-003,"Altenbrand, Windemere, McGregor and Lee Water Main Extension",133,165,0,15,0,0,0,0,0.01978,190.01978,
+129,Old Bridge Municipal Utilities Authority,1209002-014,Perrine Road Carbon Absorber Facility,65375,160,0,15,0,0,0,0,0.67215,185.67215,
+130,Bloomfield Township,0702001-001,Cleaning and Lining of water mains,47000,175,0,0,5,0,0,0,0.47315,185.47314,
+130,Bloomfield Township,0702001-006,Lead Service Line Replacement (2023-2025),-,175,0,0,5,0,0,0,0.47315,185.47314,
+131,Montclair Township,0713001-013,"Montclair Township - Lead & Galvanized Service Line Replacements -
+SFY23",2000,175,0,0,5,0,0,0,0.37669,185.37669,
+132,Collingswood Borough,0412001-006,Collingswood Lead Line Removal,16000,175,0,0,5,0,0,0,0.245,185.245,
+133,Passaic Valley Water Commission,0231001-002,Lead Service Line Replacement in Lodi System,24551,175,0,0,0,5,0,0,0.24136,185.24136,BIL (LSLR)
+134,South Orange Village,0719001-013,Lead Line Identification and Replacement,22865,175,0,0,5,0,0,0,0.16964,185.16965,
+135,North Jersey District Water Supply Commission,1613001-006,"Construct a 48 inch by-pass main and rehabilitate the single 70+ yr old 74
+inch aqueduct",872153,75,50,20,0,0,0,30,8.72153,183.72153,
+135,North Jersey District Water Supply Commission,1613001-009,Rehab of the Kearny/Bayonne Transmission main,872153,75,50,20,0,0,0,30,8.72153,183.72153,
+136,"NJ American Water Company, Inc.",2004002-015,Netherwood PFAS Treatment,48000,160,0,0,5,5,0,0,3.18148,183.18147,BIL (EC)
+137,Salem City,1712001-004,Salem City Water Meter,4931,35,80,15,0,5,15,0,0.06199,180.062,BIL (GEN)
+138,Tuckerton Borough,1532002-004,Rehabilitation of three green sand filter tanks and one backwash tank,3365,100,35,15,0,0,0,30,0.03365,180.03365,BIL (GEN)
+140,Passaic Valley Water Commission,1605002-015,Replace approximately 200 large antiquated valves,347052,75,0,20,0,0,0,80,3.47052,178.47052,BIL (GEN)
+140,Passaic Valley Water Commission,1605002-017,"Installation of 7000 LF of 12-inch main to replace Granite Ave storage
+tank",347052,75,0,20,0,0,0,80,3.47052,178.47052,BIL (GEN)
+140,Passaic Valley Water Commission,1605002-019,"Installation of 2200 LF of 12-inch main to connect Eastside Pumping
+station to Patersons downtown area",347052,75,0,20,0,0,0,80,3.47052,178.47052,BIL (GEN)
+141,Newark City,0714001-010,"Replacement of 38,234 old water meters in the distribution system.",285000,25,50,20,0,0,0,80,2.85,177.85,BIL (GEN)
+142,Newark City,0714001-018,Replacement of Water Distribution Mains,273000,75,0,20,0,0,0,80,2.73,177.73,BIL (GEN)
+143,Middlesex Water Company,1225001-005,MWC Galvanized & Lead Service Line Replacement,-,175,0,0,0,0,0,0,2.33376,177.33376,
+144,Ridgewood Village,0251001-007,Ridgewood Water Lead Service Line Replacements,61220,175,0,0,0,0,0,0,0.617,175.617,
+145,Merchantville Pennsauken Water Commission,0424001-005,Lead line removal,49990,175,0,0,0,0,0,0,0.47144,175.47144,
+146,Aqua New Jersey Incorporate,1103001-007,Aqua NJ Hamilton Lead Service Line Replacement,88464,175,0,0,0,0,0,0,0.39128,175.39128,
+147,Orange City,0717001-014,"Orange Twp | Relocation of the existing transmission main under the
+Glen Avenue Bridge for the stabilization of the pipe",30731,75,80,0,5,5,0,0,0.30134,175.30135,BIL (GEN)
+148,Aqua New Jersey Incorporate,2119001-002,Lead Service Line Replacement Phillipsburg,14950,175,0,0,0,0,0,0,0.26686,175.26686,
+149,Hackettstown Municipal Utilities Authority,2108001-002,Lead Service Line Replacement,185,125,50,0,0,0,0,0,0.22,175.22,
+150,Hamilton Township Municipal Utilities Authority,0112001-005,WATER MAIN REPLACEMENT PHASE 2,22000,175,0,0,0,0,0,0,0.2172,175.21719,
+151,Lyndhurst Township,0232001-004,Lead Water Service Replacement Program,22453,175,0,0,0,0,0,0,0.205,175.205,
+152,Hawthorne Borough,1604001-003,Hawthorne Lead Water Service Line Replacement Phase 2,19360,175,0,0,0,0,0,0,0.19458,175.19458,
+152,Hawthorne Borough,1604001-004,Hawthorne Lead Service Line Replacement Phase 3,19458,175,0,0,0,0,0,0,0.19458,175.19458,
+153,Maple Shade Township,0319001-001,Maple Shade Township Lead Service Line Replacement,19980,175,0,0,0,0,0,0,0.194,175.194,
+154,Passaic Valley Water Commission,0239001-002,Lead Service Line Replacement in North Arlington System,15741,175,0,0,0,0,0,0,0.15392,175.15392,
+155,Ventnor City,0122001-002,Water Infrastructure Project,14076,175,0,0,0,0,0,0,0.14076,175.14076,BIL (GEN)
+156,Clinton Town,1005001-014,Town of Clinton - Galvanized Service Line Replacement - SFY23,1000,175,0,0,0,0,0,0,0.125,175.125,
+156,Clinton Town,1005001-015,Town of Clinton - Galvanized Service Line Replacement - SFY24,1000,175,0,0,0,0,0,0,0.125,175.125,
+156,Clinton Town,1005001-016,Town of Clinton - Galvanized Service Line Replacement - SFY25,1000,175,0,0,0,0,0,0,0.125,175.125,
+156,Clinton Town,1005001-017,Town of Clinton - Galvanized Service Line Replacement - SFY26,1000,175,0,0,0,0,0,0,0.125,175.125,
+156,Clinton Town,1005001-018,Town of Clinton - Galvanized Service Line Replacement - SFY27,1000,175,0,0,0,0,0,0,0.125,175.125,
+157,Brigantine City,0103001-002,Brigantine Lead Service Line Replacement Project,11117,175,0,0,0,0,0,0,0.111167,175.11117,
+158,Margate City,0116001-003,Margate Lead Service Line Replacement Program,10000,175,0,0,0,0,0,0,0.1,175.1,
+159,Chatham Borough,1404001-001,Lead Line Service Replacements,9212,175,0,0,0,0,0,0,0.08962,175.08962,
+160,Aqua New Jersey Incorporate,1107002-001,Lead Service Line Replacements Lawrenceville,33472,175,0,0,0,0,0,0,0.08655,175.08655,
+162,Glen Ridge Borough,0708001-009,GR-Lead Service Lines Replacement (Main to Dwelling) - Phase 1,7527,175,0,0,0,0,0,0,0.07681,175.07681,
+163,Bayonne City,0901001-005,City of Bayonne Lead Service Line Replacement Project,71686,175,0,0,0,0,0,0,0.063,175.063,BIL (LSLR)
+164,Hightstown Borough,1104001-013,Improvements to Maxwell Avenue,5855,175,0,0,0,0,0,0,0.054,175.054,
+165,Longport Borough,0115001-001,Lead Service Line Replacement - Phase I,3851,175,0,0,0,0,0,0,0.0385133,175.03851,
+166,"Fayson Lake Water Company, Incorporated",1415001-002,FLWC 2023 Water Main Replacement,3010,175,0,0,0,0,0,0,0.0301,175.0301,
+167,Swedesboro Borough,0817001-001,Lead Service Water Line Abatement,2000,175,0,0,0,0,0,0,0.02824,175.02824,
+168,Hampton Borough,1013001-002,Hampton Borough - Galvanized Service Line Replacement,1400,175,0,0,0,0,0,0,0.01401,175.01401,
+169,Weymouth Township Municipal Utilities Authority,0123001-001,WTMUA Water Line Replacement,600,175,0,0,0,0,0,0,0.0072,175.0072,BIL (GEN)
+170,"NJ American Water Company, Inc.",2004002-014,RMWTP LT2ESWWTR and Filter Rehabilitation,44464,100,50,20,0,0,0,0,3.15315,173.15315,
+171,Jersey City Municipal Utilities Authority,0906001-019,Route 139 Water Main Replacement Project,262000,75,50,20,5,5,0,15,2.62,172.62,
+172,Wildwood City,0514001-006,2019 Capital Improvements (Drinking Water),94333,75,0,15,0,0,0,80,0.943327,170.94333,BIL (GEN)
+173,Sayreville Borough,1219001-011,Water Treatment Plant Chemical Feed Upgrades,44243,160,0,0,0,5,0,0,0.43761,170.43761,
+174,Montclair Township,0713001-012,Montclair Township - PFOAS and Perchlorate Treatment - Rand Well,3800,160,0,0,5,0,0,0,0.37669,170.37669,BIL (EC)
+175,Manchester Township,1518005-001,Various main replacements,26877,75,0,15,0,0,0,80,0.26877,170.26877,BIL (GEN)
+176,Collingswood Borough,0412001-001,Collingswood Comly Ave Water Plant,16904,160,0,0,5,0,0,0,0.245,170.245,
+178,South Orange Village,0719001-008,Well 17 Air Stripper,16198,160,0,0,5,0,0,0,0.16964,170.16965,
+179,Park Ridge Borough,0247001-002,Well 21 Treatment Plant Construction,16500,160,0,0,5,0,0,0,0.16466,170.16466,
+180,Lower Township Municipal Utilities Authority,0505002-004,Del Haven Water Main Expansion / Wildwood Water Utility Interconnect,7222,125,0,15,0,0,0,30,0.07222,170.07222,BIL (GEN)
+181,Flemington Borough,1009001-009,Additional Water Tank and Improvements,4389,60,80,15,0,0,0,0,0.04389,170.04388,BIL (GEN)
+182,Seaside Park Borough,1527001-004,Well 10 Treatment Facility,1700,40,50,0,0,0,0,80,0.017,170.017,BIL (GEN)
+184,Arthur Road Well Association,1912007-001,Connection of this system to Hopatcong Borough,60,170,0,0,0,0,0,0,0.0006,170.0006,
+185,North Jersey District Water Supply Commission,1613001-035,Rehabilitation of Pump Stations,872153,60,50,20,0,0,0,30,8.72153,168.72153,
+185,North Jersey District Water Supply Commission,1613001-019,Ramapo Pump Station Improvements,872153,60,50,20,0,0,0,30,8.72153,168.72153,
+185,North Jersey District Water Supply Commission,1613001-021,"Implementation of alternative energy generation systems at the
+Wanaque TP",872153,45,50,20,0,0,15,30,8.72153,168.72153,
+186,"NJ American Water Company, Inc.",1345001-021,Swimming River WTP 2nd Clearwell,335449,100,50,0,0,0,0,15,3.35449,168.35449,
+187,Jersey City Municipal Utilities Authority,0906001-016,Large Valve Replacement Program- Phase 2,264290,75,0,20,5,5,0,0,2.6429,167.6429,
+188,Jersey City Municipal Utilities Authority,0906001-022,"Hackensack River 36"" Aqueduct replacement",270753,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-027,PHASE 6B WATER MAIN REHABILITATION PROJECT,247597,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-024,Phase 2A Water,250000,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-023,Phase 5A Water Project,262000,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-026,5-B Water Project,250000,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-032,Van Horne Street Water Improvements,265549,75,0,20,5,5,0,0,2.62,167.62,
+188,Jersey City Municipal Utilities Authority,0906001-033,Pine Street Area Water Improvements,5000,75,0,20,5,5,0,0,2.62,167.62,
+190,East Windsor Municipal Utilities Authority,1101002-006,Millstone Road Water Treatment Plant Well #9 & Well #10,25763,150,0,0,0,0,15,0,0.25,165.25,
+191,Manchester Utilities Authority,1603001-004,Holland Christian Home Water Main Extension Project,175,165,0,0,0,0,0,0,0.12,165.12,
+192,Lower Township Municipal Utilities Authority,0505002-005,LCMR - Water Main Extension,884,165,0,0,0,0,0,0,0.10315,165.10315,BIL (GEN)
+193,Passaic Valley Water Commission,1605002-020,Replacement of Prospect Park storage tank,347052,60,0,20,0,0,0,80,3.47052,163.47052,BIL (GEN)
+193,Passaic Valley Water Commission,1605002-023,Decommissing of Granite Avenue Tank,347052,60,0,20,0,0,0,80,3.47052,163.47052,BIL (GEN)
+194,Jersey City Municipal Utilities Authority,0906001-029,Phase 6A Water Rehabilitation,265510,75,0,15,5,5,0,0,2.62,162.62,
+195,Brick Township Municipal Utilities Authority,1506001-014,"Water Main Replacement on Cartagena Drive, Alhama Drive, Cadiz Drive,
+Valencia Drive and Monterey Drive",86898,75,50,20,0,0,0,15,0.86898,160.86898,
+196,"NJ American Water Company, Inc.",0323001-005,Woodlane WTP Improvement Project,445702,160,0,0,0,0,0,0,0.47427,160.47427,
+197,Camden City,0408001-022,Install potable wells/flr elevations at Morris Delair WTP,46585,15,80,15,0,0,0,0,0.46585,160.46585,BIL (GEN)
+198,Mount Laurel Township Municipal Utilities Authority,0324001-004,Elbo Lane WTP HVAC Replacement,46310,160,0,0,0,0,0,0,0.41743,160.41743,
+199,Aqua New Jersey Incorporate,1103001-004,AQUA Hamilton PFAS Treatment,39128,160,0,0,0,0,0,0,0.39128,160.39128,BIL (EC)
+200,Fair Lawn Borough,0217001-001,Fair Lawn Water Treatment Facility,34927,160,0,0,0,0,0,0,0.31,160.31,
+201,Monroe Municipal Utilities Authority,0811002-002,Water Treatment System Rehabilitation,37117,160,0,0,0,0,0,0,0.26179,160.2618,
+203,Hamilton Township Municipal Utilities Authority,0112001-004,HTMUA WELL #8 REHABILITATION,23176,160,0,0,0,0,0,0,0.2172,160.21719,
+204,Point Pleasant Borough,1524001-002,Water Treatment Plant Filter Replacement,18651,160,0,0,0,0,0,0,0.196,160.196,
+205,Verona Township,0720001-006,LINN DRIVE WELLS,14460,160,0,0,0,0,0,0,0.13641,160.13641,
+205,Verona Township,0720001-007,FAIRVIEW WELLS,14460,160,0,0,0,0,0,0,0.13641,160.13641,
+206,Clinton Town,1005001-020,"Town of Clinton - Lebanon Well #2 - PFAS Treatment and Well
+Improvements",8333,160,0,0,0,0,0,0,0.125,160.125,BIL (EC)
+206,Clinton Town,1005001-019,"Town of Clinton - Wells 11, 12R & 15 - PFAS Treatment Improvements",-,160,0,0,0,0,0,0,0.125,160.125,BIL (EC)
+207,Beachwood Borough,1504001-001,Beachwood Water Department New Water Treatment Facility,10859,160,0,0,0,0,0,0,0.10802,160.10802,
+208,Boonton Town,1401001-003,Wellfield Treatment Plant Upgrades,9900,160,0,0,0,0,0,0,0.09532,160.09532,
+209,Spotswood Borough,1224001-003,Rehabilitation of the George Street Water Treatment Plant,8300,160,0,0,0,0,0,0,0.083,160.08299,
+210,Berkeley Township Municipal Utilities Authority,1505004-003,Install new solar panels at treatment plant,8130,45,0,20,0,0,15,80,0.0813,160.0813,BIL (GEN)
+211,Roxbury Township,1436003-001,Well 2 PFAS Treatment Facility,5153,160,0,0,0,0,0,0,0.05153,160.05153,BIL (EC)
+212,Netcong Borough,1428001-002,Replacement of leaking water mains,3236,75,50,15,5,0,0,15,0.03236,160.03236,
+212,Netcong Borough,1428001-004,Replacement of 8in water main,3236,75,50,15,5,0,0,15,0.03236,160.03236,
+213,Lakehurst Borough,1513001-003,Treatment Plant Updates,2684,160,0,0,0,0,0,0,0.0265,160.0265,
+214,Jersey City Municipal Utilities Authority,0906001-036,"Bates Street, Grand Street and Center Street Water System Improvements",283927,75,0,20,5,0,0,0,2.62,157.62,
+214,Jersey City Municipal Utilities Authority,0906001-012,Water Main Replacement,262000,75,0,20,5,0,0,0,2.62,157.62,
+214,Jersey City Municipal Utilities Authority,0906001-006,Transmission Main Install,247000,75,0,20,5,0,0,0,2.62,157.62,
+220,Clementon Borough,0411001-001,Rehab of Gibbsboro Water Main (White Horse Pike & White Horse Rd.),5003,75,80,0,0,0,0,0,0.05,155.05,BIL (GEN)
+222,Sussex Borough,1921001-007,Sussex Borough Main Street Water Main Replacement Project,2201,75,80,0,0,0,0,0,0.02201,155.022,BIL (GEN)
+223,Sussex Borough,1921001-006,Water Systems Enhancements,2130,75,0,0,0,0,0,80,0.0213,155.0213,BIL (GEN)
+223,Sussex Borough,1921001-005,Lake Rutherford Water Line Installation Project,2130,75,0,0,0,0,0,80,0.0213,155.0213,BIL (GEN)
+224,Newark City,0714001-014,Installation of a SCADA system,285000,1,50,20,0,0,0,80,2.85,153.85,BIL (GEN)
+225,North Jersey District Water Supply Commission,1613001-018,"Security system improvements - Relocation of Wanaque WTP main
+entrance gate closer to Ringwood Blvd",872153,45,50,20,0,0,0,30,8.72153,153.72153,
+225,North Jersey District Water Supply Commission,1613001-023,Security system improvements,872153,45,50,20,0,0,0,30,8.72153,153.72153,
+226,"NJ American Water Company, Inc.",1345001-018,Oak Glenn Treatment Plant Expansion,290470,100,50,0,0,0,0,0,2.9047,152.9047,
+227,Middlesex Water Company,1225001-029,CJO Plant Upgrade - DBP Removal Treatment,282741,100,50,0,0,0,0,0,2.33376,152.33376,
+228,East Orange Water Commission,0705001-004,"Rehab of Braidburn wells #1 & #2; Canoe Brook wells #2, #3 & #4",80468,15,50,0,5,0,0,80,0.80468,150.80468,BIL (GEN)
+228,East Orange Water Commission,0705001-005,"Replacement of electrical cable for wellfield which includes Well Nos. 3, 4
+& 5",80468,15,50,0,5,0,0,80,0.80468,150.80468,BIL (GEN)
+229,Perth Amboy City,1216001-012,Florida Grove Road Reservoir Improvements,55436,60,80,0,0,5,0,0,0.52328,150.52328,BIL (GEN)
+230,Mahwah Township,0233001-006,"Rehabilitation of Ford Wellfield treatment, pumps & motors, electrical,
+SCADA and transmission mains",24062,100,50,0,0,0,0,0,0.24062,150.24062,
+231,Hawthorne Borough,1604001-002,Hawthorne Water Utility PFAs Treatment,18775,100,50,0,0,0,0,0,0.19058,150.19058,BIL (EC)
+232,Willingboro Municipal Utilities Authority,0338001-002,"Replacement of 56,000 LF of 6 and 8-inch mains-Twin Hills",34731,75,50,20,0,0,0,0,0.34731,145.34731,
+232,Willingboro Municipal Utilities Authority,0338001-003,Replacement of 6 & 8 inch mains in RIttenhouse section,34731,75,50,20,0,0,0,0,0.34731,145.34731,
+233,Vineland City,0614003-012,"Upgrades to well #4 water treatment plant including a new air stripping
+tower",33000,100,0,15,0,0,0,30,0.33,145.33,BIL (GEN)
+233,Vineland City,0614003-013,"Upgrades to the existing water treatment plant at well #13 with new
+replacement well #18.",33000,100,0,15,0,0,0,30,0.33,145.33,BIL (GEN)
+234,Stafford Township,1530004-016,"Installation of 5,000 LF of main under the GSP as secondary crossing",28868,75,35,20,0,0,0,15,0.28868,145.28868,
+234,Stafford Township,1530004-017,"Replacement of 1,600 LF of water main on Charles Blvd",28868,75,35,20,0,0,0,15,0.28868,145.28868,
+235,Egg Harbor City,0107001-001,Construction of a new storage tank,4700,50,0,15,0,0,0,80,0.047,145.047,BIL (GEN)
+237,Netcong Borough,1428001-005,Roof and Structural repairs to a 1MG reservoir,3236,60,50,15,5,0,0,15,0.03236,145.03236,
+238,Glassboro Borough,0806001-001,2.0 mg elevated tower repainting,19992,60,80,0,0,0,0,0,0.24244,140.24245,
+239,Manchester Utilities Authority,1603001-007,Replace existing booster station,12111,60,50,15,0,0,0,15,0.12111,140.12111,
+240,Berkeley Township Municipal Utilities Authority,1505004-004,Install automated meter reading system,8130,25,0,20,0,0,15,80,0.0813,140.0813,BIL (GEN)
+241,Hightstown Borough,1104001-009,Water Tank Painting & Repairs,5567,60,50,15,0,0,0,15,0.054,140.054,
+243,Upper Deerfield Township,0613004-002,Seabrook Water Tower Replacement (Upper Deerfield),2964,60,80,0,0,0,0,0,0.02463,140.02463,BIL (GEN)
+244,Waterford Township Municipal Utilities Authority,0435003-001,New water mains for Maximum Contaminant Level violations,2408,125,0,15,0,0,0,0,0.02408,140.02408,
+245,Jersey City Municipal Utilities Authority,0906001-025,Phase 1 & 2 Water Main Replacement Project,264161,75,0,20,5,5,15,15,2.62,137.62,
+245,Jersey City Municipal Utilities Authority,0906001-028,Dam Security Improvements,265932,45,0,20,5,5,0,0,2.62,137.62,
+246,Trenton City,1111001-012,Pennington Reservoir Replacement,225000,60,0,15,0,5,0,0,2.17,137.17,BIL (GEN)
+247,East Orange City,0705001-500/001,Install generators -White Oak Rd,80468,1,50,0,5,0,0,80,0.80468,136.80468,BIL (GEN)
+249,Atlantic City Municipal Utilities Authority,0102001-009,Water Meter and MTU Replacement,75619,25,0,15,0,0,15,80,0.756193,135.75619,BIL (GEN)
+250,Perth Amboy City,1216001-005,"THE INSTALLATION OF A NEW STANDBY GENERATOR AT THE RUNYON
+WATER TREATMENT PLANT",366296,45,80,0,0,5,0,0,0.52328,135.52328,BIL (GEN)
+251,Wildwood City,0514001-005,Well #39 Redevelopment,45500,15,80,15,0,0,0,0,0.454997,135.455,BIL (GEN)
+252,Vineland City,0614003-016,Well 17 Treatment Facility,36848,15,80,15,0,0,0,0,0.3625,135.3625,BIL (GEN)
+253,Willingboro Municipal Utilities Authority,0338001-010,Well5A PFOS Treatment System Upgrade,34731,100,0,20,0,0,0,15,0.35,135.35,BIL (EC)
+255,Bridgeton City,0601001-006,Well 14/15 Rehabilitation,25349,15,80,15,0,0,0,0,0.2277,135.22771,BIL (GEN)
+256,Freehold Borough,1315001-003,Replacement of Well No. 3,12052,15,80,15,0,5,0,0,0.11029,135.11029,BIL (GEN)
+257,Passaic Valley Water Commission,1605002-010,Installation of a back up Wanaque interconnection line,347052,30,0,20,0,0,0,80,3.47052,133.47052,BIL (GEN)
+257,Passaic Valley Water Commission,1605002-016,Upgrade the interconnection with United WC,347052,30,0,20,0,0,0,80,3.47052,133.47052,BIL (GEN)
+257,Passaic Valley Water Commission,1605002-022,Emergency interconnection upgrade,347052,30,0,20,0,0,0,80,3.47052,133.47052,BIL (GEN)
+258,Jersey City Municipal Utilities Authority,0906001-010,Journal Square North Cleaning,262000,75,0,20,5,0,0,30,2.62,132.62,
+258,Jersey City Municipal Utilities Authority,0906001-009,Burma Road Area Water System Improvements,262000,75,0,15,5,5,0,30,2.62,132.62,
+260,NJ City Univ. / Jersey City Municipal Utilities Authority,0906001-005,Redevelopment of Brownfield site,247000,75,0,20,5,0,0,30,2.47,132.47,
+261,"NJ American Water Company, Inc.",0712001-016,"NJ American Water Lead Service Line Replacement Program PWSID
+0712001",217230,125,0,0,5,0,0,0,1.74985,131.74985,
+265,Orange City,0717001-012,Orange Twp | Interconnection and Distribution Project,30731,30,80,0,5,5,0,0,0.30134,130.30135,BIL (GEN)
+266,Manchester Township,1518005-004,MANCHESTER TOWNSHIP 1.0MG ELEVATED TANK,21200,50,80,0,0,0,0,0,0.212,130.21201,BIL (GEN)
+267,Pine Hill Municipal Utilities Authority,0428002-001,"Construction of GAC filtration system for removal of IPMP - Critical Area
+#2",12492,100,0,0,0,0,0,30,0.12492,130.12492,BIL (GEN)
+268,Bellmawr Borough,0404001-005,Improvements to WTP,11583,100,0,0,0,0,0,30,0.11583,130.11583,BIL (GEN)
+269,Sussex Borough,1921001-001,Water Treatment Plant upgrades,2666,100,0,0,0,0,0,30,0.02666,130.02666,BIL (GEN)
+270,Bayville Central Regional Board of Education,1505355-001,Additional treatment on existing well,2500,100,0,0,0,0,0,30,0.025,130.025,
+271,Downe Township,0604001-004,Construction of new storage tank on New Jersey Avenue,770,50,0,0,0,0,0,80,0.0077,130.0077,BIL (GEN)
+272,"NJ American Water Company, Inc.",1345001-019,Howell-Lakewood Transmission Main,290470,75,50,0,0,0,0,0,2.55333,127.55333,
+273,Middlesex Water Company,1225001-018,Construction of a water main,233376,75,50,0,0,0,0,0,2.33376,127.33376,
+273,Middlesex Water Company,1225001-019,"Replacement of 5,000 LF of 24-inch cast iron mains",233376,75,50,0,0,0,0,0,2.33376,127.33376,
+275,Atlantic City Municipal Utilities Authority,0102001-008,Water Meter Replacement Program,94225,25,0,20,0,0,0,80,0.95,125.95,BIL (GEN)
+276,Old Bridge Municipal Utilities Authority,1209002-005,"Laurence Harbor Water System Upgrade, Phase 1",65375,75,50,0,0,0,0,0,0.67215,125.67215,
+277,Bayonne Municipal Utilities Authority,0901001-004,Rehabilitation of gate house valve chamber and venturi flow meter,61842,75,0,20,0,0,0,30,0.61842,125.61842,BIL (GEN)
+279,Perth Amboy City,1216001-500,Install New Stand-by Generator for Runyon Water Treat. Plant,50814,45,80,0,0,0,0,0,0.52328,125.52328,BIL (GEN)
+280,Aqua New Jersey Incorporate,0415002-008,"Replacement of 5,900 LF of water main on Lakeside, East Blenheim,
+Haines, Lake & Church, etc",49350,75,50,0,0,0,0,0,0.4935,125.4935,
+281,Long Beach Township,1517001-013,Replacement of water mains,35367,75,50,0,0,0,0,0,0.35367,125.35367,
+283,Ramsey Borough,0248001-001,"Construction of mains (Rte 17, Grant & Airmount)",16350,75,50,0,0,0,0,0,0.1635,125.1635,
+283,Ramsey Borough,0248001-002,Replacement of mains (Carol & Maple),16350,75,50,0,0,0,0,0,0.1635,125.1635,
+283,Ramsey Borough,0248001-003,"Construction of mains (Rte 17, Snyder & Airmount)",16350,75,50,0,0,0,0,0,0.1635,125.1635,
+283,Ramsey Borough,0248001-004,Construction of mains (Lakeview & Airmount),16350,75,50,0,0,0,0,0,0.1635,125.1635,
+285,Harrison Town,0904001-001,"Cleaning & Lining of mains on Grant Ave., Cleveland Ave., & Hamilton
+Street",14425,75,0,20,0,0,0,30,0.14425,125.14425,
+285,Harrison Town,0904001-004,"Cleaning and Lining and of approximately 3,000 LF of 10, 12 and 14 inch
+mains",14425,75,0,20,0,0,0,30,0.14425,125.14425,
+285,Harrison Town,0904001-005,"Replacement of 3,160 LF of water mains on S 2nd, Frank E. Rogers Blvd &
+Scott Mobus Place",14425,75,0,20,0,0,0,30,0.14425,125.14425,
+286,Clinton Town,1005001-010,"West Main Street Water Main Replacement Project - Asset Management
+Planning",12500,75,50,0,0,0,0,0,0.125,125.125,
+287,Spotswood Borough,1224001-001,"Cleaning and lining of approximaty 3,600 LF of water mains",8300,75,50,0,0,0,0,0,0.083,125.083,
+288,Point Pleasant Beach Borough,1525001-002,Ocean Avenue Water Main Replacement,7733,75,50,0,0,0,0,0,0.0773333,125.07733,
+291,Perth Amboy City,1216001-009,The Replacement of Water Meters Project,47300,25,0,0,0,0,15,80,0.473,120.473,BIL (GEN)
+292,Willingboro Municipal Utilities Authority,0338001-012,Well No. 1 Water Treatment Plant Upgrade,34731,100,0,20,0,0,0,0,0.37731,120.37731,
+293,Vineland City,0614003-007,Replacement of 1.4 miles of 8-inch with 10 -inch water mains,33000,75,0,15,0,0,0,30,0.33,120.33,BIL (GEN)
+293,Vineland City,0614003-008,"Replacement of 2,300 LF of 8-, 10- and 12-inch water mains",33000,75,0,15,0,0,0,30,0.33,120.33,BIL (GEN)
+293,Vineland City,0614003-009,"Construction of .4 miles of 12-inch water mains to loop dead ends and
+enhance water pressure",33000,75,0,15,0,0,0,30,0.33,120.33,BIL (GEN)
+295,Wildwood City,0514001-003,Water system improvements - 2016 street & utility reconstruction,20361,75,0,15,0,0,0,30,0.203607,120.20361,BIL (GEN)
+297,Stafford Township,1530005-001,Fawn Lakes Water Main Extension,1500,75,0,20,0,0,0,0,0.0174,120.0174,
+298,Passaic Valley Water Commission,1605002-009,Replacement of surface water intake facilities on the Passaic River,347052,15,0,20,0,0,0,80,3.47052,118.47052,BIL (GEN)
+299,Jersey City Municipal Utilities Authority,0906001-021,Phase 5 Water Mains,261666,75,0,15,5,5,0,15,2.61666,117.61666,
+299,Jersey City Municipal Utilities Authority,0906001-020,Phase 3 and 4 Water Main Replacement Project,261666,75,0,15,5,5,0,15,2.61666,117.61666,
+300,Jersey City Municipal Utilities Authority,0906001-014,Brookdale Gate House Improvements,257342,75,0,20,5,0,0,15,2.57342,117.57342,
+302,Winslow Township,0436007-003,New 1.0 MG finished water storage tank,39328,50,50,15,0,0,0,0,0.39328,115.39328,
+303,Dover Town,1409001-003,Water Main Replacement,16000,75,0,15,0,0,0,0,0.27806,115.27806,
+303,Dover Town,1409001-004,Valve and Fire Hydrant Replacement,16000,75,0,15,0,0,0,0,0.27806,115.27806,
+306,Berlin Borough,0405001-005,Repairs to Plant#1 filter and complete replacement of filter media,13121,100,0,15,0,0,0,0,0.13121,115.13121,
+307,Red Bank Borough,1340001-003,White Street Water Main,12350,75,0,15,0,0,0,0,0.1252,115.1252,
+309,Milltown Borough,1212001-002,Ford Ave Redevelopment,7052,75,0,15,0,5,0,0,0.07,115.07,
+310,Hightstown Borough,1104001-003,"Construct 80,000 gallon backwash tank and re-line existing lagoons",5567,100,0,15,0,0,0,0,0.05567,115.05567,
+311,Netcong Borough,1428001-011,"Borough of Netcong - Watermain Replacement and Project Prioritization
+Planning",4500,75,0,15,5,0,0,0,0.03342,115.03342,BIL (GEN)
+312,National Park Borough,0812001-001,Replacement of a WTP,3289,100,0,0,0,0,0,15,0.03289,115.03289,BIL (GEN)
+313,Sussex Borough,1921001-004,Water Meter Replacement Project,2130,35,0,0,0,0,0,80,0.0213,115.0213,BIL (GEN)
+314,Allentown Borough,1302001-004,Water Treatment Plant Improvements,1828,100,0,15,0,0,0,0,0.01828,115.01828,
+317,Jersey City Municipal Utilities Authority,0906001-015,Van Winkle Ave. Water Main Replacement,247597,75,0,20,0,0,0,15,2.47,112.47,
+318,Middlesex Water Company,1225001-020,Replace the Tingley Lane pump station,233376,60,50,0,0,0,0,0,2.33376,112.33376,
+320,Brick Township Municipal Utilities Authority,1506001-008,Undersized Water Main Replacement Cedar Park East and West,100000,75,0,20,0,0,0,15,0.86898,110.86898,
+320,Brick Township Municipal Utilities Authority,1506001-013,"Water Main Stream Crossings Replacements at Route 70 (16"" Diameter), at the Beaver Dam Creek at Midstreams Road (16"" Diameter), and Five 12"" Diameter Stream Crossings in the Township of Brick",100000,75,0,20,0,0,0,0,0.86898,110.86898,
+323,Kearny Town,0907001-001A,Water Facility and Ground Improv. Program,291648,75,0,20,0,0,0,15,0.41664,110.41664,
+324,Long Beach Township,1517001-012,"Rehabilitation of four storage tanks-Beach Haven Terrace, Brant Beach,
+Holgate & Pehala Park",35367,60,50,0,0,0,0,0,0.35367,110.35367,
+326,Orange City,0717001-005,Cleaning & Lining of mains,30000,75,0,0,5,0,0,30,0.3,110.3,BIL (GEN)
+328,Phillipsburg Redevelopment Authority,2119001-006,"Installation of 5,300 LF of 8 and 12-inch water mains for a brownfield site",18162,75,0,0,0,5,0,30,0.18162,110.18162,
+329,Ramsey Borough,0248001-005,Rehabilitation of Airmount reservoir,16350,60,50,0,0,0,0,0,0.1635,110.1635,
+330,Salem City,1712001-002,Installation of a new well,5857,15,0,15,0,0,0,80,0.05857,110.05857,BIL (GEN)
+331,Netcong Borough,1428001-006,Replacement of Water meters,3236,25,50,15,5,0,0,15,0.03236,110.03236,
+332,North Jersey District Water Supply Commission,1613001-030,Modify and Expand Central Receiving Building,872153,1,50,20,0,0,0,30,8.72153,109.72153,
+332,North Jersey District Water Supply Commission,1613001-007,Acquisition and integration of the Kearny/Bayonne Transmission main,872153,1,50,20,0,0,0,30,8.72153,109.72153,
+333,"NJ American Water Company, Inc.",2004002-007,Painting of the Raritan Millstone backwash tank at the WTP,610000,100,0,0,0,0,0,0,6.1,106.1,
+334,Perth Amboy City,1216001-001,Replacement of undersize water main - Center Street,50814,75,0,0,0,0,0,30,0.50814,105.50814,BIL (GEN)
+334,Perth Amboy City,1216001-002,Replacement of undersize water main - State Street,50814,75,0,0,0,0,0,30,0.50814,105.50814,BIL (GEN)
+334,Perth Amboy City,1216001-003,Cleaning & Lining of water mains-Central bussiness District,50814,75,0,0,0,0,0,30,0.50814,105.50814,BIL (GEN)
+335,Garfield City,0221001-004,Replacement of water mains,29780,75,0,0,0,0,0,30,0.2978,105.2978,BIL (GEN)
+335,Garfield City,0221001-006,"Replacement of 8,000 LF of 6-inch to 12-inch water main & replacement
+of 30 valves",29780,75,0,0,0,0,0,30,0.2978,105.2978,BIL (GEN)
+336,Lakewood Township Municipal Utilities Authority,1514002-012,Installation of a new storage tank,25000,50,25,0,0,0,0,30,0.25,105.25,BIL (GEN)
+337,West Deptford Township,0820001-003,Water Meter Replacment Project,21248,25,50,0,0,0,15,15,0.21248,105.21248,
+338,Manchester Township,1518005-003,Install automated meters,21083,25,0,0,0,0,0,80,0.210833,105.21083,BIL (GEN)
+339,Ventnor City,0122001-001,Clean and line 8 and 14inch water mains,12900,75,0,0,0,0,0,30,0.129,105.129,BIL (GEN)
+340,Manchester Utilities Authority,1603001-008,"Slip line 16,000 LF unlined cast iron 16inch pipe in High Mountain in
+Haledon and North Haledon w/ smaller diameter pipe",12111,75,0,15,0,0,0,15,0.12111,105.12111,
+342,Wallington Borough,0265001-001,Replacement of 6-inch mains with 8-inch mains,11580,75,0,0,0,0,0,30,0.1158,105.1158,
+343,Gloucester City,0414001-002,Water Main replacement on Broadway & Koehler Streets,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-003,Water Main replacement on Jersey Avenue,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-007,Water Main replacement on Johnson Blvd.,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-008,Water Main replacement on Market Street,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-009,Water Main replacement on Park Avenue,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-010,Water Main replacement on Baynes Avenue,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-011,"Water Main replacement on Brown Street, E. Brown Street, Sparks
+Avenue",11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-012,Water Main replacement on Nicholson Road,11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+343,Gloucester City,0414001-013,"Replacement of 2,200 LF of water mains on Charles Street",11484,75,0,0,0,0,0,30,0.11484,105.11484,BIL (GEN)
+345,Hammonton Town,0113001-001,"Water main extension along Egg Harbor Road, and Eighth Street to create
+loops and eliminate dead ends",11300,75,0,15,0,0,0,15,0.113,105.113,
+345,Hammonton Town,0113001-002,"Replacement of water mains on Central Ave., Golf Dr., & 12th Street.",11300,75,0,15,0,0,0,15,0.113,105.113,
+345,Hammonton Town,0113001-003,"Replacement of 2,900 LF of water mains on Rte 54",11300,75,0,15,0,0,0,15,0.113,105.113,
+346,Pemberton Township,0329004-006,Various Water System Improvements,10815,75,0,15,0,0,0,15,0.10815,105.10815,BIL (GEN)
+347,Stone Harbor Borough,0510001-001,Water Main Replacement Project- Phase 1,10283,75,0,15,0,0,0,0,0.102833,105.10284,
+348,Pine Hill Municipal Utilities Authority,0428002-003,"Erial Road Water Main Rehab and Branch Avenue Pressure Reducing
+Valve",10233,75,0,0,0,0,0,30,0.10233,105.10233,BIL (GEN)
+349,Newton Town,1915001-002,2023 Drinking Water Pump Station,8300,60,0,20,0,0,0,0,0.083,105.083,
+349,Newton Town,1915001-003,2023 Drinking Water Storage Tank,8300,60,0,20,0,0,0,0,0.083,105.083,
+350,Paulsboro Borough,0814001-002,"Replacement of 2,300 water meters",6025,25,0,0,0,0,0,80,0.06025,105.06025,BIL (GEN)
+352,Hightstown Borough,1104001-011,"Hauser, Bennet and Prospect Water Mains",5304,75,0,15,0,0,0,0,0.054,105.054,
+355,Sussex Borough,1921001-002,Replacement of 75 year old water mains,2666,75,0,0,0,0,0,30,0.02666,105.02666,BIL (GEN)
+356,Brooklawn Borough,0407001-004,"Removal and replacement 1,500 LFof 6-inch water mains",2300,75,0,0,0,0,0,30,0.023,105.023,BIL (GEN)
+357,"NJ American Water Company, Inc.",1345001-005,Replacement of ozone generators at Swimming River WTP,289553,100,0,0,0,0,0,0,2.89553,102.89553,
+358,Middlesex Water Company,1225001-025,Western Transmission Main,233376,30,50,15,5,0,0,0,2.33376,102.33376,
+360,Orange City,0717001-016,"Orange Twp | Water System Hydraulic Model, GIS, AMP",32000,1,80,0,5,5,0,0,0.30134,101.30134,BIL (GEN)
+361,Berkeley Township Municipal Utilities Authority,1505004-002,Install new water mains,8130,1,0,20,0,0,0,80,0.0813,101.0813,BIL (GEN)
+361,Berkeley Township Municipal Utilities Authority,1505004-005,Extension of water mains,8130,1,0,20,0,0,0,80,0.0813,101.0813,BIL (GEN)
+362,Hoboken City,0905001-004,Hoboken Pressure Mitigation Project,57703,30,0,20,0,0,0,0,0.52,100.52,
+365,North Brunswick Township,1215001-003,Treatment plant upgrade,38000,100,0,0,0,0,0,0,0.38,100.38,
+368,Ramsey Borough,0248001-015,"Installation of chlorine analyzers and pipe improvements to upgrade
+disinfection system at various facilities",16350,100,0,0,0,0,0,0,0.1635,100.1635,
+371,Pompton Lakes Municipal Utilities Authority,1609001-003,"Replacement of gas chlorination system with solid tablet chlorination
+system",11435,100,0,0,0,0,0,0,0.11435,100.11435,
+373,Burlington City,0305001-003,Broad Street Water Tank Rehabilitation,9743,60,0,15,5,0,0,0,0.09835,100.09835,BIL (GEN)
+374,Ringwood Borough,1611002-001,"Installation of chlorination station, automatic controls & protection of
+pipe",9600,100,0,0,0,0,0,0,0.096,100.096,
+375,Netcong Borough,1428001-003,Drill new well to meet current demand,3236,15,50,15,5,0,0,15,0.03236,100.03236,
+376,"Fayson Lake Water Company, Incorporated",1415001-001,Upgrade treatment facility,3087,100,0,0,0,0,0,0,0.03087,100.03087,
+377,Mount Arlington Borough,1426005-002,"Windemere, Altenbrand, North Glen and Park Water Main Extension",98,75,0,15,0,0,0,0,0.01978,100.01978,
+378,West Milford Municipal Utilities Authority,1615016-001,"Wells #1,6 & 7 WTP upgrades",1625,100,0,0,0,0,0,0,0.01625,100.01625,
+379,West Milford Municipal Utilities Authority,1615018-001,Concorde & Quincy WTP upgrades,1260,100,0,0,0,0,0,0,0.0126,100.0126,
+380,Roosevelt Borough,1341001-005,Upgrades to water treatment plant,935,100,0,0,0,0,0,0,0.00935,100.00935,
+381,West Milford Municipal Utilities Authority,1615012-001,Well #1 WTP upgrades,635,100,0,0,0,0,0,0,0.00635,100.00635,
+382,West Milford Municipal Utilities Authority,1615002-001,Well #28 WTP Upgrades,600,100,0,0,0,0,0,0,0.006,100.006,
+383,Hopewell Township,1106001-001,Water System Improvements,5710,75,0,15,0,0,0,0,0.00356,100.00356,
+384,Collier Services,1328300-003,Replace existing hypochlorination and water softener systems,350,100,0,0,0,0,0,0,0.0035,100.0035,
+385,Plausha Park Water Company,1421004-001,"Install chemical feed, safety upgrades and replace the ramp and piping at
+the well/treatment facility",200,100,0,0,0,0,0,0,0.002,100.002,
+386,West Milford Municipal Utilities Authority,1615001-001,Moore Rd WTP upgrades,180,100,0,0,0,0,0,0,0.0018,100.0018,
+387,West Milford Municipal Utilities Authority,1615006-001,Well #6 WTP Upgrades,115,100,0,0,0,0,0,0,0.00115,100.00115,
+388,Green Briar Residential Home,1421305-001,"Installation of chlorination to WTP, emergency generator, back up well",43,100,0,0,0,0,0,0,0.00043,100.00043,
+389,Cliffside Park Borough,0238001-001,"Construction of water mains for a brownfield redevelopment project -
+Towne Centre",394079,75,0,0,0,5,0,15,3.94079,98.94079,
+390,Woodbine Borough,0516001-002,Woodbine Asset Management Plan,2650,1,0,15,0,0,0,80,0.0265,96.0265,BIL (GEN)
+391,Brick Township Municipal Utilities Authority,1506001-009,Breton Woods Water Main Replacement - Phase I,100000,75,0,20,0,0,0,0,1,96,
+392,Brick Township Municipal Utilities Authority,1506001-015,Mantoloking Road Water Storage Tank Rehabilitation,73620,60,0,20,0,0,0,0,0.86898,95.86898,
+394,Hoboken City,0905001-003,Water Main Upgrades Phase II,54379,75,0,20,0,0,0,0,0.52,95.52,
+396,Rahway City,2013001-001,Cleaning & Lining of various water main sections,27785,75,0,0,5,0,0,15,0.27785,95.27785,
+396,Rahway City,2013001-002,Cleaning & Lining of various water main sections,27785,75,0,0,5,0,0,15,0.27785,95.27785,
+397,Mahwah Township,0233001-005,Installation of emergency generators,24062,45,50,0,0,0,0,0,0.24062,95.24062,
+398,Burlington Township,0306001-004,"Replacement of 1,500 LF of main on Lansberry Dr and LaVeer Rd",22000,75,0,20,0,0,0,0,0.22,95.22,
+399,Barnegat Township,1533001-002,Replacement of water meters & Back flow preventers,20935,25,35,20,0,0,0,15,0.20935,95.20935,
+401,Richard Stockton College,0111304-001,Installation of solar power at water treatment plant,6600,45,0,20,0,0,15,15,0.066,95.066,
+402,Clementon Borough,0411001-002,Rehab of well 9 including slip lining to improve conveyance,5003,15,80,0,0,0,0,0,0.05,95.05,BIL (GEN)
+403,Shore Water Company,1505003-001,Shore Water Co. Tank Painting and repair project,2467,60,0,20,0,0,0,0,0.0246667,95.02467,BIL (GEN)
+404,Hardyston Municipal Utilities Authority,1911006-002,Water Tank Refurbishment,1963,60,35,0,0,0,0,0,0.01963,95.01963,
+405,Berkeley Township Municipal Utilities Authority,1505323-001,Northern Blvd Water Tower Rehabilitation Project,10800,60,0,20,0,0,0,0,0.0015,95.0015,BIL (GEN)
+406,Milltown Borough,1212001-004,"Cleaning and Lining of mains and construction of 2 water main loops to
+eliminate dead ends",7052,75,0,15,0,5,0,0,0.07052,95.00007,
+407,Middlesex Water Company,1225001-003,Installation of nanofiltration for hardness removal (North Tingley Lane),233376,40,50,0,0,0,0,0,2.33376,92.33376,
+407,Middlesex Water Company,1225001-004,Installation of nanofiltration for hardness removal (South Tingley Lane),233376,40,50,0,0,0,0,0,2.33376,92.33376,
+407,Middlesex Water Company,1225001-027,RENEW 2019 - Carteret,23992,75,0,0,0,0,15,0,2.33376,92.33376,
+409,Orange City,0717001-006,asset management plan,30134,1,80,0,5,0,0,0,0.30134,91.30134,BIL (GEN)
+410,Monroe Municipal Utilities Authority,0811002-001,Tank Painting,36908,60,0,0,0,0,0,30,0.36908,90.36908,
+411,Belleville Township,0701001-006,Clara Maass Hospital Water Main Extension,36010,75,0,0,0,0,0,15,0.3601,90.3601,
+412,Belleville Township,0701001-001,Extension of 12 inch water main to the Medical Center,35928,75,0,0,0,0,0,15,0.35928,90.35928,
+412,Belleville Township,0701001-002,Replacement of inoperable valves & hydrants,35928,75,0,0,0,0,0,15,0.35928,90.35928,
+413,Vineland City,0614003-014,"Installation of gas generators at wells #4,6,7,8,10,11 and 12",33000,45,0,15,0,0,0,30,0.33,90.33,BIL (GEN)
+414,Garfield City,0221001-005,"Replacement of the Botany Street pump station. Expansion of the SCADA
+system",29780,60,0,0,0,0,0,30,0.2978,90.2978,BIL (GEN)
+415,Montville Township,1421003-004,Montville Twp - WQAA - Pine Brook Road Watermain Replacement,22000,75,0,15,0,0,0,0,0.22,90.22,
+416,Lyndhurst Township,0232001-002,"Replacement of 1,350 LF of antiquated water mains on Forest Avenue",19800,75,0,0,0,0,0,15,0.198,90.198,
+417,Berlin Borough,0405001-006,"A 12 inch water main needs to be tied in at Park Drive and White Horse
+Pike",13121,75,0,15,0,0,0,0,0.13121,90.13121,
+418,Manasquan Borough,1327001-002,Construction of 600 LF of WM on Perrine Blvd & Mallard Park Area,12265,75,0,15,0,0,0,0,0.12265,90.12265,
+419,Manchester Utilities Authority,1603001-003,High Service Pump Station Replacement,12028,60,0,15,0,0,0,0,0.12028,90.12028,
+420,Pemberton Township,0329004-007,Various Water System Improvements,10815,60,0,15,0,0,0,15,0.10815,90.10815,BIL (GEN)
+422,Ship Bottom Borough,1528001-004,Water Main Replacement Project,5762,75,0,0,0,0,0,15,0.05762,90.05762,
+423,National Park Borough,0812001-003,Replacement of 6-inch and 10-inch water main with appurtenances,3289,75,0,0,0,0,0,15,0.03289,90.03289,BIL (GEN)
+424,Lakehurst Borough,1513001-002,Water Main Replacement Project Phase I,2654,75,0,0,0,0,0,15,0.02654,90.02654,BIL (GEN)
+425,Alpha Borough,2102001-001,"Upgrades to treatment for Pursell & Alpha St wells or VOC removal,
+hardness and disinfection",2500,60,0,0,0,0,0,30,0.025,90.025,
+426,Brooklawn Borough,0407001-005,Painting interior & exterior of water tank,2300,60,0,0,0,0,0,30,0.023,90.023,BIL (GEN)
+427,Pemberton Borough,0328001-001,"Replacement of undersized and antiquated water mains on Hough and
+Handover Streets",1610,75,0,0,0,0,0,15,0.0161,90.0161,BIL (GEN)
+428,Fountainhead Properties Incorporate,1511013-002,Loop system with 400 LF of water main with replacement of water meters,280,75,0,15,0,0,0,0,0.0028,90.0028,
+429,Stafford Township,1530004-014,"Construction of 2,600 LF of 8 and 12-inch water main on Rte 9 and Oak
+Ave",28868,1,50,20,0,0,0,15,0.28868,86.28868,
+430,"NJ American Water Company, Inc.",0119002-004,Construction of a 1.5 MG elevated tank including water mains,88088,50,0,20,0,0,0,15,0.88088,85.88088,
+431,Sayreville Borough,1219001-010,Water Transmission Main,44243,75,0,0,0,5,0,0,0.43761,85.43761,
+432,Stafford Township,1530004-015,Redevelopment of wells # 2 and 5,28868,15,35,20,0,0,0,15,0.28868,85.28868,
+433,Mount Arlington Borough,1426005-004,Booster Station Improvements,1000,60,0,15,0,0,0,0,0.01978,85.01978,
+435,Ridgefield Park Village,0238001-002,Village of Ridgefield Park Skymark Project -- Drinking Water,12729,75,0,0,0,0,0,0,7.92713,82.92713,
+436,Brick Township Municipal Utilities Authority,1506001-006,Installation of security measures in water system,134108,45,0,20,0,0,0,15,1.34108,81.34108,
+437,Lakewood Township Municipal Utilities Authority,1514002-003,Administration Building Addition,21000,1,0,0,0,0,0,80,0.2175,81.2175,BIL (GEN)
+438,"NJ American Water Company, Inc.",2004002-006,36 inch valve replacement at Madison Hill Road,610000,75,0,0,0,0,0,0,6.1,81.1,
+439,Winslow Township,0436007-004,"Install appurtenances associated with new well #12 (SCADA, well house,
+transmission mains)",39328,15,50,15,0,0,0,0,0.39328,80.39328,
+439,Winslow Township,0436007-005,Install new 500 GPM well #12,39328,15,50,15,0,0,0,0,0.39328,80.39328,
+440,Montclair Township,0713001-002,Cleaning & Lining of water mains,38977,75,0,0,5,0,0,0,0.38977,80.38977,
+440,Montclair Township,0713001-003,Replace Transmission Valves,38977,75,0,0,5,0,0,0,0.38977,80.38977,
+440,Montclair Township,0713001-010,Replacement of lead service Lines - Phase III,38977,75,0,0,5,0,0,0,0.38977,80.38977,
+441,Rahway City,2013001-004,Repainting of 1.5 MG elevated & 0.5 MG watersphere water tanks,27785,60,0,0,5,0,0,15,0.27785,80.27785,
+442,Mahwah Township,0233001-003,Interconnection on Campgaw & Pulis Avenues,24062,30,50,0,0,0,0,0,0.24062,80.24062,
+443,South Orange Village,0719001-009,Scotland Road Water Mains,17000,75,0,0,5,0,0,0,0.16964,80.16964,
+444,Gloucester City,0414001-014,Construction of a 1.0 MG storage tank to replace standpipe,11484,50,0,0,0,0,0,30,0.11484,80.11484,BIL (GEN)
+444,Gloucester City,0414001-015,"Construction of a new .5 MG storage tank to maintain pressure on the
+east side",11484,50,0,0,0,0,0,30,0.11484,80.11484,BIL (GEN)
+445,Milltown Borough,1212001-003,Ford Ave Redevelopment Agency Borough,7052,60,0,15,0,5,0,0,0.07052,80.07052,
+446,North Jersey District Water Supply Commission,1613001-034,"Security, IT and Safety Projects",872153,45,0,20,0,0,0,0,0.0015,80.0015,
+448,Passaic Valley Water Commission,1605002-029,"Rehabilitation of Little Falls Water Treatment Plant PS and Water Main
+Replacement Program for Clifton and Passaic",626051,75,0,0,0,0,0,0,3.10483,78.10483,
+448,Passaic Valley Water Commission,1605002-028,Water Main Replacement Program for Paterson and Prospect Park,152684,75,0,0,0,0,0,0,3.10483,78.10483,
+449,"NJ American Water Company, Inc.",1345001-006,Rehab of High Service Transmission Main in Middletown,289553,75,0,0,0,0,0,0,2.89553,77.89553,
+449,"NJ American Water Company, Inc.",1345001-009,East End Transmission Main Replacement,289553,75,0,0,0,0,0,0,2.89553,77.89553,
+451,"NJ American Water Company, Inc.",0712001-008,Replacement of two large valves,217230,75,0,0,0,0,0,0,2.1723,77.1723,
+452,Old Bridge Municipal Utilities Authority,1209002-002,Replacement of water mains along Lawrence Harbor Road,66200,75,0,0,0,0,0,0,0.662,75.662,
+453,Bayonne City,0901001-006,Aqueduct Replacement,63000,75,0,0,0,0,0,0,0.63,75.63,BIL (GEN)
+454,Wayne Township,1614001-001,"Replacement of 2400 LF of 8-inch water main and 2000 LF of 12-inch
+water main -Farmingdale Area",55000,75,0,0,0,0,0,0,0.55,75.55,
+455,Franklin Township - Gloucester,1808001-006,Installation of new water mains to eliminate dead end mains,50000,75,0,0,0,0,0,0,0.5,75.5,
+457,East Brunswick Township,1204001-001,"Replacement of undersized water mains on Wilmot, Harrison and various
+streets",47000,75,0,0,0,0,0,0,0.47,75.47,
+458,Evesham Municipal Utilities Authority,0313001-002,2018 Water Main Replacements,45351,75,0,0,0,0,0,0,0.45351,75.45351,
+458,Evesham Municipal Utilities Authority,0313001-003,Route 70 WM Replacement,45351,75,0,0,0,0,0,0,0.45351,75.45351,
+459,North Brunswick Township,1215001-007,Water Main Replacement,41431,75,0,0,0,0,0,0,0.41,75.41,
+459,North Brunswick Township,1215001-008,Old Georges Road Water Project,41431,75,0,0,0,0,0,0,0.41,75.41,
+460,Sayreville Borough,1219001-004,"Rehabilitate existing unlined cast iron water mains in several areas of
+Sayreville",40377,75,0,0,0,0,0,0,0.40377,75.40377,
+460,Sayreville Borough,1219001-006,Construct new water main along Washington Road,40377,75,0,0,0,0,0,0,0.40377,75.40377,
+460,Sayreville Borough,1219001-008,Clean and line water mains in several sections of the Borough,40377,75,0,0,0,0,0,0,0.40377,75.40377,
+461,North Brunswick Township,1215001-002,"Replacement of 4 miles of 24 inch water main from the North Brunswick
+Twp Treatment plant to Finnegans Lane",38000,75,0,0,0,0,0,0,0.38,75.38,
+461,North Brunswick Township,1215001-004,Install 16 inch water main,38000,75,0,0,0,0,0,0,0.38,75.38,
+461,North Brunswick Township,1215001-005,"Replacement of 2,350 LF of 8 inch water mains on Excelsior and Thalia
+Streets and Sioux Road",38000,75,0,0,0,0,0,0,0.38,75.38,
+462,Edison Township,1205001-001,Water System Improvements,107588,75,0,0,0,0,0,0,0.35,75.35,
+463,Deptford Township Municipal Utilities Authority,0802001-002,Water Main Replacement at East Woodbury,30590,75,0,0,0,0,0,0,0.30561,75.30561,
+463,Deptford Township Municipal Utilities Authority,0802001-003,Water Main Replacement at Country Club Estates,30590,75,0,0,0,0,0,0,0.30561,75.30561,
+464,East Windsor Municipal Utilities Authority,1101002-005,Twin Rivers (H section) Water Main Replacement Project,27190,75,0,0,0,0,0,0,0.2719,75.2719,
+465,Little Egg Harbor Municipal Utilities Authority,1516001-006,Water Storage Tank Painting and Upgrades,21333,60,0,0,0,0,0,0,0.24215,75.24215,BIL (GEN)
+465,Little Egg Harbor Municipal Utilities Authority,1516001-007,Little Egg Harbor Water Improvements Phase II,24215,75,0,0,0,0,0,0,0.24215,75.24215,BIL (GEN)
+466,Passaic Valley Water Commission,0231001-003,Water Main Replacement Program for the Lodi System,24084,75,0,0,0,0,0,0,0.24136,75.24136,
+467,Montville Township,1421003-002,Installation of 880 LF of 8 inch water main,21000,75,0,0,0,0,0,0,0.21,75.21,
+468,Ramsey Borough,0248001-014,Replacement of North Central Ave water main,16350,75,0,0,0,0,0,0,0.1635,75.1635,
+469,Bordentown City,0303001-002,"Replacement of 1,500 LF of 12-inch transmission mains",15831,75,0,0,0,0,0,0,0.15831,75.15831,
+470,Passaic Valley Water Commission,0239001-003,Replacement of Water Mains - North Arlington System,15368,75,0,0,0,0,0,0,0.15392,75.15392,
+471,Pennsville Township,1708001-003,Rehabilitate .25 MG Water Street storage tank,13250,60,0,0,0,0,0,15,0.1325,75.1325,BIL (GEN)
+472,Saddle Brook Township,0257001-001,"Construction of 1,200 LF of 8-inch water mains",13155,75,0,0,0,0,0,0,0.13155,75.13155,
+473,Mantua Township MUA,0810004-004,Centre City Water/Sewer Infrastructure Improvements,12711,75,0,0,0,0,0,0,0.126,75.126,
+474,Clinton Town,1005001-012,WQAA Implementation - Water Infrastructure Audit and Upgrades,12500,75,0,0,0,0,0,0,0.125,75.125,
+474,Clinton Town,1005001-006,Lebanon Borough Water Main Replacements - Phase 2-5,12500,75,0,0,0,0,0,0,0.125,75.125,
+474,Clinton Town,1005001-021,"Town of Clinton - West Main Street Water Main Replacement - Phase 3 &
+4",8333,75,0,0,0,0,0,0,0.125,75.125,
+475,Hammonton Town,0113001-012,Town of Hammonton Water infrastructure Project,14711,75,0,0,0,0,0,0,0.12153,75.12153,
+476,Haddonfield Borough,0417001-001,Replacement of water main on Tanner & Woodlane with 8 inch,11600,75,0,0,0,0,0,0,0.116,75.116,
+477,Wallington Borough,0265001-002,Wallington Avenue Water Main,11335,75,0,0,0,0,0,0,0.11583,75.11583,
+478,Pompton Lakes Municipal Utilities Authority,1609001-001,"Abandonment of Cannonball Rd main and installation of insertion valves
+throughout system",11435,75,0,0,0,0,0,0,0.11435,75.11435,
+478,Pompton Lakes Municipal Utilities Authority,1609001-009,Ringwood Ave Water Main,1470,75,0,0,0,0,0,0,0.11435,75.11435,
+479,Beachwood Borough,1504001-006,The Cable Avenue water main replacement,10375,75,0,0,0,0,0,0,0.10375,75.10375,
+480,Lower Township Municipal Utilities Authority,0505002-006,LTMUA - North Cape May Water Main Replacement 1-5,39510,75,0,0,0,0,0,0,0.10315,75.10315,BIL (GEN)
+481,East Hanover Township,1410001-004,Replace Water Meters,10000,75,0,0,0,0,0,0,0.1,75.1,
+482,Long Beach Township,1517001-015,Water Main Replacement Project,9962,75,0,0,0,0,0,0,0.0996167,75.09962,
+483,Wanaque Borough,1613002-002,"Replacement of approximately 6,000 feet of water main and services on
+Ringwood Avenue",9954,75,0,0,0,0,0,0,0.09954,75.09954,
+484,Ringwood Borough,1611002-002,Replacement of undersized water mains,9600,75,0,0,0,0,0,0,0.096,75.096,
+485,Aberdeen Township,1330002-001,Installation of water mains,8900,75,0,0,0,0,0,0,0.089,75.089,
+485,Aberdeen Township,1330002-003,Replace deteriorated water main from Route 35/Long Neck crossing,8900,75,0,0,0,0,0,0,0.089,75.089,
+485,Aberdeen Township,1330002-004,Install two water utility crossing of Route 35,8900,75,0,0,0,0,0,0,0.089,75.089,
+486,Florham Park Borough,1411001-002,"Replacement of 14 6-inch line valves, 12 hydrants and 11 services",8857,75,0,0,0,0,0,0,0.08857,75.08857,
+488,Glen Ridge Borough,0708001-010,Glen Ridge - Water Main Replacement Project - Carteret/Forest,7681,75,0,0,0,0,0,0,0.07681,75.07681,
+490,Washington Township Municipal Utilities Authority,1438004-004,WTMUA - Water System Improvements - Water Main Replacements,1622,75,0,0,0,0,0,0,0.04866,75.04866,
+492,High Bridge Borough,1014001-003,West Main Street Water Main Upgrades,3648,75,0,0,0,0,0,0,0.033,75.033,
+494,Allentown Borough,1302001-002,Elevated Water Tank Improvements,1828,60,0,15,0,0,0,0,0.02,75.02,
+495,Island Heights Borough,1510001-004,Replacement of 75 fire hydrants and repairs to 21 fire hydrants,1750,75,0,0,0,0,0,0,0.0175,75.0175,
+496,West Milford Municipal Utilities Authority,1615016-004,Replace Fire Hydrants,1625,75,0,0,0,0,0,0,0.01625,75.01625,
+497,Milford Borough,1020001-001,"Replace 3,000 LF with 8-inch water mains on Green, Maple, Orchard,
+Walnut & Railroad Sts",1347,75,0,0,0,0,0,0,0.01347,75.01347,
+497,Milford Borough,1020001-002,"Replace 5,000 LF with 8-inch water mains on Delaware & Ravine Rds to
+loop system",1347,75,0,0,0,0,0,0,0.01347,75.01347,
+499,Farmingdale Borough,1314001-002,Painting and repairs to water tower and other misc system improvements,1329,60,0,0,0,0,0,15,0.01329,75.01329,BIL (GEN)
+500,West Milford Municipal Utilities Authority,1615018-004,Replace Fire Hydrants,1260,75,0,0,0,0,0,0,0.0126,75.0126,
+502,Roosevelt Borough,1341001-006,Replacement of water lines most susceptible to breakage,933,75,0,0,0,0,0,0,0.00933,75.00933,
+503,Roosevelt Borough,1341001-007,"Homestead, Cedar and Elm Water Mains Project.",882,75,0,0,0,0,0,0,0.00882,75.00882,
+504,Roosevelt Borough,1314001-003,Improvements to Farm Lane and School Lane,808,75,0,0,0,0,0,0,0.0088,75.0088,
+504,Roosevelt Borough,1341001-008,Improvements to Pine Drive Phase I,808,75,0,0,0,0,0,0,0.0088,75.0088,
+504,Roosevelt Borough,1341001-009,Water Main Improvements on Tamara Drive,808,75,0,0,0,0,0,0,0.0088,75.0088,
+505,West Milford Municipal Utilities Authority,1615014-002,Replace Fire Hydrants,700,75,0,0,0,0,0,0,0.007,75.007,
+506,West Milford Municipal Utilities Authority,1615012-004,Replace Fire Hydrants,635,75,0,0,0,0,0,0,0.00635,75.00635,
+507,West Milford Municipal Utilities Authority,1615002-003,Replace Fire Hydrants,600,75,0,0,0,0,0,0,0.006,75.006,
+508,Delaware Township Municipal Utilities Authority,1007001-001,"Delaware Township MUA - Watermain Replacement and Asset
+Management Planning Efforts",500,75,0,0,0,0,0,0,0.005,75.005,
+509,Byram Homeowners Association,1904009-006,Replacement of 77 saddles on the water mains,400,75,0,0,0,0,0,0,0.004,75.004,
+510,Collier Services,1328300-002,Replace distribution system and associated appurtenances,350,75,0,0,0,0,0,0,0.0035,75.0035,
+511,Robbinsville Township,1112001-001,Newtown Village Watermain Project,149,75,0,0,0,0,0,0,0.003,75.003,
+513,Lake Glenwood Village,1922010-002,"Installation of 7,100 LF of 6-inch Cement Lined Ductile Iron Pipe
+replacement water mains",250,75,0,0,0,0,0,0,0.0025,75.0025,
+513,Lake Glenwood Village,1922010-004,"Replacement of 1,000 LF of water mains on Cliffside, Toboggan &
+Lakeshore",250,75,0,0,0,0,0,0,0.0025,75.0025,
+514,Rosemont Water Company,1007002-002,Rehabilitate and/or replace existing distribution mains,225,75,0,0,0,0,0,0,0.00225,75.00225,
+515,Plausha Park Water Company,1421004-002,"Replacement of main at stream crossing, valves and installing blow off
+hydrants",200,75,0,0,0,0,0,0,0.002,75.002,
+516,West Milford Municipal Utilities Authority,1615001-004,Replace Fire Hydrants,180,75,0,0,0,0,0,0,0.0018,75.0018,
+517,West Milford Municipal Utilities Authority,1615006-004,Replace Fire Hydrants,115,75,0,0,0,0,0,0,0.00115,75.00115,
+518,North Shore Water Association,1904004-002,Water System Refurb,105,75,0,0,0,0,0,0,0.00105,75.00105,
+519,Oak Ridge Senior Housing Community,1414008-001,Oakridge Senior Community Water Lines,100,75,0,0,0,0,0,0,0.001,75.001,
+520,Woodland Heights Homeowners Association,1615022-001,Well Rehabilitation/System Improvements,80,75,0,0,0,0,0,0,0.00055,75.00055,
+521,Middlesex Water Company,1225001-506/001,New elevated storage tank to replace tank & PS @ Eborn,1633632,1,50,15,5,0,0,0,2.33376,73.33376,
+522,North Jersey District Water Supply Commission,1613001-026,Low Lift Gas Pump,872153,50,0,20,0,0,0,0,2.3048,72.3048,
+523,"NJ American Water Company, Inc.",2004002-013,RM WTP Emergency Generator,44464,1,50,15,0,0,0,0,6.1,72.1,
+524,Barnegat Township,1533001-003,"Installation of 1,700 LF of 8 inch PVC water main extension",20935,1,35,20,0,0,0,15,0.20935,71.20935,
+525,"NJ American Water Company, Inc.",0119002-009,Installation of New Water Meters,88088,35,0,20,0,0,0,15,0.88088,70.88088,
+526,South Orange Village,0719001-005,"Crest Drive Water Tank Replacement and Water Infrastructure
+Improvement Projects",16198,60,0,0,5,0,0,0,0.16964,70.16964,
+526,South Orange Village,0719001-006,Repair or Replace Newstead Shere,16298,60,0,0,5,0,0,0,0.16964,70.16964,
+527,Point Pleasant Beach Borough,1525001-001,Water Meter Replacement Project,6204,25,0,0,0,0,15,30,0.06204,70.06204,
+528,Jersey City Municipal Utilities Authority,0906001-013,Remote Meter Reading (AMI),257342,25,0,20,5,0,0,15,2.57342,67.57342,
+529,Trenton City,1111001-007,Construction of an emergency interconnection with NJAWCo,255000,30,0,20,0,0,0,15,2.55,67.55,BIL (GEN)
+530,Atlantic City Municipal Utilities Authority,0102001-010,Asset Management Plan - Professional Consulting Services In Compliance With The New Jersey Water Quality Accountability Act,63943,1,0,15,0,0,0,0,0.639433,66.63943,BIL (GEN)
+531,"NJ American Water Company, Inc.",2004002-002,Hummocks Tank Painting,610000,60,0,0,0,0,0,0,6.1,66.1,
+531,"NJ American Water Company, Inc.",2004002-003,"Upgrade or replace existing booster station due to aging and obolete
+equipment (Roselle Station)",610000,60,0,0,0,0,0,0,6.1,66.1,
+531,"NJ American Water Company, Inc.",2004002-008,Prospect Ave Tank (Mountainside) Painting,610000,60,0,0,0,0,0,0,6.1,66.1,
+533,Montclair Township,0713001-004,Rehabilitate 2.5 MG & 1.5 MG storage tanks with piping,38977,60,0,0,5,0,0,0,0.38977,65.38977,
+534,Ramsey Borough,0248001-006,"Rehabilitate Dixon, Martis & Spring wells",16350,15,50,0,0,0,0,0,0.1635,65.1635,
+534,Ramsey Borough,0248001-007,Construction of 2 wells with pump station & piping,16350,15,50,0,0,0,0,0,0.1635,65.1635,
+535,Hightstown Borough,1104001-001,New Wycoff Mills Water Storage Tank with transmission mains,5567,50,0,15,0,0,0,0,0.05567,65.05567,
+536,Passaic Valley Water Commission,1605002-027,Construction of the Levine Tanks Phase 1C-2,626051,60,0,0,0,0,0,0,3.10483,63.10483,
+537,"NJ American Water Company, Inc.",1345001-008,Rehab of Newman Springs Pumping Station,289553,60,0,0,0,0,0,0,2.89553,62.89553,
+537,"NJ American Water Company, Inc.",1345001-010,Sunset Avenue and Monterey Tank Painting,289553,60,0,0,0,0,0,0,2.89553,62.89553,
+539,"NJ American Water Company, Inc.",0712001-006,Short Hills Tank Painting,217230,60,0,0,0,0,0,0,2.1723,62.1723,
+540,"NJ American Water Company, Inc.",0119002-010,Replacement of Water Meters,88088,25,0,20,0,0,0,15,0.88088,60.88088,
+542,"NJ American Water Company, Inc.",1345001-001,Jumping Brook WTP Improvement Project,524000,60,0,0,0,0,0,0,0.60092,60.60092,
+543,Parsippany Troy Hills Township,1429001-004,Repainting of 1 MG water storage tank,50649,60,0,0,0,0,0,0,0.50649,60.50649,
+544,Franklin Township - Gloucester,1808001-004,Replacement of 2 elevated storage tanks,50000,60,0,0,0,0,0,0,0.5,60.5,
+546,Sayreville Borough,1219001-002,"Rehabilitate the pump station facility and surface intake on the South
+River located in Sayreville",40377,60,0,0,0,0,0,0,0.40377,60.40377,
+546,Sayreville Borough,1219001-003,Rehabilitate existing 3 MG tank,40377,60,0,0,0,0,0,0,0.40377,60.40377,
+547,Willingboro Municipal Utilities Authority,0338001-014,Water Tank 2 Edge Lane Rehab,31822,60,0,0,0,0,0,0,0.35,60.35,
+548,Marlboro Township,1328002-006,Tennent Road Booster Pump Station,41502,60,0,0,0,0,0,0,0.2948,60.2948,
+548,Marlboro Township,1328002-008,Tennent Road Tank,41502,60,0,0,0,0,0,0,0.2948,60.2948,
+548,Marlboro Township,1328002-003,Beacon Hill storge tank Rehab,29481,60,0,0,0,0,0,0,0.2948,60.2948,
+549,Monroe Municipal Utilities Authority,0811002-003,"Painting of KOC (Well #8) Tank, Corkery (Well #7) Tank and Herbert Tank",37117,60,0,0,0,0,0,0,0.26179,60.26179,
+550,Mahwah Township,0233001-010,Rehabilitation of Campgaw elevated storage tank,24062,60,0,0,0,0,0,0,0.24062,60.24062,
+551,Hackettstown Municipal Utilities Authority,2108001-001,"Construction of New Water Storage Tank w/ related water distribution
+lines",22500,60,0,0,0,0,0,0,0.22,60.22,
+551,West Deptford Township,0820001-004,Jessup Road Water Storage Tank Repair and Repainting,21248,60,0,0,0,0,0,0,0.22,60.22,
+552,Montville Township,1421003-003,"Storage tank rehabilitation, which includes increasing the capacity of 0.25
+MG tank to 0.33 MG",21000,60,0,0,0,0,0,0,0.21,60.21,
+553,Hawthorne Borough,1604001-005,Hawthorne Peach Tree Water Tank Rehabilitation,19231,60,0,0,0,0,0,0,0.19458,60.19458,
+554,Point Pleasant Borough,1524001-001,Replacement of the Clifton Ave storage tank,19306,60,0,0,0,0,0,0,0.19306,60.19306,
+555,West Caldwell Township,0721001-001,Rehabilitation of McKinley Ave storage tank,18296,60,0,0,0,0,0,0,0.18296,60.18296,
+556,Sparta Township,1918004-001,"Installation of a 600 KW wind turbine generator at Germany Flats Water
+Utility",15726,45,0,0,0,0,15,0,0.15726,60.15726,
+557,Verona Township,0720001-004,"Acquisition of the ECUA Jail Annex tank plus rehab and upgrading of the
+tank",13641,60,0,0,0,0,0,0,0.13641,60.13641,
+557,Verona Township,0720001-005,Rehabilitation of the 2 MG Fairview Avenue storage tank,13641,60,0,0,0,0,0,0,0.13641,60.13641,
+559,Clinton Town,1005001-013,"Foster Wheeler Booster Pump Station Modifications - Asset Management
+Planning",214,60,0,0,0,0,0,0,0.125,60.125,
+560,Pompton Lakes Municipal Utilities Authority,1609001-002,Rehabilitation of the exterior of the existing 1.0 MG tank,11435,60,0,0,0,0,0,0,0.11435,60.11435,
+560,Pompton Lakes Municipal Utilities Authority,1609001-005,Replacement of water storage tanks with a 1.0 MG tank,11435,60,0,0,0,0,0,0,0.11435,60.11435,
+561,Pine Hill Municipal Utilities Authority,0428002-006,Water Rehab Project,-,60,0,0,0,0,0,0,0.10223,60.10223,
+562,Florham Park Borough,1411001-003,Rehabilitation of a 1.0 MG storage tank,8857,60,0,0,0,0,0,0,0.08857,60.08857,
+563,North Caldwell Borough,0715001-001,"Rehabilitate a 1.29 MG steel water tank. Remove and replace 800 feet of
+existing chain link fence",6000,60,0,0,0,0,0,0,0.06,60.06,
+564,Point Pleasant Beach Borough,1525001-003,Water Tank Painting And Improvements to Water Treatment Plant,2133,60,0,0,0,0,0,0,0.056,60.056,
+565,Oakland Borough,0220001-004,Iroquois Pumping Station - Rehabilitation,12959,60,0,0,0,0,0,0,0.05038,60.05038,
+566,Washington Township Municipal Utilities Authority,1438004-001,WTMUA - Water Tank Rehabilitation & Well Sm-3 Decommissioning,7500,60,0,0,0,0,0,0,0.04866,60.04866,
+568,Allamuchy Township,2101001-001,Water Storage Tank Replacement Project,5335,60,0,0,0,0,0,0,0.04573,60.04573,
+569,Flemington Borough,1009001-008,Installation of wells #1B and 1C,4250,15,0,15,0,0,0,30,0.0425,60.0425,BIL (GEN)
+570,Ho-Ho-Kus Borough,0228001-001,Water Tank Upgrade,4078,60,0,0,0,0,0,0,0.0406,60.0406,
+571,"Fayson Lake Water Company, Incorporated",1415001-003,Replace existing 0.1 MG Stony Brook storage tank with a 0.25 MG tank,3087,60,0,0,0,0,0,0,0.03087,60.03087,
+572,Bayville Central Regional Board of Education,1505355-002,"Construction of new interconnection with existing municipal water
+system",2500,30,0,0,0,0,0,30,0.025,60.025,
+573,Wenonah Borough,0819001-001,"Water System Asset Management Plan and System Improvements -
+Water Tank Rehabilitation",2278,60,0,0,0,0,0,0,0.02357,60.02357,
+574,Essex Fells Borough,0706001-001,Rehabilitate 1 MG water storage tank,2200,60,0,0,0,0,0,0,0.022,60.022,
+575,Hardyston Municipal Utilities Authority,1911006-001,Water Meter Replacement,1963,25,0,20,0,0,15,0,0.01963,60.01963,
+576,Glen Gardner Borough,1012001-001,Rehabilitate storage tank,1902,60,0,0,0,0,0,0,0.01902,60.01902,
+577,"Brookwood Musconetcong River Property Owners
+Association",1904001-005,Tower Painting & Meter System,422,60,0,0,0,0,0,0,0.012,60.012,
+577,Stillwater Township,1920001-002,Painting interior of water tank,1200,60,0,0,0,0,0,0,0.012,60.012,
+578,Manchester Utilities Authority,1603301-001,Reactivation of the Tilt St Spring,1000,15,0,15,0,0,0,30,0.01,60.01,
+579,Collier Services,1328300-001,"Replace existing 24,000 gallon elevated storage tank to prevent freezing
+and leakage",350,60,0,0,0,0,0,0,0.0035,60.0035,
+580,Rosemont Water Company,1007002-004,Rosemont Water Company Emergency Well Pump Repair,-,60,0,0,0,0,0,0,0.00256,60.00256,
+581,Rosemont Water Company,1007002-003,"Replace existing underground hydro-pneumatic tank with ground level
+storage tank",225,60,0,0,0,0,0,0,0.00225,60.00225,
+582,Plausha Park Water Company,1421004-003,"Rehabilitation of concrete storage facility including security measures and
+instrumentation",200,60,0,0,0,0,0,0,0.002,60.002,
+583,"Wonder Lakes Properties, Incorporate",1615017-003,Replace hydro-pneumatic tank and install new tank,170,60,0,0,0,0,0,0,0.00105,60.00105,
+586,Lakewood Township Municipal Utilities Authority,1514002-013,iInstallation of SCADA,25000,1,25,0,0,0,0,30,0.25,56.25,BIL (GEN)
+587,Bloomfield Township,0702001-002,Water Meter Replacement,47982,35,0,0,5,0,15,0,0.47982,55.47982,
+588,Winslow Township,0436007-010,Well #2 Filter Plant Upgrade,39147,40,0,0,0,0,0,15,0.39147,55.39147,
+589,Montclair Township,0713001-011,New 1.0MG High Zone Tank,37766,50,0,0,5,0,0,0,0.37766,55.37766,
+592,Hammonton Town,0113001-007,Water Meter Replacement,11300,25,0,15,0,0,0,15,0.113,55.113,
+593,Hopatcong Borough,1912001-005,Hopatcong Borough Water Meter Replacement Project,7000,25,0,15,0,0,0,0,0.07224,55.07224,
+594,Allentown Borough,1302001-003,Water Meter Replacement,1828,25,0,15,0,0,15,0,0.01828,55.01828,
+595,"NJ American Water Company, Inc.",0327001-008,"Installation of a booster station including associated apputenances at
+Barrington",253045,50,0,0,0,0,0,0,2.53045,52.53045,
+597,Mount Arlington Borough,1426005-001,Rehabilitation of the Schmitz Terrace Stand Pipe,5187,1,50,0,0,0,0,0,0.05187,51.05187,
+598,"NJ American Water Company, Inc.",0119002-006,Smithvillve ASR Well,88088,15,0,20,0,0,0,15,0.88088,50.88088,
+599,Brick Township Municipal Utilities Authority,1506001-016,Reservoir Infrastructure Mitigation Improvements Project,73620,15,0,20,0,0,0,0,0.86898,50.86898,
+599,Brick Township Municipal Utilities Authority,1506001-017,Replacement of Three Cohansey Wells,73620,15,0,20,0,0,0,0,0.86898,50.86898,
+600,"NJ American Water Company, Inc.",0508001-006,Installation of New Water Meters,28071,35,0,0,0,0,0,15,0.28071,50.28071,
+602,Mahwah Township,0233001-011,Installation of a new Nilson Ave. Booser Pump Station,24062,50,0,0,0,0,0,0,0.24062,50.24062,
+603,South Orange Village,0719001-002,Well 17 Emergency Power,16198,45,0,0,5,0,0,0,0.16964,50.16964,
+604,Bordentown City,0303001-005,Construct a 1.25 MG storage tank,15831,50,0,0,0,0,0,0,0.15831,50.15831,
+605,Verona Township,0720001-003,Construction of a new Fairview Ave tank,13641,50,0,0,0,0,0,0,0.13641,50.13641,
+605,Verona Township,0720001-008,CLARIDGE PUMP PROJECT,-,50,0,0,0,0,0,0,0.13641,50.13641,
+606,East Hanover Township,1410001-005,Construction of a new water storage tank,10000,50,0,0,0,0,0,0,0.1,50.1,
+608,Harding Woods Mobile Home Community,1710001-002,Installation of new water meters in Harding Woods Mobile Home Park,1103,35,0,0,0,0,0,15,0.01103,50.01103,
+609,Lake Glenwood Village,1922010-003,"Installation of a new 8,000 gal. underground concrete water storage tank",250,50,0,0,0,0,0,0,0.0025,50.0025,
+610,North Shore Water Association,1904004-003,Installation of storage tank,105,50,0,0,0,0,0,0,0.00105,50.00105,
+611,Colby Homeowners Association Water Company,1904007-002,Installation of a new storage tank,75,50,0,0,0,0,0,0,0.00075,50.00075,
+613,Washington Township Municipal Utilities Authority,0818004-008,"Installation of solar system for wells # 18, 19 & 20",48559,45,0,0,0,0,0,0,0.48559,45.48559,
+614,Vineland City,0614003-015,Well No. 17 Installation,36848,15,0,15,0,0,0,15,0.36848,45.36848,BIL (GEN)
+615,Jackson Township Municipal Utilities Authority,1511001-008,"Installation of a water main and booster station to interconnect the
+Legler system",32600,30,0,15,0,0,0,0,0.326,45.326,
+616,Garfield City,0221001-003,Rehabilitation of Well 1A,29780,15,0,0,0,0,0,30,0.2978,45.2978,BIL (GEN)
+617,East Windsor Municipal Utilities Authority,1101002-004,Installation of solar panels at 2 facilities,27200,45,0,0,0,0,0,0,0.272,45.272,
+618,Burlington Township,0306001-003,Purchase of water meters to replace existing meters-Phases 2 to 4,22000,25,0,20,0,0,0,0,0.22,45.22,
+620,Pompton Lakes Municipal Utilities Authority,1609001-004,Installation of emergency generator at wells,11435,45,0,0,0,0,0,0,0.11435,45.11435,
+621,Freehold Borough,1315001-001,Replace and construct two well houses that protect well pumps,11029,15,0,15,0,0,0,15,0.11029,45.11029,BIL (GEN)
+622,Pemberton Township,0329004-005,Replacing Well #4 with Well #14,10815,15,0,15,0,0,0,15,0.10815,45.10815,BIL (GEN)
+622,Pemberton Township,0329004-010,Conversion of test well #14 to production well,10815,15,0,15,0,0,0,15,0.10815,45.10815,BIL (GEN)
+623,Pine Hill Municipal Utilities Authority,0428002-005,PRM Backup Well #4 and Decommision of Wells #6 & #7,10233,15,0,0,0,0,0,30,0.10233,45.10233,BIL (GEN)
+624,Brigantine City,0103001-501,Installation of Generators at well,11117,45,0,0,0,0,0,0,0.0945,45.0945,
+625,Tuckerton Borough,1532002-001,2022 Rehabilitation of Well #3 and Well #4,3347,15,0,15,0,0,0,0,0.06285,45.06285,
+626,Washington Township Municipal Utilities Authority,1438004-002,WTMUA - Water System Improvements,7500,45,0,0,0,0,0,0,0.04866,45.04866,
+628,West Milford Municipal Utilities Authority,1615016-002,Replace Generator,1625,45,0,0,0,0,0,0,0.01625,45.01625,
+628,West Milford Municipal Utilities Authority,1615016-002/500,Milford Emergency Power Generators,1625,45,0,0,0,0,0,0,0.01625,45.01625,
+630,Forest Lakes Water Company,1904003-001,Installation of two generators,1500,45,0,0,0,0,0,0,0.015,45.015,
+631,West Milford Municipal Utilities Authority,1615018-002,Replace Generator,1260,45,0,0,0,0,0,0,0.0126,45.0126,
+631,West Milford Municipal Utilities Authority,1615018-002/500,Bald Eagle Emergency Power Generators,1260,45,0,0,0,0,0,0,0.0126,45.0126,
+632,West Milford Municipal Utilities Authority,1615014-001/500,Crescent Park Emergency Power Generators,700,45,0,0,0,0,0,0,0.007,45.007,
+632,West Milford Municipal Utilities Authority,1615014-001,Replace Generator,700,45,0,0,0,0,0,0,0.007,45.007,
+633,West Milford Municipal Utilities Authority,1615012-002/500,Awosting Emergency Power Generators,635,45,0,0,0,0,0,0,0.00635,45.00635,
+633,West Milford Municipal Utilities Authority,1615012-002,Replace Generator,635,45,0,0,0,0,0,0,0.00635,45.00635,
+634,West Milford Municipal Utilities Authority,1615002-002/500,Greenbrook Emergency Power Generators,600,45,0,0,0,0,0,0,0.006,45.006,
+634,West Milford Municipal Utilities Authority,1615002-002,Replace Generator,600,45,0,0,0,0,0,0,0.006,45.006,
+635,West Milford Municipal Utilities Authority,1615001-002/500,Birch Hill Emergency Power Generator,180,45,0,0,0,0,0,0,0.0018,45.0018,
+635,West Milford Municipal Utilities Authority,1615001-002,Replace Generator,180,45,0,0,0,0,0,0,0.0018,45.0018,
+636,West Milford Municipal Utilities Authority,1615006-002/500,Parkway Emergency Power Generator,805,45,0,0,0,0,0,0,0.00115,45.00115,
+636,West Milford Municipal Utilities Authority,1615006-002,Replace Generator,115,45,0,0,0,0,0,0,0.00115,45.00115,
+637,"NJ American Water Company, Inc.",1345001-007,Monterey Iron Removal,289553,40,0,0,0,0,0,0,2.89553,42.89553,
+638,"NJ American Water Company, Inc.",2004002-009,Installation of New Water Meters,610000,35,0,0,0,0,0,0,6.1,41.1,
+639,Netcong Borough,1428001-001,Water System Assment Management Plan,3250,1,0,15,5,0,0,0,0.03342,41.03342,
+640,Belleville Township,0701001-005,Replacement of Water meters,35928,25,0,0,0,0,0,15,0.35928,40.35928,
+641,"NJ American Water Company, Inc.",0508001-007,Replacement of Water Meters,28071,25,0,0,0,0,0,15,0.28071,40.28071,
+642,South Orange Village,0719001-007,Replace Pressure Reducing Valves,16198,30,0,0,5,0,0,0,0.16964,40.16964,
+643,East Hanover Township,1410001-001,Renovation of treatment plant - addition of ion exchange for well #1 & #2,10000,40,0,0,0,0,0,0,0.1,40.1,
+644,Florham Park Borough,1411001-001,Construction of Water Treatment Facility for removal of manganese,8857,40,0,0,0,0,0,0,0.08857,40.08857,
+645,High Bridge Borough,1014001-002,Improvements to the High Bridge Water System,3900,25,0,0,0,0,15,0,0.033,40.033,
+646,"NJ American Water Company, Inc.",1345001-014,Installation of New Water Meters,289553,35,0,0,0,0,0,0,2.89553,37.89553,
+647,"NJ American Water Company, Inc.",0327001-012,Installation of New Water Meters,253045,35,0,0,0,0,0,0,2.53045,37.53045,
+648,Brick Township Municipal Utilities Authority,1506001-007,Chlorine Disinfection System Relocation,100000,1,0,20,0,0,0,15,1.34108,37.34108,
+649,"NJ American Water Company, Inc.",0712001-014,Installation of New Water Meters,217230,35,0,0,0,0,0,0,2.1723,37.1723,
+650,Willingboro Municipal Utilities Authority,0338001-005,Energy Savings Improvement Program (DW),35000,1,0,20,0,0,0,15,0.35,36.35,
+651,Bellmawr Borough,0404001-003,"Replacement of water mains will be needed to serve a brownfield
+redevelopment area.",11583,1,0,0,0,5,0,30,0.11583,36.11583,BIL (GEN)
+651,Bellmawr Borough,0404001-004,"A new 0.3 MG storage tank is needed to serve a Brownfield
+redevelopment area.",11583,1,0,0,0,5,0,30,0.11583,36.11583,BIL (GEN)
+652,"NJ American Water Company, Inc.",0323001-003,Installation of New Water Meters,42035,35,0,0,0,0,0,0,0.42035,35.42035,
+653,Willingboro Municipal Utilities Authority,0338001-013,Replacement of Well No. 1,34731,15,0,20,0,0,0,0,0.37731,35.37731,
+654,Burlington Township,0306001-002,Rehabilitate well #4,22000,15,0,20,0,0,0,0,0.22,35.22,
+655,South Orange Village,0719001-004,Farrell Field (Walton Ave & Audley St.) Interconnection Rehab.,16198,30,0,0,5,0,0,0,0.16964,35.16964,
+656,South Orange Village,0719001-003,South Orange Ave and Holland Road Interconnection Rehabilitation,16198,30,0,0,5,0,0,0,0.16198,35.16198,
+657,"NJ American Water Company, Inc.",1605001-003,Installation of New Water Meters,11247,35,0,0,0,0,0,0,0.11247,35.11247,
+658,Collier Services,1328300-005,"Install new meters and water conservation devices at Collier Services
+Bldgs",350,35,0,0,0,0,0,0,0.0035,35.0035,
+659,"NJ American Water Company, Inc.",0712001-004,Interconnection of Twin Lake and Short Hill Systems,217230,30,0,0,0,0,0,0,2.1723,32.1723,
+660,Garfield City,0221001-007,Upgrade to SCADA,29780,1,0,0,0,0,0,30,0.2978,31.2978,BIL (GEN)
+661,Little Egg Harbor Municipal Utilities Authority,1516001-500,Radio Road Water Treatment Plant,20065,1,0,15,0,0,0,15,0.20065,31.20065,BIL (GEN)
+662,Hammonton Town,0113001-010,SCADA System/Water Meter Replacment Proj,11300,1,0,15,0,0,0,15,0.113,31.113,
+663,Pemberton Township,0329004-008,Various Water System Improvements,10815,1,0,15,0,0,0,15,0.10815,31.10815,BIL (GEN)
+664,"NJ American Water Company, Inc.",2004002-010,Replacement of Water Meters,610000,25,0,0,0,0,0,0,6.1,31.1,
+665,Lower Township Municipal Utilities Authority,0505002-001,Extension of water mains to service homes that are on private wells,9700,1,0,0,0,0,0,30,0.097,31.097,BIL (GEN)
+665,Lower Township Municipal Utilities Authority,0505002-002,Installation of well #10,9700,1,0,0,0,0,0,30,0.097,31.097,BIL (GEN)
+666,Franklin Township - Gloucester,1808001-007,Construction of an interconnection w/ New Brunswick City,50000,30,0,0,0,0,0,0,0.5,30.5,
+667,Jackson Township Municipal Utilities Authority,1511001-006,Construction of back up well for Manhattan Water Treatment Plant,32600,15,0,15,0,0,0,0,0.326,30.326,
+668,"NJ American Water Company, Inc.",0508001-003,Third Street Well Replacement,28071,15,0,0,0,0,0,15,0.28071,30.28071,
+669,Berlin Borough,0405001-007,"Redrilling of well, approximately 450 feet deep",13121,15,0,15,0,0,0,0,0.13121,30.13121,
+670,Pompton Lakes Municipal Utilities Authority,1609001-010,Pompton Ave Water Main Installation,70,30,0,0,0,0,0,0,0.11435,30.11435,
+671,Hopatcong Borough,1912001-008,"Install new well and construct associated treatment facilities, SCADA
+system, generator & mains",7900,15,0,15,0,0,0,0,0.079,30.079,
+671,Hopatcong Borough,1912001-010,"Construction of a new surface water treatment plant for reactivated Elbo
+Pt well",7900,15,0,15,0,0,0,0,0.079,30.079,
+672,Hightstown Borough,1104001-002,"New Well #3 - Upgrades to plant, well house and pump",5567,15,0,15,0,0,0,0,0.05567,30.05567,
+673,National Park Borough,0812001-002,Redevelopment/ Rehabilitation to Well 5 with a new well house,3289,15,0,0,0,0,0,15,0.03289,30.03289,BIL (GEN)
+674,Sparta Township,1918003-001,Installation of a water main interconnection,1618,30,0,0,0,0,0,0,0.01618,30.01618,
+675,Fountainhead Properties Incorporate,1511013-003,Rehabilitation of well #2,280,15,0,15,0,0,0,0,0.0028,30.0028,
+675,Fountainhead Properties Incorporate,1511013-004,Improvements/Replacement of well #1,280,15,0,15,0,0,0,0,0.0028,30.0028,
+676,Lake Glenwood Village,1922010-005,New well #8 for upper system,250,15,0,15,0,0,0,0,0.0025,30.0025,
+677,"NJ American Water Company, Inc.",1345001-015,Replacement of Water Meters,289553,25,0,0,0,0,0,0,2.89553,27.89553,
+678,"NJ American Water Company, Inc.",0327001-013,Replacement of Water Meters,253045,25,0,0,0,0,0,0,2.53045,27.53045,
+679,"NJ American Water Company, Inc.",0712001-015,Replacement of Water Meters,217230,25,0,0,0,0,0,0,2.1723,27.1723,
+680,"NJ American Water Company, Inc.",1103002-001,Replacement of Water Meters,120000,25,0,0,0,0,0,0,1.2,26.2,
+681,Allentown Borough,1302001-001,Asset Management Plan,1788,1,0,15,0,0,0,0,0.02,26.02,
+682,Ridgewood Village,0215001-024,"Replacement of 14,629 water meters with radio frequency meters",61700,25,0,0,0,0,0,0,0.617,25.617,
+683,Franklin Township - Gloucester,1808001-005,Replace Water Meters,50000,25,0,0,0,0,0,0,0.5,25.5,
+684,North Brunswick Township,1215001-006,Water Meter Replacement,42392,25,0,0,0,0,0,0,0.42392,25.42392,
+685,"NJ American Water Company, Inc.",0323001-004,Replacement of Water Meters,42035,25,0,0,0,0,0,0,0.42035,25.42035,
+686,Margate City,0116001-002,Margate Water Meter Project,22333,25,0,0,0,0,0,0,0.223333,25.22333,
+687,Lyndhurst Township,0232001-003,Township Wide Water Meter Replacement Program,22453,25,0,0,0,0,0,0,0.205,25.205,
+688,Bordentown City,0303001-001,Water Meter Replacement Program,16663,25,0,0,0,0,0,0,0.15821,25.15821,
+689,Highland Park Borough,1207001-001,2018-19 Water System Improvements,14245,25,0,0,0,0,0,0,0.14,25.14,
+690,Clinton Town,1005001-007,Replace Water Meters,12500,25,0,0,0,0,0,0,0.125,25.125,
+691,"NJ American Water Company, Inc.",1605001-004,Replacement of Water Meters,11247,25,0,0,0,0,0,0,0.11247,25.11247,
+692,Oakland Borough,0220001-002,Replace 4600 Water Meters,12959,25,0,0,0,0,0,0,0.05038,25.05038,
+693,Mine Hill Township,1420001-004,Replace Water Meters,3400,25,0,0,0,0,0,0,0.034,25.034,
+694,Pine Beach Borough,1522001-001,"Merion Ave. Well Replacement / Townwide Water Meter Replacement
+Project",2080,25,0,0,0,0,0,0,0.0208,25.0208,
+695,Island Heights Borough,1510001-005,Water Meter Replacement Project,1521,25,0,0,0,0,0,0,0.0175,25.0175,
+696,Montclair Township,0713001-008,Nishuane Well Production & Treatment Facility,38977,15,0,0,5,0,0,0,0.38977,20.38977,
+696,Montclair Township,0713001-006,Redevelop Glenfield Wells,38977,15,0,0,5,0,0,0,0.38977,20.38977,
+698,Matawan Borough,1329001-003,Rehabilitate the Boroughs two wells,8810,15,0,0,5,0,0,0,0.0881,20.0881,
+699,"NJ American Water Company, Inc.",1345001-011,Drill two additional wells to increase the capacity at Yellowbrook WTP,289553,15,0,0,0,0,0,0,2.89553,17.89553,
+700,Jackson Township Municipal Utilities Authority,1511001-007,Ancillary Improvements to the Old Manhattan Water Treatment Facility,32600,1,0,15,0,0,0,0,0.326,16.326,
+701,Hopatcong Borough,1912001-004,Small System Asset Management,7224,1,0,15,0,0,0,0,0.07224,16.07224,
+704,Parsippany Troy Hills Township,1429001-002,Replacement Well 20-R,56000,15,0,0,0,0,0,0,0.504,15.504,
+706,Marlboro Township,1328002-004,"New Stand-by Well 5A (Tennent Rd Treatment Plant & Booster Pump
+Station)",27000,15,0,0,0,0,0,0,0.2948,15.2948,
+706,Marlboro Township,1328002-007,Well #2 Replacement,41502,15,0,0,0,0,0,0,0.2948,15.2948,
+706,Marlboro Township,1328002-009,Well #1 Replacement,41502,15,0,0,0,0,0,0,0.2948,15.2948,
+707,Lacey Township,1512001-001,Construction of two test wells # 7 and 8,26240,15,0,0,0,0,0,0,0.2624,15.2624,
+707,Lacey Township,1512001-002,Upgrade of WTP to make wells # 7 and 8 operational,26240,15,0,0,0,0,0,0,0.2624,15.2624,
+708,South River Borough,1223001-003,Rehabilitation of Borough Wells,16023,15,0,0,0,0,0,0,0.16,15.16,
+711,Pemberton Township,0329004-001,Pinelands Water Infrastructure,2500,15,0,0,0,0,0,0,0.12378,15.12378,BIL (GEN)
+712,East Hanover Township,1410001-002,New Water Treatment Plant for Well 6,10000,15,0,0,0,0,0,0,0.1,15.1,
+713,Lavallette Borough,1515001-002,Replacement of Potable Water Supply - Well # 3,9525,15,0,0,0,0,0,0,0.0952467,15.09525,
+714,Oakland Borough,0220001-003,Well 9 - Diesel Generator,12959,15,0,0,0,0,0,0,0.05038,15.05038,
+714,Oakland Borough,0220001-001,Construct new Well 10A as backup for Well 10,12959,15,0,0,0,0,0,0,0.05038,15.05038,
+715,Washington Township Municipal Utilities Authority,1438004-003,WTMUA - Proposed Well SM-23 and Water Treatment Facility,-,15,0,0,0,0,0,0,0.04866,15.04866,
+716,Ocean Gate Borough,1521001-003,Well Water Construction/Drilling a new well,2800,15,0,0,0,0,0,0,0.032,15.032,BIL (GEN)
+717,Harvey Cedars Borough,1509001-002,Installation of a Water Monitoring Well,3165,15,0,0,0,0,0,0,0.0316467,15.03165,
+718,Pine Beach Borough,1522001-002,"Merion Ave. Well Replacement / Townwide Water Meter Replacement
+Project",2080,15,0,0,0,0,0,0,0.0208,15.0208,
+719,West Milford Municipal Utilities Authority,1615016-003,Rehabilitation of Well,1625,15,0,0,0,0,0,0,0.01625,15.01625,
+720,Farmingdale Borough,1314001-001,"Redevelop well #3; upgrade control system for well #3 & 4, misc
+improvements to the WTP",1500,15,0,0,0,0,0,0,0.015,15.015,BIL (GEN)
+721,West Milford Municipal Utilities Authority,1615018-003,Rehabilitation of Well,1260,15,0,0,0,0,0,0,0.0126,15.0126,
+722,"NJ American Water Company, Inc.",0809001-001,Beckett Well Replacement,1085,15,0,0,0,0,0,0,0.01085,15.01085,
+723,West Milford Municipal Utilities Authority,1615012-003,Rehabilitation of Well,635,15,0,0,0,0,0,0,0.00635,15.00635,
+724,West Milford Municipal Utilities Authority,1615001-003,Rehabilitation of Well,180,15,0,0,0,0,0,0,0.0018,15.0018,
+725,West Milford Municipal Utilities Authority,1615006-003,Rehabilitation of Well,115,15,0,0,0,0,0,0,0.00115,15.00115,
+726,Colby Homeowners Association Water Company,1904007-001,Installation of back up well,75,15,0,0,0,0,0,0,0.00075,15.00075,
+727,South Orange Village,0719001-011,Flush Valve Removal,16198,1,0,0,5,0,0,0,0.16198,6.16198,
+728,"NJ American Water Company, Inc.",1345001-004,Howell Water Mains - Freewood Acres,335449,1,0,0,0,0,0,0,3.35449,4.35449,
+729,"NJ American Water Company, Inc.",0712001-013,Installation of water mains at redevelopment project,217230,1,0,0,0,0,0,0,2.1723,3.1723,
+731,Washington Township Municipal Utilities Authority,0818004-002,WTMUA Complex,48559,1,0,0,0,0,0,0,0.48,1.48,
+732,Sayreville Borough,1219001-005,"Construct new transmission mains in the northeast section of the
+Borough",40377,1,0,0,0,0,0,0,0.40377,1.40377,
+734,Marlboro Township,1328002-501/001,portable genertor @ Harbor Rd & Tennent Rd WTP,40191,1,0,0,0,0,0,0,0.40191,1.40191,
+735,Belleville Township,0701001-007,Township of Belleville Asset Management Plan,36383,1,0,0,0,0,0,0,0.35129,1.35129,
+736,Mahwah Township,0233001-009,Construction of two new wells,24062,1,0,0,0,0,0,0,0.24062,1.24062,
+737,Montville Township,1421003-001,"Installation of 2,300 LF of 8 inch water main and appurtances on Hillcrest
+and Upper Mountain Avenues",21000,1,0,0,0,0,0,0,0.21,1.21,
+738,Verona Township,0720001-001,Water Utility Asset Management Plan,14572,1,0,0,0,0,0,0,0.13641,1.13641,
+739,Seaside Park Borough,1527001-003,Water Asset Management Plan,3753,1,0,0,0,0,0,0,0.131,1.131,BIL (GEN)
+740,Jefferson Township,1414011-002,Water System Asset Management Plan,8500,1,0,0,0,0,0,0,0.085,1.085,
+741,Spotswood Borough,1224001-002,SPOTSWOOD WATER MASTER PLAN,8257,1,0,0,0,0,0,0,0.083,1.083,
+743,Woodland Park Borough,1616001-001,Extension of water mains to service homes that are on private wells,5030,1,0,0,0,0,0,0,0.0503,1.0503,
+745,High Bridge Borough,1014001-001,Asset Management Plan for the High Bridge Water System,3900,1,0,0,0,0,0,0,0.039,1.039,
+746,Pennington Borough,1108001-004,Asset Management Plan for Pennington Water Utility ',2585,1,0,0,0,0,0,0,0.026,1.026,
+747,Pennington Borough,1108001-003,Asset Management Plan for Pennington Water Utility,2585,1,0,0,0,0,0,0,0.02585,1.02585,
+748,Sea Girt Borough,1344001-005,Sea Girt Borough CMMS,2552,1,0,0,0,0,0,0,0.02552,1.02552,
+749,Hardyston Municipal Utilities Authority,1911006-003,Asset Management Plan,1963,1,0,0,0,0,0,0,0.01963,1.01963,
+750,Waterford Township,0435003-002,Haines Blvd Water Extension,-,1,0,0,0,0,0,0,0.01184,1.01184,

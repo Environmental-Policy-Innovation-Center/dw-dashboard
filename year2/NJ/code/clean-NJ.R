@@ -1,6 +1,6 @@
-clean_nj_y1 <- function() {
+clean_nj_y2 <- function() {
   
-  nj_raw <- data.table::fread("year1/NJ/data/NJ_SFY23.csv",
+  nj_raw <- data.table::fread("year2/NJ/data/NJ_SFY24.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names()
   
@@ -9,7 +9,7 @@ clean_nj_y1 <- function() {
     dplyr::mutate(
       community_served = as.character(NA),
       borrower = str_squish(project_sponsor),
-      pwsid = str_squish(pwsid),
+      pwsid = paste0("NJ", stringr::str_extract(project_number, "^[^-]+")),
       project_id = stringr::str_squish(project_number),
       project_name = str_squish(project_name),
       project_type = dplyr::case_when(
@@ -19,18 +19,18 @@ clean_nj_y1 <- function() {
         grepl(lead_str, project_name, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_name, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"),
-      project_cost = clean_numeric_string(estimated_cost),
+      project_cost = as.character(NA),
       requested_amount = as.character(NA),
       funding_amount = as.character(NA),
       principal_forgiveness = as.character(NA),
       project_description = str_squish(project_name),
       population = clean_numeric_string(population),
-      disadvantaged = ifelse(cat_b == "80", "Yes", "No Information" ),
+      disadvantaged = ifelse(cat_b == "80", "Yes", "No Information"),
       project_rank = str_squish(rank),
       project_score = str_squish(rank_points),
       expecting_funding = as.character(NA),
       state = "New Jersey",
-      state_fiscal_year = "2023"
+      state_fiscal_year = "2024"
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
@@ -83,8 +83,8 @@ clean_nj_y1 <- function() {
     ) |>
     dplyr::filter(lead_type == "unknown") 
 
-  ### Decision: 4 Unknown; 0512001-001 remediation --> replacement, 0424001-005 removal --> replacement, 1409001-001 & 0701001-004 --> unknown
-
+  ### Decision: 7 Unknown;
+  # unknown # unknown # remediation --> replacement # unknown # removal --> replacement # removal --> replacement # abatement --> replacement
   ####### SANITY CHECKS END #######
   
   run_tests(nj_clean)

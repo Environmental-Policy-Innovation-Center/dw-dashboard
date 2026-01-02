@@ -48,7 +48,7 @@ clean_tx_y4 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
   
   
-  ####### SANITY CHECKS START #######
+####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
 tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))

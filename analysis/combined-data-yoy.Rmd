@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "New Jersey"
-state_abbr <- "NJ"
+state_name <- "Pennsylvania"
+state_abbr <- "PA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -403,7 +403,6 @@ if(sum(unmet_demand$value[unmet_demand$name=="Unmet Demand"], na.rm=TRUE) > 0) {
 
 unmet_demand_type <- all_funds_to_compare_type |>
   dplyr::ungroup() |>
-  
   dplyr::mutate(
     # Depicted as Demand for Funds
     total_demand = dplyr::case_when(

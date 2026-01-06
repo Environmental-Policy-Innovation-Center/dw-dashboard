@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "New Jersey"
-state_abbr <- "NJ"
+state_name <- "Pennsylvania"
+state_abbr <- "PA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE

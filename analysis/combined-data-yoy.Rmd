@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Pennsylvania"
-state_abbr <- "PA"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -200,14 +200,16 @@ financial_by_project_type <- financial |>
   dplyr::mutate(project_type = case_when(
     fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
     fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants",
-    TRUE ~ "General"
+    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp") ~ "General", 
+    TRUE ~ paste0("Combined: ", fed_cap_grant)
   )) |>
   dplyr::group_by(state, state_fiscal_year, project_type) |>
   dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
-            .groups = "drop")
+            .groups = "drop") |>
+  dplyr::filter(total_funding_available > 0)            
 
 all_funds_to_compare_type <- project_type_df |>
-    dplyr::select(state, state_fiscal_year, project_type, total_project_cost, total_project_cost_ef, total_requested_amount, total_requested_amount_ef, total_funding_amount) |>
+  dplyr::select(state, state_fiscal_year, project_type, total_project_cost, total_project_cost_ef, total_requested_amount, total_requested_amount_ef, total_funding_amount) |>
   dplyr::group_by(state, state_fiscal_year, project_type) |>
   dplyr::summarize(
     total_project_cost = sum(total_project_cost, na.rm = TRUE),
@@ -417,12 +419,12 @@ unmet_demand_type <- all_funds_to_compare_type |>
     ),
     unmet_demand = total_demand - total_funding_available
     )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount) |>   
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available)) |> 
+  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount, -total_demand) |>   
+  tidyr::pivot_longer(cols=c(unmet_demand, total_funding_available)) |> 
   dplyr::mutate(
     name =case_when(
       name == "total_funding_available" ~ "Available Funds",
-      name == "total_demand" ~ "Unmet Demand"
+      name == "unmet_demand" ~ "Unmet Demand"
       ),
     name = factor(name, levels=c("Unmet Demand", "Available Funds")),
     rule_label = dplyr::case_when(
@@ -460,8 +462,6 @@ for (type in levels(unmet_demand_type$project_type)){
 
   }
 
-
-  
   # Skip if no data for this type
   if(nrow(filtered_data) == 0) {
     next

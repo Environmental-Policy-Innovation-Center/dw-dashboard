@@ -53,6 +53,7 @@ clean_in_y3 <- function() {
       project_type =  case_when(
         !is.na(project_type) ~ project_type,
         grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        grepl("Yes", emerging_contaminants, ignore.case = TRUE) ~ "Emerging Contaminants",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = as.character(NA),
@@ -86,12 +87,12 @@ clean_in_y3 <- function() {
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+#in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
 ####### Decision : No duplicates
 
 # Check for disinfection byproduct in description
-in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+#in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 ####### Decision : No disinfection byproduct string
   
 # Check for lead subtypes: Both

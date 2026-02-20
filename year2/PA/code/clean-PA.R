@@ -42,6 +42,7 @@ clean_pa_y2 <- function() {
                                     list == "lead_fundable" ~ "Lead", 
                                     list == "ec_fundable" ~ "Emerging Contaminants", 
                                     TRUE ~ "General"),
+          project_cost = clean_numeric_string(project_cost),
            state = "Pennsylvania",
            state_fiscal_year = "2024") %>%
     # handling the applicant --> project name and borrower columns: 
@@ -105,6 +106,22 @@ clean_pa_y2 <- function() {
     dplyr::filter(lead_type == "unknown")
 
   # one unknown --> unknown
+
+  pa_clean <- pa_clean |>
+    dplyr::mutate(
+      project_type = 
+        dplyr::case_when(
+          project_id == "80204" ~ "General",
+          .default = project_type
+        ),
+      project_description = 
+        dplyr::case_when(
+          project_type == "Lead" & project_id == "80214" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          project_type == "Lead" & borrower == "Pittsburgh Water & Sewer A." & pwsid ==	"PA5020038" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          project_type == "Lead" & borrower == "Lehigh County Authority" & pwsid ==	"PA3390041" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          .default = project_description
+        )
+    )
 
   ####### SANITY CHECKS END #######
   

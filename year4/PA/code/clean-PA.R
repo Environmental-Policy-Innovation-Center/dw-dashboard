@@ -123,6 +123,15 @@ clean_pa_y4 <- function() {
 
   # one unknown --> replacement
 
+  pa_clean <- pa_clean |>
+    dplyr::mutate(
+      project_description = 
+        dplyr::case_when(
+          project_type == "Lead" & borrower == "Erie City Water Authority" & pwsid ==	"PA6250028" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          .default = project_description
+        )
+    )
+
   ####### SANITY CHECKS END #######
   
   run_tests(pa_clean)

@@ -126,8 +126,18 @@ clean_pa_y0 <- function() {
 
   # two unknown --> replacement
 
+    pa_clean <- pa_clean |>
+    dplyr::mutate(
+      project_description = 
+        dplyr::case_when(
+          project_type == "Lead" & borrower == "Knox Borough" & pwsid == "PA6160005" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          project_type == "Lead" & borrower == "Patton Municipal Authority" & pwsid == "PA4110024" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          .default = project_description
+        )
+    )
+  
   ####### SANITY CHECKS END #######
-       
+  
   run_tests(pa_clean)
   rm(list=setdiff(ls(), "pa_clean"))
   

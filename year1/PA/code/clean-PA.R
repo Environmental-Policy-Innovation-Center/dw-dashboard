@@ -160,6 +160,21 @@ clean_pa_y1 <- function() {
 
   # seven unknown 
 
+  pa_clean <- pa_clean |>
+    dplyr::mutate(
+      project_type = 
+        dplyr::case_when(
+          project_id == "85221" ~ "General",
+          .default = project_type
+        ),
+      project_description = 
+        dplyr::case_when(
+          project_type == "Lead" & project_id %in% c("85211", "82238", "85197", "85215", "85214") ~ paste0(project_description, " | FT note: ", "LSLR"),
+          project_type == "Lead" & borrower == "Ford City Borough" & pwsid ==	"PA5030005" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          .default = project_description
+        )
+    )
+
   ####### SANITY CHECKS END #######
 
   run_tests(pa_clean)

@@ -110,6 +110,15 @@ clean_pa_y3 <- function() {
 
   # one unknown --> replacement
 
+  pa_clean <- pa_clean |>
+    dplyr::mutate(
+      project_description = 
+        dplyr::case_when(
+          project_type == "Lead" & project_id == "80237" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          project_type == "Lead" & borrower == "City Of Philadelphia" & pwsid ==	"PA1510001" ~ paste0(project_description, " | FT note: ", "LSLR"),
+          .default = project_description
+        )
+    )
   ####### SANITY CHECKS END #######
        
   run_tests(pa_clean)

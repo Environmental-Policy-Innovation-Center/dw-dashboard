@@ -128,13 +128,29 @@ lsl_projects <- all_projects |>
         project_score = c("48.49", "42.34", "40.42", "16.43", "15.91", "13.32", "12", "62.99", "58.17", "46.20", "29.29", "25.26"),
         state = c("Texas", "Texas", "Texas", "Texas", "Texas", "Texas", "Louisiana", "Texas", "Texas", "Texas", "Texas", "Texas"),
         state_fiscal_year = c("2023", "2023", "2023", "2023", "2023", "2023", "2025", "2025", "2025", "2025", "2025", "2025"),
-        lead_type_new = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
+        lead_type_new_TX = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
         ) 
     ) |>
-    dplyr::mutate(lead_type = if_else(lead_type == "both" & !is.na(lead_type_new), 
+    dplyr::left_join(
+  data.frame(
+   stringsAsFactors = FALSE,
+          borrower = c("Pittsburgh Water & Sewer Authority","Pittsburgh Water & Sewer A.", "Lehigh County Authority","City Of Philadelphia"),
+          project_id = c("80214","No Information", "No Information","No Information"),
+          pwsid = c("PA5020038", "PA5020038", "PA3390041", "PA1510001"),
+          project_type = c("Lead", "Lead", "Lead", "Lead"),
+          project_score = c("92", "0", "0", "0"),
+          state = c("Pennsylvania", "Pennsylvania", "Pennsylvania", "Pennsylvania"),
+          state_fiscal_year = c("2024", "2024", "2024", "2025"),
+          lead_type_new_PA = c("lslr", "lslr", "lslr", "lslr")
+          ),
+          by = c("borrower", "pwsid", "project_id", "project_type", "project_score", "state", "state_fiscal_year")
+    ) |>  
+    dplyr::mutate(
+      lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA),
+      lead_type = if_else(lead_type == "both" & !is.na(lead_type_new), 
                               lead_type_new, 
                               lead_type)) |>
-    dplyr::select(-lead_type_new)
+    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA))
 
 
 lead_type_count_summary <- lsl_projects |>
@@ -266,9 +282,8 @@ pc_by_ef_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`
-        #  ,
-        #  project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`
          )
 
 
@@ -279,9 +294,8 @@ pc_by_dac_sc <- sc_projects |>
   tidyr::pivot_wider(names_from="disadvantaged", values_from="total_project_cost") %>%
   rename(project_costs_dac = Yes,
          project_costs_ndac = No,
-         project_costs_dac_ni = `No Information`
-        #  ,
-        #  project_costs_dac_na = `NA`
+         project_costs_dac_ni = `No Information`,
+         project_costs_dac_na = `NA`
          ) 
  
 pc_by_dac_ef_sc <- sc_projects |>
@@ -302,8 +316,8 @@ pc_by_dac_ef_sc <- sc_projects |>
 
     project_costs_ef_ni_dac = `No Information_Yes`,
     #project_costs_ef_na_dac_na = `NA_NA`,
-    #project_costs_ef_na_dac = `NA_Yes`,
-    #project_costs_ef_na_ndac = `NA_No`
+    project_costs_ef_na_dac = `NA_Yes`,
+    project_costs_ef_na_ndac = `NA_No`
     ) 
 
 # filter project costs by expecting funding for both tables
@@ -314,9 +328,8 @@ pc_by_ef <- all_projects %>%
   pivot_wider(names_from="expecting_funding", values_from="total_project_cost") %>%
   rename(project_cost_ef = Yes,
          project_cost_nef = No,
-         project_cost_ef_ni = `No Information`
-        #  ,
-        #  project_cost_ef_na = `NA`
+         project_cost_ef_ni = `No Information`,
+         project_cost_ef_na = `NA`
          )
 
 pc_by_dac <- all_projects %>%
@@ -326,9 +339,8 @@ pc_by_dac <- all_projects %>%
   tidyr::pivot_wider(names_from="disadvantaged", values_from="project_cost_dac") %>%
   rename(project_cost_dac = Yes,
          project_cost_ndac = No,
-         project_cost_dac_ni = `No Information`
-        #  ,
-        #  project_cost_dac_na = `NA`
+         project_cost_dac_ni = `No Information`,
+         project_cost_dac_na = `NA`
          )
 
 pc_by_dac_type <- all_projects %>%

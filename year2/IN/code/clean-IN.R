@@ -52,9 +52,10 @@ clean_in_y2 <- function() {
       project_description = stringr::str_squish(project_description),
       project_type =  case_when(
         !is.na(project_type) ~ project_type,
-          grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
-          grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
-          TRUE ~ "General"),
+        grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        grepl("Yes", emerging_contaminants, ignore.case = TRUE) ~ "Emerging Contaminants",
+        grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
+        TRUE ~ "General"),
       project_cost = as.character(NA),
       requested_amount = dplyr::case_when(
         is.na(requested_funds) ~ clean_numeric_string(estimated_total_project_cost),

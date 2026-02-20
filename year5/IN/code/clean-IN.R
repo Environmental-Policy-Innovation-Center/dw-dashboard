@@ -41,6 +41,7 @@ clean_in_y5 <- function() {
       project_type =  case_when(
         !is.na(project_type) ~ project_type, 
         grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        grepl("Yes", emerging_contaminants, ignore.case = TRUE) ~ "Emerging Contaminants",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = as.character(NA),

@@ -4,7 +4,7 @@ clean_in_y0 <- function() {
     janitor::clean_names() |>
     dplyr::filter(ppl_rank <= 11) |> #fundable range
     dplyr::mutate(
-      ppl_rank <- as.integer(ppl_rank),
+      ppl_rank = as.integer(ppl_rank),
       list = "fundable",
       project_id = str_squish(srf_project_no)
     )

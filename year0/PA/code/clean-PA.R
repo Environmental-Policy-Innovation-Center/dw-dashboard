@@ -15,7 +15,10 @@ clean_pa_y0 <- function() {
                                     TRUE ~ project_name)) %>%
     rename(funding_amount = total_assistance_amount) %>%
     select(loan_number, project_name, funding_amount, expecting_funding, 
-           principal_forgiveness)
+           principal_forgiveness) |>
+    dplyr::mutate(
+      list = "PA SFY21 fundable"
+    )
   
   # comprehensive list (25, 20)
   pa_comp <- fread(file.path(base_path, "pa-y0-comp-ppl.csv")) %>%
@@ -47,19 +50,24 @@ clean_pa_y0 <- function() {
            pwsid = paste0("PA", pwsid), 
            # cleaning numeric string
            project_rank = clean_numeric_string(project_rank), 
-           project_score = clean_numeric_string(dep_project_ranking), 
+           project_score = clean_numeric_string(pv_rating), 
            population = clean_numeric_string(population), 
            project_cost = clean_numeric_string(project_cost)) %>%
     # trimming extra cols before the merge
     select(-c(city, county, street_address, mtgdate, region, green_project, 
               business_case, green_category, green_amount, pv_rating, 
-              dep_project_ranking, funding_source))
+              dep_project_ranking, funding_source)) |>
+    dplyr::mutate(
+      list = "PA SFY21 comprehensive"
+    )
   
   
   # bringing the final bits together:
   pa_clean <- merge(pa_comp, pa_fund, by.x = "borrower", 
                     by.y = "project_name", all = T) %>%
-    mutate(project_id = clean_numeric_string(loan_number), 
+    mutate(
+      list = ifelse(is.na(list.y), list.x, list.y),
+      project_id = clean_numeric_string(loan_number), 
            funding_amount = clean_numeric_string(funding_amount), 
            principal_forgiveness = clean_numeric_string(principal_forgiveness), 
            expecting_funding = case_when(is.na(expecting_funding) ~ "No", 
@@ -69,64 +77,65 @@ clean_pa_y0 <- function() {
            # borrower name
            project_description = paste0("Project Description: ", project_description, 
                                         "; Problem Description: ", problem_description),
-           project_type = case_when(grepl(ec_str, project_description) ~ "Emerging Contaminants", 
-                                    grepl(lead_str, project_description) ~ "Lead",
-                                    TRUE ~ "General"), 
+           project_type = case_when(
+            grepl("lead|lsl", project_description, ignore.case = TRUE) ~ "Lead",
+            grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants", 
+            TRUE ~ "General"), 
            disadvantaged = as.character(NA), 
            requested_amount = as.character(NA), 
            state = "Pennsylvania",
-           state_fiscal_year = "2022") %>%
+           state_fiscal_year = "2021") %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  pa_clean |> dplyr::group_by(project_id) |> dplyr::tally()
+  # pa_clean |> dplyr::group_by(project_id) |> dplyr::tally()
   ####### Decision: No duplicates from funding lists
   
   # Check for disinfection byproduct in description
-  pa_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  # pa_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
   
   # Check for lead subtypes: Both
-  pa_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # pa_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: no lead classified as both
   
   # Check for lead subtypes: Unknown
-  pa_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown")
+  # pa_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown")
 
   # two unknown --> replacement
 
-    pa_clean <- pa_clean |>
+  pa_clean <- pa_clean |>
     dplyr::mutate(
       project_description = 
         dplyr::case_when(

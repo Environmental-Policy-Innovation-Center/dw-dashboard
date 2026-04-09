@@ -38,6 +38,7 @@ states <- c(
   "IL", 
   "IN",   
   "LA",
+  "MD",
   "MI", 
   #"MN", 
   "MS",

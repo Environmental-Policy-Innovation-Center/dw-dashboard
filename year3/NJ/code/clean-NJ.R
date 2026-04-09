@@ -2,7 +2,8 @@ clean_nj_y3 <- function() {
   
   nj_raw <- data.table::fread("year3/NJ/data/NJ_SFY25.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names()
+    janitor::clean_names() |>
+    dplyr::mutate(list = "SFY25 IUP")
   
   nj_disadvantaged <- data.table::fread("year3/NJ/data/NJ_SFY25_disadvantaged.csv",
                   colClasses = "character", na.strings = "") |>
@@ -26,7 +27,7 @@ clean_nj_y3 <- function() {
         bil_eligibility == "BIL (GEN)" ~ "General", 
         bil_eligibility == "BIL (LSLR)" ~ "Lead",
         bil_eligibility == "BIL (EC)" ~ "Emerging Contaminants",
-        grepl(lead_str, project_name, ignore.case=TRUE) ~ "Lead",
+        grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_name, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = clean_numeric_string(estimated_cost),
@@ -52,54 +53,54 @@ clean_nj_y3 <- function() {
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  nj_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
+  # nj_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   ### Decision: No duplicates
 
   # Check for disinfection byproduct in description
-  nj_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  # nj_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 
   ### Decision: No disinfection byproduct string
 
   # Check for lead subtypes
-  nj_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # nj_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ### Decision: No lead projects classified as both
 
   # Check for lead subtypes: Unknown
-  nj_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
+  # nj_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
 
   ### Decision: 18 Unknown;
   # unknown # unknown # remediation --> replacement # unknown # removal --> replacement # removal --> replacement # abatement --> replacement

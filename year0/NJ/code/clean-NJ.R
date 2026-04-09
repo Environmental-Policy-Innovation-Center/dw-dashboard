@@ -2,7 +2,10 @@ clean_nj_y0 <- function() {
   
   nj_raw <- data.table::fread("year0/NJ/data/NJ_SFY22.csv",
                   colClasses = "character", na.strings = "") |>
-    janitor::clean_names()
+    janitor::clean_names() |>
+    dplyr::mutate(
+      list = "SFY22 IUP"
+    )
   
   nj_clean <- nj_raw |>
     dplyr::select(-cat_a, -cat_b, -cat_c_a, -cat_c_b, -cat_c_c, -cat_c_d, -cat_e) |>
@@ -13,7 +16,7 @@ clean_nj_y0 <- function() {
       project_id = stringr::str_squish(project_number),
       project_name = str_squish(project_name),
       project_type =  case_when(
-             grepl(lead_str, project_name, ignore.case=TRUE) ~ "Lead",
+             grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",
              grepl(ec_str, project_name, ignore.case=TRUE) ~ "Emerging Contaminants",
              TRUE ~ "General"),
       project_cost = clean_numeric_string(estimated_cost),
@@ -31,18 +34,18 @@ clean_nj_y0 <- function() {
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  nj_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
+  #nj_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   ### Decision: No duplicates
 
   # Check for disinfection byproduct in description
-  nj_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  #nj_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 
   ### Decision: No disinfection byproduct string
 

@@ -106,7 +106,7 @@ clean_ny_y4 <- function() {
       project_cost = clean_numeric_string(project_cost), #drop project cost =0 downstream
       requested_amount = as.character(NA),
       funding_amount = as.character(NA),
-      principal_forgiveness = as.character(NA), #SFY26 additional subsidies procided as grants, not PF
+      principal_forgiveness = as.character(NA), #SFY26 additional subsidies proceeded as grants, not PF
       project_description = str_squish(description),
       population = clean_numeric_string(pop),
       disadvantaged = dplyr::case_when(
@@ -145,30 +145,65 @@ clean_ny_y4 <- function() {
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  #ny_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
   ####### Decision: No duplicates
   
   # Check for disinfection byproduct in description
-  ny_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  #ny_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
   ####### Decision: No change, classified as expected
   
   # Check for lead subtypes
-  ny_clean |>
-    dplyr::filter(project_type=="Lead") |>
-  dplyr::mutate(
-    lead_type = dplyr::case_when(
-    stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-    stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-    stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-   # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-   stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-   stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-    TRUE ~ "unknown"
-  )) |>
-    dplyr::filter(lead_type == "both")
-  ####### Decision: No lead projects classified as both
+  # ny_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  # dplyr::mutate(
+  #   lead_type = dplyr::case_when(
+  #   stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #   stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #   stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #  # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #  stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #  stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #   TRUE ~ "unknown"
+  # )) |>
+  #   dplyr::filter(lead_type == "both")
+  # ####### Decision: No lead projects classified as both
   
   ####### SANITY CHECKS END #######
+
+  # Final Amendment #1: December 17, 2025
+  # FFY 2026 DWSRF Intended Use Plan Amendment
+  # DWSRF No. 19988: Town of Kendall, Orleans County. The project score is increased to 70 points and the project has been added to the Infrastructure Improvement and Jobs Act General Supplemental (IIJA-GS) project list.
+  # DWSRF No. 19962: Graymoor Village Corporation, Putnam County. The project score is increased to 55 points and the project has been added to the Infrastructure Improvement and Jobs Act Emerging Contaminants (IIJA-EC) project list.
+  # DWSRF No. 19554: Albany Municipal Water Finance Authority, Albany County. The project cost as listed in the DWSRF IUP is increased to a total project cost of $8,500,000.
+
+   ny_clean <- ny_clean |> 
+    dplyr::mutate(
+      project_score = ifelse(project_id == "19988", "70", project_score),
+      project_score = ifelse(project_id == "19962", "55", project_score),
+      project_cost = ifelse(project_id == "19554", "8500000", project_cost)
+      )
+  
+  
+  # Final Amendment #2: February 4, 2026 
+  ny_clean <- ny_clean |> 
+    dplyr::mutate(
+      project_cost = ifelse(project_id == "17629", "650000", project_cost),
+      project_cost = ifelse(project_id == "18768", "175000", project_cost),
+      project_cost = ifelse(project_id == "18328", "500000", project_cost),
+      project_cost = ifelse(project_id == "18127", "2500000", project_cost),
+      project_score = ifelse(project_id == "19861", "40", project_score)
+      ) 
+
+  # DWSRF No. 19093: City of Plattsburgh, Clinton County. The Department mistakenly removed the
+  # project from the IUP. The project has been added back to the Annual List and the Infrastructure
+  # Improvement and Jobs Act General Supplemental (IIJA-GS) list.
+
+  all_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
+    janitor::clean_names() |>
+    dplyr::mutate(state_fiscal_year = as.character(state_fiscal_year))
+
+  ny_clean <- ny_clean |>
+    dplyr::bind_rows(all_projects |> dplyr::filter(project_id == "19093" & state_fiscal_year == "2025") |> dplyr::mutate(state_fiscal_year = "2026", principal_forgiveness = as.character(NA), funding_amount = as.character(NA)))
 
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))

@@ -109,9 +109,12 @@ pf_colors <- c("DAC PF"="#526489",
                "Remaining Base Grants" = "lightgrey")
 
 # Project YOY Colors
-pt_colors <- c("General"="#526489",
-               "Lead"="#82AB6E",
-               "Emerging Contaminants"="#B077B2")
+pt_colors <- c(
+              "General"="#526489",
+              "Lead"="#82AB6E",
+              "Emerging Contaminants (EC)"="#B077B2",
+              "Both Lead and EC" = "#B15712"
+              )
 
 ef_dac_sc_colors <- c("No"="#526489",
                       "Yes"="#82AB6E",
@@ -128,7 +131,10 @@ comp_colors <- c("Total Available"="#4ea324",
                  "Available Funds"="#4ea324",
                  "Total Demand"="#172f60",
                  "Expected Funding"="#791a7b",
-                 "Unmet Demand"="lightgrey")
+                 "Unmet Demand"="lightgrey",
+                 "Unmet Demand (Lead and EC)" = "darkgrey"
+                
+                )
 
 # Single SFY Colors
 distribution_colors <- c("Principal Forgiveness"="#4ea324",

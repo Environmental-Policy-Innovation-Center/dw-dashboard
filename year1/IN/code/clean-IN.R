@@ -1,17 +1,17 @@
 clean_in_y1 <- function() {
 
- in_iup_q1 <- data.table::fread("year1/IN/data/SFY22_Q1_fundable.csv", colClasses = "character", na.strings = "") |>
+  in_iup_q1 <- data.table::fread("year1/IN/data/SFY22_Q1_fundable.csv", colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "fundable",
+      list = "SFY22 Q1 fundable",
       project_id = str_squish(srf_project_no)
     )
   
-  in_iup_q4 <- fread("year1/IN/data/IN-SFY22-DWSRF-Q4-PPL.csv",
+  in_iup_q4 <- data.table::fread("year1/IN/data/IN-SFY22-DWSRF-Q4-PPL.csv",
                   colClasses = "character", na.strings = "") %>%
-    clean_names() |>
+    janitor::clean_names() |>
     dplyr::mutate(
-      list = "comprehensive",
+      list = "SFY22 Q4 comprehensive",
       project_id = str_squish(srf_project_no)
     ) |>
     dplyr::filter(!project_id %in% in_iup_q1$project_id)
@@ -32,7 +32,7 @@ clean_in_y1 <- function() {
       project_name = as.character(NA),
       project_description = stringr::str_squish(project_description),
       project_type =  case_when(
-          grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(estimated_lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+          grepl("lsl|lead", project_description, ignore.case=TRUE) | convert_to_numeric(estimated_lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
           grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
           TRUE ~ "General"),
       project_cost = as.character(NA),
@@ -58,24 +58,24 @@ clean_in_y1 <- function() {
       .default = str_squish(ppl_score)
     ),
     expecting_funding = dplyr::case_when(
-      list == "fundable" ~ "Yes",
+      grepl("fundable", list) ~ "Yes",
       .default = "No"
     ),
     state = "Indiana",
     state_fiscal_year = "2022",
     ) %>%
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+# in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 ####### Decision : No duplicates
 
 # Check for disinfection byproduct in description
-in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+# in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 ####### Decision : No disinfection byproduct string
 
 # Check for lead subtypes: Both

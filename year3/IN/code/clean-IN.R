@@ -1,40 +1,52 @@
 clean_in_y3 <- function() {
- 
-  in_iup_q1 <- fread("year3/IN/data/IN_SFY24_Q1_fundable.csv",
+
+  in_ppl_comprehensive <- data.table::fread("year3/IN/data/IN-SFY24-DWSRF-Q4-PPL-Comprehensive.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "fundable",
+      list = "SFY24 Q4 comprehensive",
       project_id = str_squish(srf_project_no)
     )
+
+  in_iup_q1 <- data.table::fread("year3/IN/data/IN_SFY24_Q1_fundable.csv",
+                  colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      list = "SFY24 Q1 fundable",
+      project_id = str_squish(srf_project_no)
+    ) 
   
-  in_ppl_comprehensive <- fread("year3/IN/data/IN-SFY24-DWSRF-Q4-PPL-Comprehensive.csv",
-                  colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-    dplyr::mutate(
-      list = "comprehensive",
-      project_id = str_squish(srf_project_no)
-    ) |>
-    dplyr::filter(!project_id %in% in_iup_q1$project_id)
+  # inner_join_and_order_q1_q4(
+  #   df_q1       = in_iup_q1,
+  #   df_q4       = in_ppl_comprehensive,
+  #   fiscal_year = "2024",
+  #   output_path = "./output/tmp/SFY24_base_overlap_Q1_Q4.csv"
+  # )
 
-  in_iup_q1_lslr <- fread("year3/IN/data/IN_SFY24_Q1_LSLR.csv",
-                  colClasses = "character", na.strings = "") |>
-    janitor::clean_names() |>
-    dplyr::mutate(
-      list = "fundable",
-      project_type = "Lead", 
-      project_id = str_squish(srf_project_no)
-    )
-
-   in_ppl_lslr <- fread("year3/IN/data/IN-SFY24-DWSRF-Q4-PPL-Lead.csv",
+  in_ppl_lslr <- data.table::fread("year3/IN/data/IN-SFY24-DWSRF-Q4-PPL-Lead.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(project_type = "Lead") |>
      dplyr::mutate(
-      list = "comprehensive",
+      list = "SFY24 Q4 LSLR comprehensive",
       project_id = str_squish(srf_project_no)
-    ) |>
-    dplyr::filter(!project_id %in% in_iup_q1_lslr$project_id)
+    )
+
+  in_iup_q1_lslr <- data.table::fread("year3/IN/data/IN_SFY24_Q1_LSLR.csv",
+                  colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      list = "SFY24 Q1 LSLR fundable",
+      project_type = "Lead", 
+      project_id = str_squish(srf_project_no)
+    ) 
+  
+  # inner_join_and_order_q1_q4(
+  #   df_q1       = in_iup_q1_lslr,
+  #   df_q4       = in_ppl_lslr,
+  #   fiscal_year = "2024",
+  #   output_path = "./output/tmp/SFY24_lslr_overlap_Q1_Q4.csv"
+  # )
   
   in_combined <- dplyr::bind_rows(in_iup_q1, in_ppl_comprehensive, in_iup_q1_lslr, in_ppl_lslr)
   
@@ -52,7 +64,9 @@ clean_in_y3 <- function() {
       project_description = stringr::str_squish(project_description),
       project_type =  case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        (grepl("lsl|lead", project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0) &
+        (grepl("Yes", emerging_contaminants, ignore.case = TRUE) |  grepl(ec_str, project_description, ignore.case=TRUE)) ~ "Both Lead and EC",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
         grepl("Yes", emerging_contaminants, ignore.case = TRUE) ~ "Emerging Contaminants",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
@@ -74,22 +88,22 @@ clean_in_y3 <- function() {
         .default = str_squish(ppl_score)
       ),
       expecting_funding = dplyr::case_when(
-        list == "fundable" ~ "Yes",
+        grepl("fundable", list) ~ "Yes",
         .default = "No"
       ),
       state = "Indiana",
       state_fiscal_year = "2024",
-    ) %>%
+    ) |>
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-#in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+# in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
-####### Decision : No duplicates
+####### Decision : Duplicates due to Q1 and Q4 overlap
 
 # Check for disinfection byproduct in description
 #in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))

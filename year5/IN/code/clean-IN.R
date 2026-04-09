@@ -1,23 +1,22 @@
 clean_in_y5 <- function() {
  
-  in_ppl_comprehensive <- fread("year5/IN/data/IN-SFY26-DWSRF-Q1-PPL-Comprehensive.csv",
+  in_ppl_comprehensive <- data.table::fread("year5/IN/data/IN-SFY26-DWSRF-Q1-PPL-Comprehensive.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "Comprehensive",
+      list = "SFY26 Q1 fundable (Q4 not out)",
       expecting_funding = ifelse(ppl_rank %in% as.character(1:9), "Yes", "No"),
       project_id = stringr::str_squish(srf_project_no),
       project_id = paste0(str_remove_all(str_sub(project_id, 1, -4), "\\s+"), 
                              str_sub(project_id, -3, -1))
     )
 
-
-   in_ppl_lslr <- fread("year5/IN/data/IN-SFY26-DWSRF-Q1-PPL-Lead.csv",
+   in_ppl_lslr <- data.table::fread("year5/IN/data/IN-SFY26-DWSRF-Q1-PPL-Lead.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       project_type = "Lead",
-      list = "Lead",
+      list = "SFY26 Q1 LSLR fundable (Q4 not out)",
       expecting_funding = ifelse(is.na(ppl_rank), "No", "No Information"),
       project_id = stringr::str_squish(srf_project_no),
       project_id = paste0(str_remove_all(str_sub(project_id, 1, -4), "\\s+"), 
@@ -40,7 +39,9 @@ clean_in_y5 <- function() {
       project_description = stringr::str_squish(project_description),
       project_type =  case_when(
         !is.na(project_type) ~ project_type, 
-        grepl(lead_str, project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
+        (grepl("lsl|lead", project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0) &
+        (grepl("Yes", emerging_contaminants, ignore.case = TRUE) |  grepl(ec_str, project_description, ignore.case=TRUE)) ~ "Both Lead and EC",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) | convert_to_numeric(lead_service_line_replacement_cost, TRUE)>0  ~ "Lead",
         grepl("Yes", emerging_contaminants, ignore.case = TRUE) ~ "Emerging Contaminants",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
@@ -66,13 +67,12 @@ clean_in_y5 <- function() {
     ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-#in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-
+# in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 ####### Decision : No duplicates
 
 # Check for disinfection byproduct in description

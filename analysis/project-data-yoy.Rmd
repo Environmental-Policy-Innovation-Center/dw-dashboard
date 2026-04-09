@@ -13,8 +13,8 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Maryland"
+state_abbr <- "MD"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -42,7 +42,8 @@ project_type_df <- s3read_using(read.csv, object="s3://funding-tracker/state-sta
   clean_names() %>%
   filter(state == state_name) %>%
   mutate(state_fiscal_year = as.factor(state_fiscal_year),
-         project_type = factor(project_type, levels=c("Emerging Contaminants", "Lead", "General")),
+         project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type),
+         project_type = factor(project_type, levels=c("Both Lead and EC","Emerging Contaminants (EC)", "Lead", "General")),
          total_project_cost_str = format_currency(total_project_cost),
          total_requested_amount_str = format_currency(total_requested_amount),
          total_principal_forgiveness_str = format_currency(total_principal_forgiveness),
@@ -371,7 +372,7 @@ if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
                 group_by(state_fiscal_year) %>%
                 summarize(dac_projects_combined = sum(dac_projects, na.rm=TRUE))) %>%
     mutate(
-      project_type = factor(project_type, levels=c("Emerging Contaminants", "Lead", "General")),
+      project_type = factor(project_type, levels=c("Both Lead and EC", "Emerging Contaminants (EC)", "Lead", "General")),
       pct_str = as.character(round(dac_projects/dac_projects_combined,3)*100),
       plot_str = paste0(project_type, ", ", state_fiscal_year,": <br>", dac_projects, " projects (", pct_str, "%)")
     )
@@ -412,7 +413,7 @@ if (nrow(project_type_df %>% filter(!is.na(dac_projects))) > 0) {
     select(state_fiscal_year, project_type, dac_projects, ndac_projects, dac_ni_projects, projects) %>% 
     pivot_longer(cols=c("dac_projects", "ndac_projects", "dac_ni_projects")) %>%
     mutate(
-      project_type = factor(project_type, levels=c("General", "Lead", "Emerging Contaminants")),
+      project_type = factor(project_type, levels=c("Both Lead and EC", "Emerging Contaminants (EC)", "Lead", "General")),
       disadvantaged = case_when(
         name == "dac_projects" ~ "Yes",
         name == "ndac_projects" ~ "No",
@@ -553,11 +554,11 @@ if (nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_projects
 
 ```{r}
 
-if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is.na(dac_projects))) > 0) {
+if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants (EC)" & !is.na(dac_projects))) > 0) {
   
   dac_comp_ec <- project_type_df %>%
     select(state_fiscal_year, project_type, dac_projects, ndac_projects, dac_ni_projects, projects) %>% 
-    filter(project_type == "Emerging Contaminants") %>%
+    filter(project_type == "Emerging Contaminants (EC)") %>%
     pivot_longer(cols=c("dac_projects", "ndac_projects", "dac_ni_projects")) %>%
     mutate(
       disadvantaged = case_when(
@@ -595,6 +596,10 @@ if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !i
   
 }
 ```
+
+#### Both Lead and EC
+
+
 
 ## Expecting Funding & DAC
 
@@ -658,7 +663,7 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
   select(state_fiscal_year, project_type, dac_ef_projects, dac_nef_projects, dac_ef_ni_projects, dac_projects) %>%
   pivot_longer(cols=c(dac_ef_projects, dac_nef_projects, dac_ef_ni_projects)) %>%
   mutate(
-      project_type = factor(project_type, levels=c("General", "Lead", "Emerging Contaminants")),
+      project_type = factor(project_type, levels=c("Both Lead and EC", "Emerging Contaminants (EC)", "Lead", "General")),
       expecting_funding = case_when(
         name == "dac_ef_projects" ~ "Yes",
         name == "dac_nef_projects" ~ "No",
@@ -793,11 +798,11 @@ if (nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_projects
 #### EC
 
 ```{r}
-if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is.na(dac_projects))) > 0) {
+if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants (EC)" & !is.na(dac_projects))) > 0) {
   
  ef_dac_ec <- project_type_df %>%
     select(state_fiscal_year, project_type, dac_ef_projects, dac_nef_projects, dac_ef_ni_projects, dac_projects) %>%
-    filter(project_type == "Emerging Contaminants") %>%
+    filter(project_type == "Emerging Contaminants (EC)") %>%
     pivot_longer(cols=c("dac_ef_projects", "dac_nef_projects", "dac_ef_ni_projects")) %>%
     rename(expecting_funding = name) %>%
     mutate(expecting_funding = case_when(
@@ -833,6 +838,8 @@ if (nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !i
   ef_dac_ec_gp
 }
 ```
+
+#### Both Lead and EC
 
 
 ### How many EFs are DACs?
@@ -894,7 +901,7 @@ if(nrow(project_type_df %>% filter(!is.na(dac_ef_projects))) > 0 &
   select(state_fiscal_year, project_type, dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects, ef_projects) %>%
   pivot_longer(cols=c(dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects)) %>%
   mutate(
-      project_type = factor(project_type, levels=c("General", "Lead", "Emerging Contaminants")),
+      project_type = factor(project_type, levels=c("Both Lead and EC", "Emerging Contaminants (EC)", "Lead", "General")),
       disadvantaged = case_when(
         name == "dac_ef_projects" ~ "Yes",
         name == "ndac_ef_projects" ~ "No",
@@ -1040,11 +1047,11 @@ if(nrow(project_type_df %>% filter(project_type == "Lead" & !is.na(dac_ef_projec
 #### EC
 
 ```{r}
-if(nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is.na(dac_ef_projects))) > 0) {
+if(nrow(project_type_df %>% filter(project_type == "Emerging Contaminants (EC)" & !is.na(dac_ef_projects))) > 0) {
   
   dac_ef_ec <- project_type_df %>%
     select(state_fiscal_year, project_type, dac_ef_projects, ndac_ef_projects, dac_ni_ef_projects, ef_projects) %>%
-    filter(project_type == "Emerging Contaminants") %>%
+    filter(project_type == "Emerging Contaminants (EC)") %>%
     pivot_longer(cols=c("dac_ef_projects", "ndac_ef_projects", "dac_ni_ef_projects")) %>%
     rename(disadvantaged = name) %>%
     mutate(disadvantaged = case_when(
@@ -1085,6 +1092,7 @@ if(nrow(project_type_df %>% filter(project_type == "Emerging Contaminants" & !is
 }
 ```
 
+#### Both Lead and EC
 
 ### DAC/EF Heat Map
 ```{r}
@@ -1203,7 +1211,9 @@ if(sum(project_type_df$projects, na.rm=TRUE) > 0) {
     left_join(project_type_df %>% 
                 group_by(state_fiscal_year) %>%
                 summarize(projects_combined = sum(projects, na.rm=TRUE))) %>%
-    mutate(pct_str = as.character(round(projects/projects_combined,3)*100),
+    mutate(
+      project_type = factor(project_type, levels=c("Both Lead and EC","Emerging Contaminants (EC)", "Lead", "General")),
+      pct_str = as.character(round(projects/projects_combined,3)*100),
            plot_str = paste0(project_type, ", ", state_fiscal_year, ":<br>", projects, " projects (",
                                                       pct_str, "%)"))
   
@@ -1658,11 +1668,11 @@ sc_dac_projects <- small_community_df %>%
 
 ### Expecting funding and DAC
 ```{r}
-state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
+state_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
   janitor::clean_names() |>
   dplyr::filter(state == state_name) 
  
- sc_dac_ef <- state_projects |>
+sc_dac_ef <- state_projects |>
   dplyr::select(state_fiscal_year, disadvantaged, expecting_funding, population) |>
   dplyr::mutate(
     population = as.numeric(population),
@@ -1674,12 +1684,15 @@ state_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data
   dplyr::filter(expecting_funding == "Yes") |>
   dplyr::group_by(state_fiscal_year, small_community, disadvantaged) |>
   dplyr::tally() |>
-  dplyr::mutate(interaction = interaction(small_community, disadvantaged),
+  dplyr::mutate(
+    interaction = interaction(small_community, disadvantaged),
   interaction = dplyr::case_when(
     interaction =="No.No" ~ "Not small community, Not disadvantaged",
     interaction =="No.Yes"~ "Not small community, Disadvantaged",
     interaction =="Yes.No"~ "Small community, Not disadvantaged",
     interaction =="Yes.Yes"~ "Small community, Disadvantaged",
+    interaction == "No.No Information" ~ "Not small community, No Information",
+    interaction == "Yes.No Information" ~"Small community, No Information",
   )
   ) 
 
@@ -1724,7 +1737,7 @@ sc_dac_ef_p <- ggplot2::ggplot() +
 #                       name = "Population < 10k") + 
 #     epic_chart_theme
   
-  sc_dac_ef_gp <- ggplotly(sc_dac_ef_p, tooltip="text") %>%
+sc_dac_ef_gp <- ggplotly(sc_dac_ef_p, tooltip="text") %>%
     layout(title = list(text = paste0("Projects on Fundable Lists serving small communities serving DACs",
                                       '<br>',
                                       get_subtitle_str(sc_dac_ef$state_fiscal_year, state_name))))
@@ -2146,7 +2159,8 @@ pc_by_type_by_dac <- all_projects |>
       project_type, ", ", state_fiscal_year, ": <br>", 
       "Disadvantaged: ", Disadvantaged, "<br>", 
       "Total project costs: ", format_currency(total_project_cost_by_dac), " (", proportion, "%)"
-    )
+    ),
+    state_fiscal_year = as.character(state_fiscal_year)
    ) 
 
 if (nrow(pc_by_type_by_dac) > 0) {
@@ -2170,7 +2184,7 @@ pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
       "Proportion of project costs for projects on fundable list that serve DACs — ",
       get_subtitle_str(pc_by_type_by_dac$state_fiscal_year, state_name))))
 
-    if (save_plots) {
+if (save_plots) {
     run_save_plots(gg_plot = pc_by_type_by_dac_g,
                    gp_object = pc_by_type_by_dac_gp, 
                    name = "dac-by-type-project-cost-yoy")
@@ -2183,62 +2197,5 @@ pc_by_type_by_dac_gp <- ggplotly(pc_by_type_by_dac_g, tooltip="text") |>
 ```
 
 ```{r}
-# all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") |>
-#   janitor::clean_names()
-
-
-# vsc_pc_summary <- all_projects |>
-#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
-#    dplyr::select(population, project_cost) |>
-#    dplyr::mutate(
-#     population = as.numeric(population),
-#     project_cost = as.numeric(project_cost),
-#     very_small_communities = dplyr::case_when(
-#     population <= 1000 ~ "Yes",
-#     .default = "No"
-#    )) |>
-#    dplyr::group_by(very_small_communities) |>
-#    dplyr::summarise(
-#     median_project_cost = median(project_cost) ,
-#     mean_project_cost  = mean(project_cost)
-#    ) |>
-#   tidyr::pivot_longer(cols = c("median_project_cost", "mean_project_cost"), names_to = "stat")
-
-
-# pc_summary <- all_projects |>
-#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
-#    dplyr::select(population, project_cost) |>
-#    dplyr::mutate(
-#     population = as.numeric(population),
-#     project_cost = as.numeric(project_cost),
-#     very_small_communities = dplyr::case_when(
-#     population <= 1000 ~ "Yes",
-#     .default = "No"
-#    )) |> 
-#    dplyr::summarise(
-#     median_project_cost = median(project_cost) ,
-#     mean_project_cost  = mean(project_cost)
-#    ) |>
-#   tidyr::pivot_longer(cols = c("median_project_cost", "mean_project_cost"), names_to = "stat", values_to = "all_project_cost")
-
-
-# vsc_pc_summary |>
-#   dplyr::left_join(pc_summary) |>
-#   gt::gt()
-
-
-
-# data_subset<- all_projects |>
-#    dplyr::filter(state == state_name & state_fiscal_year == 2026) |>
-#    dplyr::mutate(
-#     population = as.numeric(population),
-#     project_cost = as.numeric(project_cost),
-#     very_small_communities = dplyr::case_when(
-#     population <= 1000 ~ "Yes",
-#     .default = "No"
-#    )) |>
-#     dplyr::filter(very_small_communities == "Yes") 
-
-# googlesheets4::write_sheet(data_subset, "https://docs.google.com/spreadsheets/d/1ONJ_bFWaRSOMGbhI8hF7UOQs6FQsvpXaY70rkTgoJQM/", sheet = "Sheet1")
 
 ```

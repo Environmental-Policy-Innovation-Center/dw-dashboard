@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Texas"
-state_abbr <- "TX"
+state_name <- "Maryland"
+state_abbr <- "MD"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -906,6 +906,51 @@ leveraged <- financial |>
   leveraged_gp
 
 }
+
+if (state_name == "Illinois") {
+
+reserved_leveraged <- financial |>
+    dplyr::select(fed_cap_grant, state_fiscal_year, funds_reserved_leveraging) |>
+    dplyr::mutate(state_fiscal_year = as.factor(state_fiscal_year)) |>
+    dplyr::filter(!is.na(funds_reserved_leveraging) & funds_reserved_leveraging > 0) |>
+    dplyr::mutate(leveraged_funds_str = format_currency(funds_reserved_leveraging))
+  
+  reserved_leveraged_yoy <- reserved_leveraged |>
+    dplyr::group_by(state_fiscal_year) |>
+    dplyr::summarize(combined_leveraged = sum(funds_reserved_leveraging))
+  
+  reserved_leveraged <- reserved_leveraged |>
+    dplyr::left_join(reserved_leveraged_yoy, by="state_fiscal_year") |>
+    dplyr::mutate(pct_str = as.character(round((funds_reserved_leveraging/combined_leveraged),3)*100),
+         plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
+                           leveraged_funds_str, " (", pct_str, "%)"))
+  
+  reserved_leveraged_p <- ggplot(reserved_leveraged, aes(x=state_fiscal_year, y=funds_reserved_leveraging, 
+                                       fill=fed_cap_grant, text=plot_str)) + 
+    ggplot2::geom_col(width=0.5) + 
+    scale_y_continuous(labels=label_currency()) + 
+    ggplot2::scale_x_discrete(drop=FALSE) +
+    labs(x="", y="", fill="",
+         title="Funds Reserved for Leveraging",
+         subtitle=get_subtitle_str(levels(leveraged$state_fiscal_year), state_name)) + 
+    scale_fill_manual(values=fed_cap_grant_colors) + 
+    epic_chart_theme
+  
+  reserved_leveraged_gp <- ggplotly(reserved_leveraged_p, tooltip="text") %>%
+    layout(title = list(text = paste0('Funds Reserved for Leveraging',
+                                      '<br>',
+                                      get_subtitle_str(levels(reserved_leveraged$state_fiscal_year), state_name))))
+  
+  
+  if (save_plots) {
+    run_save_plots(gg_plot = reserved_leveraged_p,
+                   gp_object = reserved_leveraged_gp,
+                   name = "leveraged-funds-reserved-yoy")
+    }
+
+  reserved_leveraged_gp
+}
+
 ```
 
 ### Unutilized Funds
@@ -970,7 +1015,8 @@ if (nrow(unutilized) > 0) {
         value, 
         fill = fed_cap_grant, 
         text=text, 
-        alpha=name)
+        alpha=name),
+        width = 1
     ) +
     ggplot2::geom_text(
       data = unutilized |> dplyr::mutate(label = ifelse(name == "PF", "PF", "")), 

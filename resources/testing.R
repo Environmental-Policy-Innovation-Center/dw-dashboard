@@ -91,7 +91,7 @@ check_column_types <- function(df) {
 
 
 check_project_type <- function(df) {
-  if (any(!df$project_type %in% c("General", "Lead", "Emerging Contaminants", "No Information", as.character(NA)))) {
+  if (any(!df$project_type %in% c("General", "Lead", "Emerging Contaminants", "Both Lead and EC", "No Information", as.character(NA)))) {
     warning("FAIL: Invalid 'project_type' value found.")
   }
   else {

@@ -5,15 +5,15 @@ clean_in_y0 <- function() {
     dplyr::filter(ppl_rank <= 11) |> #fundable range
     dplyr::mutate(
       ppl_rank = as.integer(ppl_rank),
-      list = "fundable",
+      list = "SFY21 Q1 fundable",
       project_id = str_squish(srf_project_no)
     )
   
-  in_iup_q4 <- read.csv("year0/IN/data/IN-SFY21-DWSRF-Q4-PPL.csv") %>%
-    clean_names() |>
+  in_iup_q4 <- read.csv("year0/IN/data/IN-SFY21-DWSRF-Q4-PPL.csv") |>
+    janitor::clean_names() |>
     dplyr::mutate(
-      list = "comprehensive",
-      project_id = str_squish(srf_project_no)
+      list = "SFY21 Q4 comprehensive",
+      project_id = stringr::str_squish(srf_project_no)
     ) |>
     dplyr::filter(!project_id %in% in_iup_q1$project_id)
   
@@ -22,8 +22,8 @@ clean_in_y0 <- function() {
   in_clean <- in_iup_concat |>
     dplyr::mutate(
     community_served = as.character(NA),
-    borrower = str_squish(participant),
-    pwsid = str_split(pwsid_no, "[,\n]") %>%
+    borrower = stringr::str_squish(participant),
+    pwsid = stringr::str_split(pwsid_no, "[,\n]") %>%
       lapply(str_trim) %>%
       lapply(function(x) paste0("IN", x)) %>%
       lapply(paste, collapse = ", ") %>%
@@ -32,7 +32,7 @@ clean_in_y0 <- function() {
     project_name = as.character(NA),
     project_description = stringr::str_squish(project_description),
     project_type =  case_when(
-        grepl(lead_str, project_description, ignore.case=TRUE)  ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE)  ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
     project_cost = as.character(NA),
@@ -59,7 +59,7 @@ clean_in_y0 <- function() {
     .default = str_squish(ppl_score)
   ),
   expecting_funding =  dplyr::case_when(
-    list == "fundable" ~ "Yes",
+    grepl("fundable", list) ~ "Yes",
     .default = "No"
   ),
   state = "Indiana",
@@ -68,7 +68,7 @@ clean_in_y0 <- function() {
   select(community_served, borrower, pwsid, project_id, project_name, project_type,
          project_cost, requested_amount, funding_amount, principal_forgiveness,
          project_description, population, disadvantaged, project_rank, project_score,
-         expecting_funding, state, state_fiscal_year)
+         expecting_funding, state, state_fiscal_year, list)
 
   ####### SANITY CHECKS START #######
 

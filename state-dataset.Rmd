@@ -107,7 +107,7 @@ project_counts <- all_projects %>%
 # 2025-07-11: added survey to lead_type designation for lsli
 # see: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752240945744229?thread_ts=1752092342.154789&cid=C08LXGF02AE
 lsl_projects <- all_projects |>
-  dplyr::filter(project_type=="Lead") |>
+  dplyr::filter(project_type %in% c("Lead", "Both Lead and EC")) |>
   dplyr::mutate(
     lead_type = dplyr::case_when(
     stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
@@ -381,12 +381,6 @@ pc_by_lsl <- lsl_projects %>%
     names_prefix = "project_cost_",
     names_glue = "project_cost_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
   )
-  # pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  # rename(
-  #       project_cost_lslb = both,
-  #       project_cost_lslr = lslr,
-  #        project_cost_lsli = lsli,
-  #        project_cost_lslu = unknown)
 
 # group by lsl project type AND whether they are expecting funding or not
 pc_by_lsl_ef <- lsl_projects %>%
@@ -401,12 +395,6 @@ pc_by_lsl_ef <- lsl_projects %>%
     names_prefix = "project_cost_ef",
     names_glue = "project_cost_ef_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
   ) |>
-  # pivot_wider(names_from="lead_type", values_from="total_project_cost") %>%
-  # rename(
-  #   project_cost_ef_lslb = both, 
-  #   project_cost_ef_lslr = lslr,
-  #        project_cost_ef_lsli = lsli,
-  #        project_cost_ef_lslu = unknown) %>%
   ungroup() %>%
   select(-expecting_funding)
 
@@ -472,13 +460,6 @@ fa_by_lsl <- lsl_projects |>
     names_prefix = "funding_amount_",
     names_glue = "funding_amount_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
   ) |>
-#   tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
-# dplyr::mutate(
-#     funding_amount_lslb = if(exists("both", inherits = FALSE)) both else NA_real_,
-#     funding_amount_lslr = if(exists("lslr", inherits = FALSE)) lslr else NA_real_,
-#     funding_amount_lsli = if(exists("lsli", inherits = FALSE)) lsli else NA_real_,
-#     funding_amount_lslu = if(exists("unknown", inherits = FALSE)) unknown else NA_real_
-#   ) |>
   dplyr::select(state, state_fiscal_year, 
   dplyr::any_of(c("funding_amount_lslb", 
                              "funding_amount_lslr", 
@@ -497,13 +478,6 @@ fa_by_lsl_ef <-  lsl_projects |>
     names_prefix = "funding_amount_ef_",
     names_glue = "funding_amount_ef_{ifelse(lead_type == 'both', 'lslb', ifelse(lead_type == 'lslr', 'lslr', ifelse(lead_type == 'lsli', 'lsli', ifelse(lead_type == 'unknown', 'lslu', lead_type))))}"
   ) |> 
- # tidyr::pivot_wider(names_from = "lead_type", values_from = "total_funding_amount", values_fill = 0) |>
-  # dplyr::mutate(
-  #   funding_amount_ef_lslb = if("both" %in% dplyr::cur_data()) both else NA_real_,
-  #   funding_amount_ef_lslr = if("lslr" %in% dplyr::cur_data()) lslr else NA_real_,
-  #   funding_amount_ef_lsli = if("lsli" %in% dplyr::cur_data()) lsli else NA_real_,
-  #   funding_amount_ef_lslu = if("unknown" %in% dplyr::cur_data()) unknown else NA_real_
-  # ) |>
   dplyr::select(state, state_fiscal_year, 
   dplyr::any_of(c("funding_amount_ef_lslb", 
                              "funding_amount_ef_lslr", 

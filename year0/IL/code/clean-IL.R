@@ -123,7 +123,7 @@ clean_il_y0 <- function() {
       project_description = str_to_sentence(project_description),
       project_type =  dplyr::case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE)  ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE)  ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE)  ~ "Emerging Contaminants",
         TRUE ~ "General"),
       population = dplyr::case_when(
@@ -170,7 +170,7 @@ clean_il_y0 <- function() {
   #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5085")
+  #il_clean |> dplyr::filter(project_id == "5085")
   # Decision: Default to Base Fundable project
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "5085" & list =="Base Ineligible"))
@@ -180,7 +180,7 @@ clean_il_y0 <- function() {
   # Decision: Keep both, they are different projects, may have been a typo
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5788")
+  #il_clean |> dplyr::filter(project_id == "5788")
   # Decision: Keep both, based on project description               
             
   ####### Decision:  
@@ -189,7 +189,7 @@ clean_il_y0 <- function() {
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
   
   # Check for disinfection byproduct in description
-  il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
 
   # Check for lead subtypes: Both
@@ -230,8 +230,8 @@ clean_il_y0 <- function() {
     
   ####### SANITY CHECKS END #######
   
-  il_clean <- il_clean |>
-    dplyr::select(-list)
+  # il_clean <- il_clean |>
+  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

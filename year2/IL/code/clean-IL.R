@@ -158,7 +158,7 @@ clean_il_y2 <- function() {
       project_description = str_to_sentence(project_description),
       project_type = dplyr::case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
@@ -169,20 +169,20 @@ clean_il_y2 <- function() {
       state = "Illinois",
       state_fiscal_year = "2024"
     ) |>
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::tally() |>
-    dplyr::filter(n>1)
+  # il_clean |>
+  #   dplyr::group_by(project_id) |>
+  #   dplyr::tally() |>
+  #   dplyr::filter(n>1)
 
-  # Check project id
-  il_clean |> dplyr::filter(project_id == "4188")
+  # # Check project id
+  # il_clean |> dplyr::filter(project_id == "4188")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "4188" & list =="exhausted")) 
@@ -190,7 +190,7 @@ clean_il_y2 <- function() {
   # Decision: default to ec fundable
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5443")
+  # il_clean |> dplyr::filter(project_id == "5443")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "5443" & list =="exhausted"))
@@ -198,7 +198,7 @@ clean_il_y2 <- function() {
   # Decision: default to ec fundable
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5877")
+  # il_clean |> dplyr::filter(project_id == "5877")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "5877" & list =="exhausted"))
@@ -206,7 +206,7 @@ clean_il_y2 <- function() {
   # Decision: default to ec fundable
 
    # Check project id
-  il_clean |> dplyr::filter(project_id == "6043")
+  # il_clean |> dplyr::filter(project_id == "6043")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "6043" & list =="ec fundable"))
@@ -214,7 +214,7 @@ clean_il_y2 <- function() {
   # Decision: default to fundable (more info)
 
    # Check project id
-  il_clean |> dplyr::filter(project_id == "6307")
+  # il_clean |> dplyr::filter(project_id == "6307")
 
   il_clean <- il_clean |>
     dplyr::group_by(project_id) |>
@@ -224,7 +224,7 @@ clean_il_y2 <- function() {
   # Decision: default to ec fundable
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "6375")
+  # il_clean |> dplyr::filter(project_id == "6375")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "6375" & list =="exhausted"))
@@ -232,7 +232,7 @@ clean_il_y2 <- function() {
   # Decision: default to ec fundable
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "6376")
+  # il_clean |> dplyr::filter(project_id == "6376")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "6376" & list =="exhausted"))
@@ -287,8 +287,8 @@ clean_il_y2 <- function() {
   
   ####### SANITY CHECKS END #######
   
-  il_clean <- il_clean |>
-    dplyr::select(-list)
+  # il_clean <- il_clean |>
+  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

@@ -144,6 +144,9 @@ clean_il_y4 <- function() {
       project_name = as.character(NA),
       project_cost = as.character(NA),
       requested_amount = dplyr::case_when(
+        list == "exhausted" ~ clean_numeric_string(projected_loan_amount),
+        list == "planning approval" ~ clean_numeric_string(projected_loan_amount),
+        list == "no planning approval" ~ clean_numeric_string(projected_loan_amount),
         list == "ec fundable" ~ clean_numeric_string(requested_loan_amount),
         list == "ec exhausted" ~ clean_numeric_string(requested_loan_amount),
         list == "lead fundable" ~ clean_numeric_string(requested_loan_amount),
@@ -153,7 +156,7 @@ clean_il_y4 <- function() {
       project_description = str_to_sentence(project_description),
       project_type = dplyr::case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
@@ -175,7 +178,7 @@ clean_il_y4 <- function() {
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
+  #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
 
   # Check project id
   # il_clean |> dplyr::filter(project_id %in% c("6742","6744", "6810", "7030", "7281", "7594")) |> arrange(project_id) |> View()
@@ -225,21 +228,21 @@ clean_il_y4 <- function() {
 
   ####### Decision: No lead projects classified as both
   
-  # Check for lead subtypes: Unknown
-  il_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
+  # # Check for lead subtypes: Unknown
+  # il_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
 
 #   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
 #              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
@@ -251,8 +254,8 @@ clean_il_y4 <- function() {
   
   ####### SANITY CHECKS END #######
 
-  il_clean <- il_clean |>
-    dplyr::select(-list)
+  # il_clean <- il_clean |>
+  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

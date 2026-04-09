@@ -145,7 +145,7 @@ clean_il_y3 <- function() {
       project_description = str_to_sentence(project_description),
       project_type = dplyr::case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
@@ -161,7 +161,7 @@ clean_il_y3 <- function() {
       state = "Illinois",
       state_fiscal_year = "2025"
     ) |>
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
@@ -244,8 +244,8 @@ clean_il_y3 <- function() {
   
   ####### SANITY CHECKS END #######
   
-  il_clean <- il_clean |>
-    dplyr::select(-list)
+  # il_clean <- il_clean |>
+  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

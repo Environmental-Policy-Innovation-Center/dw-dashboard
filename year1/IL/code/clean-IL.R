@@ -163,7 +163,7 @@ clean_il_y1 <- function() {
     dplyr::mutate(
       project_type = dplyr::case_when(
         !is.na(project_type) ~ project_type,
-        grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       )
@@ -174,7 +174,7 @@ clean_il_y1 <- function() {
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list) ##remove list after checks
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list) 
   
    ####### SANITY CHECKS START #######
   # Check any inconsistencies between borrower and pwsid
@@ -192,29 +192,29 @@ clean_il_y1 <- function() {
   #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "3864")
+  #il_clean |> dplyr::filter(project_id == "3864")
 
   # Decision: Default to Base Fundable project
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "3864" & list =="no planning approval")) 
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "4594")
+  #il_clean |> dplyr::filter(project_id == "4594")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "4594" & list =="no planning approval"))
   # Decision: Default to fundable
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5086")
+  # il_clean |> dplyr::filter(project_id == "5086")
   # Decision: From same list, keep both
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "6050")
+ # il_clean |> dplyr::filter(project_id == "6050")
   # Decision: Keep both, project descriptins differ
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "6082")
+ # il_clean |> dplyr::filter(project_id == "6082")
 
   il_clean <- il_clean |>
     dplyr::filter(!(project_id == "6082" & list =="no planning approval"))
@@ -268,8 +268,8 @@ clean_il_y1 <- function() {
     
   ####### SANITY CHECKS END #######
   
-  il_clean <- il_clean |>
-    dplyr::select(-list)
+  # il_clean <- il_clean |>
+  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

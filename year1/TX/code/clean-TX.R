@@ -11,7 +11,8 @@ clean_tx_y1 <- function() {
     dplyr::mutate(
       project_description = stringr::str_squish(project_description),
       project_description = stringr::str_replace(project_description, "12- mile", "12-mile"),
-      rank_test = as.numeric(rank)
+      rank_test = as.numeric(rank),
+      list = "SFY23 General IUP"
     ) 
   
   tx_invite <- data.table::fread("year1/TX/data/tx-y1-appendix-k.csv",
@@ -30,7 +31,8 @@ clean_tx_y1 <- function() {
     janitor::clean_names() |>
     dplyr::mutate(
       project_type = "Lead",
-      disadvantaged = "Yes"
+      disadvantaged = "Yes",
+      list = "SFY23 LSLR PPL"
       ) |>
     dplyr::rename(project_cost = total_project_cost) |>
     dplyr::select(-requested_phase_s)
@@ -55,7 +57,8 @@ clean_tx_y1 <- function() {
     dplyr::mutate(
       project_type = "Emerging Contaminants",
       disadvantaged = "Yes",
-      expecting_funding = "No Information") |>
+      expecting_funding = "No Information",
+      list = "SFY23 EC IUP") |>
     dplyr::rename(project_cost = total_project_cost) |>
     dplyr::select(-requested_phase_s)
   
@@ -73,7 +76,7 @@ clean_tx_y1 <- function() {
         # ec and led docs already defined
         !is.na(project_type) ~ project_type,
         # search for keywords from full PPL, otherwise General project
-        grepl(lead_str, project_description, ignore.case = TRUE) ~ "Lead",
+        grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
@@ -92,7 +95,7 @@ clean_tx_y1 <- function() {
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   ####### SANITY CHECKS START #######
   # Hone in on project id duplication

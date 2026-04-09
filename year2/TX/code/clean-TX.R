@@ -4,7 +4,10 @@ clean_tx_y2 <- function() {
   # this includes all projects
   tx_ppl <- fread(file.path(base_path, "tx-y2-appendix-j.csv"),
                    colClasses = "character", na.strings = "") %>%
-    clean_names()
+    clean_names() |>
+    dplyr::mutate(
+      list = "SFY24 IUP"
+    )
   
   
   tx_invite <- fread(file.path(base_path, "tx-y2-appendix-k.csv"),
@@ -19,7 +22,7 @@ clean_tx_y2 <- function() {
     clean_names() %>%
     mutate(project_type = "Emerging Contaminants",
            disadvantaged = "Yes",
-           list="ec")
+           list="SFY 2024 EC IUP")
   
   tx_ppl <- bind_rows(tx_ppl, tx_ec)
   
@@ -43,8 +46,8 @@ clean_tx_y2 <- function() {
              # ec and led docs already defined
              !is.na(project_type) ~ project_type,
              # search for keywords from full PPL, otherwise General project
-             grepl(lead_str, project_description) ~ "Lead",
-             grepl(ec_str, project_description) ~ "Emerging Contaminants",
+             grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
+             grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
              TRUE ~ "General"),
            # ec docs already defined - if still NA and disavd_percent from PPL is NA, Not DAC
            disadvantaged = ifelse(is.na(disadv_percent) & is.na(disadvantaged), "No", "Yes"),
@@ -61,7 +64,7 @@ clean_tx_y2 <- function() {
            ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 
   run_tests(tx_clean)

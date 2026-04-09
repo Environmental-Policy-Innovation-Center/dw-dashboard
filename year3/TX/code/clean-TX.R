@@ -4,7 +4,10 @@ clean_tx_y3 <- function() {
   # this includes all projects
   tx_ppl <- fread(file.path(base_path, "tx-y3-iup-appendix-j.csv"),
                   colClasses = "character", na.strings = "") %>%
-    clean_names()
+    clean_names() |>
+    dplyr::mutate(
+      list = "SFY 2025 General IUP"
+    )
   
   # expecting funding projects
   tx_invite <- fread(file.path(base_path, "tx-y3-iup-appendix-k.csv"),
@@ -24,7 +27,9 @@ clean_tx_y3 <- function() {
                    colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Lead",
-           disadvantaged = "Yes")
+           disadvantaged = "Yes",
+          list = "SFY 2025 LSLR IUP"
+          )
   
   tx_lsl_invite <- data.table::fread(file.path(base_path, "TX_Y3_LSLR_invited_appendix_j.csv"),
                           colClasses = "character", na.strings = "") |>
@@ -43,7 +48,9 @@ clean_tx_y3 <- function() {
                   colClasses = "character", na.strings = "") %>%
     clean_names() %>%
     mutate(project_type = "Emerging Contaminants",
-           disadvantaged = "Yes")
+           disadvantaged = "Yes",
+          list = "SFY 2025 EC IUP"
+          )
   
   tx_ec_invite <- fread(file.path(base_path, "tx-y3-appendix-k-ec.csv"),
                          colClasses = "character", na.strings = "") %>%
@@ -75,7 +82,7 @@ clean_tx_y3 <- function() {
              # ec and led docs already defined
              !is.na(project_type) ~ project_type,
              # search for keywords from full PPL, otherwise General project
-             grepl(lead_str, project_description, ignore.case = TRUE) ~ "Lead",
+             grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
              grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
              TRUE ~ "General"),
            # lead docs already defined - if still NA and disavd_percent from PPL is NA, Not DAC
@@ -89,17 +96,17 @@ clean_tx_y3 <- function() {
     ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+#tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
 ####### Decision : project_id = 16056 Different projects, same id
 
 # Check for disinfection byproduct in description
-tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+#tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   
 ####### Decision : No disinfection byproduct string
 
@@ -140,6 +147,10 @@ tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 
 ####### SANITY CHECKS END #######
 
+  tx_clean <- tx_clean |>
+    dplyr::mutate(
+      project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type)
+    )
   
   # Run validation tests
   run_tests(tx_clean)

@@ -1,6 +1,5 @@
 clean_tx_y0 <- function() {
-  
-  
+
   tx_ppl <- read.csv("year0/TX/data/tx-dw-sfy22-ppl-invited.csv") %>%
     clean_names()
   
@@ -13,8 +12,8 @@ clean_tx_y0 <- function() {
       project_name = as.character(NA),
       project_type = case_when(
         # search for keywords from full PPL, otherwise General project
-        grepl(lead_str, project_description) ~ "Lead",
-        grepl(ec_str, project_description) ~ "Emerging Contaminants",
+        grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = clean_numeric_string(project_cost),
       requested_amount = as.character(NA),
@@ -28,11 +27,12 @@ clean_tx_y0 <- function() {
       expecting_funding = ifelse(invited == "Yes", "Yes", "No"),
       state = "Texas",
       state_fiscal_year = "2022",
+      list = "SFY22 General IUP"
     ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type,
            project_cost, requested_amount, funding_amount, principal_forgiveness,
            project_description, population, disadvantaged, project_rank, project_score,
-           expecting_funding, state, state_fiscal_year)
+           expecting_funding, state, state_fiscal_year, list)
   
   
   

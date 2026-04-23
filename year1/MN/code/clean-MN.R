@@ -1,80 +1,129 @@
 clean_mn_y1 <- function() {
   
-  # (142, 16)
-  mn_raw <- fread("year1/MN/data/23-Minnesota_IUP_manual.csv",
-                  colClasses = "character", na.strings = "") %>% 
-    clean_names()
+  mn_comp_ppl <- data.table::fread("year1/MN/data/mn_comp_ppl.csv",
+                      colClasses = "character", na.strings = "") |> 
+    janitor::clean_names() |>
+    dplyr::filter(rank != "GRAND TOTAL")
   
-  # -> (142, 18)
-  mn_clean <- mn_raw %>%
-    # remove extra columns
-    select(-est_const_start, v16) %>%
-    # process numeric columns
-    mutate(
-      population = clean_numeric_string(population),
-      # transform string to numeric and replace NAs specifically for adding columns
-      est_lslr_pf = as.numeric(str_replace_all(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1,"[^0-9.]","")),
-      est_lslr_pf = replace_na(est_lslr_pf, 0),
-      est_ec_pf = as.numeric(str_replace_all(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2,"[^0-9.]","")),
-      est_ec_pf = replace_na(est_ec_pf, 0),
-      est_dac_pf = as.numeric(str_replace_all(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3,"[^0-9.]","")),
-      est_dac_pf = replace_na(est_dac_pf, 0),
-      # Sum of Estimated DWRF Lead, Estimated DWRF Emerging Contaminant, 
-      # Estimated DWRF Disadvantaged Community
-      principal_forgiveness = est_lslr_pf + est_ec_pf + est_dac_pf,
-      # transform to numeric to save rows where numbers are present,
-      # but fill in 0s from adding above with "No Information" for the final database
-      # per State Sources Data Dictionary, funding amount = estimated loan + PFA
-      funding_amount = as.numeric(str_replace_all(estimated_dwrf_loan,"[^0-9.]","")) + principal_forgiveness,
-    ) %>%
-    # process text columns
-    mutate(
-      borrower = str_squish(system_name),
-      project_description = str_squish(project_description),
-      project_rank = str_replace_all(mdh_2023_ppl_rank,"[^0-9.]",""),
-      project_score = str_replace_all(mdh_2023_ppl_points,"[^0-9.]",""),
-      project_id = str_squish(project_number),
-      project_type = case_when(
-        status == "Part A5,LSL" ~ "Lead",
-        status == "Carryover,LSL" ~ "Lead",
-        status == "Part A6,EC" ~ "Emerging Contaminants",
-        TRUE ~ "General"),
-      # Only projects with a dollar amount indicated for “Estimated DWRF Loan” and/or “Estimated Principal Forgiveness” are expected to receive SRF awards at this time and only these projects are included in the dashboard analysis.
-      expecting_funding = case_when(
-        !is.na(funding_amount) | principal_forgiveness > 0 ~ "Yes",
-        TRUE ~ "No"),
-      # Projects with a dollar amount or “eligible” in any of the “estimated principal forgiveness columns” or in the “estimated WIF grant” column are considered DACs.
-      disadvantaged = case_when(
-        # if not NA or two characters (the space and dash in otherwise empty cells in the raw data), mark as DAC for each column
-        !is.na(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) & nchar(  estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) > 2 ~ "Yes",
-        !is.na(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2) & nchar(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2) > 2 ~ "Yes",
-        !is.na(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3) & nchar(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3) > 2 ~ "Yes",
-        !is.na(estimated_wif_grant_not_final_4) & nchar(estimated_wif_grant_not_final_4) > 2 ~ "Yes",
-        TRUE ~ "No"
-      ),
-      funding_amount = clean_numeric_string(funding_amount),
-      funding_amount = case_when(funding_amount == "0" ~ "No Information",
-                                 TRUE ~ funding_amount),
-      principal_forgiveness = clean_numeric_string(principal_forgiveness),
-      principal_forgiveness = case_when(principal_forgiveness == "0" ~ "No Information",
-                                        TRUE ~ principal_forgiveness),
-      state = "Minnesota",
-      state_fiscal_year = "2023",
-      # add in NA columns for state
-      pwsid = as.character(NA),
-      community_served = as.character(NA),
-      project_name = as.character(NA),
-      project_cost = as.character(NA),
-      requested_amount = as.character(NA),
-      
-    ) %>%
-    # subset columns
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+  
+  mn_not_eligible <- data.table::fread("year1/MN/data/mn_not_eligible.csv",
+                           colClasses = "character", na.strings = "") |> 
+    janitor::clean_names() |>
+    dplyr::filter(!is.na(project_number)) |>
+    dplyr::mutate(list = "SFY23 Not Eligible List",
+           expecting_funding = "No")
+  
+  
+  # following amendment 1, the not-fundable table got added to the fundable list, part B of the original IUP
+  mn_part_b <- data.table::fread("year1/MN/data/mn_not_fundable.csv",
+                           colClasses = "character", na.strings = "") |> 
+    janitor::clean_names()
+  
+  # part A of the original IUP
+  mn_part_a <- data.table::fread("year1/MN/data/mn_fundable.csv",
+                       colClasses = "character", na.strings = "") |> 
+    janitor::clean_names()
+  
+  
+  mn_fundable <- bind_rows(mn_part_a, mn_part_b) |> 
+    dplyr::mutate(expecting_funding = "Yes",
+           list = "SFY23 Fundable List") |>
+    dplyr::filter(!is.na(project_number))
+    
+    mn_combined <- bind_rows(mn_fundable, mn_not_eligible) |>
+    # all subsequent mutations apply to fundable projects and not eligible projects to then join on comp project list
+      dplyr::mutate(,
+           project_type = dplyr::case_when(
+                                    grepl("LSL", status) ~ "Lead",
+                                    grepl("EC", status) ~ "Emerging Contaminants",
+                                    grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants", 
+                                    nchar(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2) > 1 ~ "Emerging Contaminants",
+                                    grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
+                                    nchar(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) > 1 ~ "Lead",
+                                    TRUE ~ "General"),
+           estimated_dwrf = convert_to_numeric(estimated_dwrf_loan, TRUE),
+           estimated_lsl_pf = convert_to_numeric(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1, TRUE),
+           estimated_ec_pf = convert_to_numeric(estimated_dwrf_emerging_contaminant_principal_forgiveness_not_final_2, TRUE),
+           estimated_dac_pf = convert_to_numeric(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3, TRUE),
+           estimated_wif = convert_to_numeric(estimated_wif_grant_not_final_4, TRUE),
+           funding_amount = estimated_dwrf + estimated_lsl_pf + estimated_ec_pf + estimated_dac_pf,
+           # add up PF for fundable projects, No Info for Not Eligible list projects
+           principal_forgiveness = dplyr::case_when(
+             list == "SFY23 Fundable List" ~ as.character(estimated_lsl_pf + estimated_ec_pf + estimated_dac_pf),
+             TRUE ~ "No Information"),
+           disadvantaged = dplyr::case_when(
+             list == "SFY23 Not Eligible List" ~ "No Information",
+             nchar(estimated_dwrf_lead_service_line_replacement_principal_forgiveness_not_final_1) > 1 ~ "Yes",
+             nchar(estimated_dwrf_disadvantgd_community_principal_forgiveness_not_final_3) > 1 ~ "Yes",
+             nchar(estimated_wif_grant_not_final_4) > 1 ~ "Yes",
+             TRUE ~ "No Information"
+             )
+           ) |>
+      dplyr::rename(project_id = project_number) |>
+      dplyr::select(project_id, expecting_funding, list, estimated_project_cost, project_type, funding_amount, principal_forgiveness, disadvantaged)
+  
+
+  mn_clean <- mn_comp_ppl |>
+    dplyr::left_join(mn_combined, by='project_id') |>
+    dplyr::mutate(community_served = as.character(NA),
+           borrower = stringr::str_squish(system),
+           pwsid = paste0("MN", str_remove(project_id, "-.*")),
+           project_id = stringr::str_squish(project_id),
+           project_name = as.character(NA),
+           project_description = stringr::str_squish(project),
+           project_type = dplyr::case_when(!is.na(project_type) ~ project_type,
+                                    grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+                                    grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
+                                    TRUE ~ "General"),
+           project_cost = dplyr::case_when(!is.na(estimated_project_cost) ~ clean_numeric_string(estimated_project_cost),
+                                    TRUE ~ clean_numeric_string(project_cost)),
+           requested_amount = as.character(NA),
+           population = clean_numeric_string(population),
+           funding_amount = clean_numeric_string(funding_amount),
+           principal_forgiveness = clean_numeric_string(principal_forgiveness),
+           disadvantaged = replace_na(disadvantaged, "No Information"),
+           project_rank = stringr::str_squish(rank),
+           project_score = stringr::str_squish(points),
+           expecting_funding = replace_na(expecting_funding, "No"),
+           state = "Minnesota",
+           state_fiscal_year = "2023",
+           list = replace_na(list, "SFY23 Comprehensive List")
+    ) |> 
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   run_tests(mn_clean)
   rm(list=setdiff(ls(), "mn_clean"))
   
   return(mn_clean)
 }
+
+
+####### SANITY CHECKS START #######
+
+# Hone in on project id duplication
+# mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+####### Decision: No duplicates
+
+# Check for disinfection byproduct in description
+# mn_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+####### Decision: No change, classified as expected
+
+# Check for lead subtypes
+# mn_clean |>
+#   dplyr::filter(project_type=="Lead") |>
+# dplyr::mutate(
+#   lead_type = dplyr::case_when(
+#   stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+#   stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+#   stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+#  # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+#  stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+#  stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+#   TRUE ~ "unknown"
+# )) |>
+#   dplyr::filter(lead_type == "both")
+# ####### Decision: No lead projects classified as both
+
+####### SANITY CHECKS END #######

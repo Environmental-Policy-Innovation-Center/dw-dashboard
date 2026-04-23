@@ -4,26 +4,33 @@ clean_oh_y0 <- function() {
   # where borrower/descriptions/pwsid/funding amount can all vary slightly, an "epic_project_id" was manually created by
   # comparing and validating projects to join projects to the comprehensive table
   
+  #NOTE: 6 projects on the fundable list are noted separately as unlikely to receive funding.
+  # using the epic_project_id, manually identified programs based on borrower and estimated project cost.
+  # Use this list when analysts discuss these outliers in the data dictionary.
+  not_ef_list <- c("30", "57", "118", "127", "265", "317")
+  
   # dac PPL: 
-  oh_dac <- fread("./year0/OH/data/oh_dac_ppl.csv") %>%
-    janitor::clean_names() %>%
+  oh_dac <- data.table::fread("./year0/OH/data/oh_dac_ppl.csv") |>
+    janitor::clean_names() |>
     # these are all disadvantaged
-    mutate(disadvantaged = "Yes") %>%
+    dplyr::mutate(disadvantaged = "Yes",
+           list = "SFY22 DAC PPL") |>
     # selecting just the columns we need
-    select(epic_project_id, disadvantaged, 
-           principal_forgiveness, project_score, rate)
+    dplyr::select(epic_project_id, disadvantaged, 
+           principal_forgiveness, project_score, rate, list)
   
   # regionalization projects: 
-  oh_reg <- fread("./year0/OH/data/oh_regionalization_ppl.csv") %>%
-    janitor::clean_names() %>%
-    select(epic_project_id, project_score, rate, 
-           estimated_principal_forgiveness)
+  oh_reg <- data.table::fread("./year0/OH/data/oh_regionalization_ppl.csv") |>
+    janitor::clean_names() |>
+    dplyr::mutate(list = "SFY22 Regionalization PPL") |>
+    dplyr::select(epic_project_id, project_score, rate, 
+           estimated_principal_forgiveness, list)
   
   # merging dac and reg ppls together since they may overlap: 
-  oh_dac_reg <- merge(oh_dac, oh_reg, by = "epic_project_id", all = T) %>%
+  oh_dac_reg <- merge(oh_dac, oh_reg, by = "epic_project_id", all = T) |>
     # fill in gaps for project score - can projects on both lists have the
     # same project score 
-    mutate(project_score = case_when(is.na(project_score.y) ~ project_score.x, 
+    dplyr::mutate(project_score = case_when(is.na(project_score.y) ~ project_score.x, 
                                      is.na(project_score.x) ~ project_score.y, 
                                      TRUE ~ NA), 
            # paste the rates together, which will be string matched to identify 
@@ -31,62 +38,70 @@ clean_oh_y0 <- function() {
            rate = paste0(rate.x, rate.y), 
            # fill in gaps for PF
            principal_forgiveness = case_when(!is.na(principal_forgiveness) ~ principal_forgiveness, 
-                                             TRUE ~ estimated_principal_forgiveness)) %>%
+                                             TRUE ~ estimated_principal_forgiveness),
+           principal_forgiveness = ifelse(principal_forgiveness=="", "0", principal_forgiveness),
+           list = case_when(
+             #NOTE: when overlaps exist, prioritize DAC list over REG list for tracking
+             is.na(list.x) ~ list.y,
+             TRUE ~ list.x)
+           ) |>
     # remove extra columns from the merge
-    select(-c("project_score.x", "project_score.y", 
-              "rate.x", "rate.y", "estimated_principal_forgiveness"))
+    dplyr::select(-c("project_score.x", "project_score.y", 
+              "rate.x", "rate.y", "estimated_principal_forgiveness", "list.x", "list.y"))
   
   # projects eligible for funding (all projects will appear on 
   # this list, aside from one lead project)
-  oh_fundable <- fread("./year0/OH/data/oh_comp_ppl.csv") %>%
-    janitor::clean_names() %>%
-    # all of these are expecting funding & should have a funding amount
-    mutate(expecting_funding = "Yes", 
-           funding_amount = estimated_loan_amount) %>%
+  oh_fundable <- data.table::fread("./year0/OH/data/oh_comp_ppl.csv") |>
+    janitor::clean_names() |>
+    # all of these are expecting funding
+    dplyr::mutate(expecting_funding = case_when(
+      epic_project_id %in% not_ef_list ~ "No",
+      TRUE ~ "Yes")) |>
     # removing some extra cols we don't need
-    select(!c("loan_type", "estimated_award_date", "district_office"))
+    dplyr::select(!c("loan_type", "estimated_award_date", "district_office"))
   
   # merging fundable, and the dac-regionalization lists
-  oh_comp <- merge(oh_fundable, oh_dac_reg, by = "epic_project_id", all = T) %>%
+  oh_comp <- merge(oh_fundable, oh_dac_reg, by = "epic_project_id", all = T) |>
     # adding the rates together for string matching
-    mutate(rate = paste0(rate.x, rate.y)) %>%
+    dplyr::mutate(rate = paste0(rate.x, rate.y)) |>
     # finding the presence of HAB or LSL in the rate columns: 
-    mutate(project_type = case_when(grepl("HAB", rate) ~ "Emerging Contaminants", 
-                                    grepl("LSL", rate) ~ "Lead", 
+    dplyr::mutate(project_type = case_when(grepl("HAB|PFAS", rate) ~ "Emerging Contaminants", 
+                                    grepl("LSL", rate) | grepl("lead", project, ignore.case=TRUE) ~ "Lead", 
                                     # and the other strings listed for the 
                                     # fundbale list
                                     grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
-                                    TRUE ~ "General")) %>%
+                                    TRUE ~ "General")) |>
     # trimming extra cols
-    select(-c("rate.x", "rate.y", "rate"))
+    dplyr::select(-c("rate.x", "rate.y"))
     
   
   # HAB/PFAS list: 
-  oh_ec <- fread("./year0/OH/data/oh_pfas_ppl.csv") %>%
-    janitor::clean_names() %>%
+  oh_ec <- data.table::fread("./year0/OH/data/oh_pfas_ppl.csv") |>
+    janitor::clean_names() |>
     # these are all EC
-    mutate(project_type = "Emerging Contaminants") %>%
-    select(epic_project_id, project_type)
+    dplyr::mutate(project_type = "Emerging Contaminants",
+           list = "SFY22 EC PPL") |>
+    dplyr::select(epic_project_id, project_type, list)
   
   
   # LSL list: note there is one project that does not appear on the fundable 
-  # list 
-  oh_lead_all <- fread("./year0/OH/data/oh_lead_ppl.csv") %>%
-    janitor::clean_names() %>%
+  # list, but should be considered fundable
+  oh_lead_all <- data.table::fread("./year0/OH/data/oh_lead_ppl.csv") |>
+    janitor::clean_names() |>
     # these are all lead
-    mutate(project_type = "Lead")
+    dplyr::mutate(project_type = "Lead",
+           list = "SFY22 Lead PPL")
   
   # these are the lead projects that appear on the fundable list
-  oh_lead_fundable <- oh_lead_all %>%
-    filter(epic_project_id %in% oh_fundable$epic_project_id) %>%
-    select(epic_project_id, project_type)
+  oh_lead_fundable <- oh_lead_all |>
+    dplyr::filter(epic_project_id %in% oh_fundable$epic_project_id) |>
+    dplyr::select(epic_project_id, project_type)
   
   # the not fundable project but prepping for a bind_rows later
-  oh_lead_not_fundable <- oh_lead_all %>%
-    filter(!(epic_project_id %in% oh_fundable$epic_project_id)) %>%
-    mutate(disadvantaged = "No", 
-           expecting_funding = "No") %>%
-    select(-c("loan_type", "estimated_award_date", "district_office"))
+  oh_lead_not_fundable <- oh_lead_all |>
+    dplyr::filter(!(epic_project_id %in% oh_fundable$epic_project_id)) |>
+    dplyr::mutate(expecting_funding = "Yes") |>
+    dplyr::select(-c("loan_type", "estimated_award_date", "district_office"))
   
   
   # combing ec and lead: 
@@ -95,41 +110,46 @@ clean_oh_y0 <- function() {
   
   # bring everything back together
   oh_clean_lead_ec <- merge(oh_comp, oh_lead_ec, 
-                            by = "epic_project_id", all = T) %>%
+                            by = "epic_project_id", all = T) |>
     # handle project types - note it seems like the state does not consider 
     # THM projects as EC. They do not appear on the EC list but are captured 
     # by our sting matching
-    mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
+    dplyr::mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
                                     is.na(project_type.y) ~ project_type.x, 
-                                    is.na(project_type.x) ~ project_type.y))%>%
+                                    is.na(project_type.x) ~ project_type.y))|>
     select(-c("project_type.x", "project_type.y"))
   
   # bringing back the lead project that is not eligible for funding, and 
   # finish standardizing columns: 
-  oh_clean <- bind_rows(oh_clean_lead_ec, oh_lead_not_fundable) %>%
+  oh_clean <- bind_rows(oh_clean_lead_ec, oh_lead_not_fundable) |>
     # process numeric cols: 
-    mutate(principal_forgiveness = clean_numeric_string(principal_forgiveness), 
+    dplyr::mutate(principal_forgiveness = case_when(
+      # not EF projects explicitly not receiving PF. in case of overlap, set to No Info first
+      # then use normal function for keeping numeric value or setting NA to No Info
+      epic_project_id %in% not_ef_list ~ "0",
+      TRUE ~ clean_numeric_string(principal_forgiveness)), 
            requested_amount = clean_numeric_string(estimated_loan_amount), 
-           funding_amount = clean_numeric_string(funding_amount), 
+           funding_amount = as.character(NA),
            population = clean_numeric_string(population),
            project_score = clean_numeric_string(project_score), 
-           # process ifelse cols: 
-           disadvantaged = ifelse(is.na(disadvantaged), "No", disadvantaged), 
-           expecting_funding = ifelse(is.na(expecting_funding), "No", expecting_funding), 
-           # tidy string cols: 
-           pwsid = pws_id, 
-           borrower = entity, 
-           community_served = county,
+           disadvantaged = case_when(
+             !is.na(disadvantaged) ~ disadvantaged,
+             grepl("DIS", rate) ~ "Yes",
+             TRUE ~ "No"), 
+           pwsid = stringr::str_squish(pws_id), 
+           borrower = stringr::str_squish(entity), 
+           community_served = stringr::str_squish(county),
            project_id = as.character(NA), 
            project_name = as.character(NA),
            project_cost = as.character(NA), 
-           project_description = project, 
+           project_description = stringr::str_squish(project), 
            project_rank = as.character(NA), 
            state = "Ohio", 
-           state_fiscal_year = "2022") %>%
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, requested_amount,
+           state_fiscal_year = "2022",
+           list = replace_na("SFY22 Fundable List and Comprehensive List")) |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, requested_amount,
            funding_amount, principal_forgiveness, population, project_description, disadvantaged, project_rank,
-           project_score, expecting_funding, state, state_fiscal_year)
+           project_score, expecting_funding, state, state_fiscal_year, list)
   
   ####### SANITY CHECKS START #######
   

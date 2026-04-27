@@ -1,5 +1,6 @@
 clean_md_y4 <- function() {
 
+  #ammendement
   md_ppl_comprehensive <- data.table::fread("year4/MD/data/MD_Y4_SFY27_Comprehensive_List.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
@@ -21,25 +22,26 @@ clean_md_y4 <- function() {
         convert_to_numeric(iija_lsl_pf, fill_na_0 = TRUE) + 
         convert_to_numeric(iija_pfas_ec, fill_na_0 = TRUE),
       project_type = dplyr::case_when(
-        convert_to_numeric(iija_pfas_ec, fill_na_0 = TRUE) > 0 ~ "Emerging Contaminants",
         convert_to_numeric(iija_lsl_loan, fill_na_0 = TRUE) > 0 ~ "Lead",
         convert_to_numeric(iija_lsl_pf, fill_na_0 = TRUE) > 0 ~ "Lead",
+        convert_to_numeric(iija_pfas_ec, fill_na_0 = TRUE) > 0 ~ "Emerging Contaminants",
         .default = NA
       )
     ) |>
-    dplyr::select(matching_id, list, total_funding, expecting_funding, principal_forgiveness, project_type) 
+    dplyr::select(list, total_funding, expecting_funding, principal_forgiveness, project_type, project_number) 
   
   # All fundable projects match
-  # sum(md_ppl_fundable$matching_id %in% md_ppl_comprehensive$matching_id)
-
+  # sum(md_ppl_fundable$project_number %in% md_ppl_comprehensive$project_number)
   # 8 bypassed projects
-  # bypassed_projects <- c("DW0016", "DW0058", "DW0010", "DW0014", "DW0095", "DW0091", "DW0090", "DW0019")
-  # sum(md_ppl_fundable$matching_id %in% bypassed_projects)
+  # bypassed_projects <- c(
+  #   "DW0058", "DW0010", "DW0014", "DW0095", "DW0091", "DW0090", "DW0019", "DW0039"
+  # )
+  # sum(md_ppl_fundable$project_number %in% bypassed_projects)
   # [keep] all bypassed projects are present in the comprehensive list
-  # sum(bypassed_projects %in% md_ppl_comprehensive$matching_id)
+  # sum(bypassed_projects %in% md_ppl_comprehensive$project_number)
   
   md_combined <- md_ppl_comprehensive |>
-    dplyr::left_join(md_ppl_fundable, by= "matching_id") |>
+    dplyr::left_join(md_ppl_fundable, by= "project_number") |>
     # [keep] we default to list value of the fundable list
     dplyr::mutate(
       list = ifelse(is.na(list.y), list.x , list.y)
@@ -48,9 +50,10 @@ clean_md_y4 <- function() {
   
   md_clean <- md_combined |>
     dplyr::mutate(
-      # [keep] geographic reference from the dd is encoded as community_served here (this has no downstream effects) 
+      # [keep] geographic reference from the dd is encoded as community_served here (this has no downstream effects, please don't include in the code review) 
       community_served = stringr::str_squish(county),
-      borrower = stringr::str_squish(applicant_name),
+      # [keep] extract the borrower after /
+      borrower = stringr::str_trim(stringr::str_extract(applicant_system_name, "(?<=/).*")),
       # [keep] extracted from source as pwsid in raw data
       pwsid = stringr::str_squish(pwsid),
       pwsid = ifelse(is.na(pwsid), "No Information", pwsid),
@@ -62,7 +65,7 @@ clean_md_y4 <- function() {
       # [keep] project details column separated as lsl and pfas_ec columns, when Y, the strings were present in the cell
       # [keep] ec_str consists of the keywords presented in the DD
       project_type =  case_when(
-        !is.na(project_type.y) ~ project_type.y,
+        !is.na(project_type) ~ project_type,
         grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
         grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",
         grepl("Y", lsl, ignore.case=TRUE)  ~ "Lead",  
@@ -72,13 +75,13 @@ clean_md_y4 <- function() {
         TRUE ~ "General"),
       project_cost = clean_numeric_string(total_cost),
       requested_amount = clean_numeric_string(mde_requested_funding),
-      # [keep] projects with “-” have been scraped as empty, and the clean_numeric_string funtion will coerce to "No Information"
+      # [keep] clean_numeric_string funtion will coerce empty to "No Information"
       funding_amount = clean_numeric_string(total_funding),
       # [keep] verified that clean_md has No Information for PF when funding amount is No Information, further true 0s are kept as 0
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       principal_forgiveness =ifelse(funding_amount == "No Information", "No Information", principal_forgiveness),
-      # [keep] population is found in the beneficial_population column , claude scraped Ben.Pop= ? as 0
-      population = ifelse(beneficial_population %in% c("?", "0"), "No Information", beneficial_population),
+      # [keep] population is found in the beneficiary_population column , claude scraped Ben.Pop= ? as 0
+      population = ifelse(beneficiary_population %in% c("?", "0"), "No Information", beneficiary_population),
       # [keep] Disadv was encoded as Y and N for Yes and No, respectively
       disadvantaged = ifelse(disadvantaged == "Y", "Yes", "No"),
       project_rank = stringr::str_squish(rank),
@@ -91,23 +94,6 @@ clean_md_y4 <- function() {
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
- 
-  md_clean <- md_clean |>
-    dplyr::mutate(
-      project_description = dplyr::case_when(
-        project_type == "Lead" & project_name == "Willards LCRR Inventory Field Investigation" ~ paste0(project_description, " | FT: LSLI"),
-        project_type == "Lead" & project_name == "Danville Road Water Main Replacement" ~ paste0(project_description, " | FT: LSLR"),
-        project_type == "Lead" & project_name == "Waldorf System Service Line Verification" ~ paste0(project_description, " | FT: LSLI"),
-        project_type == "Lead" & project_name == "Fruitland LCRR Inventory Field Investigation" ~ paste0(project_description, " | FT: LSLI"),
-        project_type == "Lead" & project_name == "Lead Service Line Inventory - WSSC" ~ paste0(project_description, " | FT: LSLI"),
-        project_type == "Lead" & project_name == "Newark Lead/Copper & Backflow Prevention Water Service Replacement" ~ paste0(project_description, " | FT: LSLR"),
-        .default = project_description 
-      ),
-      project_type = dplyr::case_when(
-        project_type == "Lead" & project_name == "WFP Membrane Filtration Building (Project No. 2023-20-WFP)" ~ "General",
-        .default = project_type
-      )
-      )
     
     
 ####### SANITY CHECKS START #######
@@ -117,7 +103,7 @@ clean_md_y4 <- function() {
 ####### Decision : No project_id
 
 # Check for disinfection byproduct in description
-# md_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+#  md_clean |> dplyr::filter(grepl("disinfection byproduct", project_description, ignore.case = TRUE))
 ####### Decision : No disinfection byproduct string
   
 # Check for lead subtypes: Both
@@ -154,7 +140,24 @@ clean_md_y4 <- function() {
 #   ) |>
 #   dplyr::filter(lead_type == "unknown") 
   
-######## Decision: 7 projects classified as unknown, adressed upstream
+######## Decision: 7 projects classified as unknown
+  
+ md_clean <- md_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_name == stringr::str_to_upper("Willards LCRR Inventory Field Investigation") ~ paste0(project_description, " | FT: LSLI"),
+        project_type == "Lead" & project_name == stringr::str_to_upper("Waldorf System Service Line Verification") ~ paste0(project_description, " | FT: LSLI"),
+        project_type == "Lead" & project_name == stringr::str_to_upper("Fruitland LCRR Inventory Field Investigation") ~ paste0(project_description, " | FT: LSLI"),
+        project_type == "Lead" & project_name == stringr::str_to_upper("Lead Service Line Inventory - WSSC") ~ paste0(project_description, " | FT: LSLI"),
+        project_type == "Lead" & project_name == stringr::str_to_upper("Newark Lead/Copper & Backflow Prevention Water Service Replacement") ~ paste0(project_description, " | FT: LSLR"),
+        project_type == "Lead" & project_name == "MAIN STREET WATERMAIN REPLACEMENT" ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description 
+      ),
+      project_type = dplyr::case_when(
+        project_type == "Lead" & project_name == stringr::str_to_upper("WFP Membrane Filtration Building (Project No. 2023-20-WFP)") ~ "General",
+        .default = project_type
+      )
+      )  
   
 ####### SANITY CHECKS END #######
   

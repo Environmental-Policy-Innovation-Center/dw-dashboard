@@ -17,3 +17,23 @@
 
 /.luarc.json
 !requests/requests.html
+analysis/2026_02_12_lead_types.R
+2026_02_24_lead_project_audit.csv
+analysis/2025_03_10_TX_demand_earmarks.R
+analysis/2026_01_08_lead_subtype_sheets.R
+analysis/2026_01_20_TX_wholesalers.R
+analysis/2026_01_21_MI_lead_state_funds_source_breakdown.R
+analysis/2026_01_22_MI_crosswalk.R
+analysis/2026_02_17_web_crawl_testing.R
+analysis/2026_02_24_lead_from_general_TX.R
+analysis/2026_02_24_lead_project_audit.R
+analysis/Session_1.qmd
+analysis/Session_1_files/libs/bootstrap/bootstrap-icons.woff
+analysis/web_crawl_iup_source.R
+analysis/YYYY_MM_DD_NY_xwalk.R
+output/tmp/SFY23_base_overlap_Q1_Q4.csv
+output/tmp/SFY23_lslr_overlap_Q1_Q4.csv
+output/tmp/SFY24_base_overlap_Q1_Q4.csv
+output/tmp/SFY24_lslr_overlap_Q1_Q4.csv
+output/tmp/SFY25_base_overlap_Q1_Q4.csv
+resources/2026_03_19_review_helper.R

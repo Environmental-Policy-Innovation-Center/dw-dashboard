@@ -110,47 +110,63 @@ lsl_projects <- all_projects |>
   dplyr::filter(project_type %in% c("Lead", "Both Lead and EC")) |>
   dplyr::mutate(
     lead_type = dplyr::case_when(
-    stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-    stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-    stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-   # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-   stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-   stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-    TRUE ~ "unknown"
-  )) |>
-    # lead sub type exceptions (after inspection of project description classified as "both" lead types) 
-    dplyr::left_join(
-      tibble::tibble(
-        borrower = c("Mart", "Alice", "Dog Ridge WSC", "Texarkana", "Bandera", "Varner Creek UD", "New Orleans - Carrolton Water Works (Loan 3)", "Goliad", "Brazoria", "Alice", "Cumby", "Hempstead"),
-        project_id = c("No Information", "No Information", "No Information", "No Information", "No Information", "No Information", "1071009-03-LSLR", "16050", "16081", "16057", "16082", "16083"),
-        pwsid = c("TX1550005", "TX1250001", "TX0140044", "TX0190004", "TX0100012", "TX0200070", "LA1071009", "TX0880001", "TX0200003", "TX1250001", "TX1120001", "TX2370001"),
-        project_type = c("Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead"),
-        project_score = c("48.49", "42.34", "40.42", "16.43", "15.91", "13.32", "12", "62.99", "58.17", "46.20", "29.29", "25.26"),
-        state = c("Texas", "Texas", "Texas", "Texas", "Texas", "Texas", "Louisiana", "Texas", "Texas", "Texas", "Texas", "Texas"),
-        state_fiscal_year = c("2023", "2023", "2023", "2023", "2023", "2023", "2025", "2025", "2025", "2025", "2025", "2025"),
-        lead_type_new_TX = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
-        ) 
+      stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+      stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+      stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+      # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+      stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+      stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
     ) |>
-    dplyr::left_join(
-  data.frame(
-   stringsAsFactors = FALSE,
-          borrower = c("Pittsburgh Water & Sewer Authority","Pittsburgh Water & Sewer A.", "Lehigh County Authority","City Of Philadelphia"),
-          project_id = c("80214","No Information", "No Information","No Information"),
-          pwsid = c("PA5020038", "PA5020038", "PA3390041", "PA1510001"),
-          project_type = c("Lead", "Lead", "Lead", "Lead"),
-          project_score = c("92", "0", "0", "0"),
-          state = c("Pennsylvania", "Pennsylvania", "Pennsylvania", "Pennsylvania"),
-          state_fiscal_year = c("2024", "2024", "2024", "2025"),
-          lead_type_new_PA = c("lslr", "lslr", "lslr", "lslr")
-          ),
-          by = c("borrower", "pwsid", "project_id", "project_type", "project_score", "state", "state_fiscal_year")
+  # lead sub type exceptions (after inspection of project description classified as "both" lead types) 
+
+  # TX and LA
+  dplyr::left_join(
+    tibble::tibble(
+      borrower = c("Mart", "Alice", "Dog Ridge WSC", "Texarkana", "Bandera", "Varner Creek UD", "New Orleans - Carrolton Water Works (Loan 3)", "Goliad", "Brazoria", "Alice", "Cumby", "Hempstead"),
+      project_id = c("No Information", "No Information", "No Information", "No Information", "No Information", "No Information", "1071009-03-LSLR", "16050", "16081", "16057", "16082", "16083"),
+      pwsid = c("TX1550005", "TX1250001", "TX0140044", "TX0190004", "TX0100012", "TX0200070", "LA1071009", "TX0880001", "TX0200003", "TX1250001", "TX1120001", "TX2370001"),
+      project_type = c("Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead", "Lead"),
+      project_score = c("48.49", "42.34", "40.42", "16.43", "15.91", "13.32", "12", "62.99", "58.17", "46.20", "29.29", "25.26"),
+      state = c("Texas", "Texas", "Texas", "Texas", "Texas", "Texas", "Louisiana", "Texas", "Texas", "Texas", "Texas", "Texas"),
+      state_fiscal_year = c("2023", "2023", "2023", "2023", "2023", "2023", "2025", "2025", "2025", "2025", "2025", "2025"),
+      lead_type_new_TX = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
+    ) 
+  ) |>
+  # PA  
+  dplyr::left_join(
+    data.frame(
+      stringsAsFactors = FALSE,
+      borrower = c("Pittsburgh Water & Sewer Authority","Pittsburgh Water & Sewer A.", "Lehigh County Authority","City Of Philadelphia"),        project_id = c("80214","No Information", "No Information","No Information"),
+      pwsid = c("PA5020038", "PA5020038", "PA3390041", "PA1510001"),
+      project_type = c("Lead", "Lead", "Lead", "Lead"),
+      project_score = c("92", "0", "0", "0"),
+      state = c("Pennsylvania", "Pennsylvania", "Pennsylvania", "Pennsylvania"),
+      state_fiscal_year = c("2024", "2024", "2024", "2025"),
+      lead_type_new_PA = c("lslr", "lslr", "lslr", "lslr")
+      ),
+      by = c("borrower", "pwsid", "project_id", "project_type", "project_score", "state", "state_fiscal_year")
     ) |>  
-    dplyr::mutate(
-      lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA),
-      lead_type = if_else(lead_type == "both" & !is.na(lead_type_new), 
-                              lead_type_new, 
-                              lead_type)) |>
-    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA))
+  # MD
+  dplyr::left_join(
+    data.frame(
+      stringsAsFactors = FALSE,
+      community_served = c("WSSC", "Frederick", "Garrett", "Carroll", "Caroline", "Kent"),
+      borrower= c("WASHINGTON SUBURBAN SANITARY COMMISSION", "MAYOR AND COUNCIL OF BRUNSWICK", "TOWN OF OAKLAND",	"TOWN OF MOUNT AIRY", "TOWN OF PRESTON", "TOWN OF ROCK HALL"),
+      pwsid = c("MD0150005", "MD0100005", "MD0110008", "MD0060007", "MD0050005", "MD0140006"),
+      project_name = c("WSSC LEAD SERVICE LINE REPLACEMENT PROGRAM", "CITY OF BRUNSWICK LEAD SERVICE LINE REPLACEMENT", "TOWN OF OAKLAND'S LEAD SERVICE LINE REPLACEMENT - PHASE 1", "TOWN OF MOUNT AIRY LEAD SERVICE LINE REPLACEMENT PROGRAM", "TOWN OF PRESTON LEAD SERVICE LINE REPLACEMENT PROJECT", "LEAD AND COPPER LINE REPLACEMENT - TOWN OF ROCK HALL"),
+      project_type = c("Lead", "Lead", "Lead", "Lead", "Lead", "Lead"),
+      state = c("Maryland", "Maryland", "Maryland", "Maryland", "Maryland", "Maryland"),
+      state_fiscal_year = c("2025", "2026", "2027", "2027", "2027", "2027") , 
+      lead_type= c("both", "both","both", "both", "both", "both"),
+      lead_type_new_MD = c("lslr", "lslr", "lslr", "lslr", "lslr", "lslr"))
+  ) |>
+  dplyr::mutate(
+    lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA, lead_type_new_MD),
+    lead_type = dplyr::if_else(lead_type == "both" & !is.na(lead_type_new), lead_type_new, lead_type)
+    ) |>
+    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA, lead_type_new_MD))
 
 
 lead_type_count_summary <- lsl_projects |>

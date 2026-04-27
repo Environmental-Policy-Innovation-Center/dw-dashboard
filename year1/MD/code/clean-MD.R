@@ -110,8 +110,16 @@ clean_md_y1 <- function() {
 #   ) |>
 #   dplyr::filter(lead_type == "unknown") 
   
-######## Decision: No projects classified as unknown
-  
+######## Decision: 1 project classified as unknown
+ 
+ md_clean <- md_clean |>
+  dplyr::mutate(
+    project_description = dplyr::case_when(
+      project_type == "Lead" & project_name == "BEACHES WATER CO-OP (BWC) REDUCING LEAD IN DRINKING WATER SERVICE LINE REPL" ~ paste0(project_description, " | FT: LSLR") ,
+      .default = project_description
+    )
+  ) 
+
 ####### SANITY CHECKS END #######
   
   run_tests(md_clean)

@@ -1208,7 +1208,7 @@ if (sum(gen_supp$total_fcg, na.rm=TRUE) > 0) {
 
 set_asides_fcg_group <- set_asides %>%
   group_by(fed_cap_grant, state_fiscal_year) %>%
-  summarize(total_sa_amt = sum(total_sa_amt),
+  summarize(total_sa_amt = sum(total_sa_amt, na.rm = TRUE),
             total_fcg = max(total_fcg),
             total_sa_pct = total_sa_amt / total_fcg) %>%
   mutate(total_sa_amt_str = format_currency(total_sa_amt),
@@ -1334,13 +1334,13 @@ if (sum(sa_pct_base$total_sa_pct, na.rm=TRUE) >0 ) {
     scale_x_continuous(breaks=seq(min(sa_pct_base$state_fiscal_year), 
                                   max(sa_pct_base$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set aside percentage per category under base program",
+         title="Set aside percentage per category, Base grant",
          subtitle=get_subtitle_str(sa_pct_base$state_fiscal_year, state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
   sa_pct_base_gp <- ggplotly(sa_pct_base_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category, Base',
+    layout(title = list(text = paste0('Set aside percentage per category, Base grant',
                                       '<br>',
                                       get_subtitle_str(sa_pct_base$state_fiscal_year, state_name)
                                       )))
@@ -1376,13 +1376,13 @@ if (sum(sa_pct_gen_supp$total_sa_pct, na.rm=TRUE) >0 ) {
     #                               max(sa_pct_gen_supp$state_fiscal_year))) + 
     scale_x_discrete(drop = FALSE) +
     labs(x="", y="", color="",
-         title="Set aside percentage per category, Gen Supp", 
+         title="Set aside percentage per category, Gen Supp grant", 
          subtitle=get_subtitle_str(levels(sa_pct_gen_supp$state_fiscal_year), state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     epic_chart_theme
   
   sa_pct_gen_supp_gp <- ggplotly(sa_pct_gen_supp_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category, Gen Supp',
+    layout(title = list(text = paste0('Set aside percentage per category, Gen Supp grant',
                                       '<br>',
                                       get_subtitle_str(levels(sa_pct_gen_supp$state_fiscal_year), state_name)
                                       )))
@@ -1419,14 +1419,14 @@ if (sum(sa_pct_lead$total_sa_pct, na.rm=TRUE) >0) {
     # scale_x_continuous(breaks=seq(min(sa_pct_lead$state_fiscal_year), 
     #                               max(sa_pct_lead$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set aside percentage per category, Lead",
+         title="Set aside percentage per category, Lead grant",
          subtitle=get_subtitle_str(sa_pct_lead$state_fiscal_year, state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     scale_x_discrete(drop=FALSE) +
     epic_chart_theme
   
   sa_pct_lead_gp <- ggplotly(sa_pct_lead_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category, Lead',
+    layout(title = list(text = paste0('Set aside percentage per category, Lead grant',
                                       '<br>',
                                       get_subtitle_str(levels(sa_pct_lead$state_fiscal_year), state_name))))
   
@@ -1459,14 +1459,14 @@ if (sum(sa_pct_ec$total_sa_pct, na.rm=TRUE) >0 ) {
     # scale_x_continuous(breaks=seq(min(sa_pct_ec$state_fiscal_year), 
     #                               max(sa_pct_ec$state_fiscal_year))) + 
     labs(x="", y="", color="",
-         title="Set aside percentage per category, EC",
+         title="Set aside percentage per category, EC grant",
          subtitle=get_subtitle_str(levels(sa_pct_ec$state_fiscal_year), state_name)) + 
     scale_color_manual(values = allowance_colors) + 
     scale_x_discrete(drop = FALSE) +
     epic_chart_theme
   
   sa_pct_ec_gp <- ggplotly(sa_pct_ec_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Set aside percentage per category, EC',
+    layout(title = list(text = paste0('Set aside percentage per category, EC grant',
                                       '<br>',
                                       get_subtitle_str(levels(sa_pct_ec$state_fiscal_year), state_name)
                                       )))

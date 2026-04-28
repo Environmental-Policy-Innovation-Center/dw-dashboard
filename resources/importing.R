@@ -55,9 +55,19 @@ get_set_asides <- function(state_name) {
   set_asides <- set_asides %>%
     clean_names() %>%
     filter(state==state_name) %>%
-    # drop all total columns used by policy analysts
+    # # drop all total columns used by policy analysts (except for Maryland) [this is commented out since the fundable list contained the itemized set asides for these programs and years]
+    # dplyr::mutate(
+    #   keep_row = dplyr::case_when(
+    #     (state_name == "Maryland" & state_fiscal_year == 2026 & fed_cap_grant %in% c("LSLR", "EC") & grepl("total", allowance, ignore.case = TRUE)) ~ "Yes",
+    #     (state_name == "Maryland" & state_fiscal_year == 2027 & fed_cap_grant == "LSLR" & grepl("total", allowance, ignore.case = TRUE)) ~ "Yes",
+    #     grepl("total", allowance, ignore.case=TRUE) ~ "No",
+    #     .default = "Yes"
+    #   )
+    # )|>
+    # dplyr::filter(keep_row == "Yes") |>
     filter(!grepl("total", ignore.case=TRUE, allowance)) %>%
-    # drop policy analyst specific columns
+    # drop policy analyst specific columns and helper column for MD special case
+    # select(-notes, -assignee, -reviewed, -questions, -keep_row) %>%
     select(-notes, -assignee, -reviewed, -questions) %>%
     # ensure state_fiscal_year is string, arrange the dataframe by year, then set it to factor, levels in ascending order
     mutate(state_fiscal_year = as.character(state_fiscal_year)) %>%
@@ -83,6 +93,7 @@ get_set_asides <- function(state_name) {
         allowance == "State Program Management (10%)" ~ "Max 10%",
         allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Max 15%",
         allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Max 10%",
+        # (state_name == "Maryland" & grepl("total", ignore.case = TRUE, allowance))  ~ paste0("Total, SFY", str_extract(state_fiscal_year, pattern = "(..)$"), " only"),
         TRUE ~ "Missing Max"),
       
       allowance = case_when(
@@ -91,6 +102,7 @@ get_set_asides <- function(state_name) {
         allowance == "State Program Management (10%)" ~ "State Program Management",
         allowance == "Local Assistance and other State Programs (up to 15%)" ~ "Local Assistance & Other",
         allowance == "Local Assistance and other State Programs (up to 10%)" ~ "Local Assistance & Other",
+        # (state_name == "Maryland" & grepl("total", ignore.case = TRUE, allowance))  ~ paste0("Total, SFY", str_extract(state_fiscal_year, pattern = "(..)$"), " only"),
         TRUE ~ "Missing Allowance"),
     ) 
   

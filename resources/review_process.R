@@ -2,18 +2,23 @@ source("resources/review_helpers.R")
 source("resources/view_code_review.R")
 
 year <- "year4"
-sfy <- "SFY27"
-state_abb <- "MD"
-review_number <- "2"
+sfy <- "SFY26"
+state_abb <- "OH"
+review_number <- "1"
 
 year_title <- stringr::str_extract(year, "\\d+")
 
 dict_path <- paste0(year,"/", state_abb, "/data/", state_abb, "_Y", year_title, "_",sfy , "_DD.docx")
 
 data_paths<- c(
-  paste0(year, "/", state_abb, "/data/", "MD_Y4_SFY27_Comprehensive_List.csv"), 
-  paste0(year, "/", state_abb, "/data/", "MD_Y4_SFY27_Fundable_List.csv")
+  "year4/OH/data/oh-missing-not-funded.csv", 
+  "year4/OH/data/oh_regionalization_ppl.csv",
+  "year4/OH/data/oh_lead_ppl.csv",
+  "year4/OH/data/oh_ec_ppl.csv", 
+  "year4/OH/data/oh_dac_ppl.csv",
+  'year4/OH/data/oh_comp_ppl.csv'
 )
+
 
 script_path <- paste0(year,"/", state_abb, "/code/clean-", state_abb, ".R")
 log_path <- paste0(year,"/", state_abb, "/data")

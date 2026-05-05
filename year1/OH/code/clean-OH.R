@@ -39,7 +39,7 @@ clean_oh_y1 <- function() {
   # merging this back to base: 
   oh_base_dac_reg <- merge(oh_comp, oh_dac_reg, by = "epic_project_id", 
                            all = T) |>
-    dplyr::mutate(rate = paste0(rate.x, rate.y), 
+    dplyr::mutate(rate = paste(rate.x, rate.y, sep = " "), 
            project_type = case_when(grepl("LSL", rate, ignore.case = T) ~ "Lead", 
                                     grepl("lsl|lead", project, ignore.case=T) ~ "Lead",
                                     grepl("HAB|PFAS", rate, ignore.case = T) ~ "Emerging Contaminants", 
@@ -84,8 +84,8 @@ clean_oh_y1 <- function() {
            expecting_funding = "No", 
            pwsid = "No Information", 
            population = "No Information",
-           diadvantaged = "No",
-           list = "SFY24 Lead PPL") |>
+           disadvantaged = "No",
+           list = "SFY23 Lead PPL") |>
     dplyr::select(-c(estimated_lsl_eligible_costs:rate))
   
   
@@ -94,7 +94,9 @@ clean_oh_y1 <- function() {
   
   # merging with the final list 
   oh_full <- merge(oh_base_dac_reg, oh_lead_ec, by = "epic_project_id", 
-                    all = T)
+                    all = T) |>
+           dplyr::mutate(list = dplyr::coalesce(list.x, list.y))
+  
   oh_full <- bind_rows(oh_full, oh_lead_extra)
 
   # final cleaning 
@@ -124,7 +126,7 @@ clean_oh_y1 <- function() {
                                          TRUE ~ expecting_funding), 
            state = "Ohio", 
            state_fiscal_year = "2023",
-           list = replace_na("SFY23 Fundable List and Comprehensive List")) |>
+           list = replace_na(list, "SFY23 Fundable List and Comprehensive List")) |>
     # there was an extra column in there from the bind_rows
     dplyr::filter(!is.na(borrower)) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, requested_amount,
@@ -137,44 +139,103 @@ clean_oh_y1 <- function() {
   ####### Decision: No project id
   
   # Check for disinfection byproduct in description
-  oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  # oh_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
 
   # Check for lead subtypes: Both
-  oh_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # oh_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: No lead projects classified as both
   
   # Check for lead subtypes: Unknown
-  oh_clean |>
-    dplyr::filter(project_type=="Lead") |>
+  # oh_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown")
+
+  ####### Decision: 33 lead projects classified as unknonw
+
+  oh_clean <- oh_clean |>
+    dplyr::left_join(
+      data.table::data.table(
+      community_served = c("Columbiana","Hamilton","Trumbull","Trumbull","Licking","Hamilton",
+                            "Carroll","Carroll","Wood","Ottawa","Harrison",
+                            "Licking","Licking","Trumbull","Adams","Huron",
+                            "Sandusky","Hamilton","Hamilton","Hamilton",
+                            "Hamilton","Hamilton","Hamilton","Hamilton",
+                            "Hamilton","Hamilton","Hamilton","Hamilton","Hamilton",
+                            "Hamilton","Hamilton","Hamilton","Hamilton"),
+      borrower = c("East Palestine","Glendale","Hubbard","Hubbard","Licking County",
+                            "Lockland","Malvern","Malvern","North Baltimore",
+                            "Port Clinton","Scio","Utica","Utica","Warren",
+                            "West Union","Willard","Woodville","Cincinnati",
+                            "Cincinnati","Cincinnati","Cincinnati","Cincinnati",
+                            "Cincinnati","Cincinnati","Cincinnati",
+                            "Cincinnati","Cincinnati","Cincinnati","Cincinnati",
+                            "Cincinnati","Cincinnati","Cincinnati","Cincinnati"),
+
+      project_description = c("Waterline Replacement Project","Water Treatment System Upgrades",
+                            "South Main Street Water Line Replacement (Lincoln to Helen)",
+                            "South Main Street Waterline Replacement (Lincoln to Helen)",
+                            "Prescott Estates Water Line and New Tank","Water Treatment System Upgrades",
+                            "Phase 1 Waterline Replacement",
+                            "Waterline Replacement Phase 2","Watermain Replacement Project",
+                            "Water and Sanitary Sewer Infrastructure Improvements",
+                            "Waterline and Household Line Replacement",
+                            "Riverside Drive Watermain Replacement",
+                            "Riverside Drive Watermain Replacement","2022 Waterline Replacement Program",
+                            "North Street Water Line Replacement",
+                            "Park Street Water Line Replacement",
+                            "Water Line Improvements Phase 3","Apple Cooper Hanfield Water Main Replacement",
+                            "Bevis Bonaparte Clarion Water Main Replacement",
+                            "Burch East Hill Shaw Water Main Replacement",
+                            "Cappel Drive Waterline Replacement",
+                            "Carson Avenue Waterline Replacement","CUF Water Main Replacement",
+                            "Dayton Horace Naeher Water Main Replacement",
+                            "Dunore Road Waterline Replacement",
+                            "E. McMillan Street Waterline Replacement",
+                            "East Price Hill Water Main Replacement",
+                            "Fairview Graham Probasco Water Main Replacement",
+                            "Fire Flow Collection Waterline Replacement","Hyde Park Water Main Replacement",
+                            "Lisbon Avenue Waterline Replacement",
+                            "Symmes Fowler Water Main Replacement",
+                            "West Price Hill Water Main Replacement"),
+      requested_amount = c("5605510", "2003883", "60000", "680000", "2901300", "9900000", "769855", "3886000", "4838251", "10704265", "258890", "67526", "624312", "2424000", "1235000", "895295", "557530", "2307000", "2665000", "2422000", "2422000", "2485000", "2111000", "2979000", "593000", "1614000", "3321000", "2817000", "2913000", "2688000", "2006000", "5561000", "2810000"),
+      list = c("SFY23 DAC PPL","SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL","SFY23 DAC PPL","SFY23 DAC PPL","SFY23 Lead PPL", "SFY23 Regionalization PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL","SFY23 Lead PPL","SFY23 Lead PPL", "SFY23 Lead PPL"),
+      new_lead_type = c("lslr","lslr", "lslr","lslr","lslr","lslr","lslr","lslr","lslr", "lslr","lslr","lslr","lslr","lslr","lslr", "lslr","lslr","lslr","lslr","lslr","lslr","lslr", "lslr","lslr","lslr","lslr","lslr","lslr", "lslr","lslr","lslr","lslr","lslr")
+    ),
+      by = c("community_served", "borrower", "project_description", "requested_amount", "list")
+    ) |>
     dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
+      project_description = dplyr::case_when(
+        !is.na(new_lead_type) ~ paste0(project_description, " | FT: ", stringr::str_to_upper(new_lead_type)),
+        .default = project_description
       )
     ) |>
-    dplyr::filter(lead_type == "unknown") |> View()
-
-  ####### Decision: No lead projects classified as unknonw
+    dplyr::select(-new_lead_type)
   
   ####### SANITY CHECKS END #######
   

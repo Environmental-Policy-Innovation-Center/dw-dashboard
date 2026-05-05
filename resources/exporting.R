@@ -135,3 +135,90 @@ update_google_sheet <- function(sheet_url, sheet_tab, name, object_url) {
   # export to sheet
   write_sheet(sheet_data, sheet_url, sheet = sheet_tab)
 }
+
+#' Save and Update Other Federal and State Funds (OFSF) Tracker
+#'
+#' Appends new OFSF project data to the existing funding tracker stored in S3,
+#' retaining only the most recent observations per state and state fiscal year,
+#' then writes the updated dataset back to the S3 bucket.
+#'
+#' @param ofsf_df A data frame containing new OFSF project records to append.
+#'   Must include at minimum the columns \code{state} and \code{state_fiscal_year}.
+#'   An \code{updated} column will be added automatically with today's date.
+#'
+#' @return Invisibly returns \code{NULL}. Called for its side effect of updating
+#'   the CSV file at
+#'   \code{s3://water-team-data/clean_data/srf_project_priority_lists/ofsf-funding-tracker-all-projects.csv}.
+#'
+#' @details
+#' The function performs the following steps:
+#' \enumerate{
+#'   \item Tags incoming records with today's date in the \code{updated} column.
+#'   \item Reads the current tracker from S3.
+#'   \item Binds new records to the existing dataset.
+#'   \item Filters to the most recent observation(s) per \code{state} and
+#'     \code{state_fiscal_year}, preserving ties on the maximum \code{updated} date.
+#'   \item Coerces all columns to character for storage consistency.
+#'   \item Writes the result to a temp file and uploads it back to S3 with
+#'     \code{public-read} ACL.
+#' }
+#'
+#' @note This function is intended to be called from within a state-year cleaning
+#'   script as part of the SRF project priority list pipeline. Requires valid AWS
+#'   credentials in the environment and read/write access to the
+#'   \code{water-team-data} S3 bucket.
+#'
+#' @importFrom dplyr mutate group_by filter ungroup bind_rows across everything
+#' @importFrom aws.s3 s3read_using put_object
+#' @importFrom janitor clean_names
+#'
+
+save_update_ofsf <- function(ofsf_df) {
+
+  # light checks/tidying
+  ofsf_df <- ofsf_df |>
+    dplyr::mutate(
+      updated = format(Sys.time(), tz = "UTC", usetz = TRUE)
+    )
+
+  # read current dataset, return empty df if file does not exist
+  print("Reading Other Federal and State Funding Dataset...")
+  ofsf_s3 <- tryCatch(
+    {
+      aws.s3::s3read_using(
+        read.csv,
+        object = "s3://water-team-data/clean_data/srf_project_priority_lists/ofsf-funding-tracker-all-projects.csv"
+      ) |>
+        janitor::clean_names() |>
+        dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
+    },
+    error = function(e) {
+      message("No existing file found in S3, initializing new dataset: ", conditionMessage(e))
+      dplyr::slice(ofsf_df, 0)  # empty df with same structure as incoming data
+    }
+  )
+
+  ofsf_s3_new <- ofsf_s3 |>
+    dplyr::bind_rows(ofsf_df) |>
+    dplyr::mutate(updated = as.POSIXct(updated, tz = "UTC")) |>
+    dplyr::group_by(state, state_fiscal_year) |>
+    # keep rows where the datetime equals the group maximum
+    dplyr::filter(updated == max(updated)) |>
+    dplyr::ungroup() |>
+    # convert all columns to character for consistency
+    dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
+
+  # Writing to temp
+  write.csv(ofsf_s3_new, file.path(tempdir(), "ofsf-funding-tracker-all-projects.csv"), row.names = FALSE)
+
+  # Putting in Bucket
+  aws.s3::put_object(
+    file = file.path(tempdir(), "ofsf-funding-tracker-all-projects.csv"),
+    object = "clean_data/srf_project_priority_lists/ofsf-funding-tracker-all-projects.csv",
+    bucket = "water-team-data",
+    acl = "public-read"
+  )
+
+  print("Updated Other Federal and State Funding Dataset.")
+
+}

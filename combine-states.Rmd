@@ -23,6 +23,7 @@ run_code_from_file("aws.txt")
 
 source("resources/cleaning.R")
 source("resources/testing.R")
+source("resources/exporting.R")
 
 ```
 

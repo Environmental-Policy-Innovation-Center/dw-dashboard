@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Maryland"
-state_abbr <- "MD"
+state_name <- "Ohio"
+state_abbr <- "OH"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -956,59 +956,161 @@ reserved_leveraged <- financial |>
 ### Unutilized Funds
 
 ```{r}
-# unutilized <- financial %>%
-#   filter(unutilized_fcg > 0 & !is.na(unutilized_fcg)) %>%
-#   filter(fed_cap_grant != "Total") %>%
-#   mutate(unutilized_fcg_str = format_currency(unutilized_fcg))
-
-# if (nrow(unutilized) > 0) {
-  
-#   unutilized_yoy <- unutilized %>%
-#     group_by(state_fiscal_year) %>%
-#     summarize(combined_unutilized = sum(unutilized_fcg))
-  
-#   unutilized <- unutilized %>%
-#     left_join(unutilized_yoy, by="state_fiscal_year") %>%
-#     mutate(
-#          plot_str = paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
-#                            unutilized_fcg_str))
-  
-  
-#   unutilized_p <- ggplot(unutilized, aes(x=state_fiscal_year, y=unutilized_fcg, 
-#                                          fill=fed_cap_grant, text=plot_str)) + 
-#     geom_bar(stat="identity", position="stack") + 
-#     scale_y_continuous(labels=label_currency()) + 
-#     scale_fill_manual(values=fed_cap_grant_colors) + 
-#     labs(x="", y="", fill="",
-#          title="Unutilized Funds (Carryover)",
-#          subtitle=get_subtitle_str(unutilized$state_fiscal_year, state_name)) + 
-#     epic_chart_theme
-  
-#   unutilized_gp <- ggplotly(unutilized_p, tooltip="text") %>%
-#     layout(title = list(text = paste0('Unutilized Funds (Carryover)',
-#                                       '<br>',
-#                                       get_subtitle_str(unutilized$state_fiscal_year, state_name)
-#                                       )))
 unutilized <- financial |>
-  dplyr::select(state, state_fiscal_year,fed_cap_grant, unutilized_fcg, pf_carryover) |>
+  dplyr::select(state, state_fiscal_year, fed_cap_grant, unutilized_fcg, pf_carryover) |>
   tidyr::pivot_longer(cols = c(unutilized_fcg, pf_carryover)) |>
-  dplyr::filter(value >0) |>
+  dplyr::filter(value > 0) |>
   dplyr::mutate(
     name = dplyr::case_when(
       name == "unutilized_fcg" ~ "General",
       name == "pf_carryover" ~ "PF"
     ),
-    text =  paste0(fed_cap_grant, ", ", state_fiscal_year, ':<br>',
-                           name, ": ", format_currency(value))) |>
-  dplyr::arrange(
-    state_fiscal_year, fed_cap_grant, name 
-  )
+    text = paste0(fed_cap_grant, ", ", state_fiscal_year, ":<br>",
+                  name, ": ", format_currency(value))
+  ) |>
+  dplyr::mutate(
+    name = forcats::fct_relevel(name, "General", "PF")  # General bottom, PF top
+  ) |>
+  dplyr::arrange(state_fiscal_year, fed_cap_grant, name)  # respects factor order
 
 if (nrow(unutilized) > 0) {
 
   plot_title <- ifelse(state_abbr == "IN" ,  "Unutilized Funds (Carryover)", "General and Principal Forgiveness (PF) Unutilized Funds (Carryover)")
 
+if (state_abbr == "OH") {
+
   unutilized_p <- ggplot2::ggplot(unutilized) +
+    ggplot2::geom_col(
+      ggplot2::aes(
+        x = state_fiscal_year, 
+        y = value, 
+        fill = fed_cap_grant, 
+        text = text, 
+        alpha = name
+      ),
+      position = ggplot2::position_stack(reverse = TRUE),  # reverses stacking order
+      width = 1) +
+    ggplot2::geom_text(
+      data = unutilized |> dplyr::mutate(label = ifelse(name == "PF", "PF", "")), 
+      ggplot2::aes(
+        state_fiscal_year, 
+        value, 
+        label = label,  
+        fill = fed_cap_grant,  # Add this
+        alpha = name           # Add this
+      ),
+      color = "white", 
+      position = position_stack(vjust = .5, reverse = TRUE), 
+      show.legend = FALSE
+    ) +
+    ggplot2::geom_label(
+      data = unutilized |>
+        dplyr::group_by(state_fiscal_year, fed_cap_grant) |>
+        dplyr::mutate(
+          cumval = cumsum(value),
+          midpoint = cumval - (value / 2)
+        ) |>
+        dplyr::ungroup() |>
+        dplyr::filter(name == "PF"),
+      ggplot2::aes(
+        x = state_fiscal_year,
+        y = midpoint,
+        label = paste0("PF: ", format_currency(value)),
+        group = fed_cap_grant
+      ),
+      color = "black",
+      size = 12, size.unit = "pt",
+      fontface = "bold"
+    ) +
+    ggplot2::scale_y_continuous(labels = scales::label_currency()) +
+    ggplot2::scale_x_discrete(drop = FALSE) +
+    ggplot2::scale_fill_manual(values = fed_cap_grant_colors) + 
+    ggplot2::scale_alpha_manual(values = c("General" = 1, "PF" = 0.8), name = "") + 
+    ggplot2::labs(x="", y="", fill="",
+          title = plot_title,
+          subtitle = get_subtitle_str(unutilized$state_fiscal_year, state_name)) + 
+    ggplot2::guides(
+      alpha = FALSE,
+      label = FALSE) +
+    epic_chart_theme
+
+  # rebuild plot WITHOUT geom_text
+  unutilized_p_clean <- ggplot2::ggplot(unutilized) +
+    ggplot2::geom_col(
+      ggplot2::aes(
+        state_fiscal_year, 
+        value, 
+        fill = fed_cap_grant, 
+        text = text, 
+        alpha = name
+      ),
+      position = ggplot2::position_stack(reverse = TRUE),
+      width = 1
+    ) +
+    ggplot2::scale_y_continuous(
+      labels = scales::label_currency(),
+      minor_breaks = function(lims) seq(lims[1], lims[2], by = 500000)
+    ) + 
+    ggplot2::scale_x_discrete(drop = FALSE) +
+    ggplot2::scale_fill_manual(values = fed_cap_grant_colors) + 
+    ggplot2::scale_alpha_manual(values = c("General" = 1, "PF" = 0.8), name = "") + 
+    ggplot2::labs(x = "", y = "", fill = "",
+          title = plot_title,
+          subtitle = get_subtitle_str(unutilized$state_fiscal_year, state_name)) + 
+    ggplot2::guides(alpha = FALSE) +
+    epic_chart_theme
+
+  pf_labels <- unutilized |>
+    dplyr::group_by(state_fiscal_year, fed_cap_grant) |>
+    dplyr::mutate(cumval = cumsum(value)) |>
+    dplyr::ungroup() |>
+    dplyr::filter(name == "PF")
+
+  # map factor levels to numeric positions
+  year_levels <- levels(unutilized$state_fiscal_year)
+
+  pf_labels <- pf_labels |>
+    dplyr::mutate(
+      x_numeric = as.numeric(state_fiscal_year)  # factor -> integer position
+    )
+
+  unutilized_gp <- plotly::ggplotly(unutilized_p_clean, tooltip = "text") |>
+    plotly::layout(title = list(text = paste0( plot_title,
+                                          '<br>',
+                                          get_subtitle_str(unutilized$state_fiscal_year, state_name)
+                                          ))) |>
+    plotly::layout(
+      title = list(
+        text = paste0(
+          plot_title, "<br>",
+          get_subtitle_str(unutilized$state_fiscal_year, state_name)
+        )
+      ),
+      annotations = purrr::pmap(
+    list(
+      x    = pf_labels$x_numeric,
+      y    = pf_labels$cumval,   # label position
+      text = paste0("PF: ", format_currency(pf_labels$value))
+    ),
+      function(x, y, text) {
+        list(
+          x           = x,
+          y           = y,
+          text        = text,
+          showarrow   = FALSE,
+          xref        = "x",
+          yref        = "y",
+          font        = list(size = 10, color = "white"),
+          bgcolor     = "rgba(0,0,0,0.4)",
+          bordercolor = "white",
+          borderwidth = 1,
+          borderpad   = 3
+        )
+    }
+  ))
+} else {
+
+unutilized_p <- ggplot2::ggplot(unutilized) +
     ggplot2::geom_col(
       ggplot2::aes(
         state_fiscal_year, 
@@ -1024,8 +1126,8 @@ if (nrow(unutilized) > 0) {
         state_fiscal_year, 
         value, 
         label = label,  
-        fill = fed_cap_grant,  # Add this
-        alpha = name           # Add this
+        fill = fed_cap_grant,  
+        alpha = name           
       ),
       color = "white", 
       position = position_stack(vjust = .5), 
@@ -1049,6 +1151,9 @@ if (nrow(unutilized) > 0) {
                                         '<br>',
                                         get_subtitle_str(unutilized$state_fiscal_year, state_name)
                                         )))
+
+
+}
 
     if (save_plots) {
       run_save_plots(gg_plot = unutilized_p,

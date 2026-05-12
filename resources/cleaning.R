@@ -30,6 +30,11 @@ convert_to_numeric <- function(column, fill_na_0 = FALSE) {
   return(column_numeric)
 }
 
+# catches all variants of unicode dashes and standardizes for easier joins
+normalize_dashes <- function(x) {
+  gsub("[\u2010\u2011\u2012\u2013\u2014\u2015\u2212\uFE58\uFE63\uFF0D]", "-", x)
+}
+
 
 # takes a column and calculates the median without including 0s
 # since they can often be equivalent to 'null' responses for our purposes

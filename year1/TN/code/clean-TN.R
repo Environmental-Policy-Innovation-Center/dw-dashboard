@@ -5,38 +5,48 @@ clean_tn_y1 <- function() {
   tn_ppl <- data.table::fread("year1/TN/data/sfy_23_basegen_supp_ppl.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
-    dplyr::mutate(list = "SFY23 Base Gen") 
+    dplyr::mutate(list = "SFY23 Base/IIJA Gen Supp PPL") 
   
   tn_clean <- tn_ppl |>
     # # process numeric columns
-    dplyr::mutate(project_cost = clean_numeric_string(total_project_amount),
-           population = clean_numeric_string(pop_served)) |>
+    dplyr::mutate(
+      project_cost = clean_numeric_string(total_project_amount),
+      population = clean_numeric_string(pop_served)) |>
     # process text columns 
-    dplyr::mutate(community_served = str_squish(county),
-           borrower = stringr::str_squish(local_government),
-           pwsid = stringr::str_squish(pwsid_number),
-           project_id = as.character(NA),
-           project_name = as.character(NA), 
-           project_description = stringr::str_squish(project_description), 
-           project_type = case_when(
-             grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
-             grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-             TRUE ~ "General"), 
-           requested_amount = as.character(NA), 
-           funding_amount = as.character(NA),
-           principal_forgiveness = as.character(NA), 
-           project_description = stringr::str_squish(project_description),
-           disadvantaged = dplyr::case_when(
-             grepl("\\*", local_government) ~ "Yes",
-             TRUE ~ "No"),
-           # with dac define, remove extra characters referencing table footnotes
-           borrower = stringr::str_replace_all(borrower, "\\*", ""),
-           borrower = stringr::str_replace_all(borrower, "\\+", ""),
-           project_rank = stringr::str_squish(rank_order),
-           project_score = stringr::str_squish(priority_points),
-           expecting_funding = ifelse(row_number() < 108, "Yes", "No"),
-           state = "Tennessee",
-           state_fiscal_year = "2023"
+    dplyr::mutate(
+      community_served = str_squish(county),
+      borrower = stringr::str_squish(local_government),
+      pwsid = stringr::str_squish(pwsid_number),
+      pwsid = ifelse(pwsid == "TN000253", "TN0000253", pwsid),
+      project_id = as.character(NA),
+      project_name = as.character(NA), 
+      project_description = stringr::str_squish(project_description), 
+      project_type = case_when(
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+        TRUE ~ "General"), 
+      requested_amount = as.character(NA), 
+      funding_amount = as.character(NA),
+      #[keep] FY22 Base Principal Forgiveness Amount corresponds to principal_forgiveness_amount
+      principal_forgiveness_amount = convert_to_numeric(principal_forgiveness_amount,fill_na_0 = TRUE),
+      #[keep] FY22 BIL Principal Principal Forgiveness Amount corresponds to principal_forgiveness_amount_2
+      principal_forgiveness_amount_2 = convert_to_numeric(principal_forgiveness_amount_2,fill_na_0 = TRUE),
+      #[keep] Revolving Base Principal Forgiveness corresponds to revolving_base_principal_forgiveness
+      revolving_base_principal_forgiveness = convert_to_numeric(revolving_base_principal_forgiveness,fill_na_0 = TRUE),
+      principal_forgiveness = principal_forgiveness_amount + principal_forgiveness_amount_2 + revolving_base_principal_forgiveness,
+      # [keep] all projects are ranked
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),       
+      disadvantaged = dplyr::case_when(
+        grepl("\\*", local_government) ~ "Yes",
+        TRUE ~ "No"),
+      # [keep] with dac defined, remove extra characters referencing table footnotes
+      borrower = stringr::str_replace_all(borrower, "\\*", ""),
+      borrower = stringr::str_replace_all(borrower, "\\+", ""),
+      project_rank = stringr::str_squish(rank_order),
+      project_score = stringr::str_squish(priority_points),
+      expecting_funding = ifelse(row_number() < 108, "Yes", "No"),
+      state = "Tennessee",
+      state_fiscal_year = "2023"
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
@@ -44,6 +54,9 @@ clean_tn_y1 <- function() {
   
   ####### SANITY CHECKS START #######
   
+  # Check pwsid length
+  # tn_clean[stringr::str_count(tn_clean$pwsid) != 9, pwsid]
+
   # Hone in on project id duplication
   ####### Decision: No project id
   

@@ -17,25 +17,29 @@ clean_tn_y0 <- function() {
       borrower = stringr::str_replace_all(borrower, "\\*", ""),
       borrower = stringr::str_replace_all(borrower, "\\+", ""),
       pwsid = stringr::str_squish(pwsid),
+      pwsid = ifelse(pwsid == "TN000393", "TN0000393", pwsid), #fix pwsid
       project_cost = clean_numeric_string(total_project_amount),
-      project_description = stringr::str_squish(project_description),
       population = clean_numeric_string(pop),
+      rank_order = as.numeric(rank_order),
       project_rank = stringr::str_squish(rank_order),
       project_score = stringr::str_squish(priority_points),
-      expecting_funding = dplyr::case_when(rank_order <= 30 ~ "Yes", 
-                                    TRUE ~ "No"),
+      expecting_funding = dplyr::case_when(
+        rank_order <= 30 ~ "Yes", 
+        TRUE ~ "No"),
       project_id = as.character(NA),
       project_name = as.character(NA),
       project_description = stringr::str_squish(project_description), 
-           project_type = dplyr::case_when(
-             grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
-             grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-             TRUE ~ "General"), 
+      project_type = dplyr::case_when(
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+        TRUE ~ "General"), 
       requested_amount = as.character(NA),
       funding_amount = as.character(NA),
       principal_forgiveness = as.character(NA),
-      disadvantaged = dplyr::case_when(atpi > 50 ~ "No", 
-                                TRUE ~ "Yes"),
+      atpi = as.numeric(atpi), 
+      disadvantaged = dplyr::case_when(
+        atpi > 50 ~ "No", 
+        TRUE ~ "Yes"),
       state = "Tennessee",
       state_fiscal_year = "2022",
     ) |>
@@ -45,7 +49,8 @@ clean_tn_y0 <- function() {
            expecting_funding, state, state_fiscal_year, list)
   
   ####### SANITY CHECKS START #######
-  
+  # Check pwsid length
+  # tn_clean[stringr::str_count(tn_clean$pwsid) != 9, pwsid]
   # Hone in on project id duplication
   ####### Decision: No project id
   

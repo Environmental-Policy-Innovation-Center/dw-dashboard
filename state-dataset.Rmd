@@ -162,11 +162,35 @@ lsl_projects <- all_projects |>
       lead_type= c("both", "both","both", "both", "both", "both"),
       lead_type_new_MD = c("lslr", "lslr", "lslr", "lslr", "lslr", "lslr"))
   ) |>
+  # TN
+  dplyr::left_join(
+    data.frame(
+      stringsAsFactors = FALSE,
+      community_served = c("Davidson", "Roane", "Roane", "Hamilton"),
+      project_id = c("2024-11932", "2024-11876", "2025-13744", "2025-13624"),
+      state = c("Tennessee", "Tennessee", "Tennessee", "Tennessee"),
+      state_fiscal_year = c("2027","2027", "2027", "2027"),
+      lead_type= c("both", "both","both", "both"),
+      lead_type_new_TN = c("lslr", "lslr", "lslr", "lslr")
+      )
+  ) |>
+  # AL
+  dplyr::left_join(
+    data.frame(
+      stringsAsFactors = FALSE,
+      community_served = c("Eufaula", "Selma", "Alpine"),
+      project_id = c("FS010003-03", "FS010256-07", "FS020411-02"),
+      state = c("Alabama", "Alabama", "Alabama"),
+      state_fiscal_year = c("2026", "2026", "2026"),
+      lead_type = c("both", "both", "both"),
+      lead_type_new_AL = c("lslr", "both", "lslr")
+    )
+  ) |>
   dplyr::mutate(
-    lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA, lead_type_new_MD),
+    lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL),
     lead_type = dplyr::if_else(lead_type == "both" & !is.na(lead_type_new), lead_type_new, lead_type)
     ) |>
-    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA, lead_type_new_MD))
+    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL))
 
 
 lead_type_count_summary <- lsl_projects |>

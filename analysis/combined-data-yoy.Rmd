@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Maryland"
-state_abbr <- "MD"
+state_name <- "Alabama"
+state_abbr <- "AL"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -109,7 +109,7 @@ compare_demand_available_funding <- all_funds_to_compare |>
   dplyr::ungroup() |>
   dplyr::mutate(
     # Depicted as On Fundable List
-    total_funding_amount = dplyr::case_when(
+    total_funding_amount_ = dplyr::case_when(
       total_funding_amount > 0 ~ total_funding_amount,
       total_requested_amount_ef > 0 ~ total_requested_amount_ef,
       total_project_cost_ef > 0 ~ total_project_cost_ef,
@@ -133,12 +133,12 @@ compare_demand_available_funding <- all_funds_to_compare |>
      TRUE ~ "Default"
     )
     )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef) |>   
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) |> 
+  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount) |>   
+  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount_)) |> 
   dplyr::mutate(
     name =case_when(
       name == "total_funding_available" ~ "Available Funds",
-      name == "total_funding_amount" ~ "On Fundable List",
+      name == "total_funding_amount_" ~ "On Fundable List",
       name == "total_demand" ~ "Demand for Funds"
       ),
     name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),
@@ -227,7 +227,7 @@ compare_demand_available_funding_type <- all_funds_to_compare_type |>
   dplyr::ungroup() |>
   dplyr::mutate(
     # Depicted as On Fundable List
-    total_funding_amount = dplyr::case_when(
+    total_funding_amount_ = dplyr::case_when(
       total_funding_amount > 0 ~ total_funding_amount,
       total_requested_amount_ef > 0 ~ total_requested_amount_ef,
       total_project_cost_ef > 0 ~ total_project_cost_ef,
@@ -251,12 +251,12 @@ compare_demand_available_funding_type <- all_funds_to_compare_type |>
      TRUE ~ "Default"
     )
     )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef) |>   
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount)) |> 
+  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, total_funding_amount) |>   
+  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount_)) |> 
   dplyr::mutate(
     name =case_when(
       name == "total_funding_available" ~ "Available Funds",
-      name == "total_funding_amount" ~ "On Fundable List",
+      name == "total_funding_amount_" ~ "On Fundable List",
       name == "total_demand" ~ "Demand for Funds"
       ),
     name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),

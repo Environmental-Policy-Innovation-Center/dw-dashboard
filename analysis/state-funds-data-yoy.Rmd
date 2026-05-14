@@ -1,0 +1,526 @@
+---
+title: "SRF Funding Tracker Other Federal and State Funds Data YOY Analysis"
+author: "Maria Sevillano"
+date: "2026-05-04"
+---
+
+This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on project- and state-level data gathered through the PPL/IUP scraping and cleaning process. The outputs focus on the "Project" sections of the state overview pages.
+
+Simply changing the `state_name` will subset the data and update the plot's subtitles along with the `years` variable. Setting `include_y0` to TRUE will include state fiscal year 2022 in the data and subsequent plots. Note that 2022 is not available for most states at this time, but may be retroactively added to compare pre-IIJA to post-IIJA results.
+
+# State Setup
+
+## Imports & Settings
+
+```{r}
+state_name <- "Ohio"
+state_abbr <- "OH"
+
+# export plots to AWS and Drive?
+save_plots <- FALSE
+
+```
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+library(here)
+source(here("resources", "inputs.R"))
+source(here("resources", "styling.R"))
+source(here("resources", "importing.R"))
+source(here("resources", "exporting.R"))
+run_code_from_file(here("aws.txt"))
+```
+
+# Read Data
+
+```{r}
+# Other Federal and State Funds Data
+ofsf_all_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/ofsf-funding-tracker-all-projects.csv") |>
+  janitor::clean_names() |>
+  dplyr::filter(state == state_name) |>
+  dplyr::mutate(
+    dplyr::across(dplyr::everything(), as.character
+    )
+  )
+
+# DWSRF Project Data
+dwsrf_all_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names() |>
+  dplyr::filter(state == state_name) |>
+  dplyr::mutate(
+    dplyr::across(dplyr::everything(), as.character
+    )
+  )  
+
+# Financial Data  
+financial <- get_financial(state_name)
+
+```
+
+
+# Prep Data
+```{r}
+ofsf_projects_by_project_type <- ofsf_all_projects |>
+  dplyr::mutate(
+    dplyr::across(
+      c(project_cost_ofsf, requested_amount_ofsf,funding_amount_ofsf),
+      convert_to_numeric
+    )
+  ) |>
+  dplyr::select(
+    project_type, project_cost_ofsf, requested_amount_ofsf, funding_amount_ofsf, disadvantaged, expecting_funding_ofsf,state,state_fiscal_year
+  )|>
+  dplyr::group_by(state, state_fiscal_year, project_type, expecting_funding_ofsf, disadvantaged) |>
+  dplyr::summarise(dplyr::across(dplyr::where(is.numeric), sum, na.rm = TRUE)) |>
+  dplyr:: ungroup()
+
+dwsrf_projects_by_project_type <- dwsrf_all_projects |>
+  dplyr::mutate(
+    dplyr::across(
+      c(project_cost, requested_amount,funding_amount),
+      convert_to_numeric
+    )
+  ) |>
+  dplyr::select(
+    project_type, project_cost, requested_amount, funding_amount, disadvantaged, expecting_funding,state,state_fiscal_year
+  )|>
+  dplyr::group_by(state, state_fiscal_year, project_type, expecting_funding, disadvantaged) |>
+  dplyr::summarise(dplyr::across(dplyr::where(is.numeric), sum, na.rm = TRUE)) |>
+  dplyr:: ungroup()
+
+financial_by_project_type <- financial |>
+  dplyr::mutate(project_type = case_when(
+    fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
+    fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants (EC)",
+    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp") ~ "General", 
+    TRUE ~ paste0("Combined: ", fed_cap_grant)
+  )) |>
+  dplyr::group_by(state, state_fiscal_year, project_type) |>
+  dplyr::summarize(
+    total_funding_available = sum(total_funding_available, na.rm=TRUE),
+    total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm = TRUE),
+            .groups = "drop")
+
+
+
+```
+
+
+# Data Summaries
+
+```{r}
+
+# OSFS Specific
+osfs_funding_summary <- ofsf_projects_by_project_type |>
+  # dplyr::filter(expecting_funding_ofsf == "Yes") |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  # summrize data to reflect bar or proxy for funding amount (on fundable list, OSOFS specific)
+  dplyr::summarize(
+    total_funding_amount_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * funding_amount_ofsf, na.rm = TRUE),
+    total_requested_amount_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * requested_amount_ofsf, na.rm = TRUE),
+    total_project_cost_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * project_cost_ofsf, na.rm = TRUE)
+  )|>
+   # join summarized demand data (OSFS specific) 
+  dplyr::left_join(
+    (ofsf_projects_by_project_type |> dplyr::group_by(state, state_fiscal_year) |> 
+      dplyr::summarise(
+        total_requested_amount_ofsf = sum(requested_amount_ofsf, na.rm = TRUE),
+        total_project_cost_ofsf = sum(project_cost_ofsf, na.rm = TRUE)
+      ) |> dplyr::ungroup()
+      ),
+    by = c("state", "state_fiscal_year")
+  ) |>
+  # choose value or proxy
+  # note value or proxy as rule 
+  dplyr::mutate(
+    # Depicted as On Fundable List
+    total_funding_amount_ = dplyr::case_when(
+      total_funding_amount_ofsf_ef > 0 ~ total_funding_amount_ofsf_ef,
+      total_requested_amount_ofsf_ef > 0 ~ total_requested_amount_ofsf_ef,
+      total_project_cost_ofsf_ef > 0 ~ total_project_cost_ofsf_ef,
+      .default = 0
+    ),
+    funding_rule = dplyr::case_when(
+      total_funding_amount_ofsf_ef > 0 ~ "* Funding Amount",
+      total_requested_amount_ofsf_ef > 0 ~ "** Requested Amount on Fundable List",
+      total_project_cost_ofsf_ef > 0 ~ "*** Project Cost on Fundable List",
+      TRUE ~ "Default" # this means no value was extracted for On Fundable List (Funding Amount)
+    ),
+    # Depicted as Demand for Funds
+    total_demand = dplyr::case_when(
+      total_requested_amount_ofsf > 0 ~ total_requested_amount_ofsf,
+      total_project_cost_ofsf > 0 ~ total_project_cost_ofsf,
+      .default = 0
+    ),
+    demand_rule = dplyr::case_when(
+     total_requested_amount_ofsf > 0 ~ "^ Requested Amount",
+     total_project_cost_ofsf > 0 ~ "^^ Project Cost",
+     TRUE ~ "Default" #this means no value was extracted for Demand
+    )
+    )
+
+
+# QC Statements for osfs_funding_summary
+osfs_funding_summary |>
+  dplyr::arrange(state, state_fiscal_year) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::group_walk(~ {
+    yr <- .y$state_fiscal_year
+    cat(strrep("=", 50), "\n")
+    cat("Fiscal Year:", yr, "\n")
+    cat(strrep("=", 50), "\n")
+    
+    purrr::pwalk(
+      list(
+        .x$state,
+        .x$total_funding_amount_,
+        .x$funding_rule,
+        .x$total_demand,
+        .x$demand_rule
+      ),
+      function(state, funding_amt, funding_rule, demand, demand_rule) {
+        cat("\n  State:", state, "\n")
+        cat("  On Fundable List:\n")
+        cat("    Amount:  $", scales::comma(funding_amt), "\n")
+        cat("    Rule:     ", funding_rule, "\n")
+        if (funding_rule == "Default") {
+          cat("    !! No proxy selected — no Funding Amount, Requested Amount,\n")
+          cat("       or Project Cost found on Fundable List for this state/year.\n")
+        }
+        cat("  Demand for Funds:\n")
+        cat("    Amount:  $", scales::comma(demand), "\n")
+        cat("    Rule:     ", demand_rule, "\n")
+        if (demand_rule == "Default") {
+          cat("    !! No proxy selected — no Requested Amount\n")
+          cat("       or Project Cost found for Demand for this state/year.\n")
+        }
+      }
+    )
+  })
+
+
+# DWSRF Specific
+dwsrf_funding_summary <- dwsrf_projects_by_project_type |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  # summrize data to reflect bar or proxy for funding amount (on fundable list, OSOFS specific)
+  dplyr::summarize(
+    total_funding_amount_ef = sum((expecting_funding == "Yes") * funding_amount, na.rm = TRUE),
+    total_requested_amount_ef = sum((expecting_funding == "Yes") * requested_amount, na.rm = TRUE),
+    total_project_cost_ef = sum((expecting_funding == "Yes") * project_cost, na.rm = TRUE)
+  )|>
+   # join summarized demand data  
+  dplyr::left_join(
+    (dwsrf_projects_by_project_type |> dplyr::group_by(state, state_fiscal_year) |> 
+      dplyr::summarise(
+        total_requested_amount = sum(requested_amount, na.rm = TRUE),
+        total_project_cost = sum(project_cost, na.rm = TRUE)
+      ) |> dplyr::ungroup()
+      ),
+    by = c("state", "state_fiscal_year")
+  ) |>
+  # choose value or proxy
+  # note value or proxy as rule 
+  dplyr::mutate(
+    # Depicted as On Fundable List
+    total_funding_amount_ = dplyr::case_when(
+      total_funding_amount_ef > 0 ~ total_funding_amount_ef,
+      total_requested_amount_ef > 0 ~ total_requested_amount_ef,
+      total_project_cost_ef > 0 ~ total_project_cost_ef,
+      .default = 0
+    ),
+    funding_rule = dplyr::case_when(
+      total_funding_amount_ef > 0 ~ "* Funding Amount",
+      total_requested_amount_ef > 0 ~ "** Requested Amount on Fundable List",
+      total_project_cost_ef > 0 ~ "*** Project Cost on Fundable List",
+      TRUE ~ "Default" # this means no value was extracted for On Fundable List (Funding Amount)
+    ),
+    # Depicted as Demand for Funds
+    total_demand = dplyr::case_when(
+      total_requested_amount > 0 ~ total_requested_amount,
+      total_project_cost > 0 ~ total_project_cost,
+      .default = 0
+    ),
+    demand_rule = dplyr::case_when(
+     total_requested_amount > 0 ~ "^ Requested Amount",
+     total_project_cost > 0 ~ "^^ Project Cost",
+     TRUE ~ "Default" #this means no value was extracted for Demand
+    )
+    )
+
+#QC dwsrf_funding_summary print statements
+dwsrf_funding_summary |>
+  dplyr::arrange(state, state_fiscal_year) |>
+  dplyr::group_by(state_fiscal_year) |>
+  dplyr::group_walk(~ {
+    yr <- .y$state_fiscal_year
+    cat(strrep("=", 50), "\n")
+    cat("Fiscal Year:", yr, "\n")
+    cat(strrep("=", 50), "\n")
+    
+    purrr::pwalk(
+      list(
+        .x$state,
+        .x$total_funding_amount_,
+        .x$funding_rule,
+        .x$total_demand,
+        .x$demand_rule
+      ),
+      function(state, funding_amt, funding_rule, demand, demand_rule) {
+        cat("\n  State:", state, "\n")
+        cat("  On Fundable List:\n")
+        cat("    Amount:  $", scales::comma(funding_amt), "\n")
+        cat("    Rule:     ", funding_rule, "\n")
+        if (funding_rule == "Default") {
+          cat("    !! No proxy selected — no Funding Amount, Requested Amount,\n")
+          cat("       or Project Cost found on Fundable List for this state/year.\n")
+        }
+        cat("  Demand for Funds:\n")
+        cat("    Amount:  $", scales::comma(demand), "\n")
+        cat("    Rule:     ", demand_rule, "\n")
+         if (demand_rule == "Default") {
+          cat("    !! No proxy selected — no Requested Amount\n")
+          cat("       or Project Cost found for Demand for this state/year.\n")
+        }
+      }
+    )
+  })
+
+
+# From financial data
+available_funding_summary <- financial_by_project_type |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  dplyr::summarise(
+    total_funding_available = sum(total_funding_available, na.rm = TRUE),
+    total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm = TRUE),
+    )
+
+   
+# QC Statements for available_funding_summary
+cat("\n", strrep("=", 60), "\n")
+cat("QC: available_funding_summary\n")
+cat(strrep("=", 60), "\n")
+
+cat("\nRow count:", nrow(available_funding_summary), "\n")
+
+if (nrow(available_funding_summary) == 0) {
+  cat("NOTE: Table is empty — no available funding records found.\n")
+} else {
+  available_funding_summary |>
+    dplyr::arrange(state, state_fiscal_year) |>
+    dplyr::group_by(state_fiscal_year) |>
+    dplyr::group_walk(~ {
+      yr <- .y$state_fiscal_year
+      cat("\n", strrep("-", 50), "\n")
+      cat("Fiscal Year:", yr, "\n")
+      cat(strrep("-", 50), "\n")
+      
+      purrr::pwalk(
+        list(
+          .x$state,
+          .x$total_funding_available
+        ),
+        function(state, funding_available) {
+          cat("\n  State:", state, "\n")
+          cat("  Total Funding Available:  $", scales::comma(funding_available), "\n")
+        }
+      )
+    })
+}
+```
+
+# Data Viz -----
+https://funding-tracker.s3.us-east-1.amazonaws.com/MI/overview/state-funds-compare-demand-available-funds-expected-funds-yoy.html
+
+## Comparison of demand for funds, available funds, and funds on fundable list ----
+
+```{r}
+
+osfs_funding_long <- osfs_funding_summary |>
+  dplyr::select(
+    state_fiscal_year,
+    total_funding_amount_,
+    funding_rule,
+    total_demand,
+    demand_rule
+    ) |>
+  tidyr::pivot_longer(
+    cols = c(total_funding_amount_, total_demand),
+    names_to = "source",
+    values_to = "funding"
+  ) |>
+  dplyr::mutate(
+    rule = dplyr::if_else(source == "total_funding_amount_", funding_rule, demand_rule),
+    source = dplyr::recode(source,
+      "total_funding_amount_" = "On Fundable List OFSF",
+      "total_demand"          = "Demand for Funds OFSF"
+    )
+  ) |>
+  dplyr::select(state, state_fiscal_year, source, funding, rule, -funding_rule, -demand_rule)
+
+
+dwsrf_funding_long <- dwsrf_funding_summary |>
+  dplyr::select(
+    state_fiscal_year,
+    total_funding_amount_,
+    funding_rule,
+    total_demand,
+    demand_rule
+    ) |>
+  tidyr::pivot_longer(
+    cols = c(total_funding_amount_, total_demand),
+    names_to = "source",
+    values_to = "funding"
+  ) |>
+  dplyr::mutate(
+    rule = dplyr::if_else(source == "total_funding_amount_", funding_rule, demand_rule),
+    source = dplyr::recode(source,
+      "total_funding_amount_" = "On Fundable List DWSRF",
+      "total_demand"          = "Demand for Funds DWSRF"
+    )
+  ) |>
+  dplyr::select(state, state_fiscal_year, source, funding, rule, -funding_rule, -demand_rule)
+
+available_funding_long <- available_funding_summary |>
+  tidyr::pivot_longer(
+    cols = c(total_funding_available, total_funding_available_state_funds),
+    names_to = "source",
+    values_to = "funding"
+  )|>
+  dplyr::mutate(
+    source = dplyr::recode(source,
+          "total_funding_available" = "Available DWSRF Funds",
+          "total_funding_available_state_funds" = "Available OFSF Funds"
+        ),
+    rule = NA_character_
+  )  
+
+state_funds <- dplyr::bind_rows(
+  osfs_funding_long,
+  dwsrf_funding_long,
+  available_funding_long
+  ) |>
+  dplyr::mutate(
+    category = dplyr::case_when(
+      grepl("OFSF", source) ~ "OFSF",
+      .default = "DWSRF"
+    ),
+    source = stringr::str_remove(source, " (DWSRF|OFSF)")
+    )  
+
+library(ggplot2)
+
+# Step 1: Define dodge order and bar width constants
+bar_width <- 0.25
+dodge_offsets <- c("Available Funds" = -bar_width, "On Fundable List" = 0, "Demand for Funds" = bar_width)
+plot_title <- "Comparison of demand for funds, available funds, and funds on fundable list"
+
+plot_data <- state_funds |>
+  dplyr::mutate(
+    year_num = as.numeric(state_fiscal_year),
+    fill_group = paste(source, category) |>
+      factor(levels = c(
+        "Available Funds OFSF",      
+        "Available Funds DWSRF",     
+        "On Fundable List OFSF",
+        "On Fundable List DWSRF",
+        "Demand for Funds OFSF",
+        "Demand for Funds DWSRF"
+      )) , 
+    # create a numeric dodge position as a new x variable
+    x_dodge = dplyr::case_when(
+      source == "Available Funds"  ~ year_num - bar_width,
+      source == "On Fundable List" ~ year_num,
+      source == "Demand for Funds" ~ year_num + bar_width
+    )
+  ) |>
+  dplyr::mutate(
+    text = paste0(source, " ", category, " ", state_fiscal_year, ":<br>", scales::dollar(funding)) 
+  )
+
+state_funds_p <- ggplot(plot_data, aes(x = x_dodge, y = funding, fill = fill_group, text = text)) +
+  geom_col(
+    width = bar_width - 0.01,
+    position = "stack",
+    color = "black"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Available Funds DWSRF"       = "#6bc842",
+      "Available Funds OFSF"        = "#3d7f1c",
+      "On Fundable List DWSRF"      = "#791a7b",
+      "On Fundable List OFSF"       = "#da1cddff",
+      "Demand for Funds DWSRF"      = "#172f60",
+      "Demand for Funds OFSF"       = "#396dd4ff"
+    ),
+    labels = c(
+      "Available Funds DWSRF"       = "Available DWSRF Funds",
+      "Available Funds OFSF"        = "Available Other Federal and State Funds",
+      "On Fundable List DWSRF"      = "On DWSRF Fundable List",
+      "On Fundable List OFSF"       = "On Other Federal and State Funds Fundable List",
+      "Demand for Funds DWSRF"      = "DWSRF Demand for Funds",
+      "Demand for Funds OFSF"       = "Other Federal and State Funds Demand for Funds"
+    )
+  ) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  scale_x_continuous(
+    breaks = sort(unique(plot_data$year_num)),
+    labels = sort(unique(plot_data$state_fiscal_year))
+  ) +
+  labs(x = "", y = "", fill = NULL, title = plot_title) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+
+state_funds_gp <- plotly::ggplotly(state_funds_p, tooltip = "text") |>
+  plotly::layout(
+    title = list(text = paste0(plot_title, '<br>',
+                   get_subtitle_str(state_funds$state_fiscal_year, state_name)))
+  )
+
+# define desired final label order
+legend_order <- c(
+  "Available DWSRF Funds",
+  "Available Other Federal and State Funds",
+  "On DWSRF Fundable List",
+  "On Other Federal and State Funds Fundable List",
+  "DWSRF Demand for Funds",
+  "Other Federal and State Funds Demand for Funds"
+)
+
+# rename traces
+for (i in seq_along(state_funds_gp$x$data)) {
+  old_name <- state_funds_gp$x$data[[i]]$name
+  if (!is.null(old_name) && old_name %in% names(label_lookup)) {
+    state_funds_gp$x$data[[i]]$name <- label_lookup[[old_name]]
+  }
+}
+
+# reorder traces to match desired legend order
+trace_names <- sapply(state_funds_gp$x$data, function(tr) tr$name %||% "")
+new_order <- order(match(trace_names, legend_order, nomatch = length(legend_order) + 1))
+state_funds_gp$x$data <- state_funds_gp$x$data[new_order]
+
+state_funds_gp
+
+```
+
+
+## Funding amount DACs using DWSRF funds vs state funds -----
+
+State-funds-dac-dwsrf-state-funds-yoy
+Improve title - reference fundable list; DACs on the fundable list, remove the rest of the title
+Incorporate funding available, stack srf and other state funds
+Other states will have this granularity?
+Note: MI aligns state funds to fundable lists
+Incorporate a small system 
+This might be more more consistent across states, since there is generally more availability of population data
+Fix gray colors (and keep plot)
+Future: dac + system size layers
+
+```{r}
+
+```
+
+
+```{r}
+
+```

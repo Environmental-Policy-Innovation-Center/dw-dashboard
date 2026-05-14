@@ -11,11 +11,11 @@ clean_al_y3 <- function() {
       janitor::clean_names() |>
       dplyr::mutate(
         source_list="Priority",
-        source_file = dplyr::case_when(
-          stringr::str_detect(file_name, "_BIL") ~ "BIL",
-          stringr::str_detect(file_name, "_LSL") ~ "LSL",
-          stringr::str_detect(file_name, "_EC") ~ "EC",
-          TRUE ~ "Base"
+        list = dplyr::case_when(
+          stringr::str_detect(file_name, "_BIL") ~ "SFY25 BIL Gen Supp PPL",
+          stringr::str_detect(file_name, "_LSL") ~ "SFY25 LSLR PPL",
+          stringr::str_detect(file_name, "_EC") ~ "SFY25 EC PPL",
+          TRUE ~ "SFY25 Base PPL"
         )
       )
     priority_list<- priority_list |>
@@ -32,9 +32,10 @@ clean_al_y3 <- function() {
     )|>
     dplyr::mutate(
       project_type = dplyr::case_when(
-        source_file == "LSL" ~ "Lead",
-        source_file == "EC" ~ "Emerging Contaminants",
-        grepl(lead_str, attachment_project_description, ignore.case = TRUE) ~ "Lead",
+        list == "SFY25 LSLR PPL" ~ "Lead",
+        list == "SFY25 EC PPL" ~ "Emerging Contaminants",
+        grepl("lsl|lead", attachment_project_description, ignore.case = TRUE) ~ "Lead",
+        grepl("BIL LSL", fund, ignore.case = TRUE) ~ "Lead", 
         grepl(ec_str, attachment_project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       )
@@ -45,28 +46,20 @@ clean_al_y3 <- function() {
     )|>
     dplyr::mutate(
       funding_amount = dplyr::case_when(
-        project_type == "General" & !is.na(dw_srf_amount_granted) ~ dw_srf_amount_granted,
-        project_type == "General" & !is.na(dw_bil_amount_granted) ~ dw_bil_amount_granted,
-        project_type == "Lead" & !is.na(dw_bil_lead_amount_granted) ~ dw_bil_lead_amount_granted,
-        project_type == "Lead" & !is.na(dw_srf_amount_granted) ~ dw_srf_amount_granted,
-        project_type == "Lead" & !is.na(dw_bil_amount_granted) ~ dw_bil_amount_granted,
-        project_type == "Emerging Contaminants" & !is.na(dw_bil_ec_amount_granted) ~ dw_bil_ec_amount_granted,
-        project_type == "Emerging Contaminants" & !is.na(dw_srf_amount_granted) ~ dw_srf_amount_granted,
-        project_type == "Emerging Contaminants" & !is.na(dw_bil_amount_granted) ~ dw_bil_amount_granted
+        list =="SFY25 Base PPL" ~ dw_srf_amount_granted,
+        list == "SFY25 BIL Gen Supp PPL" ~ dw_bil_amount_granted,
+        list == "SFY25 LSLR PPL" ~ dw_bil_lead_amount_granted,
+        list =="SFY25 EC PPL" ~ dw_bil_ec_amount_granted  
       ), 
       funding_amount = clean_numeric_string(funding_amount)
     ) |>
     dplyr::mutate(
       principal_forgiveness = dplyr::case_when(
-        project_type == "General" & !is.na(dw_srf_amount_of_pf) ~ dw_srf_amount_of_pf,
-        project_type == "General" & !is.na(dw_bil_amount_of_pf) ~ dw_bil_amount_of_pf,
-        project_type == "Lead" & !is.na(dw_bil_lsl_amount_of_pf) ~ dw_bil_lsl_amount_of_pf,
-        project_type == "Lead" & !is.na(dw_srf_amount_of_pf) ~ dw_srf_amount_of_pf,
-        project_type == "Lead" & !is.na(dw_bil_amount_of_pf) ~ dw_bil_amount_of_pf,
-        project_type == "Emerging Contaminants" & !is.na(dw_bil_ec_amount_granted) ~ dw_bil_ec_amount_granted,
-        project_type == "Emerging Contaminants" & !is.na(dw_srf_amount_of_pf) ~ dw_srf_amount_of_pf,
-        project_type == "Emerging Contaminants" & !is.na(dw_bil_amount_of_pf) ~ dw_bil_amount_of_pf
-      ),
+        list == "SFY25 Base PPL" ~ dw_srf_amount_of_pf,
+        list == "SFY25 BIL Gen Supp PPL" ~ dw_bil_amount_of_pf,
+        list == "SFY25 LSLR PPL" ~ dw_bil_lsl_amount_of_pf,
+        list == "SFY25 EC PPL" ~ dw_bil_ec_amount_granted  
+        ),
       principal_forgiveness = clean_numeric_string(principal_forgiveness)
     ) |>
     dplyr::mutate(
@@ -84,13 +77,14 @@ clean_al_y3 <- function() {
     dplyr::mutate(
       project_rank = as.character(NA) ,
       project_score = priority_ranking_points,
+      project_score = ifelse(project_score == "SUPP", "No Information", project_score),
       expecting_funding = "Yes",
       state = "Alabama",
       state_fiscal_year = "2025"
     ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
       requested_amount, funding_amount, principal_forgiveness, population, project_description,
-      disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, source_file)
+      disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
 
     # # there is one project number also in al_supp but a mismatch in applicant
     # # name: 
@@ -102,26 +96,67 @@ clean_al_y3 <- function() {
 
 ####### SANITY CHECKS #######
 # Hone in on project id duplication
-al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+# al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
-al_clean |>
-  dplyr::filter(project_id == "FS010096-11") 
+# al_clean |>
+#   dplyr::filter(project_id == "FS010096-11") 
 ####### Decision: Keep both as separate projects, they have different descriptions
 
-al_clean |>
-  dplyr::filter(project_id == "FS010488-02") 
+# al_clean |>
+#   dplyr::filter(project_id == "FS010488-02") 
 ####### Decision: Keep both as separate projects, per Janet's request in Data Dictionary 
  
 # Check for disinfection byproduct in description
-al_clean |>
-  dplyr::filter(grepl("disinfection byproduct", project_description))
+# al_clean |>
+#   dplyr::filter(grepl("disinfection byproduct", project_description))
 ####### Decision : No disinfection byproduct string
+ 
+# Check for lead subtypes: Both
+# al_clean |>
+#   dplyr::filter(project_type=="Lead") |>
+#   dplyr::mutate(
+#     lead_type = dplyr::case_when(
+#       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+#       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+#       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+#       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+#       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+#       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+#       TRUE ~ "unknown"
+#     )
+#   ) |>
+#   dplyr::filter(lead_type == "both")
 
+####### Decision: No lead projects classified as both
+  
+# Check for lead subtypes: Unknown
+# al_clean |>
+#   dplyr::filter(project_type=="Lead") |>
+#   dplyr::mutate(
+#     lead_type = dplyr::case_when(
+#       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+#       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+#       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+#       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+#       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+#       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+#       TRUE ~ "unknown"
+#     )
+#   ) |>
+#   dplyr::filter(lead_type == "unknown") 
+
+### 1 unknown 
+  
+al_clean <- al_clean |>
+  dplyr::mutate(
+    project_description = dplyr::case_when(
+      project_id == "FS010488-02" & project_name == "Waterline Replacement" ~ paste0(project_description, " | FT: LSLR"),
+      .default = project_description)
+    )
+
+  
 ####### SANITY CHECKS END #######
   
-  al_clean <- al_clean |>
-    dplyr::select(-source_file)
-
   run_tests(al_clean)
   rm(list=setdiff(ls(), "al_clean"))
   

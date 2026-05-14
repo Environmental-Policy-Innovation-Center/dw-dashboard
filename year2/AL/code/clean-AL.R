@@ -1,19 +1,19 @@
 clean_al_y2 <- function() {
   base_path <- "year2/AL/data"
   
-  # (40, 16)
-  al_base <- fread(file.path(base_path, "al-y2-base-ppl.csv"),
-                   colClasses = "character", na.strings = "") %>%
-    clean_names() %>%
-    mutate_all(., ~str_squish(.)) |>
-    dplyr::mutate(source_file = "Base")
+  # (40, )
+  al_base <- data.table::fread(file.path(base_path, "al-y2-base-ppl.csv"),
+                   colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate_all(~str_squish(.)) |>
+    dplyr::mutate(list = "SFY24 Base PPL")
   
-  # (9, 17)
-  al_supp <- fread(file.path(base_path, "al-y2-bilgensupp-ppl.csv"),
-                   colClasses = "character", na.strings = "") %>%
-    clean_names() %>%
-    mutate_all(., ~str_squish(.)) |>
-    dplyr::mutate(source_file = "BIL")
+  # (9,)
+  al_supp <- data.table::fread(file.path(base_path, "al-y2-bilgensupp-ppl.csv"),
+                   colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate_all(~str_squish(.)) |>
+    dplyr::mutate(list = "SFY24 BIL Gen Supp PPL")
   
   # (47,)
   # two overlapping projects in base and supp: FS010168-05, FS010096-04, 
@@ -23,9 +23,9 @@ clean_al_y2 <- function() {
                          "project_description", "city_town", 
                          "county", "justice_40_map_coverage", 
                          "population", "financial_rank", "dw_ratio", 
-                         "disadvantged_rank", "priority_ranking_points"), all = T) %>%
+                         "disadvantged_rank", "priority_ranking_points"), all = T) |>
     # replace NAs in non-matching columns to zero for math
-    mutate(across(.cols = c("dw_bil_amount_granted", "dw_srf_amount_granted", 
+    dplyr::mutate(across(.cols = c("dw_bil_amount_granted", "dw_srf_amount_granted", 
                             "dw_srf_principal_forgiveness", "dw_bil_principal_forgiveness"), 
                   ~case_when(is.na(.) ~ "$0", 
                              TRUE ~ .)),
@@ -36,27 +36,27 @@ clean_al_y2 <- function() {
                                      clean_numeric_string(applied_for_project_amount.y),
                                      clean_numeric_string(applied_for_project_amount.x)),
            funding_amount = ifelse(is.na(dw_srf_amount_granted), dw_bil_amount_granted, dw_srf_amount_granted),
-           principal_forgiveness = ifelse(is.na(dw_srf_principal_forgiveness), dw_bil_principal_forgiveness, dw_srf_principal_forgiveness)
-           ) |>
-    dplyr::mutate(source_file = "Merged Base and BIL-duplicates")
+           principal_forgiveness = ifelse(is.na(dw_srf_principal_forgiveness), dw_bil_principal_forgiveness, dw_srf_principal_forgiveness),
+           list = dplyr::coalesce(list.y, list.x)
+           ) 
   
-  # (23, 16)
-  al_lsl <- fread(file.path(base_path, "al-y2-lsl-ppl.csv"),
-                   colClasses = "character", na.strings = "") %>%
-    clean_names() %>%
-    mutate(project_type = "Lead", 
+  # (23,)
+  al_lsl <- data.table::fread(file.path(base_path, "al-y2-lsl-ppl.csv"),
+                   colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(project_type = "Lead", 
            requested_amount = clean_numeric_string(applied_for_project_amount), 
            funding_amount = clean_numeric_string(dw_bil_lead_amount_granted), 
            principal_forgiveness = clean_numeric_string(dw_bil_lsl_amount_of_pf)) |>
-    dplyr::mutate(source_file = "LSL")
+    dplyr::mutate(list = "SFY24 LSLR PPL")
   
 
-  # (4, 16)
-  al_ec <- fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
-                   colClasses = "character", na.strings = "") %>%
-    clean_names() %>%
-    dplyr::mutate(source_file = "EC") |>
-    mutate(project_type = "Emerging Contaminants", 
+  # (4,)
+  al_ec <- data.table::fread(file.path(base_path, "al-y2-ec-ppl-2.csv"),
+                   colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(list = "SFY24 EC PPL") |>
+    dplyr::mutate(project_type = "Emerging Contaminants", 
            funding_amount = clean_numeric_string(dw_bil_ec_amount_granted), 
            principal_forgiveness = clean_numeric_string(dw_bil_ec_amount_granted),
            requested_amount = clean_numeric_string(applied_for_project_amount),
@@ -70,14 +70,14 @@ clean_al_y2 <- function() {
   
   # binding: 
   # (75, )
-  al_clean <- bind_rows(al_gen, al_lsl, al_ec) %>%
-    mutate(community_served = str_squish(city_town), 
+  al_clean <- dplyr::bind_rows(al_gen, al_lsl, al_ec) |>
+    dplyr::mutate(community_served = str_squish(city_town), 
            borrower = str_squish(applicant_name), 
            pwsid =  as.character(NA),
            project_id = str_squish(project_number), 
            project_type = case_when(
              !is.na(project_type) ~ project_type,
-             grepl(lead_str, project_description_attachment, ignore.case=TRUE) ~ "Lead",
+             grepl("lsl|lead", project_description_attachment, ignore.case=TRUE) ~ "Lead",
              grepl(ec_str, project_description_attachment, ignore.case=TRUE) ~ "Emerging Contaminants",
              TRUE ~ "General"), 
            project_cost =  as.character(NA),
@@ -88,7 +88,7 @@ clean_al_y2 <- function() {
            project_description = str_squish(project_description_attachment), 
            disadvantaged = case_when(
              disadvantged_rank == "SUPP" | disadvantged_rank == "N/A" ~ "No Information",
-             convert_to_numeric(disadvantged_rank) < 1 ~ "No", 
+             convert_to_numeric(disadvantged_rank) <= 1 ~ "No", 
              TRUE ~ "Yes"), 
            project_rank =  as.character(NA),
            project_score = case_when(
@@ -100,14 +100,15 @@ clean_al_y2 <- function() {
              is.na(expecting_funding) ~ "Yes", 
              TRUE ~ expecting_funding),
            state = "Alabama",
-           state_fiscal_year = "2024") %>%
-    select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           state_fiscal_year = "2024") |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, source_file)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
+    
 # Hone in on project id duplication
-al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+# al_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
 ####### Decision:
 # West Morgan-East Lawrence Water & Sewer Authority** will be the only one receiving funding (see Page 13), 
@@ -119,24 +120,61 @@ al_clean <- al_clean |>
     (project_id != "FS010090‐04")
   )
 
-# clean_al_y2 |>
-#   dplyr::filter(project_id == "FS010096-04")
-
-# clean_al_y2 |>
-#   dplyr::filter(project_id == "FS010168-05")
-
 ####### Decision: Merging of Base and BIL see al_gen
 
 # Check for disinfection byproduct in description
-  al_clean |>
-    dplyr::filter(grepl("disinfection byproduct", project_description)) 
+  # al_clean |>
+  #   dplyr::filter(grepl("disinfection byproduct", project_description)) 
 
 ####### Decision : No disinfection byproduct string
 
-####### SANITY CHECKS END #######
+  # Check for lead subtypes: Both
+  # al_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
+
+  ####### Decision: No lead projects classified as both
+  
+  # Check for lead subtypes: Unknown
+  # al_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+
+  ### 7 unknown --> LSLR
 
   al_clean <- al_clean |>
-    dplyr::select(-source_file)
+    dplyr::mutate(
+      project_description = ifelse(
+        project_id %in% c("FS010325-01","FS010177-02","FS010401-01","FS010489-02","FS010406-01","FS010006-02","FS010393-01"),
+        paste0(project_description, " | FT: LSLR"),
+        project_description
+      )
+    )
+
+####### SANITY CHECKS END #######
+
   
   run_tests(al_clean)
   rm(list=setdiff(ls(), "al_clean"))

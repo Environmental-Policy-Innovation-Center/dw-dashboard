@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Ohio"
-state_abbr <- "OH"
+state_name <- "Tennessee"
+state_abbr <- "TN"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -231,9 +231,9 @@ funding_source_breakdown <- financial |>
   dplyr::mutate(
     source = dplyr::case_when(
       source == "total_srf_funds" ~ "DWSRF Funds",
-      .default = "Other Federal and State Funds"),
+      .default = "Other Funds Channeled Through SRFs"),
     source = forcats::as_factor(source),
-    source = forcats::fct_relevel(source, "Other Federal and State Funds","DWSRF Funds"),  
+    source = forcats::fct_relevel(source, "Other Funds Channeled Through SRFs","DWSRF Funds"),  
     plot_str = paste0(fed_cap_grant, " ", source, ": ", format_currency(value) )
     )
     
@@ -244,8 +244,8 @@ funding_source_breakdown <- financial |>
   dplyr::summarise(value = sum(value)) |>
   dplyr::mutate(
     fed_cap_grant = "Aggregate",
-    source = "Other Federal and State Funds",
-    plot_str = paste0("Other Federal and State Funds: ", format_currency(value) )
+    source = "Other Funds Channeled Through SRFs",
+    plot_str = paste0("Other Funds Channeled Through SRFs: ", format_currency(value) )
   )    
     
  
@@ -255,17 +255,17 @@ source_p <- funding_source_breakdown |>
   dplyr::bind_rows(other_sources) |>
   ggplot(aes(x=state_fiscal_year, y=value, fill=fed_cap_grant, alpha=source, text=plot_str)) + 
     geom_bar(stat="identity", position="stack") + 
-    scale_alpha_manual(values = c("Other Federal and State Funds" = 0.5, "DWSRF Funds" = 1), name = "") +
+    scale_alpha_manual(values = c("Other Funds Channeled Through SRFs" = 0.5, "DWSRF Funds" = 1), name = "") +
     scale_y_continuous(labels=label_currency()) + 
     labs(x="", y="", fill="", alpha="Source",
-         title="Total funding available from DWSRF and other federal and state funds",
+         title = "Total funding available from DWSRF and other funds channeled through SRFs",
          subtitle=get_subtitle_str(financial$state_fiscal_year, state_name)) + 
     scale_fill_manual(values=fed_cap_grant_colors) + 
     ggplot2::scale_x_discrete(drop = FALSE) +
     epic_chart_theme
 
 source_gp <- ggplotly(source_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Total funding available from DWSRF and other federal and state funds',
+    layout(title = list(text = paste0('Total funding available from DWSRF and other funds channeled through SRFs',
                                       '<br>',
                                       get_subtitle_str(financial$state_fiscal_year, state_name)
                                       ))) 
@@ -275,7 +275,7 @@ for(i in 1:length(source_gp$x$data)) {
   source_gp$x$data[[i]]$name <- gsub("\\(|\\)", "", source_gp$x$data[[i]]$name)
   source_gp$x$data[[i]]$name <- gsub(",", ", ", source_gp$x$data[[i]]$name)
   source_gp$x$data[[i]]$name <- gsub(", Aggregate", ", ", source_gp$x$data[[i]]$name)
-  source_gp$x$data[[i]]$name <- gsub("Other Federal and State Funds,", "Other Federal and State Funds", source_gp$x$data[[i]]$name)
+  source_gp$x$data[[i]]$name <- gsub("Other Funds Channeled Through SRFs,", "Other Funds Channeled Through SRFs", source_gp$x$data[[i]]$name)
 }
 
  if (save_plots) {

@@ -18,17 +18,17 @@ clean_wi_y1 <- function() {
            estimated_loan_amount = convert_to_numeric(estimated_loan_amount, T),
            principal_forgiveness = convert_to_numeric(pf_estimate, T),
            funding_amount = estimated_loan_amount + principal_forgiveness,
-           population = clean_numeric_string(population))
+           population = clean_numeric_string(population)) |>
+    dplyr::rename(self_score = priority_score)
   
   # funded projects not on comp list
   wi_gen_lsl_fund_extra <- wi_gen_lsl_fund |>
-    dplyr::filter(project_number %in% c("4920-48", "5369-18", "5436-07", "4768-02", "5545-04")) |>
-    dplyr::rename(self_score = priority_score)
+    dplyr::filter(project_number %in% c("4920-48", "5369-18", "5436-07", "4768-02", "5545-04"))
   
   
   # after extracting funding projects not on comp list, subset to columns needed to join onto comp list for the rest
   wi_gen_lsl_fund <- wi_gen_lsl_fund |>
-    dplyr::select(project_number, list, requested_amount, expecting_funding, principal_forgiveness, funding_amount, disadvantaged, population)
+    dplyr::select(project_number, list, requested_amount, expecting_funding, principal_forgiveness, funding_amount, disadvantaged, population, self_score)
 
   
   # none of the EC projects are on Comp list, need to be added on like some of Gen-LSL list
@@ -49,8 +49,10 @@ clean_wi_y1 <- function() {
   # combine comp and funding projects
   wi_all <- wi_comp_list |>
     dplyr::left_join(wi_gen_lsl_fund, by="project_number") |>
-    dplyr::mutate(list = ifelse(!is.na(list.y), list.y, list.x)) |>
-    dplyr::select(-list.x, -list.y)
+    dplyr::mutate(
+      self_score = coalesce(self_score.y, self_score.x),
+      list = ifelse(!is.na(list.y), list.y, list.x)) |>
+    dplyr::select(-c(self_score.y, self_score.x, list.x, list.y))
   
   wi_all <- bind_rows(wi_all, wi_gen_lsl_fund_extra, wi_ec_fund)
   
@@ -70,6 +72,11 @@ clean_wi_y1 <- function() {
       project_score = clean_numeric_string(self_score),
       project_rank = as.character(NA),
       project_cost = clean_numeric_string(estimated_project_cost),
+      project_cost = ifelse(
+        list %in% c("SFY23 General and LSL Fundable List", "SFY23 EC Fundable List"),
+        "No Information",
+        project_cost
+      ),
       disadvantaged = replace_na(disadvantaged, "No Information"),
       expecting_funding = replace_na(expecting_funding, "No"),
       funding_amount = clean_numeric_string(funding_amount),
@@ -84,23 +91,15 @@ clean_wi_y1 <- function() {
            project_description, population, disadvantaged, project_rank, project_score,
            expecting_funding, state, state_fiscal_year, list)
   
-
-  run_tests(wi_clean)
-  rm(list=setdiff(ls(), "wi_clean"))
-  
-  return(wi_clean)
-}
-
-
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
 # wi_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-####### Decision: One duplicate, sourced back to original PDF where state lists project twice in Comp List PPL, removed with unique call above
+####### Decision: No duplicates
 
 # Check for disinfection byproduct in description
 # wi_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
-####### Decision: No change, classified as expected
+####### Decision: ####### Decision: One duplicate, sourced back to original PDF where state lists project twice in Comp List PPL, addressed with unique above
 
 # Check for lead subtypes
 # wi_clean |>
@@ -117,5 +116,40 @@ clean_wi_y1 <- function() {
 #     )) |>
 #   dplyr::filter(lead_type == "both")
 # ####### Decision: No lead projects classified as both
+  
+ # Check for lead subtypes: Unknown
+  # wi_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+
+  ### 11 lead unknown --> LSLR
 
 ####### SANITY CHECKS END #######
+  
+  wi_clean <- wi_clean |>
+    dplyr::mutate(
+      project_description = ifelse(
+        project_id %in% c("5443-10", "5366-06", "5366-07", "5316-06", "4920-38", "4920-42", "4851-42", "4852-18", "5564-03", "4824-05", "4920-48"),
+        paste0(project_description, " | FT: LSLR"),
+        project_description
+      )
+    )
+    
+  run_tests(wi_clean)
+  rm(list=setdiff(ls(), "wi_clean"))
+  
+  return(wi_clean)
+}
+
+

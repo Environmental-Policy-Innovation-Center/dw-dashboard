@@ -1,0 +1,5 @@
+timestamp,call_label,model,input_tokens,output_tokens,cache_creation_tokens,cache_read_tokens,stop_reason
+2026-05-20T18:23:57Z,1_col_names,claude-haiku-4-5-20251001,4028,1269,0,0,end_turn
+2026-05-20T18:24:15Z,2_types_nulls,claude-haiku-4-5-20251001,11046,1820,0,0,end_turn
+2026-05-20T18:24:59Z,3_script_logic,claude-sonnet-4-6,2429,2147,3342,0,end_turn
+2026-05-20T18:26:17Z,4_script_data,claude-sonnet-4-6,9952,3906,0,3342,end_turn

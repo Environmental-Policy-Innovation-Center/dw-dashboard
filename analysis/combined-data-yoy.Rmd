@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Alabama"
-state_abbr <- "AL"
+state_name <- "Wisconsin"
+state_abbr <- "WI"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -42,7 +42,7 @@ gen_supp <- financial %>%
   filter(fed_cap_grant == "IIJA Gen Supp")
 
 base_gen_supp <- financial %>%
-  filter(fed_cap_grant == "Base & IIJA Gen Supp")
+  filter(fed_cap_grant %in% c("Base & IIJA Gen Supp", "Base and IIJA Gen Supp"))
 
 base_gen_supp <- bind_rows(base, gen_supp, base_gen_supp) %>%
   group_by(state, state_fiscal_year) %>%
@@ -204,7 +204,7 @@ financial_by_project_type <- financial |>
   dplyr::mutate(project_type = case_when(
     fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
     fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants (EC)",
-    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp") ~ "General", 
+    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp", "Base and IIJA Gen Supp") ~ "General", 
     TRUE ~ paste0("Combined: ", fed_cap_grant)
   )) |>
   dplyr::group_by(state, state_fiscal_year, project_type) |>

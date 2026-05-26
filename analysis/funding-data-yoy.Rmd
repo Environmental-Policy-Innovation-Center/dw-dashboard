@@ -625,9 +625,11 @@ grants <- financial |>
   dplyr::select(state_fiscal_year, fed_cap_grant, ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments) |>
   tidyr::pivot_longer(cols=c(ffy21_fcg, ffy22_fcg, ffy23_fcg, ffy24_fcg, ffy25_fcg, ffy26_fcg, reallotments)) |>
   dplyr::filter(!is.na(value) & value > 0) |>
-  dplyr::mutate(name = stringr::str_extract(name, "^[^_]+"),
-         name = stringr::str_replace(name, "ffy", "FFY")
-         ) 
+  dplyr::mutate(
+    name = stringr::str_extract(name, "^[^_]+"),
+    name = stringr::str_replace(name, "ffy", "FFY"),
+    plt_str = paste0(fed_cap_grant, ", ", name, ": ", scales::dollar(value))
+    )
 
 grant_sets <- list(
   General = c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp", "Base, IIJA Gen Supp, and EC", "Base, IIJA Gen Supp, LSLR, and EC", 
@@ -641,20 +643,8 @@ grant_sets <- list(
               "IIJA Gen Supp, LSLR, and EC")
 )
 
-# general_cat_palette <- colorRampPalette(c("#d6deeb", "#172f60"))  # light desaturated navy → navy
-# ec_cat_palette      <- colorRampPalette(c("#e8d4e9", "#791a7b"))  # light lavender → purple
-# lead_cat_palette    <- colorRampPalette(c("#d9ebd3", "#4ea324"))  # light mint green → green
-#save_plots <- FALSE
-for (category in names(grant_sets)) {
-  
-  # # choose the palette based on category
-  # cat_palette <- switch(
-  #   category,
-  #   General = general_cat_palette,
-  #   EC      = ec_cat_palette,
-  #   LSLR    = lead_cat_palette
-  # )
 
+for (category in names(grant_sets)) {
   cap_grant_subset <- grants |>
     dplyr::filter(fed_cap_grant %in% grant_sets[[category]]) |>
     dplyr::arrange(state_fiscal_year, fed_cap_grant, desc(name))
@@ -669,16 +659,15 @@ segments_per_year <- cap_grant_subset |>
 # Use different approach based on whether we have stacking
 if (segments_per_year > 1) {
   # Multiple segments - use position_stack with group_var
-  p <- cap_grant_subset |>
-    mutate(group_var = interaction(fed_cap_grant, name)) |>
-    ggplot2::ggplot(
+  p <- ggplot2::ggplot(
+      data = cap_grant_subset |> mutate(group_var = interaction(fed_cap_grant, name)),
       aes(
         x = state_fiscal_year, 
         y = value, 
         fill = fed_cap_grant)
         ) +
     ggplot2::geom_col(
-      aes(alpha = name, group = group_var), 
+      aes(alpha = name, group = group_var, text = plt_str), 
       position = position_stack(), 
       width = 1) +
     ggplot2::geom_text(
@@ -698,7 +687,7 @@ if (segments_per_year > 1) {
         fill = fed_cap_grant)
         ) +
     ggplot2::geom_col(
-      aes(alpha = name), 
+      aes(alpha = name, text = plt_str), 
       position = position_stack(), 
       width = 1) +
     ggplot2::geom_text(
@@ -730,20 +719,7 @@ p <- p +
                                         )) +
   ggplot2::guides(alpha = FALSE, label = FALSE) +                                           
   epic_chart_theme 
-  # p <- grants |>
-  #   dplyr::filter(fed_cap_grant %in% grant_sets[[category]]) |>
-  #   ggplot2::ggplot(aes(x = value, y = reorder(name, value), fill= fed_cap_grant, text = format_currency(value))) +
-  #   ggplot2::geom_col() +
-  #   ggplot2::facet_wrap(~state_fiscal_year, scales = "free_y", ncol = 1) +
-  #   ggplot2::labs(
-  #     x = "", y = "",
-  #     title = "Federal Capitalization Grants",
-  #     subtitle = paste(state_name, "-", category)  # show category in subtitle
-  #   ) +
-  #   ggplot2::guides(fill = FALSE) +
-  #   ggplot2::scale_fill_manual(values = fed_cap_grant_colors) +  
-  #   ggplot2::scale_x_continuous(labels = label_dollar()) +
-  #   epic_chart_theme 
+
 
   gp <- plotly::ggplotly(p, tooltip="text") |>
     plotly::layout(title = list(text = paste0('Federal Capitalization Grants',

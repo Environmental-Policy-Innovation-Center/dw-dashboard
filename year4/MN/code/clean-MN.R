@@ -9,6 +9,8 @@ clean_mn_y4 <- function() {
   mn_not_fundable <- data.table::fread("year4/MN/data/mn-not-fundable-list.csv",
                                        colClasses = "character", na.strings = "") |> 
     janitor::clean_names() |>
+    # drop projects expecting funding in Gen/EC list
+    filter(!(project_id %in% mn_base_ec_fundable$project_id)) |>
     dplyr::mutate(
       funding_amount = "No Information",
       list = "SFY26 Not Fundable List"
@@ -35,7 +37,6 @@ clean_mn_y4 <- function() {
            system_population_served_lead = system_population_served,
            project_description_lead = project_description
            )
-  
   
   mn_combined <- bind_rows(mn_base_ec_fundable, mn_not_fundable, mn_lead) |>
     dplyr::mutate(project_type = 

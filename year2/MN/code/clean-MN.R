@@ -72,7 +72,6 @@ clean_mn_y2 <- function() {
     janitor::clean_names() |>
     dplyr::filter(points != "GRAND TOTAL")
 
-  
   mn_clean <- mn_comp_ppl |>
     dplyr::left_join(mn_combined, by='project_id') |>
     dplyr::mutate(community_served = as.character(NA),
@@ -105,20 +104,18 @@ clean_mn_y2 <- function() {
   requested_amount, funding_amount, principal_forgiveness, population, project_description,
   disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
-  
-  
-  run_tests(mn_clean)
-  
-  rm(list=setdiff(ls(), "mn_clean"))
-  
-  return(mn_clean)
-}
 
-####### SANITY CHECKS START #######
+  ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-####### Decision: No duplicates
+# mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+####### Decision: 1 duplicate:  1610007-7, both expecting funding, kept the one with funding amount.      
+
+mn_clean <- mn_clean |>
+  dplyr::arrange(desc(funding_amount))|>
+  dplyr::group_by(project_id) |>
+  dplyr::slice_sample(n=1) |>
+  dplyr::ungroup()
 
 # Check for disinfection byproduct in description
 # mn_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
@@ -127,17 +124,50 @@ mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dpl
 # Check for lead subtypes
 # mn_clean |>
 #   dplyr::filter(project_type=="Lead") |>
-# dplyr::mutate(
+#   dplyr::mutate(
 #   lead_type = dplyr::case_when(
 #   stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
 #   stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
 #   stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-#  # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+# # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
 #  stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
 #  stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
 #   TRUE ~ "unknown"
 # )) |>
 #   dplyr::filter(lead_type == "both")
-# ####### Decision: No lead projects classified as both
+####### Decision: No lead projects classified as both
+
+## Check for lead subtypes: Unknown
+  # mn_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+  ### Decision: 16 unknowns --> LSLR
+  
+   mn_clean <- mn_clean |>
+      dplyr::mutate(
+       project_description = dplyr::case_when(
+              project_id %in% c("1050004-5", "1050004-6", "1270024-18", "1270024-19","1270024-20","1270024-21","1270024-22","1690011-12","1690011-14","1690011-15","1690011-16", "1690011-17","1690011-18","1690011-19","1690011-20","1730027-27") ~ paste0(project_description, " | FT: LSLR"),
+              .default = project_description
+       )
+      )
 
 ####### SANITY CHECKS END #######
+  
+  run_tests(mn_clean)
+  
+  rm(list=setdiff(ls(), "mn_clean"))
+  
+  return(mn_clean)
+}
+

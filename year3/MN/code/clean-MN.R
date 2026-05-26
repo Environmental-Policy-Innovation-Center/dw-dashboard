@@ -111,13 +111,7 @@ clean_mn_y3 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
-  run_tests(mn_clean)
   
-  rm(list=setdiff(ls(), "mn_clean"))
-  
-  return(mn_clean)
-}
-
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
@@ -142,6 +136,38 @@ clean_mn_y3 <- function() {
 #   TRUE ~ "unknown"
 # )) |>
 #   dplyr::filter(lead_type == "both")
-# ####### Decision: No lead projects classified as both
+####### Decision: No lead projects classified as both
+
+  ## Check for lead subtypes: Unknown
+  mn_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "unknown") 
+  ### Decision: 24 unknowns 16--> LSLR, 8 cannot be ressolved
+  
+   mn_clean <- mn_clean |>
+      dplyr::mutate(
+       project_description = dplyr::case_when(
+        grepl("LSL Repl", project_description) ~ paste0(project_description, " | FT: LSLR"),
+              .default = project_description
+       )
+      )
 
 ####### SANITY CHECKS END #######
+
+  run_tests(mn_clean)
+  
+  rm(list=setdiff(ls(), "mn_clean"))
+  
+  return(mn_clean)
+}

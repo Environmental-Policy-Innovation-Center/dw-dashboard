@@ -90,7 +90,8 @@ get_gs_urls <- function() {
     add_row(state="MS", url="https://docs.google.com/spreadsheets/d/1ajQLY_iwzIUW4vVV6JQKrayWml2fYSn0BBnB4As9Dzk") |>
     add_row(state="AR", url="https://docs.google.com/spreadsheets/d/1bL_CQwlZAmGLqdNix0YZBe6xQ034ijyyIR486MZGD8s") |>
     add_row(state="NJ", url="https://docs.google.com/spreadsheets/d/1Kn-UDwt2YkRDSKZ3oKqMiDxLRltvxw5j8rRvAN1zTmc") |>
-    add_row(state="MD", url="https://docs.google.com/spreadsheets/d/1N5XXLJ9hYwhxgfi3NMK2EwI8DsadmSxiSK6ItrPQhU8")
+    add_row(state="MD", url="https://docs.google.com/spreadsheets/d/1N5XXLJ9hYwhxgfi3NMK2EwI8DsadmSxiSK6ItrPQhU8") |>
+    add_row(state="WI", url="https://docs.google.com/spreadsheets/d/1yrsaplDcVL6VaEeVLJ7PD5KkGq5S7IMKUVhK2-NiVEg")
   
   return(gs_urls)
 }

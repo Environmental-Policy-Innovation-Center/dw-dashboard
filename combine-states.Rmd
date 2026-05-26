@@ -48,9 +48,8 @@ states <- c(
   "OH", 
   "PA",
   "TN", 
-  "TX"
-  #, 
-  #"WI"
+  "TX", 
+  "WI"
   )
 
 ## Years vector with 5 years, currently in new lines to allow for commenting out ----

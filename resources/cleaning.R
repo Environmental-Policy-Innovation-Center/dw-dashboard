@@ -72,11 +72,8 @@ lead_str <- paste(c(
   "lsl"), collapse = "|")
 
 ec_str <- paste(c(
-  "cyanotoxin", "dioxane", "emerging contaminant", "lithium", "manganese", "Mn",
+  "cyanotoxin", "dioxane", "emerging contaminant", "lithium", "manganese", "\\bMn\\b",
   "Perfluoro-n-pentanoic acid", "PFPeA", "PFAS", "PFOA", "PFOS", "trihalomethane", "THM",
   "Unregulated Contaminant Monitoring Rule", "DBP", "disinfection byproduct", "HAA5",
   "haloacetic acid", "emerging containment", "BIL EC", "BIL-EC", "IIJA EC", "IIJA-EC"
 ), collapse = "|")
-
-
-

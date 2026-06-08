@@ -101,7 +101,23 @@ clean_wi_y4 <- function() {
     dplyr::select(project_id, project_score, community_served, project_description, project_cost, population, project_type,
            requested_amount, funding_amount, principal_forgiveness, disadvantaged, expecting_funding, list)
   
+# wi_fundable[!wi_fundable$project_id %in% wi_comp_all$project_id, project_id]  
+# there are 9 projects in fundable list not present in comprehensive list
+# wi_fundable[!wi_fundable$project_id %in% wi_comp_all$project_id, project_id]
+# [1] "4913-07" "4974-09" "4922-22" "4990-10" "4868-05" "4837-16" "5194-03" "4920-56" "4909-09"
+# the following 4, are removed due to more accurate info from fundable list  
   
+  wi_all <- wi_all |>
+    dplyr::filter(
+      !project_id %in% c("4913U07", "4837U16", "5194U03", "4920U56") #2026_06_01 in consulting w Danielle; these project are undetermined and in fundable, keep fundable
+    ) |>
+    # replace U with dash for consistency
+    dplyr::mutate(
+      project_id = dplyr::case_when(
+        grepl("U", project_id) ~ stringr::str_replace(project_id, "U", "-"),
+        .default = project_id)
+      )    
+
   wi_clean <- wi_all |>
     dplyr::mutate(
       borrower = as.character(NA),

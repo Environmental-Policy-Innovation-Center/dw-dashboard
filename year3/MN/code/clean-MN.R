@@ -5,9 +5,9 @@ clean_mn_y3 <- function() {
     janitor::clean_names() %>%
     dplyr::filter(!is.na(project_number)) %>%
     dplyr::mutate(project_type = case_when(
-      # set EC funded projects as EC, fill in remainder with text search downstream
-      convert_to_numeric(estimated_dwrf_emerging_contaminant_pf_grant_not_final_1, TRUE) > 0 ~ "Emerging Contaminants",
-      TRUE ~ as.character(NA)),
+        # set EC funded projects as EC, fill in remainder with text search downstream
+        convert_to_numeric(estimated_dwrf_emerging_contaminant_pf_grant_not_final_1, TRUE) > 0 ~ "Emerging Contaminants",
+        TRUE ~ as.character(NA)),
       estimated_dwrf = convert_to_numeric(estimated_dwrf_loan, TRUE),
       estimated_ec_pf_1 = convert_to_numeric(estimated_dwrf_emerging_contaminant_pf_grant_not_final_1, TRUE),
       estimated_dac_pf_2 = convert_to_numeric(estimated_dwrf_disadvantaged_community_pf_grant_not_final_2, TRUE),
@@ -44,30 +44,27 @@ clean_mn_y3 <- function() {
     dplyr::filter(!is.na(estimated_project_cost)) %>%
     mutate(
     ) %>%
-    dplyr::select(project_number, list, project_type, estimated_project_cost, expecting_funding, funding_amount, principal_forgiveness, disadvantaged)
-  
-  
-  
+    dplyr::select(project_number, list, project_type, estimated_project_cost, expecting_funding, funding_amount, principal_forgiveness, disadvantaged, estimated_wif_grant_not_final_3, state_or_federal_appropriation, other_funds)
   
   mn_lsl_fundable <- data.table::fread("year3/MN/data/mn_lsl_fundable.csv",
                                        colClasses = "character", na.strings = "") |> 
     janitor::clean_names() %>%
     dplyr::filter(!is.na(project_number)) %>%
-    dplyr::mutate(project_type = "Lead",
-           expecting_funding = "Yes",
-           list = "SFY25 LSL Fundable List",
-           estimated_lsl_pf = convert_to_numeric(estimated_dwrf_lsl_pf_grant_3,TRUE),
-           estimated_lsl_loan = convert_to_numeric(estimated_dwrf_lsl_loan_4, TRUE),
-           estimated_state_lsl_grant = convert_to_numeric(estimated_state_lsl_grant_5, TRUE),
-           funding_amount = estimated_lsl_pf + estimated_lsl_loan,
-           principal_forgiveness = estimated_lsl_pf,
-           disadvantaged = case_when(
-             nchar(estimated_dwrf_lsl_pf_grant_3) > 1 ~ "Yes",
-             TRUE ~ "No Information")
+    dplyr::mutate(
+      project_type = "Lead",
+      expecting_funding = "Yes",
+      list = "SFY25 LSL Fundable List",
+      estimated_lsl_pf = convert_to_numeric(estimated_dwrf_lsl_pf_grant_3,TRUE),
+      estimated_lsl_loan = convert_to_numeric(estimated_dwrf_lsl_loan_4, TRUE),
+      estimated_state_lsl_grant = convert_to_numeric(estimated_state_lsl_grant_5, TRUE),
+      funding_amount = estimated_lsl_pf + estimated_lsl_loan,
+      principal_forgiveness = estimated_lsl_pf,
+      disadvantaged = case_when(
+        nchar(estimated_dwrf_lsl_pf_grant_3) > 1 ~ "Yes",
+        TRUE ~ "No")
     ) %>%
     dplyr::rename(estimated_project_cost = estimated_total_project_cost) %>%
-    dplyr::select(project_number, list, project_type, estimated_project_cost, expecting_funding, funding_amount, principal_forgiveness, disadvantaged)
-  
+    dplyr::select(project_number, list, project_type, estimated_project_cost, expecting_funding, funding_amount, principal_forgiveness, disadvantaged, estimated_state_lsl_grant_5)
   
   mn_combined <- bind_rows(mn_combined, mn_lsl_fundable) %>%
     dplyr::rename(project_id = project_number)
@@ -77,8 +74,7 @@ clean_mn_y3 <- function() {
     janitor::clean_names() %>%
     dplyr::filter(!is.na(system))
   
-  
-  mn_clean <- mn_comp_ppl %>%
+  mn_combined_full <- mn_comp_ppl %>%
     dplyr::left_join(mn_combined, by="project_id") %>%
     dplyr::mutate(
       community_served = as.character(NA),
@@ -89,8 +85,10 @@ clean_mn_y3 <- function() {
       project_description = stringr::str_squish(project),
       project_type = case_when(
         !is.na(project_type) ~ project_type,
-        grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
         grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+        #Do a case sensitive search of Mn
+        grepl("Mn", project_description) ~ "Emerging Contaminants",
         TRUE ~ "General"),
       requested_amount = as.character(NA),
       project_cost = case_when(
@@ -106,7 +104,9 @@ clean_mn_y3 <- function() {
       state = "Minnesota",
       state_fiscal_year = "2025",
       list = replace_na(list, "SFY25 Comprehensive PPL")
-    ) %>%
+    ) 
+  
+  mn_clean <- mn_combined_full %>%
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
@@ -114,6 +114,9 @@ clean_mn_y3 <- function() {
   
 ####### SANITY CHECKS START #######
 
+#check pwsid length
+# sum(stringr::str_count(mn_clean$pwsid) != 9)
+  
 # Hone in on project id duplication
 # mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 ####### Decision: No duplicates
@@ -164,6 +167,42 @@ clean_mn_y3 <- function() {
       )
 
 ####### SANITY CHECKS END #######
+  
+# Produce Other Federal and State Funds dataset
+  mn_ofsf <- mn_combined_full |>
+    dplyr::mutate(
+       project_description = dplyr::case_when(
+        grepl("LSL Repl", project_description) ~ paste0(project_description, " | FT: LSLR"),
+              .default = project_description
+       )
+      ) |>
+    dplyr::mutate(
+      estimated_wif_grant_not_final_3 = clean_numeric_string(estimated_wif_grant_not_final_3)
+    ) |>
+    dplyr::relocate(estimated_wif_grant_not_final_3,state_or_federal_appropriation, other_funds, estimated_state_lsl_grant_5) |>
+    dplyr::filter(
+      rowSums(!is.na(dplyr::pick(estimated_wif_grant_not_final_3:estimated_state_lsl_grant_5))) >= 1
+    ) |>
+    dplyr::mutate(
+      project_cost_ofsf = as.character(NA),
+      requested_amount_ofsf = as.character(NA),
+      funding_amount_ofsf = dplyr::case_when(
+        list %in% c("SFY25 General & EC Fundable List", "SFY25 Not Eligible List") ~ clean_numeric_string(convert_to_numeric(estimated_wif_grant_not_final_3) + convert_to_numeric(state_or_federal_appropriation) + convert_to_numeric(other_funds)),   
+        list == "SFY25 LSL Fundable List" ~ clean_numeric_string(convert_to_numeric(estimated_state_lsl_grant_5)),
+        .default = "No Information"
+      ),
+      expecting_funding_ofsf = dplyr::case_when(
+        list %in% c("SFY25 General & EC Fundable List", "SFY25 Not Eligible List") & (convert_to_numeric(estimated_wif_grant_not_final_3) > 0 | convert_to_numeric(state_or_federal_appropriation) > 0 | convert_to_numeric(other_funds) > 0) ~ "Yes", 
+        list == "SFY25 LSL Fundable List"  & convert_to_numeric(estimated_state_lsl_grant_5) > 0 ~ "Yes",
+        .default = "No Information"
+      ) 
+    ) |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), as.character)) |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, project_cost_ofsf,
+           requested_amount, requested_amount_ofsf, funding_amount, funding_amount_ofsf, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, expecting_funding_ofsf, state, state_fiscal_year, list)
+  
+  save_update_ofsf(mn_ofsf)
 
   run_tests(mn_clean)
   

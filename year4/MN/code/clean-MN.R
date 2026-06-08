@@ -22,45 +22,46 @@ clean_mn_y4 <- function() {
   mn_lead <- data.table::fread("year4/MN/data/mn-lead-table-decoupled.csv",
                                colClasses = "character", na.strings = "") |> 
     janitor::clean_names() |>
-    dplyr::mutate(project_type = "Lead",
-           list = "SFY26 LSL Fundable List",
-           expecting_funding = "Yes",
-           # store project_ids (since there can be multiple in this table)
-           project_id_lead = project_id,
-           # then make the join variable only the first project
-           project_id = substr(project_id, 1, 10)
-           ) |>
-    dplyr::rename(total_project_cost_lead = total_project_costs,
-           iup_approved_amount_lead = iup_approved_amount,
-           ppl_rank_lead = ppl_rank,
-           ppl_points_lead = ppl_points,
-           system_population_served_lead = system_population_served,
-           project_description_lead = project_description
-           )
-  
+    dplyr::mutate(
+      project_type = "Lead",
+      list = "SFY26 LSL Fundable List",
+      expecting_funding = "Yes",
+      # store project_ids (since there can be multiple in this table)
+      project_id_lead = project_id,
+      # then make the join variable only the first project
+      project_id = substr(project_id, 1, 10)
+      ) |>
+    dplyr::rename(
+      total_project_cost_lead = total_project_costs,
+      iup_approved_amount_lead = iup_approved_amount,
+      ppl_rank_lead = ppl_rank,
+      ppl_points_lead = ppl_points,
+      system_population_served_lead = system_population_served,
+      project_description_lead = project_description
+      )
+
   mn_combined <- bind_rows(mn_base_ec_fundable, mn_not_fundable, mn_lead) |>
-    dplyr::mutate(project_type = 
-             case_when(
-               !is.na(project_type) ~ "Lead",
-               grepl("lead|lsl", project_description, ignore.case=T) ~ "Lead",
-               convert_to_numeric(ec_amount, TRUE) > 0 ~ "Emerging Contaminants",
-               grepl("EC", iup_part) ~ "Emerging Contaminants"
-             ),
-           total_project_cost = clean_numeric_string((total_project_costs))
-           ) |>
+    dplyr::mutate(
+      project_type =  case_when(
+        !is.na(project_type) ~ project_type,
+        grepl("lead|lsl", project_description, ignore.case=T) ~ "Lead",
+        convert_to_numeric(ec_amount, TRUE) > 0 ~ "Emerging Contaminants",
+        grepl("tbd", ec_amount, ignore.case = TRUE) ~ "Emerging Contaminants",
+        grepl("EC", iup_part) ~ "Emerging Contaminants"
+      ),
+      total_project_cost = clean_numeric_string((total_project_costs))
+    ) |>
     dplyr::select(project_id, funding_amount, list, project_type, total_project_cost, expecting_funding,
            # keep all lead projects to merge back in after joining with comp ppl, since
            # project_id will only match to one of the merged rows and may not have composite data in comp table
            project_id_lead, total_project_cost_lead, iup_approved_amount_lead, ppl_rank_lead,
            ppl_points_lead, system_population_served_lead, project_description_lead)
   
-  
   mn_comp_ppl <-  data.table::fread("year4/MN/data/mn-comprehensive-ppl.csv",
                                     colClasses = "character", na.strings = "") |> 
     janitor::clean_names()
 
-  
-  mn_clean <- mn_comp_ppl |>
+  mn_combined_full <- mn_comp_ppl |>
     dplyr::left_join(mn_combined, by="project_id") |>
     dplyr::mutate(
       community_served = as.character(NA),
@@ -75,12 +76,19 @@ clean_mn_y4 <- function() {
         !is.na(project_type) ~ project_type,
         grepl("lead|lsl", project_description, ignore.case = TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+        #Do a case sensitive search of Mn
+        grepl("Mn", project_description) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
       # defer to total_project_cost from other lists, otherwise use project cost on comp ppl
-      project_cost = ifelse(!is.na(total_project_cost), total_project_cost, clean_numeric_string(project_cost)),
-      project_cost = ifelse(!is.na(total_project_cost_lead),
-                            clean_numeric_string(total_project_cost_lead), project_cost),
+      # project_cost = ifelse(!is.na(total_project_cost), total_project_cost, clean_numeric_string(project_cost)),
+      # project_cost = ifelse(!is.na(total_project_cost_lead),
+      #                       clean_numeric_string(total_project_cost_lead), project_cost),
+      project_cost = dplyr::case_when(
+        list %in% c("SFY26 General & EC Fundable List", "SFY26 Not Fundable List") ~ clean_numeric_string(total_project_cost),
+        list == "SFY26 LSL Fundable List" ~ clean_numeric_string(total_project_cost_lead),
+        .default = clean_numeric_string(project_cost)
+        ),
       requested_amount = as.character(NA),
       funding_amount = clean_numeric_string(iup_approved_amount_lead),
       principal_forgiveness = as.character(NA),
@@ -93,14 +101,19 @@ clean_mn_y4 <- function() {
       state = "Minnesota",
       state_fiscal_year = "2026",
       list = replace_na(list, "SFY26 Comprehensive List")
-    ) |>
+    ) 
+  
+  mn_clean <- mn_combined_full |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
   
-  ####### SANITY CHECKS START #######
+####### SANITY CHECKS START #######
 
+#check pwsid length
+# sum(stringr::str_count(mn_clean$pwsid) != 9)
+  
 # Hone in on project id duplication
 # mn_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 ####### Decision: No duplicates
@@ -125,22 +138,22 @@ clean_mn_y4 <- function() {
 #   dplyr::filter(lead_type == "both")
 # ####### Decision: No lead projects classified as both
   
-    ## Check for lead subtypes: Unknown
-  mn_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
-  ### Decision: 41 unknowns 15--> LSLR, 26 cannot be ressolved
+## Check for lead subtypes: Unknown
+# mn_clean |>
+#   dplyr::filter(project_type=="Lead") |>
+#   dplyr::mutate(
+#     lead_type = dplyr::case_when(
+#       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+#       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+#       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+#       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+#       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+#       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+#       TRUE ~ "unknown"
+#     )
+#   ) |>
+#   dplyr::filter(lead_type == "unknown") 
+### Decision: 41 unknowns 15--> LSLR, 26 cannot be ressolved
 
   mn_clean <- mn_clean |>
       dplyr::mutate(
@@ -151,6 +164,27 @@ clean_mn_y4 <- function() {
       )
 
 ####### SANITY CHECKS END #######
+  
+  # Produce Other Federal and State Funds dataset
+  mn_ofsf <- mn_combined_full |>
+    dplyr::mutate(
+       project_description = dplyr::case_when(
+        grepl("LSL Repl", project_description) ~ paste0(project_description, " | FT: LSLR"),
+              .default = project_description
+       )
+      ) |>
+    dplyr::mutate(
+      project_cost_ofsf = as.character(NA),
+      requested_amount_ofsf = as.character(NA),
+      funding_amount_ofsf = as.character(NA),
+      expecting_funding_ofsf = as.character(NA) 
+    ) |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), as.character)) |>
+    dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost, project_cost_ofsf,
+           requested_amount, requested_amount_ofsf, funding_amount, funding_amount_ofsf, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, expecting_funding_ofsf, state, state_fiscal_year, list)
+  
+  save_update_ofsf(mn_ofsf)
   
   run_tests(mn_clean)
   

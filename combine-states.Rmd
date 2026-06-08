@@ -41,7 +41,7 @@ states <- c(
   "LA",
   "MD",
   "MI", 
-  #"MN", 
+  "MN", 
   "MS",
   "NJ", 
   "NY", 

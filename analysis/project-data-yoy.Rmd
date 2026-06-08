@@ -13,11 +13,11 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Maryland"
-state_abbr <- "MD"
+state_name <- "Minnesota"
+state_abbr <- "MN"
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 ```
 
@@ -2129,6 +2129,9 @@ all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/s
 
 pc_by_type_by_dac <- all_projects |>
    dplyr::filter(state == state_name) |>
+   dplyr::group_by(state_fiscal_year) |>
+   dplyr::filter(!all(is.na(disadvantaged))) |>
+   dplyr::ungroup() |>
    dplyr::filter(!is.na(project_cost) & project_cost !="No Information", expecting_funding == "Yes") |>
    dplyr::select(state, state_fiscal_year, project_cost, project_type, disadvantaged) |>
    dplyr::group_by(state, state_fiscal_year, project_type, disadvantaged) |>
@@ -2164,7 +2167,7 @@ pc_by_type_by_dac <- all_projects |>
    ) 
 
 if (nrow(pc_by_type_by_dac) > 0) {
-pc_by_type_by_dac_g<- pc_by_type_by_dac |>
+pc_by_type_by_dac_g <- pc_by_type_by_dac |>
    ggplot2::ggplot() +
    geom_col(aes(state_fiscal_year, total_project_cost_by_dac, fill = Disadvantaged, text = text)) +
    facet_grid(~project_type) +

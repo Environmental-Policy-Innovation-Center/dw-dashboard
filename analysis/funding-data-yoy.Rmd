@@ -933,19 +933,28 @@ reserved_leveraged <- financial |>
 
 ```{r}
 unutilized <- financial |>
-  dplyr::select(state, state_fiscal_year, fed_cap_grant, unutilized_fcg, pf_carryover) |>
-  tidyr::pivot_longer(cols = c(unutilized_fcg, pf_carryover)) |>
+  dplyr::select(state, state_fiscal_year, fed_cap_grant, unutilized_fcg, pf_carryover, total_carryover) |>
+  #to remove total when both values exist
+  mutate(
+    total_carryover = if_else(
+      replace_na(unutilized_fcg > 0, FALSE) | replace_na(pf_carryover > 0, FALSE),
+      NA,
+      total_carryover
+    )
+  ) |>
+  tidyr::pivot_longer(cols = c(unutilized_fcg, pf_carryover, total_carryover)) |>
   dplyr::filter(value > 0) |>
   dplyr::mutate(
     name = dplyr::case_when(
       name == "unutilized_fcg" ~ "General",
-      name == "pf_carryover" ~ "PF"
+      name == "pf_carryover" ~ "PF",
+      name == "total_carryover" ~ "Total"
     ),
     text = paste0(fed_cap_grant, ", ", state_fiscal_year, ":<br>",
                   name, ": ", format_currency(value))
   ) |>
   dplyr::mutate(
-    name = forcats::fct_relevel(name, "General", "PF")  # General bottom, PF top
+    name = forcats::fct_relevel(name, "General", "PF", "Total")  # General bottom, PF top
   ) |>
   dplyr::arrange(state_fiscal_year, fed_cap_grant, name)  # respects factor order
 
@@ -1097,7 +1106,12 @@ unutilized_p <- ggplot2::ggplot(unutilized) +
         width = 1
     ) +
     ggplot2::geom_text(
-      data = unutilized |> dplyr::mutate(label = ifelse(name == "PF", "PF", "")), 
+      data = unutilized |> dplyr::mutate(label = dplyr::case_when(
+        name == "PF" ~ name,
+        name == "Total" ~ name,
+        name == "General" ~ name,
+        .default = ""
+      )), 
       ggplot2::aes(
         state_fiscal_year, 
         value, 
@@ -1112,7 +1126,7 @@ unutilized_p <- ggplot2::ggplot(unutilized) +
     ggplot2::scale_y_continuous(labels=label_currency()) + 
     ggplot2::scale_x_discrete(drop = FALSE) +
     ggplot2::scale_fill_manual(values = fed_cap_grant_colors) + 
-    ggplot2::scale_alpha_manual(values = c("General" = 1, "PF" = 0.8), name = "") + 
+    ggplot2::scale_alpha_manual(values = c("General" = 1, "PF" = 0.8, "Total" = 1), name = "") + 
     ggplot2::labs(x="", y="", fill="",
           title = plot_title,
           subtitle = get_subtitle_str(unutilized$state_fiscal_year, state_name)) + 
@@ -1141,6 +1155,55 @@ unutilized_p <- ggplot2::ggplot(unutilized) +
   }
 ```
 
+### Total Carryover
+```{r}
+
+total_carryover <- financial |>
+  dplyr::select(state, state_fiscal_year, fed_cap_grant, total_carryover) |>
+  dplyr::filter(total_carryover > 0) |>
+  dplyr::mutate(
+    name = "Total",
+    text = paste0(fed_cap_grant, ", ", state_fiscal_year, ":<br>",
+                  name, ": ", format_currency(total_carryover))
+  ) 
+
+total_carryover_p <- ggplot2::ggplot(total_carryover) +
+    ggplot2::geom_col(
+      ggplot2::aes(
+        state_fiscal_year, 
+        total_carryover, 
+        fill = fed_cap_grant, 
+        text=text),
+        width = 1
+    ) +
+    ggplot2::scale_y_continuous(labels=label_currency()) + 
+    ggplot2::scale_x_discrete(drop = FALSE) +
+    ggplot2::scale_fill_manual(values = fed_cap_grant_colors) + 
+    ggplot2::labs(x="", y="", fill="",
+          title = "Total Carryover",
+          subtitle = get_subtitle_str(total_carryover$state_fiscal_year, state_name)) + 
+    ggplot2::guides(
+      alpha = FALSE,
+      label = FALSE) +
+    epic_chart_theme
+
+
+  total_carryover_gp <- ggplotly(total_carryover_p, tooltip="text") |>
+    layout(title = list(text = paste0( "Total Carryover",
+                                        '<br>',
+                                        get_subtitle_str(total_carryover$state_fiscal_year, state_name)
+                                        )))
+
+    if (save_plots) {
+      run_save_plots(gg_plot = total_carryover_p,
+                    gp_object = total_carryover_gp, 
+                    name = "total-carryover-yoy")
+      }
+    
+    total_carryover_gp
+
+
+```
 
 ### Base PF Percent
 

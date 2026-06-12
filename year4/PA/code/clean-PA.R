@@ -61,7 +61,7 @@ clean_pa_y4 <- function() {
     )
   
   ### Comprehensive list ----
-  pa_comp <- data.table::fread("year4/PA/data/PA_Y4_SFY25_Comprehensive.csv",
+  pa_comp <- data.table::fread("year4/PA/data/PA_Y4_SFY25_Comprehensive_Final.csv",
                    colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
@@ -115,7 +115,7 @@ clean_pa_y4 <- function() {
       borrower = trimws(stringr::str_extract(applicant, "^[^\\-\u2013\u2014]+")),
       # [keep] projects in fundable list are crosswalked to comprehensive, and we default the pwsid to the comprehensive list
       pwsid = pwsid.x,
-      project_id = clean_numeric_string(loan_number), 
+      project_id = clean_numeric_string(loan_number.x), 
       # [keep] project name is text after dash, we default o name on comprehensive
       project_name = trimws(stringr::str_extract(applicant, "(?<=-).*")), 
       project_name = dplyr::case_when(

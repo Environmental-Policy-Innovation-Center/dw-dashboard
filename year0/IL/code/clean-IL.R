@@ -106,19 +106,16 @@ clean_il_y0 <- function() {
       ),
       project_name = as.character(NA),
       project_cost = as.character(NA),
-      requested_amount = as.character(NA),
-      funding_amount = dplyr::case_when(
-        list == "Base Fundable" ~ clean_numeric_string(projected_loan_amount),
-        list == "LSLR Fundable" ~ clean_numeric_string(estimated_loan_amount),
-        .default = "No Information"
-      ),
-      funding_amount = ifelse(funding_amount == "0", "No Information", funding_amount),
+      funding_amount = as.character(NA),
       principal_forgiveness = dplyr::case_when(
         list == "Base Fundable" & is.na(convert_to_numeric(disadvantaged_community_principal_forgiveness)) ~ "0",
         list == "Base Fundable" ~ clean_numeric_string(disadvantaged_community_principal_forgiveness),
         list == "LSLR Fundable" ~ clean_numeric_string(estimated_loan_amount),
         .default = "No Information"
       ),
+      requested_amount = dplyr::case_when(
+        list %in% c("Base No Planning", "LSLR Fundable", "LSLR Planning") ~ clean_numeric_string(estimated_loan_amount),
+        TRUE ~ clean_numeric_string(projected_loan_amount)),
       project_description = str_squish(project_description),
       project_description = str_to_sentence(project_description),
       project_type =  dplyr::case_when(

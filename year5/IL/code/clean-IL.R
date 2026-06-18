@@ -1,9 +1,9 @@
-clean_il_y4 <- function() {
-
+clean_il_y5 <- function() {
+  
   # Fundable Lists -----
   ## Fundable PPL -----
-  il_ppl_f <- data.table::fread("year4/IL/data/IL_Y4_SFY26_Base_IIJAGenSupp_Fundable_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_ppl_f <- data.table::fread("year5/IL/data/il-sfy27-base-iija-gen-supp-fundable-list.csv",
+                                colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -14,24 +14,25 @@ clean_il_y4 <- function() {
     )
   
   ## Lead Fundable PPL -----
-  il_lead_f <- data.table::fread("year4/IL/data/IL_Y4_SFY26_LSLR_Fundable_List.csv",
-                   colClasses = "character", na.strings = "") |>
+  il_lead_f <- data.table::fread("year5/IL/data/il-sfy27-lead-fundable-list.csv",
+                                 colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
+    filter(!is.na(loan_applicant)) |>
     dplyr::mutate(
-      funding_amount = as.character(convert_to_numeric(principal_forgiveness_reserved, fill_na_0 = TRUE) + convert_to_numeric(loan_funding_reserved, fill_na_0 = TRUE)),
-      principal_forgiveness = clean_numeric_string(principal_forgiveness_reserved),
-      project_score = loan_priority_score,
+      funding_amount = as.character(convert_to_numeric(principal_forgiveness, fill_na_0 = TRUE) + convert_to_numeric(loan_at_0_00_percent, fill_na_0 = TRUE)),
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      project_score = priority_score,
       expecting_funding = "Yes",
       project_type = "Lead",
       list = "lead fundable"
     )
-
+  
   ## EC Fundable PPL -----
-  il_ec_f <- data.table::fread("year4/IL/data/IL_Y4_SFY26_EC_Fundable_List.csv",
-                   colClasses = "character", na.strings = "") |>
+  il_ec_f <- data.table::fread("year5/IL/data/il-sfy27-ec-fundable-list.csv",
+                               colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = as.character(convert_to_numeric(principal_forgiveness, fill_na_0 = TRUE) + convert_to_numeric(pwslp_funds_reserved, fill_na_0 = TRUE)),
+      funding_amount = as.character(convert_to_numeric(principal_forgiveness, fill_na_0 = TRUE) + convert_to_numeric(pwslp_funding_needed, fill_na_0 = TRUE)),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       project_score = loan_priority_score,
       expecting_funding = "Yes",
@@ -39,11 +40,11 @@ clean_il_y4 <- function() {
       list = "ec fundable"
     )
   
-
+  
   # Other Lists -----
   ## Exhausted Funding List -----
-  il_ppl_a <- data.table::fread("year4/IL/data/IL_Y4_SFY26_Base_IIJAGenSupp_Exhausted_Funding_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_ppl_a <- data.table::fread("year5/IL/data/il-sfy27-base-iija-gen-supp-exhausted-list.csv",
+                                colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -54,8 +55,8 @@ clean_il_y4 <- function() {
     )
   
   ## Planning Approval List -----
-  il_ppl_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_Base_IIJAGenSupp_Planning_Approval_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_ppl_pla_ap <- data.table::fread("year5/IL/data/il-sfy27-base-iija-gen-supp-planning-approval-list.csv",
+                                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -65,8 +66,8 @@ clean_il_y4 <- function() {
     )
   
   ## No Planning Approval List -----
-  il_ppl_no_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_Base_IIJAGenSupp_NoPlanning_Approval_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_ppl_no_pla_ap <- data.table::fread("year5/IL/data/il-sfy27-base-iija-gen-supp-no-planning-approval-list.csv",
+                                        colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -74,22 +75,22 @@ clean_il_y4 <- function() {
       expecting_funding = "No",
       list = "no planning approval"
     )
-
+  
   ## Lead Exhausted Funding List -----
-  il_lead_a <- data.table::fread("year4/IL/data/IL_Y4_SFY26_LSLR_Exhausted_Funding_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_lead_a <- data.table::fread("year5/IL/data/il-sfy27-lead-exhausted-funding-list.csv",
+                                 colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      project_score = loan_priority_score,
+      project_score = priority_score,
       expecting_funding = "No",
       list = "lead exhausted"
     )
   
   ## Lead Planning Approval List -----
-  il_lead_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_LSLR_Planning_Approval_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_lead_pla_ap <- data.table::fread("year5/IL/data/il-sfy27-lead-planning-approval-list.csv",
+                                      colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -100,8 +101,8 @@ clean_il_y4 <- function() {
     )
   
   ## Lead No Planning Approval List -----
-  il_lead_no_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_LSLR_NoPlanning_Approval_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_lead_no_pla_ap <- data.table::fread("year5/IL/data/il-sfy27-lead-no-planning-approval-list.csv",
+                                         colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -110,11 +111,11 @@ clean_il_y4 <- function() {
       project_type = "Lead",
       list = "lead no planning approval"
     )
-    
+  
   
   ## EC Exhausted Funding List -----
-  il_ec_no_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_EC_Exhausted_Funding_List.csv",
-                    colClasses = "character", na.strings = "") |>
+  il_ec_no_pla_ap <- data.table::fread("year5/IL/data/il-sfy27-ec-exhausted-funding-list.csv",
+                                       colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = "No Information",
@@ -124,13 +125,13 @@ clean_il_y4 <- function() {
       project_score = loan_priority_score,
       list = "ec exhausted"
     )
-
+  
   # Bind all lists (note: any data frame that starts with il_ will be bound) -----
   dfs <- mget(ls(pattern = "^il_"))
   dfs <- dfs[sapply(dfs, is.data.frame)]
   
   il_merge <- dplyr::bind_rows(dfs)
-
+  
   # Clean and process data -----
   il_clean <- il_merge |>
     dplyr::mutate(
@@ -143,18 +144,9 @@ clean_il_y4 <- function() {
       project_id = ifelse(is.na(project_id), "No Information", project_id),
       project_name = as.character(NA),
       project_cost = as.character(NA),
-      requested_amount = dplyr::case_when(
-        list == "fundable" ~ clean_numeric_string(projected_loan_amount),
-        list == "exhausted" ~ clean_numeric_string(projected_loan_amount),
-        list == "planning approval" ~ clean_numeric_string(projected_loan_amount),
-        list == "no planning approval" ~ clean_numeric_string(projected_loan_amount),
-        list == "ec fundable" ~ clean_numeric_string(requested_loan_amount),
-        list == "ec exhausted" ~ clean_numeric_string(requested_loan_amount),
-        list == "lead fundable" ~ clean_numeric_string(requested_loan_amount),
-        list == "lead exhausted" ~ clean_numeric_string(projected_loan_amount),
-        list == "lead planning approval" ~ clean_numeric_string(projected_loan_amount),
-        list == "lead no planning approval" ~ clean_numeric_string(projected_loan_amount),
-        .default = "No Information"
+      requested_amount = case_when(
+        list %in% c("lead fundable", "lead exhausted") ~ clean_numeric_string(total_funding_requested),
+        TRUE ~ clean_numeric_string(projected_loan_amount)
       ),
       project_description = str_squish(project_description),
       project_description = str_to_sentence(project_description),
@@ -164,16 +156,13 @@ clean_il_y4 <- function() {
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"
       ),
-      population = dplyr::case_when(
-        list == "fundable" ~ clean_numeric_string(population),
-        list == "exhausted"  ~ clean_numeric_string(population),
-        .default = "No Information"
-      ),
+      population = as.character(NA),
       disadvantaged = as.character(NA),
-      project_rank = as.character(NA),
+      project_rank = str_squish(rank),
+      project_rank = replace_na(project_rank, "No Information"),
       project_score = ifelse(is.na(project_score), "No Information", project_score),
       state = "Illinois",
-      state_fiscal_year = "2026"
+      state_fiscal_year = "2027"
     ) |>
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
@@ -182,67 +171,82 @@ clean_il_y4 <- function() {
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
-  #il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
-
-  # Check project id
-  # dupes_list <- il_clean |> dplyr::filter(project_id %in% c("6742","6744", "6810", "7030", "7281", "7594")) |> arrange(project_id) |> View()
+  # dupes <- il_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::filter(n>1)
   
-  il_clean <- il_clean |>
-    dplyr::mutate(keep = dplyr::case_when(
-      # drop the ec fundable duplicates because they lack the population column, data needed from ec fundable is manually entered below
-      project_id == "6742" & list == "ec fundable" ~ FALSE, 
-      project_id == "6744" & list == "ec fundable" ~ FALSE, 
-      project_id == "6810" & list == "ec fundable" ~ FALSE, 
-      project_id == "7030" & list == "ec fundable" ~ FALSE, 
-      project_id == "7281" & list == "exhausted" ~ FALSE, # default to ec exhausted
-      project_id == "7594" & list  == "lead planning approval" ~ FALSE, # keep first instance (same info)
-      .default = TRUE)
-  ) |>
-  dplyr::filter(keep) |>
-  dplyr::select(-keep) |>
-  dplyr::mutate(
-      pwsid =ifelse(project_id == "6744", "IL0335030", pwsid),
-      pwsid =ifelse(project_id == "6810", "IL1434750", pwsid),
-      pwsid =ifelse(project_id == "7281", "IL1190200", pwsid)
-    )
-
+  # dupes_list <- il_clean %>%
+  #   filter(project_id %in% dupes$project_id) %>%
+  #   filter(project_id != "No Information")
+  
   ####### Decision:  
-  # Notes for projects on multiple project lists:
+
+  # Projects on the fundable and EC fundable lists (e.g., 6383): 
+      # For funding amounts, we'll take the sum of the Principal Forgiveness and PWSLP Funding Needed from the EC fundable list only
+      # For PF amounts, we'll sum the PF amounts from both the gen fundable and EC fundable lists
   
-  # For projects that appear in both the Base/IIJA Gen Supp fundable List and EC Fundable List,
-  # we will default to using the funding amount info in the ec fundable List AND
-  # PF is sum of Principal Forgiveness from both lists is the total principal forgiveness 
+  # Relevant projects: 6383, 6742, 6810, 7429, 7610
   
-  # Projects: 6742, 6744, 6810, 7030
-  
-  il_clean <- il_clean |>
+  il_clean <- il_clean %>%
     dplyr::mutate(
-      funding_amount = case_when(
-        project_id == "6742" ~ "10698301",
-        project_id == "6744" ~ "27000000",
-        project_id == "6810" ~ "8500000",
-        project_id == "7030" ~ "8499000",
-        TRUE ~ funding_amount
-      ),
+      keep = case_when(
+        project_id == "6383" & list == "fundable" ~ FALSE,
+        project_id == "6742" & list == "fundable" ~ FALSE,
+        project_id == "6810" & list == "fundable" ~ FALSE,
+        project_id == "7281" & list == "fundable" ~ FALSE,
+        project_id == "7429" & list == "fundable" ~ FALSE,
+        project_id == "7610" & list == "fundable" ~ FALSE,
+        TRUE ~ TRUE),
       principal_forgiveness = case_when(
-        project_id == "6742" ~ "9709490",
-        project_id == "6744" ~ "9984540",
-        project_id == "6810" ~ "7100000",
-        project_id == "7030" ~ "8499000",
-        TRUE ~ principal_forgiveness
-      )
-    )
+        project_id == "6383" ~ "7117000",
+        project_id == "6742" ~ "8439541",
+        project_id == "6810" ~ "6151750",
+        project_id == "7281" ~ "6897490",
+        project_id == "7429" ~ "5414650",
+        project_id == "7610" ~ "5200000",
+        TRUE ~ principal_forgiveness)
+      ) 
   
-  #For projects that appear in both the Base/IIJA Gen Supp Fundable List and EC Exhausted Funding List, 
-  # default to funding amount info in the Base/IIJA Gen Supp Fundable List (since only projects on the fundable list are expecting funding)
+ # Projects on exhausted and EC exhausted lists (e.g., 7110): 
+    # just keep the information from the EC exhausted list
+    # The project is eligible for both gen and EC funds (which is why it appears twice), but we'll keep this as one EC project
   
-  # no projects meet this criteria for Y4
+  # Relevant projects: 7110, 7123, 7140, 7141 7355, 7362, 7598
   
+  il_clean <- il_clean %>%
+    dplyr::mutate(
+      keep = case_when(
+        project_id == "7110" & list == "exhausted" ~ FALSE,
+        project_id == "7123" & list == "exhausted" ~ FALSE,
+        project_id == "7140" & list == "exhausted" ~ FALSE,
+        project_id == "7141" & list == "exhausted" ~ FALSE,
+        project_id == "7355" & list == "exhausted" ~ FALSE,
+        project_id == "7362" & list == "exhausted" ~ FALSE,
+        project_id == "7598" & list == "exhausted" ~ FALSE,
+        TRUE ~ keep))
+  
+
+  # Projects on fundable and EC exhausted lists (e.g., 7318): 
+    # These will be considered EC projects, but we'll keep the funding amounts and PF information from the gen fundable list
+  
+  # Relevant projects: 7030, 7318, 7889
+  
+  il_clean <- il_clean %>%
+    dplyr::mutate(
+      keep = case_when(
+        project_id == "7030" & list == "ec exhausted" ~ FALSE,
+        project_id == "7318" & list == "ec exhausted" ~ FALSE,
+        project_id == "7889" & list == "ec exhausted" ~ FALSE,
+        TRUE ~ keep))
+  
+
+  # drop projects edited above
+  il_clean <- il_clean |>
+    dplyr::filter(keep) |>
+    dplyr::select(-keep)
   
   # Check for disinfection byproduct in description
   # il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
-    
+  
   # Check for lead subtypes
   # il_clean |>
   #   dplyr::filter(project_type=="Lead") |>
@@ -258,7 +262,7 @@ clean_il_y4 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "both")
-
+  
   ####### Decision: No lead projects classified as both
   
   # # Check for lead subtypes: Unknown
@@ -276,23 +280,23 @@ clean_il_y4 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
-
-#   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
-#              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
-# 1:             <NA> North Aurora IL0890600       7428         <NA>         Lead         <NA>   No Information No Information        No Information No Information Replace 8,000 lf of watermain and service lines          <NA>         <NA> No Information
-#    expecting_funding    state state_fiscal_year                      list lead_type
-#               <char>   <char>            <char>                    <char>    <char>
-# 1:                No Illinois              2026 lead no planning approval   unknown
+  
+  #   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
+  #              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
+  # 1:             <NA> North Aurora IL0890600       7428         <NA>         Lead         <NA>   No Information No Information        No Information No Information Replace 8,000 lf of watermain and service lines          <NA>         <NA> No Information
+  #    expecting_funding    state state_fiscal_year                      list lead_type
+  #               <char>   <char>            <char>                    <char>    <char>
+  # 1:                No Illinois              2026 lead no planning approval   unknown
   ####### Decision: Project is replacement?
   
   ####### SANITY CHECKS END #######
-
+  
   # il_clean <- il_clean |>
   #   dplyr::select(-list)
-
+  
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   
   return(il_clean)
-
+  
 }

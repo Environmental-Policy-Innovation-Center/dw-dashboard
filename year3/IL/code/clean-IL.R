@@ -9,6 +9,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = clean_numeric_string(estimated_loan_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       list = "fundable"
@@ -21,6 +22,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = as.character(convert_to_numeric(principal_forgiveness_reserved, fill_na_0 = TRUE) + convert_to_numeric(loan_funding_reserved, fill_na_0 = TRUE)),
       principal_forgiveness =clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       project_type = "Lead",
@@ -34,6 +36,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = as.character(convert_to_numeric(principal_forgiveness, fill_na_0 = TRUE) + convert_to_numeric(pwslp_funds_reserved, fill_na_0 = TRUE)),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       project_type = "Emerging Contaminants",
@@ -48,6 +51,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       project_score = loan_priority_score,
       expecting_funding = "No",
       list = "exhausted"
@@ -60,6 +64,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       list = "planning approval"
     )
@@ -71,6 +76,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       list = "no planning approval"
     )
@@ -82,6 +88,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead planning approval"
@@ -94,6 +101,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead no planning approval"
@@ -106,6 +114,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Emerging Contaminants",
       list = "ec no planning approval"
@@ -131,7 +140,6 @@ clean_il_y3 <- function() {
       project_id = ifelse(is.na(project_id), "No Information", project_id),
       project_name = as.character(NA),
       project_cost = as.character(NA),
-      requested_amount = clean_numeric_string(requested_loan_amount),
       project_description = str_squish(project_description),
       project_description = str_to_sentence(project_description),
       project_type = dplyr::case_when(

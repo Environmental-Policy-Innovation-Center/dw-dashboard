@@ -149,8 +149,14 @@ clean_il_y1 <- function() {
       project_name = as.character(NA),
       project_cost = as.character(NA),
       project_rank = as.character(NA),
-      funding_amount = as.character(NA),
-      requested_amount = clean_numeric_string(estimated_loan_amount),
+      funding_amount = case_when(
+        list %in% c("fundable", "lead fundable", "ec fundable") ~ clean_numeric_string(estimated_loan_amount),
+        TRUE ~ "No Information"
+      ),
+      requested_amount = case_when(
+        list %in% c("fundable", "lead fundable", "ec fundable") ~ "No Information",
+        TRUE ~ clean_numeric_string(estimated_loan_amount)
+        ),
       project_id = ifelse(l17_number=="TBD", "No Information", l17_number)
     ) |>
     dplyr::mutate(

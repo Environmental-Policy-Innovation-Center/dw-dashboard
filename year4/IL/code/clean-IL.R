@@ -6,7 +6,7 @@ clean_il_y4 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
+      funding_amount = clean_numeric_string(projected_loan_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       project_score = loan_priority_score,
       expecting_funding = "Yes",
@@ -144,13 +144,10 @@ clean_il_y4 <- function() {
       project_name = as.character(NA),
       project_cost = as.character(NA),
       requested_amount = dplyr::case_when(
-        list == "fundable" ~ clean_numeric_string(projected_loan_amount),
         list == "exhausted" ~ clean_numeric_string(projected_loan_amount),
         list == "planning approval" ~ clean_numeric_string(projected_loan_amount),
         list == "no planning approval" ~ clean_numeric_string(projected_loan_amount),
-        list == "ec fundable" ~ clean_numeric_string(requested_loan_amount),
         list == "ec exhausted" ~ clean_numeric_string(requested_loan_amount),
-        list == "lead fundable" ~ clean_numeric_string(requested_loan_amount),
         list == "lead exhausted" ~ clean_numeric_string(projected_loan_amount),
         list == "lead planning approval" ~ clean_numeric_string(projected_loan_amount),
         list == "lead no planning approval" ~ clean_numeric_string(projected_loan_amount),

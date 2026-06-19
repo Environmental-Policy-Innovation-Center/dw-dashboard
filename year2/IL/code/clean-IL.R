@@ -7,8 +7,8 @@ clean_il_y2 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      requested_amount = clean_numeric_string(requested_loan_amount),  
-      funding_amount = "No Information",
+      requested_amount = "No Information",  
+      funding_amount = clean_numeric_string(requested_loan_amount),
       principal_forgiveness = clean_numeric_string(disadvantaged_community_principal_forgiveness),
       disadvantaged = ifelse(as.numeric(disadvantaged_community_principal_forgiveness) > 0, "Yes", "No Information"),
       project_score = loan_priority_score,
@@ -35,8 +35,8 @@ clean_il_y2 <- function() {
                    colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      requested_amount = clean_numeric_string(requested_loan_amount),  
-      funding_amount = clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
+      funding_amount = clean_numeric_string(requested_loan_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness_reserved),
       project_score = loan_priority_score,
       expecting_funding = "Yes",

@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Tennessee"
-state_abbr <- "TN"
+state_name <- "Pennsylvania"
+state_abbr <- "PA"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -45,25 +45,6 @@ financial_by_project_type <- financial |>
   dplyr::group_by(state, state_fiscal_year, project_type) |>
   dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
             .groups = "drop") 
-
-# base <- financial %>%
-#   filter(fed_cap_grant == "Base")
-
-# gen_supp <- financial %>%
-#   filter(fed_cap_grant == "IIJA Gen Supp")
-
-# base_gen_supp <- financial %>%
-#   filter(fed_cap_grant %in% c("Base & IIJA Gen Supp", "Base and IIJA Gen Supp"))
-
-# base_gen_supp <- bind_rows(base, gen_supp, base_gen_supp) %>%
-#   group_by(state, state_fiscal_year) %>%
-#   summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
-
-# lead <- financial %>%
-#   filter(fed_cap_grant %in%  c("LSLR", "LSLR_FFY22","LSLR_FFY23"))
-
-# ec <- financial %>%
-#   filter(fed_cap_grant %in% c("EC","EC_FFY22", "EC_FFY23"))
 
 ```
 
@@ -104,511 +85,7 @@ year_table <- factor(year_table)
 year_table <- data.frame(state_fiscal_year=year_table)
 ```
 
-# All Sources & Projects -->
-
-# Comparing Available, Costs, and Funding (DEPRECATED)
-
-```{r}  
-
-## Comparing Project Costs & Funds Available
-all_funds <- financial |>
-  dplyr::select(state, state_fiscal_year, total_funding_available) |>
-  dplyr::group_by(state, state_fiscal_year) |>
-  dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE))
-
-all_funds_to_compare <- project_type_df |>
-  dplyr::select(state, state_fiscal_year, total_project_cost, total_project_cost_ef, total_requested_amount, total_requested_amount_ef, total_funding_amount) |>
-  dplyr::group_by(state, state_fiscal_year) |>
-  dplyr::summarize(
-    total_project_cost = sum(total_project_cost, na.rm = TRUE),
-    total_project_cost_ef = sum(total_project_cost_ef, na.rm = TRUE), #2025/11/03, per Lauren's request, if the total funding amount value is 0, use this value
-    total_requested_amount = sum(total_requested_amount, na.rm = TRUE),
-    total_requested_amount_ef = sum(total_requested_amount_ef, na.rm = TRUE), #2025/11/03 check in with Danielle
-    total_funding_amount = sum(total_funding_amount, na.rm=TRUE)) |>
-  dplyr::left_join(all_funds, by=c("state","state_fiscal_year")) 
-  
-compare_demand_available_funding <- all_funds_to_compare |>
-  dplyr::ungroup() |>
-  dplyr::mutate(
-    # Depicted as On Fundable List
-    total_funding_amount_ = dplyr::case_when(
-      total_funding_amount > 0 ~ total_funding_amount,
-      total_requested_amount_ef > 0 ~ total_requested_amount_ef,
-      total_project_cost_ef > 0 ~ total_project_cost_ef,
-      .default = 0
-    ),
-    funding_rule = dplyr::case_when(
-      total_funding_amount > 0 ~ "* Funding Amount",
-      total_requested_amount_ef > 0 ~ "** Requested Amount on Fundable List",
-      total_project_cost_ef > 0 ~ "*** Project Cost on Fundable List",
-      TRUE ~ "Default"
-    ),
-    # Depicted as Demand for Funds
-    total_demand = dplyr::case_when(
-      total_requested_amount > 0 ~ total_requested_amount,
-      total_project_cost > 0 ~ total_project_cost,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount > 0 ~ "^ Requested Amount",
-     total_project_cost > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default"
-    )
-    )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount) |>   
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount_)) |> 
-  dplyr::mutate(
-    name =case_when(
-      name == "total_funding_available" ~ "Available Funds",
-      name == "total_funding_amount_" ~ "On Fundable List",
-      name == "total_demand" ~ "Demand for Funds"
-      ),
-    name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),
-    rule_label = dplyr::case_when(
-      name == "On Fundable List" ~ funding_rule,
-      name == "Demand for Funds" ~ demand_rule,
-      TRUE ~ NA_character_
-    ),
-    plot_str = paste0(
-      name, " ", 
-      ifelse(!is.na(rule_label), 
-      paste0("(", stringr::str_remove(rule_label, "^[\\*\\^]+\\s*"), "): "), ": "),
-      format_currency(value),
-      "<br>", 
-      state_fiscal_year    
-    ),
-    rule_determinant = ifelse(is.na(rule_label), "", stringr::str_extract(rule_label, "^[\\*\\^]+")
-    )
-    )
-
-dodge_width <- 0.9
-if (sum(compare_demand_available_funding$value, na.rm = TRUE) > 0) {  
-  comp_dem_avail_fund_p <- ggplot(compare_demand_available_funding, aes(x=state_fiscal_year, y=value, fill=name, 
-  text=plot_str)) + 
-    geom_bar(stat = "identity", position = position_dodge(width = dodge_width)) + 
-    scale_y_continuous(labels=label_currency()) + 
-    ggplot2::scale_fill_manual(values = 
-    c(
-      "Available Funds" = "#4ea324",
-      "Demand for Funds" = "#172f60",
-      "On Fundable List" = "#791a7b"
-    ), name = "") + 
-    labs(
-      x="", 
-      y="",
-      title="Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List", 
-      subtitle=get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)
-      ) + 
-    epic_chart_theme + 
-    theme(legend.position="bottom")
-  
-  comp_dem_avail_fund_gp <- ggplotly(comp_dem_avail_fund_p, tooltip="text") |>
-    layout(title = list(text = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List',
-                                      '<br>',
-                                      get_subtitle_str(compare_demand_available_funding$state_fiscal_year, state_name)
-                                      )))
-  
-  
-  if (save_plots) {
-    run_save_plots(gg_plot=comp_dem_avail_fund_p,
-                   gp_object=comp_dem_avail_fund_gp,
-                   name="compare-unmet-demand-available-funds-expected-funds-yoy")
-  }
-  
-  comp_dem_avail_fund_gp
-}
-```
-
-### Further break down by project type (DEPRECATED)
-```{r}
-# get total funding available for each fed cap grant, merge with project type
-financial_by_project_type <- financial |>
-  dplyr::mutate(project_type = case_when(
-    fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
-    fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants (EC)",
-    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp", "Base and IIJA Gen Supp") ~ "General", 
-    TRUE ~ paste0("Combined: ", fed_cap_grant)
-  )) |>
-  dplyr::group_by(state, state_fiscal_year, project_type) |>
-  dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
-            .groups = "drop") |>
-  dplyr::filter(total_funding_available > 0)            
-
-all_funds_to_compare_type <- project_type_df |>
-  dplyr::select(state, state_fiscal_year, project_type, total_project_cost, total_project_cost_ef, total_requested_amount, total_requested_amount_ef, total_funding_amount) |>
-  dplyr::group_by(state, state_fiscal_year, project_type) |>
-  dplyr::summarize(
-    total_project_cost = sum(total_project_cost, na.rm = TRUE),
-    total_project_cost_ef = sum(total_project_cost_ef, na.rm = TRUE), #2025/11/03, per Lauren's request, if the total funding amount value is 0, use this value
-    total_requested_amount = sum(total_requested_amount, na.rm = TRUE),
-    total_requested_amount_ef = sum(total_requested_amount_ef, na.rm = TRUE), #2025/11/03 check in with Danielle
-    total_funding_amount = sum(total_funding_amount, na.rm=TRUE)) |>
-  dplyr::left_join(financial_by_project_type, by=c("state","state_fiscal_year", "project_type")) 
-  
-compare_demand_available_funding_type <- all_funds_to_compare_type |>
-  dplyr::ungroup() |>
-  dplyr::mutate(
-    # Depicted as On Fundable List
-    total_funding_amount_ = dplyr::case_when(
-      total_funding_amount > 0 ~ total_funding_amount,
-      total_requested_amount_ef > 0 ~ total_requested_amount_ef,
-      total_project_cost_ef > 0 ~ total_project_cost_ef,
-      .default = 0
-    ),
-    funding_rule = dplyr::case_when(
-      total_funding_amount > 0 ~ "* Funding Amount",
-      total_requested_amount_ef > 0 ~ "** Requested Amount on Fundable List",
-      total_project_cost_ef > 0 ~ "*** Project Cost on Fundable List",
-      TRUE ~ "Default"
-    ),
-    # Depicted as Demand for Funds
-    total_demand = dplyr::case_when(
-      total_requested_amount > 0 ~ total_requested_amount,
-      total_project_cost > 0 ~ total_project_cost,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount > 0 ~ "^ Requested Amount",
-     total_project_cost > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default"
-    )
-    )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, total_funding_amount) |>   
-  tidyr::pivot_longer(cols=c(total_demand, total_funding_available, total_funding_amount_)) |> 
-  dplyr::mutate(
-    name =case_when(
-      name == "total_funding_available" ~ "Available Funds",
-      name == "total_funding_amount_" ~ "On Fundable List",
-      name == "total_demand" ~ "Demand for Funds"
-      ),
-    name = factor(name, levels=c("Available Funds", "On Fundable List", "Demand for Funds")),
-    rule_label = dplyr::case_when(
-      name == "On Fundable List" ~ funding_rule,
-      name == "Demand for Funds" ~ demand_rule,
-      TRUE ~ NA_character_
-    ),
-    plot_str = paste0(
-      name, " ", 
-      ifelse(!is.na(rule_label), 
-      paste0("(", stringr::str_remove(rule_label, "^[\\*\\^]+\\s*"), "): "), ": "),
-      format_currency(value),
-      "<br>", 
-      state_fiscal_year    
-    ),
-    rule_determinant = ifelse(is.na(rule_label), "", stringr::str_extract(rule_label, "^[\\*\\^]+")),
-    project_type = as.factor(project_type)
-    )
-
-
-for (type in levels(compare_demand_available_funding_type$project_type)){
-
-# Define bar width and dodge width constants
-bar_width  <- 0.25
-dodge_width <- 0.8
-
-# Assign each bar_group a dodge x-offset
-dodge_offsets <- c(
-    "Available Funds"  = -dodge_width / 3,
-    "On Fundable List" =  0,
-    "Demand for Funds" =  dodge_width / 3
-)
-
-filtered_data <- compare_demand_available_funding_type |>
-    dplyr::filter(
-        project_type == type |
-        (type %in% c("Lead", "Emerging Contaminants (EC)") & project_type == "Both Lead and EC")
-    ) |>
-    dplyr::mutate(
-        bar_group = as.character(name),
-        fill_group = dplyr::case_when(
-            bar_group == "Available Funds"  ~ "Available Funds",
-            bar_group == "Demand for Funds" & project_type == "Both Lead and EC" ~ "Demand for Funds (Lead and EC)",
-            bar_group == "Demand for Funds" ~ "Demand for Funds",
-            bar_group == "On Fundable List" & project_type == "Both Lead and EC" ~ "On Fundable List (Lead and EC)",
-            bar_group == "On Fundable List" ~ "On Fundable List"
-        ),
-        fill_group = factor(fill_group, levels=c("Available Funds", "On Fundable List", "On Fundable List (Lead and EC)", "Demand for Funds", "Demand for Funds (Lead and EC)")),
-        x_num = as.numeric(state_fiscal_year) + dodge_offsets[bar_group]
-    ) |>
-    # stack within each year + bar_group: Primary first, Lead+EC on top
-    dplyr::arrange(state_fiscal_year, bar_group, project_type == "Both Lead and EC") |>
-    dplyr::group_by(state_fiscal_year, bar_group) |>
-    dplyr::mutate(
-        ymax = cumsum(tidyr::replace_na(value, 0)),
-        ymin = ymax - tidyr::replace_na(value, 0)
-    ) |>
-    dplyr::ungroup()
-
-
-  # Skip if no data for this type
-  if(nrow(filtered_data) == 0) {
-    next
-  }
-
-  comp_dem_avail_fund_type_p <- ggplot2::ggplot(filtered_data) +
-    ggplot2::geom_rect(ggplot2::aes(
-        xmin  = x_num - bar_width / 2,
-        xmax  = x_num + bar_width / 2,
-        ymin  = ymin,
-        ymax  = ymax,
-        fill  = fill_group,
-        text  = plot_str,
-        group = fill_group
-    )) +
-    ggplot2::scale_y_continuous(labels = label_currency()) +
-    ggplot2::scale_x_continuous(
-        breaks = seq_along(levels(filtered_data$state_fiscal_year)),
-        labels = levels(filtered_data$state_fiscal_year)
-    ) +
-    ggplot2::scale_fill_manual(values = c(
-        "Available Funds"              = "#4ea324",
-        "Demand for Funds"             = "#172f60",
-        "On Fundable List"             = "#791a7b",
-        "Demand for Funds (Lead and EC)" = "#B15712",
-        "On Fundable List (Lead and EC)" = "#ff6f00ff"
-    ), name = "") +
-    labs(
-        x        = "",
-        y        = "",
-        title    = paste0("Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ", type),
-        subtitle = get_subtitle_str(compare_demand_available_funding_type$state_fiscal_year, state_name)
-    ) +
-    epic_chart_theme +
-    theme(legend.position = "bottom")
-  
-  comp_dem_avail_fund_type_gp <- plotly::ggplotly(comp_dem_avail_fund_type_p, tooltip="text") |>
-    plotly::layout(title = list(text = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ', type,
-                                      '<br>',
-                                      get_subtitle_str(compare_demand_available_funding_type$state_fiscal_year, state_name)
-                                      ))
-           )
-
-  if (save_plots) {
-    run_save_plots(
-      gg_plot=comp_dem_avail_fund_type_p,
-      gp_object=comp_dem_avail_fund_type_gp,
-      name = paste0(
-        gsub("_", "-", janitor::make_clean_names(type)),
-        "-compare-unmet-demand-available-funds-expected-funds-yoy"
-        )
-        )
-  }
-
-  comp_dem_avail_fund_type_gp
-
-}
-```
-
-# Unmet demand: requested amount or project cost compared to available funds (DEPRECATED)
-
-```{r}
-
-unmet_demand <- all_funds_to_compare |>
-  dplyr::ungroup() |>
-  dplyr::mutate(
-    # Depicted as Demand for Funds
-    total_demand = dplyr::case_when(
-      total_requested_amount > 0 ~ total_requested_amount,
-      total_project_cost > 0 ~ total_project_cost,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount > 0 ~ "^ Requested Amount",
-     total_project_cost > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default"
-    ),
-    unmet_demand = total_demand - total_funding_available
-    )|>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount, -total_demand) |>   
-  tidyr::pivot_longer(cols=c(unmet_demand, total_funding_available)) |> 
-  dplyr::mutate(
-    name =case_when(
-      name == "total_funding_available" ~ "Available Funds",
-      name == "unmet_demand" ~ "Unmet Demand"
-      ),
-    name = factor(name, levels=c("Unmet Demand", "Available Funds")),
-    rule_label = dplyr::case_when(
-      name == "Unmet Demand" ~ demand_rule,
-      TRUE ~ NA_character_
-    ),
-    plot_str = paste0(
-      name, " ", 
-      ifelse(!is.na(rule_label), 
-      paste0("(", stringr::str_remove(rule_label, "^[\\*\\^]+\\s*"), "): "), ": "),
-      format_currency(value),
-      "<br>", 
-      state_fiscal_year    
-    ),
-    rule_determinant = ifelse(is.na(rule_label), "", stringr::str_extract(rule_label, "^[\\*\\^]+")
-    )
-    )
-
-
-if(sum(unmet_demand$value[unmet_demand$name=="Unmet Demand"], na.rm=TRUE) > 0) {
-  
-  all_pc_p <- ggplot(unmet_demand, aes(x=state_fiscal_year, y=value, fill=name, text=plot_str)) + 
-    geom_bar(stat="identity", position="stack") + 
-    scale_y_continuous(labels=label_currency()) + 
-    scale_fill_manual(values = comp_colors, 
-                      name = "") + 
-    labs(x="", y="", 
-         title="Comparing Demand to Available Funds", 
-         subtitle=get_subtitle_str(unmet_demand$state_fiscal_year, state_name)) + 
-    epic_chart_theme
-  
-  all_pc_gp <- ggplotly(all_pc_p, tooltip="text") %>%
-    layout(title = list(text = paste0('Comparing Demand to Available Funds',
-                                      '<br>',
-                                      get_subtitle_str(unmet_demand$state_fiscal_year, state_name))))
-  
-  
-  
-  if (save_plots) {
-    run_save_plots(gg_plot = all_pc_p,
-                   gp_object = all_pc_gp,
-                   name = "compare-requested-amount-or-project-cost-available-funds-all-yoy") 
-    }
-  
-  all_pc_gp
-}
-```
-
-# Unmet demand: requested amount or project cost compared to available funds by type (General, Lead, EC) (DEPRECATED)
-
-```{r}
-unmet_demand_type <- all_funds_to_compare_type |>
-  dplyr::ungroup() |>
-  dplyr::mutate(
-    total_demand = dplyr::case_when(
-      total_requested_amount > 0 ~ total_requested_amount,
-      total_project_cost > 0 ~ total_project_cost,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount > 0 ~ "^ Requested Amount",
-     total_project_cost > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default"
-    ),
-    unmet_demand = total_demand - tidyr::replace_na(total_funding_available, 0)
-  ) |>
-  dplyr::select(-total_project_cost, -total_project_cost_ef, -total_requested_amount, -total_requested_amount_ef, -total_funding_amount, -total_demand) |>   
-  tidyr::pivot_longer(cols = c(unmet_demand, total_funding_available)) |> 
-  dplyr::mutate(
-    name = case_when(
-      name == "total_funding_available" ~ "Available Funds",
-      name == "unmet_demand"            ~ "Unmet Demand"
-    ),
-    name = factor(name, levels = c("Available Funds", "Unmet Demand")),
-    rule_label = dplyr::case_when(
-      name == "Unmet Demand" ~ demand_rule,
-      TRUE ~ NA_character_
-    ),
-    plot_str = paste0(
-      name, " ", 
-      ifelse(!is.na(rule_label), 
-             paste0("(", stringr::str_remove(rule_label, "^[\\*\\^]+\\s*"), "): "), ": "),
-      format_currency(value),
-      "<br>", 
-      state_fiscal_year    
-    ),
-    rule_determinant = ifelse(is.na(rule_label), "", stringr::str_extract(rule_label, "^[\\*\\^]+")),
-    project_type = as.factor(project_type)
-  )
-
-
-for (type in levels(unmet_demand_type$project_type)) {
-
-  # Base filter: include Both Lead and EC rows for Lead / EC types
-  filtered_data <- unmet_demand_type |>
-    dplyr::filter(
-      project_type == type |
-      (type %in% c("Lead", "Emerging Contaminants (EC)") & project_type == "Both Lead and EC")
-    )
-
-  # Drop 2022 for Lead / EC
-  if (type %in% c("Lead", "Emerging Contaminants (EC)")) {
-    filtered_data <- filtered_data |>
-      dplyr::filter(state_fiscal_year != "2022") |>
-      dplyr::mutate(
-        state_fiscal_year = as.character(state_fiscal_year),
-        state_fiscal_year = as.factor(state_fiscal_year)
-      )
-  }
-
-  if (nrow(filtered_data) == 0) next
-
-  filtered_data <- filtered_data |>
-    dplyr::mutate(
-      fill_group = dplyr::case_when(
-        name == "Available Funds"  ~ "Available Funds",
-        name == "Unmet Demand" & project_type == "Both Lead and EC" ~ "Unmet Demand (Lead and EC)",
-        name == "Unmet Demand" ~ "Unmet Demand"
-      ),
-      # Legend order
-      fill_group = factor(fill_group, levels = c("Unmet Demand (Lead and EC)", "Unmet Demand", "Available Funds")),
-      # Separate stack order column
-      stack_order = dplyr::case_when(
-        fill_group == "Available Funds"            ~ 1,
-        fill_group == "Unmet Demand"               ~ 2,
-        fill_group == "Unmet Demand (Lead and EC)" ~ 3
-      )
-    ) |>
-    dplyr::arrange(state_fiscal_year, stack_order) |>
-    dplyr::group_by(state_fiscal_year) |>
-    dplyr::mutate(
-      ymax = cumsum(tidyr::replace_na(value, 0)),
-      ymin = ymax - tidyr::replace_na(value, 0)
-    ) |>
-    dplyr::ungroup()
-
-  comp_unmet_avail_fund_type_p <- ggplot2::ggplot(filtered_data) +
-    ggplot2::geom_rect(ggplot2::aes(
-      xmin  = as.numeric(state_fiscal_year) - 0.4,
-      xmax  = as.numeric(state_fiscal_year) + 0.4,
-      ymin  = ymin,
-      ymax  = ymax,
-      fill  = fill_group,
-      text  = plot_str,
-      group = fill_group
-    )) +
-    ggplot2::scale_y_continuous(labels = label_currency()) +
-    ggplot2::scale_x_continuous(
-      breaks = seq_along(levels(filtered_data$state_fiscal_year)),
-      labels = levels(filtered_data$state_fiscal_year)
-    ) +
-    ggplot2::scale_fill_manual(values = comp_colors, name = "") +
-    labs(
-      x        = "",
-      y        = "",
-      title    = paste0("Comparing Demand to Available Funds: ", type),
-      subtitle = get_subtitle_str(compare_demand_available_funding_type$state_fiscal_year, state_name)
-    ) +
-    epic_chart_theme +
-    theme(legend.position = "bottom")
-
-  comp_unmet_avail_fund_type_gp <- plotly::ggplotly(comp_unmet_avail_fund_type_p, tooltip = "text") |>
-    plotly::layout(title = list(text = paste0(
-      'Comparing Demand to Available Funds: ', type,
-      '<br>',
-      get_subtitle_str(filtered_data$state_fiscal_year, state_name)
-    )))
-
-  if (save_plots) {
-    run_save_plots(
-      gg_plot   = comp_unmet_avail_fund_type_p,
-      gp_object = comp_unmet_avail_fund_type_gp,
-      name = paste0(
-        gsub("_", "-", janitor::make_clean_names(type)),
-        "-compare-unmet-demand-available-funds-yoy"
-      )
-    )
-  }
-
-  comp_unmet_avail_fund_type_gp
-
-}
-```
-
+# All Sources & Projects --
 
 # DAC
 ## Comparing Project Cost and Funding Available
@@ -710,10 +187,11 @@ demand_df <- all_projects |>
    dplyr::mutate(
     dplyr::across(c(funding_amount, requested_amount, project_cost), as.numeric),
     dplyr::across(c(funding_amount, requested_amount, project_cost), \(x) ifelse(x == 0, NA, x)),
-    selected_demand = coalesce(requested_amount, project_cost),
+    selected_demand = coalesce(requested_amount, project_cost, funding_amount), 
     source_demand = dplyr::case_when(
       requested_amount > 0 ~ "requested_amount", 
       project_cost > 0 ~ "project_cost", 
+      funding_amount > 0 ~ "funding_amount", 
       .default = "check"
     )
   )
@@ -888,24 +366,33 @@ combined_project_type <- dplyr::bind_rows(
   ) 
 
 for (type in levels(combined_project_type$project_type)){
-  filtered_data <- combined_project_type |>
-      dplyr::filter(
-          project_type == type |
-          (type %in% c("Lead", "Emerging Contaminants (EC)") & project_type == "Both Lead and EC")
-      ) 
-
-  # Skip if no data for this type
-  if(nrow(filtered_data) == 0) {
-    next
-  }
-
+  
   stacked_bars_type <- dplyr::bind_rows(
     funding_amount_df_summary |> 
       dplyr::rename(`On fundable list` = funding_amount) |>
-      dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type),  value = `On fundable list`, category = "On Fundable List", alpha_var = source_funding, stack_var = source_funding),
+      dplyr::transmute(
+        state_fiscal_year, 
+        project_type = dplyr::case_when(
+            project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
+            .default = project_type
+        ),  
+        value = `On fundable list`, 
+        category = "On Fundable List", 
+        alpha_var = source_funding, 
+        stack_var = source_funding
+        ),
     demand_df_summary |> 
       dplyr::rename(`Demand for Funds` = demand) |>
-      dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type),  value = `Demand for Funds`, category = "Demand for Funds", alpha_var = source_demand, stack_var = source_demand)
+      dplyr::transmute(
+        state_fiscal_year, 
+          project_type = dplyr::case_when(
+            project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
+            .default = project_type
+        ),  
+        value = `Demand for Funds`, 
+        category = "Demand for Funds", 
+        alpha_var = source_demand, 
+        stack_var = source_demand)
   ) |>
     dplyr::filter(
       project_type == type
@@ -936,26 +423,53 @@ for (type in levels(combined_project_type$project_type)){
 
   plot_tile_demand_type = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ', type)
 
-  demand_type_p <- ggplot2::ggplot() +
-    # Available Funds — left
+  avail_funds_layer <- if (nrow(financial_by_project_type|> dplyr::ungroup() |> dplyr::filter(project_type == type)) > 0) {
     ggplot2::geom_rect(
       data = financial_by_project_type |>
-        dplyr::ungroup() |>
-        dplyr::filter(project_type == type) |>
-        dplyr::mutate(
-          state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),  
-          category = "Available Funds",
-          plt_str = paste0(category, ": ", scales::label_currency()(total_funding_available))
-        ),
+          dplyr::ungroup() |>
+          dplyr::filter(project_type == type) |>
+          dplyr::mutate(
+            state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),  
+            category = "Available Funds",
+            plt_str = paste0(category, ": ", scales::label_currency()(total_funding_available))
+          ),
       ggplot2::aes(
-        xmin = as.numeric(state_fiscal_year) - 0.275 - 0.125,
-        xmax = as.numeric(state_fiscal_year) - 0.275 + 0.125,
-        ymin = 0,
-        ymax = total_funding_available,
-        fill = category,
-        text = plt_str
-      )
-    )  +
+          xmin = as.numeric(state_fiscal_year) - 0.275 - 0.125,
+          xmax = as.numeric(state_fiscal_year) - 0.275 + 0.125,
+          ymin = 0,
+          ymax = total_funding_available,
+          fill = category,
+          text = plt_str
+        )
+    )
+  } else {
+    ggplot2::geom_blank()
+  }
+
+
+
+
+  demand_type_p <- ggplot2::ggplot() +
+    # Available Funds — left
+    # ggplot2::geom_rect(
+    #   data = financial_by_project_type |>
+    #     dplyr::ungroup() |>
+    #     dplyr::filter(project_type == type) |>
+    #     dplyr::mutate(
+    #       state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),  
+    #       category = "Available Funds",
+    #       plt_str = paste0(category, ": ", scales::label_currency()(total_funding_available))
+    #     ),
+    #   ggplot2::aes(
+    #     xmin = as.numeric(state_fiscal_year) - 0.275 - 0.125,
+    #     xmax = as.numeric(state_fiscal_year) - 0.275 + 0.125,
+    #     ymin = 0,
+    #     ymax = total_funding_available,
+    #     fill = category,
+    #     text = plt_str
+    #   )
+    # )  +
+    avail_funds_layer +
     # On Fundable List — center
     ggplot2::geom_rect(
       data = dplyr::filter(stacked_positioned_type, category == "On Fundable List" & project_type == type),
@@ -1022,7 +536,6 @@ for (type in levels(combined_project_type$project_type)){
 }
 
 ```
-
 
 # Unmet demand: requested amount or project cost compared to available funds (UPDATED)
 
@@ -1142,36 +655,39 @@ for (type in levels(unmet_demand_by_type_df$project_type)) {
   # Base filter: include Both Lead and EC rows for Lead / EC types
   filtered_data <- unmet_demand_by_type_df |>
     dplyr::filter(
-      project_type == type |
-      (type %in% c("Lead", "Emerging Contaminants (EC)") & project_type == "Both Lead and EC")
+      project_type == type
+      # |
+      # (type %in% c("Lead", "Emerging Contaminants (EC)") & project_type == "Both Lead and EC")
     )
 
-  # Drop 2022 for Lead / EC
-  if (type %in% c("Lead", "Emerging Contaminants (EC)")) {
-    filtered_data <- filtered_data |>
-      dplyr::filter(state_fiscal_year != "2022") |>
-      dplyr::mutate(
-        state_fiscal_year = as.character(state_fiscal_year),
-        state_fiscal_year = as.factor(state_fiscal_year)
-      )
-  }
+  # # Drop 2022 for Lead / EC
+  # if (type %in% c("Lead", "Emerging Contaminants (EC)")) {
+  #   filtered_data <- filtered_data |>
+  #     dplyr::filter(state_fiscal_year != "2022") |>
+  #     dplyr::mutate(
+  #       state_fiscal_year = as.character(state_fiscal_year),
+  #       state_fiscal_year = as.factor(state_fiscal_year)
+  #     )
+  # }
 
   if (nrow(filtered_data) == 0) next
 
   filtered_data <- filtered_data |>
     dplyr::mutate(
-      fill_group = dplyr::case_when(
-        name == "Available Funds"  ~ "Available Funds",
-        name == "Unmet Demand" & project_type == "Both Lead and EC" ~ "Unmet Demand (Lead and EC)",
-        name == "Unmet Demand" ~ "Unmet Demand"
-      ),
+    #   fill_group = dplyr::case_when(
+    #     name == "Available Funds"  ~ "Available Funds",
+    #     # name == "Unmet Demand" & project_type == "Both Lead and EC" ~ "Unmet Demand (Lead and EC)",
+    #     name == "Unmet Demand" ~ "Unmet Demand"
+    #   ),
       # Legend order
-      fill_group = factor(fill_group, levels = c("Unmet Demand (Lead and EC)", "Unmet Demand", "Available Funds")),
+      fill_group = name,
+        # factor(name, levels = c("Unmet Demand (Lead and EC)", "Unmet Demand", "Available Funds")),
       # Separate stack order column
       stack_order = dplyr::case_when(
         fill_group == "Available Funds"            ~ 1,
-        fill_group == "Unmet Demand"               ~ 2,
-        fill_group == "Unmet Demand (Lead and EC)" ~ 3
+        fill_group == "Unmet Demand"               ~ 2
+        # ,
+        # fill_group == "Unmet Demand (Lead and EC)" ~ 3
       )
     ) |>
     dplyr::arrange(state_fiscal_year, stack_order) |>
@@ -1227,7 +743,9 @@ for (type in levels(unmet_demand_by_type_df$project_type)) {
       )
     )
   }
-}
+  }
+
+
 
 ```
 

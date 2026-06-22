@@ -4,10 +4,6 @@ author: "Maria Sevillano"
 date: "2026-05-04"
 ---
 
-This notebook presents data viz and statistics for the SRF Funding Tracker state overview pages based on project- and state-level data gathered through the PPL/IUP scraping and cleaning process. The outputs focus on the "Project" sections of the state overview pages.
-
-Simply changing the `state_name` will subset the data and update the plot's subtitles along with the `years` variable. Setting `include_y0` to TRUE will include state fiscal year 2022 in the data and subsequent plots. Note that 2022 is not available for most states at this time, but may be retroactively added to compare pre-IIJA to post-IIJA results.
-
 # State Setup
 
 ## Imports & Settings
@@ -36,470 +32,708 @@ run_code_from_file(here("aws.txt"))
 # Other Federal and State Funds Data
 ofsf_all_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/ofsf-funding-tracker-all-projects.csv") |>
   janitor::clean_names() |>
-  dplyr::filter(state == state_name) |>
-  dplyr::mutate(
-    dplyr::across(dplyr::everything(), as.character
-    )
-  )
+  dplyr::filter(state == state_name) 
 
 # DWSRF Project Data
 dwsrf_all_projects <- aws.s3::s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
   clean_names() |>
-  dplyr::filter(state == state_name) |>
-  dplyr::mutate(
-    dplyr::across(dplyr::everything(), as.character
-    )
-  )  
+  dplyr::filter(state == state_name)
 
 # Financial Data  
 financial <- get_financial(state_name)
-
 ```
 
-
-# Prep Data
+# Clean Data
 ```{r}
-ofsf_projects_by_project_type <- ofsf_all_projects |>
+ofsf_all_projects_df <- ofsf_all_projects |>
   dplyr::mutate(
-    dplyr::across(
-      c(project_cost_ofsf, requested_amount_ofsf,funding_amount_ofsf),
-      convert_to_numeric
-    )
-  ) |>
-  dplyr::select(
-    project_type, project_cost_ofsf, requested_amount_ofsf, funding_amount_ofsf, disadvantaged, expecting_funding_ofsf,state,state_fiscal_year
-  )|>
-  dplyr::group_by(state, state_fiscal_year, project_type, expecting_funding_ofsf, disadvantaged) |>
-  dplyr::summarise(dplyr::across(dplyr::where(is.numeric), sum, na.rm = TRUE)) |>
-  dplyr:: ungroup()
+    dplyr::across(dplyr::everything(), as.character),
+    small_community = case_when(
+      population == "No Information" ~ "No Information",
+      is.na(population) ~ "No Information", 
+      convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 ~ "Yes",
+      TRUE ~ "No"
+    ),
+    project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type)
+  )  
 
-dwsrf_projects_by_project_type <- dwsrf_all_projects |>
+dwsrf_all_projects_df <- dwsrf_all_projects |>
   dplyr::mutate(
-    dplyr::across(
-      c(project_cost, requested_amount,funding_amount),
-      convert_to_numeric
-    )
-  ) |>
-  dplyr::select(
-    project_type, project_cost, requested_amount, funding_amount, disadvantaged, expecting_funding,state,state_fiscal_year
-  )|>
-  dplyr::group_by(state, state_fiscal_year, project_type, expecting_funding, disadvantaged) |>
-  dplyr::summarise(dplyr::across(dplyr::where(is.numeric), sum, na.rm = TRUE)) |>
-  dplyr:: ungroup()
+    dplyr::across(dplyr::everything(), as.character),
+    small_community = case_when(
+      population == "No Information" ~ "No Information",
+      is.na(population) ~ "No Information", 
+      convert_to_numeric(population, TRUE) > 0 & convert_to_numeric(population, TRUE) <= 10000 ~ "Yes",
+      TRUE ~ "No"
+    ),
+    project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type)
+  )  
 
-financial_by_project_type <- financial |>
+ financial_df <-  financial |>
   dplyr::mutate(project_type = case_when(
     fed_cap_grant %in% c("LSLR", "LSLR_FFY22","LSLR_FFY23") ~ "Lead",
     fed_cap_grant %in% c("EC", "EC_FFY22", "EC_FFY23") ~ "Emerging Contaminants (EC)",
-    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp") ~ "General", 
+    fed_cap_grant %in% c("Base", "IIJA Gen Supp", "Base & IIJA Gen Supp", "Base and IIJA Gen Supp") ~ "General", 
     TRUE ~ paste0("Combined: ", fed_cap_grant)
-  )) |>
-  dplyr::group_by(state, state_fiscal_year, project_type) |>
-  dplyr::summarize(
-    total_funding_available = sum(total_funding_available, na.rm=TRUE),
-    total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm = TRUE),
-            .groups = "drop")
-
-
-
+  ))
 ```
 
+# Prep Data
 
-# Data Summaries
-
+## Financial - Available Funds
 ```{r}
-
-# OSFS Specific
-osfs_funding_summary <- ofsf_projects_by_project_type |>
-  # dplyr::filter(expecting_funding_ofsf == "Yes") |>
+financial_df_summary_ofsf <- financial_df |>
   dplyr::group_by(state, state_fiscal_year) |>
-  # summrize data to reflect bar or proxy for funding amount (on fundable list, OSOFS specific)
-  dplyr::summarize(
-    total_funding_amount_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * funding_amount_ofsf, na.rm = TRUE),
-    total_requested_amount_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * requested_amount_ofsf, na.rm = TRUE),
-    total_project_cost_ofsf_ef = sum((expecting_funding_ofsf == "Yes") * project_cost_ofsf, na.rm = TRUE)
-  )|>
-   # join summarized demand data (OSFS specific) 
-  dplyr::left_join(
-    (ofsf_projects_by_project_type |> dplyr::group_by(state, state_fiscal_year) |> 
-      dplyr::summarise(
-        total_requested_amount_ofsf = sum(requested_amount_ofsf, na.rm = TRUE),
-        total_project_cost_ofsf = sum(project_cost_ofsf, na.rm = TRUE)
-      ) |> dplyr::ungroup()
-      ),
-    by = c("state", "state_fiscal_year")
-  ) |>
-  # choose value or proxy
-  # note value or proxy as rule 
-  dplyr::mutate(
-    # Depicted as On Fundable List
-    total_funding_amount_ = dplyr::case_when(
-      total_funding_amount_ofsf_ef > 0 ~ total_funding_amount_ofsf_ef,
-      total_requested_amount_ofsf_ef > 0 ~ total_requested_amount_ofsf_ef,
-      total_project_cost_ofsf_ef > 0 ~ total_project_cost_ofsf_ef,
-      .default = 0
-    ),
-    funding_rule = dplyr::case_when(
-      total_funding_amount_ofsf_ef > 0 ~ "* Funding Amount",
-      total_requested_amount_ofsf_ef > 0 ~ "** Requested Amount on Fundable List",
-      total_project_cost_ofsf_ef > 0 ~ "*** Project Cost on Fundable List",
-      TRUE ~ "Default" # this means no value was extracted for On Fundable List (Funding Amount)
-    ),
-    # Depicted as Demand for Funds
-    total_demand = dplyr::case_when(
-      total_requested_amount_ofsf > 0 ~ total_requested_amount_ofsf,
-      total_project_cost_ofsf > 0 ~ total_project_cost_ofsf,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount_ofsf > 0 ~ "^ Requested Amount",
-     total_project_cost_ofsf > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default" #this means no value was extracted for Demand
-    )
-    )
+  dplyr::summarize(total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm=TRUE),
+            .groups = "drop") 
 
+financial_df_summary_by_type_ofsf <- financial_df |>
+  dplyr::group_by(state, state_fiscal_year, project_type) |>
+  dplyr::summarize(total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm=TRUE),
+            .groups = "drop") 
 
-# QC Statements for osfs_funding_summary
-osfs_funding_summary |>
-  dplyr::arrange(state, state_fiscal_year) |>
-  dplyr::group_by(state_fiscal_year) |>
-  dplyr::group_walk(~ {
-    yr <- .y$state_fiscal_year
-    cat(strrep("=", 50), "\n")
-    cat("Fiscal Year:", yr, "\n")
-    cat(strrep("=", 50), "\n")
-    
-    purrr::pwalk(
-      list(
-        .x$state,
-        .x$total_funding_amount_,
-        .x$funding_rule,
-        .x$total_demand,
-        .x$demand_rule
-      ),
-      function(state, funding_amt, funding_rule, demand, demand_rule) {
-        cat("\n  State:", state, "\n")
-        cat("  On Fundable List:\n")
-        cat("    Amount:  $", scales::comma(funding_amt), "\n")
-        cat("    Rule:     ", funding_rule, "\n")
-        if (funding_rule == "Default") {
-          cat("    !! No proxy selected — no Funding Amount, Requested Amount,\n")
-          cat("       or Project Cost found on Fundable List for this state/year.\n")
-        }
-        cat("  Demand for Funds:\n")
-        cat("    Amount:  $", scales::comma(demand), "\n")
-        cat("    Rule:     ", demand_rule, "\n")
-        if (demand_rule == "Default") {
-          cat("    !! No proxy selected — no Requested Amount\n")
-          cat("       or Project Cost found for Demand for this state/year.\n")
-        }
-      }
-    )
-  })
-
-
-# DWSRF Specific
-dwsrf_funding_summary <- dwsrf_projects_by_project_type |>
+financial_df_summary_dwsrf <- financial_df |>
   dplyr::group_by(state, state_fiscal_year) |>
-  # summrize data to reflect bar or proxy for funding amount (on fundable list, OSOFS specific)
-  dplyr::summarize(
-    total_funding_amount_ef = sum((expecting_funding == "Yes") * funding_amount, na.rm = TRUE),
-    total_requested_amount_ef = sum((expecting_funding == "Yes") * requested_amount, na.rm = TRUE),
-    total_project_cost_ef = sum((expecting_funding == "Yes") * project_cost, na.rm = TRUE)
-  )|>
-   # join summarized demand data  
-  dplyr::left_join(
-    (dwsrf_projects_by_project_type |> dplyr::group_by(state, state_fiscal_year) |> 
-      dplyr::summarise(
-        total_requested_amount = sum(requested_amount, na.rm = TRUE),
-        total_project_cost = sum(project_cost, na.rm = TRUE)
-      ) |> dplyr::ungroup()
-      ),
-    by = c("state", "state_fiscal_year")
-  ) |>
-  # choose value or proxy
-  # note value or proxy as rule 
-  dplyr::mutate(
-    # Depicted as On Fundable List
-    total_funding_amount_ = dplyr::case_when(
-      total_funding_amount_ef > 0 ~ total_funding_amount_ef,
-      total_requested_amount_ef > 0 ~ total_requested_amount_ef,
-      total_project_cost_ef > 0 ~ total_project_cost_ef,
-      .default = 0
-    ),
-    funding_rule = dplyr::case_when(
-      total_funding_amount_ef > 0 ~ "* Funding Amount",
-      total_requested_amount_ef > 0 ~ "** Requested Amount on Fundable List",
-      total_project_cost_ef > 0 ~ "*** Project Cost on Fundable List",
-      TRUE ~ "Default" # this means no value was extracted for On Fundable List (Funding Amount)
-    ),
-    # Depicted as Demand for Funds
-    total_demand = dplyr::case_when(
-      total_requested_amount > 0 ~ total_requested_amount,
-      total_project_cost > 0 ~ total_project_cost,
-      .default = 0
-    ),
-    demand_rule = dplyr::case_when(
-     total_requested_amount > 0 ~ "^ Requested Amount",
-     total_project_cost > 0 ~ "^^ Project Cost",
-     TRUE ~ "Default" #this means no value was extracted for Demand
-    )
-    )
+  dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
+            .groups = "drop") 
 
-#QC dwsrf_funding_summary print statements
-dwsrf_funding_summary |>
-  dplyr::arrange(state, state_fiscal_year) |>
-  dplyr::group_by(state_fiscal_year) |>
-  dplyr::group_walk(~ {
-    yr <- .y$state_fiscal_year
-    cat(strrep("=", 50), "\n")
-    cat("Fiscal Year:", yr, "\n")
-    cat(strrep("=", 50), "\n")
-    
-    purrr::pwalk(
-      list(
-        .x$state,
-        .x$total_funding_amount_,
-        .x$funding_rule,
-        .x$total_demand,
-        .x$demand_rule
-      ),
-      function(state, funding_amt, funding_rule, demand, demand_rule) {
-        cat("\n  State:", state, "\n")
-        cat("  On Fundable List:\n")
-        cat("    Amount:  $", scales::comma(funding_amt), "\n")
-        cat("    Rule:     ", funding_rule, "\n")
-        if (funding_rule == "Default") {
-          cat("    !! No proxy selected — no Funding Amount, Requested Amount,\n")
-          cat("       or Project Cost found on Fundable List for this state/year.\n")
-        }
-        cat("  Demand for Funds:\n")
-        cat("    Amount:  $", scales::comma(demand), "\n")
-        cat("    Rule:     ", demand_rule, "\n")
-         if (demand_rule == "Default") {
-          cat("    !! No proxy selected — no Requested Amount\n")
-          cat("       or Project Cost found for Demand for this state/year.\n")
-        }
-      }
-    )
-  })
-
-
-# From financial data
-available_funding_summary <- financial_by_project_type |>
-  dplyr::group_by(state, state_fiscal_year) |>
-  dplyr::summarise(
-    total_funding_available = sum(total_funding_available, na.rm = TRUE),
-    total_funding_available_state_funds = sum(total_funding_available_state_funds, na.rm = TRUE),
-    )
-
-   
-# QC Statements for available_funding_summary
-cat("\n", strrep("=", 60), "\n")
-cat("QC: available_funding_summary\n")
-cat(strrep("=", 60), "\n")
-
-cat("\nRow count:", nrow(available_funding_summary), "\n")
-
-if (nrow(available_funding_summary) == 0) {
-  cat("NOTE: Table is empty — no available funding records found.\n")
-} else {
-  available_funding_summary |>
-    dplyr::arrange(state, state_fiscal_year) |>
-    dplyr::group_by(state_fiscal_year) |>
-    dplyr::group_walk(~ {
-      yr <- .y$state_fiscal_year
-      cat("\n", strrep("-", 50), "\n")
-      cat("Fiscal Year:", yr, "\n")
-      cat(strrep("-", 50), "\n")
-      
-      purrr::pwalk(
-        list(
-          .x$state,
-          .x$total_funding_available
-        ),
-        function(state, funding_available) {
-          cat("\n  State:", state, "\n")
-          cat("  Total Funding Available:  $", scales::comma(funding_available), "\n")
-        }
-      )
-    })
-}
+financial_df_summary_by_type_dwsrf <- financial_df |>
+  dplyr::group_by(state, state_fiscal_year, project_type) |>
+  dplyr::summarize(total_funding_available = sum(total_funding_available, na.rm=TRUE),
+            .groups = "drop") 
+            
 ```
+
+## Funding Amount (requested amount, project cost) - On Fundable List
+```{r}
+# OFSF
+funding_amount_ofsf_df <- ofsf_all_projects_df |>
+  dplyr::filter(state == state_name) |>
+  dplyr::select(
+    state_fiscal_year,
+    project_type,
+    expecting_funding_ofsf,
+    funding_amount_ofsf,
+    requested_amount_ofsf,
+    project_cost_ofsf,
+    disadvantaged,
+    small_community
+  ) |>
+   dplyr::mutate(
+    # convert $ data to numeric (No Information --> NA)
+    dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), as.numeric),
+    # Make any $0 NA for coalesce operation
+    dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), \(x) ifelse(x == 0, NA, x)),
+    requested_amount_ofsf_ef = requested_amount_ofsf * (expecting_funding_ofsf == "Yes"),
+    total_project_cost_ofsf_ef = project_cost_ofsf * (expecting_funding_ofsf == "Yes"),
+    # Choose first non NA value following hierarchy
+    selected_funding_amount_ofsf = dplyr::coalesce(funding_amount_ofsf, requested_amount_ofsf_ef, total_project_cost_ofsf_ef),
+    # Note funding source of selected funding amount (string check will flag any issue)
+    source_funding_ofsf = dplyr::case_when(
+      funding_amount_ofsf > 0 ~ "funding_amount_ofsf", 
+      requested_amount_ofsf_ef > 0 ~ "requested_amount_ofsf_ef", 
+      total_project_cost_ofsf_ef > 0 ~ "total_project_cost_ofsf_ef",
+      .default = "check"
+    )
+  )
+
+funding_amount_ofsf_df_summary <- funding_amount_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, source_funding_ofsf) |>
+  dplyr::summarise(funding_amount_ofsf = sum(selected_funding_amount_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+funding_amount_ofsf_df_summary_by_type <- funding_amount_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, project_type, source_funding_ofsf) |>
+  dplyr::summarise(funding_amount_ofsf = sum(selected_funding_amount_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+funding_amount_ofsf_df_summary_by_sc <- funding_amount_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, small_community, source_funding_ofsf) |>
+  dplyr::summarise(funding_amount_ofsf = sum(selected_funding_amount_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  )   
+
+funding_amount_ofsf_df_summary_by_dac <- funding_amount_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, disadvantaged, source_funding_ofsf) |>
+  dplyr::summarise(funding_amount_ofsf = sum(selected_funding_amount_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+#DWSRF
+
+funding_amount_dwsrf_df <- dwsrf_all_projects_df |>
+  dplyr::filter(state == state_name) |>
+  dplyr::select(
+    state_fiscal_year,
+    project_type,
+    expecting_funding,
+    funding_amount,
+    requested_amount,
+    project_cost,
+    disadvantaged,
+    small_community
+  ) |>
+   dplyr::mutate(
+    # convert $ data to numeric (No Information --> NA)
+    dplyr::across(c(funding_amount, requested_amount, project_cost), as.numeric),
+    # Make any $0 NA for coalesce operation
+    dplyr::across(c(funding_amount, requested_amount, project_cost), \(x) ifelse(x == 0, NA, x)),
+    requested_amount_ef = requested_amount * (expecting_funding == "Yes"),
+    total_project_cost_ef = project_cost * (expecting_funding == "Yes"),
+    # Choose first non NA value following hierarchy
+    selected_funding_amount = dplyr::coalesce(funding_amount, requested_amount_ef, total_project_cost_ef),
+    # Note funding source of selected funding amount (string check will flag any issue)
+    source_funding = dplyr::case_when(
+      funding_amount > 0 ~ "funding_amount", 
+      requested_amount_ef > 0 ~ "requested_amount_ef", 
+      total_project_cost_ef > 0 ~ "total_project_cost_ef",
+      .default = "check"
+    )
+  )
+
+funding_amount_dwsrf_df_summary <- funding_amount_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, source_funding) |>
+  dplyr::summarise(funding_amount = sum(selected_funding_amount, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+funding_amount_dwsrf_df_summary_by_type <- funding_amount_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, project_type, source_funding) |>
+  dplyr::summarise(funding_amount = sum(selected_funding_amount, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+funding_amount_dwsrf_df_summary_by_sc <- funding_amount_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, small_community, source_funding) |>
+  dplyr::summarise(funding_amount = sum(selected_funding_amount, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+funding_amount_dwsrf_df_summary_by_dac <- funding_amount_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, disadvantaged, source_funding) |>
+  dplyr::summarise(funding_amount = sum(selected_funding_amount, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!funding_amount == 0) |>
+  tidyr::pivot_longer(cols = "funding_amount") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+```
+
+## Demand (requested amount, project cost) - Comprehensive
+```{r}
+# demand
+demand_ofsf_df <- ofsf_all_projects_df |>
+  dplyr::filter(state == state_name) |>
+  dplyr::select(
+    state_fiscal_year,
+    project_type,
+    expecting_funding_ofsf,
+    funding_amount_ofsf,
+    requested_amount_ofsf,
+    project_cost_ofsf,
+    disadvantaged,
+    small_community
+  ) |>
+   dplyr::mutate(
+    dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), as.numeric),
+    dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), \(x) ifelse(x == 0, NA, x)),
+    selected_demand_ofsf = coalesce(requested_amount_ofsf, project_cost_ofsf),
+    source_demand_ofsf = dplyr::case_when(
+      requested_amount_ofsf > 0 ~ "requested_amount_ofsf", 
+      project_cost_ofsf > 0 ~ "project_cost_ofsf", 
+      .default = "check"
+    )
+  )
+
+demand_ofsf_df_summary <- demand_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, source_demand_ofsf) |>
+  dplyr::summarise(demand_ofsf = sum(selected_demand_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "demand_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_ofsf_df_summary_by_type <- demand_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, project_type, source_demand_ofsf) |>
+  dplyr::summarise(demand_ofsf = sum(selected_demand_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "demand_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_ofsf_df_summary_by_sc <- demand_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, small_community, source_demand_ofsf) |>
+  dplyr::summarise(demand_ofsf = sum(selected_demand_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "demand_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_ofsf_df_summary_by_dac <- demand_ofsf_df |>
+  dplyr::group_by(state_fiscal_year, disadvantaged, source_demand_ofsf) |>
+  dplyr::summarise(demand_ofsf = sum(selected_demand_ofsf, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_ofsf == 0) |>
+  tidyr::pivot_longer(cols = "demand_ofsf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_dwsrf_df <- dwsrf_all_projects_df |>
+  dplyr::filter(state == state_name) |>
+  dplyr::select(
+    state_fiscal_year,
+    project_type,
+    expecting_funding,
+    funding_amount,
+    requested_amount,
+    project_cost,
+    disadvantaged,
+    small_community
+  ) |>
+   dplyr::mutate(
+    dplyr::across(c(funding_amount, requested_amount, project_cost), as.numeric),
+    dplyr::across(c(funding_amount, requested_amount, project_cost), \(x) ifelse(x == 0, NA, x)),
+    selected_demand = coalesce(requested_amount, project_cost),
+    source_demand = dplyr::case_when(
+      requested_amount > 0 ~ "requested_amount", 
+      project_cost > 0 ~ "project_cost", 
+      .default = "check"
+    )
+  )
+
+demand_dwsrf_df_summary <- demand_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, source_demand) |>
+  dplyr::summarise(demand_dwsrf = sum(selected_demand, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_dwsrf == 0) |>
+  tidyr::pivot_longer(cols = "demand_dwsrf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_dwsrf_df_summary_by_type <- demand_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, project_type, source_demand) |>
+  dplyr::summarise(demand_dwsrf = sum(selected_demand, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_dwsrf == 0) |>
+  tidyr::pivot_longer(cols = "demand_dwsrf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_dwsrf_df_summary_by_sc <- demand_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, small_community, source_demand) |>
+  dplyr::summarise(demand_dwsrf = sum(selected_demand, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_dwsrf == 0) |>
+  tidyr::pivot_longer(cols = "demand_dwsrf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+demand_dwsrf_df_summary_by_dac <- demand_dwsrf_df |>
+  dplyr::group_by(state_fiscal_year, disadvantaged, source_demand) |>
+  dplyr::summarise(demand_dwsrf = sum(selected_demand, na.rm = T)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(!demand_dwsrf == 0) |>
+  tidyr::pivot_longer(cols = "demand_dwsrf") |>
+  tidyr::pivot_wider(
+    names_from = name,
+    values_from = value
+  ) 
+
+```
+
+## Combine all demand
+```{r}
+# concatenate summary dfs
+available_funds_by_type <- financial_df_summary_by_type_ofsf |>
+  dplyr::mutate(funding_source = "Other Funds Channeled Through SRFs") |>
+  dplyr::bind_rows(financial_df_summary_by_type_dwsrf |> dplyr::mutate(funding_source = "DWSRF Funds")) |>
+  dplyr::mutate(
+    funding_amount = dplyr::coalesce(total_funding_available_state_funds, total_funding_available),
+    bar = ifelse(grepl("Other", funding_source), "Available Other Funds Channeled Through SRFs","Available DWSRF Funds")
+  ) |>
+  dplyr::select(state_fiscal_year, project_type, funding_amount, funding_source, bar) |>
+  dplyr::mutate(
+    plt_str = paste0(bar, ": ", format_currency(funding_amount))
+  )
+
+funding_amount_by_type <- funding_amount_ofsf_df_summary_by_type |>
+  dplyr::mutate(funding_source = "Other Funds Channeled Through SRFs") |>
+  dplyr::bind_rows(funding_amount_dwsrf_df_summary_by_type |> dplyr::mutate(funding_source = "DWSRF Funds")) |>
+  dplyr::mutate(
+    source_funding = dplyr::coalesce(source_funding_ofsf, source_funding),
+    funding_amount = dplyr::coalesce(funding_amount_ofsf, funding_amount),
+    bar = ifelse(grepl("ofsf", source_funding), "On Fundable List Other Funds Channeled Through SRFs","On Fundable List DWSRF Funds")
+  ) |>
+  dplyr::select(state_fiscal_year, project_type, source_funding, funding_amount, funding_source, bar) |>
+  dplyr::mutate(
+    source_funding = dplyr::case_when(
+      grepl("funding_amount", source_funding ) ~ "Funding Amount",
+      grepl("requested_amount", source_funding) ~ "Requested Amount",
+      grepl("project_cost", source_funding) ~ "Project Cost",
+      .default = source_funding
+    ),
+    plt_str = paste0(bar, ": ", format_currency(funding_amount), " (", source_funding, ")")
+  )
+
+# Helper: ensures expected cols exist before binding
+add_missing_cols <- function(df, cols, fill = NA) {
+  missing <- setdiff(cols, names(df))
+  df[missing] <- fill
+  df
+}
+
+ofsf_cols <- c("source_demand_ofsf", "demand_ofsf")
+
+demand_by_type <- add_missing_cols(
+    demand_ofsf_df_summary_by_type, ofsf_cols
+  ) |>
+  dplyr::mutate(funding_source = "Other Funds Channeled Through SRFs") |>
+  dplyr::bind_rows(demand_dwsrf_df_summary_by_type |> dplyr::mutate(funding_source = "DWSRF Funds")) |>
+  dplyr::mutate(
+    #this is demand, but keeping consistent colnames to joint dfs later
+    source_funding = dplyr::coalesce(source_demand_ofsf, source_demand),
+    funding_amount = dplyr::coalesce(demand_ofsf, demand_dwsrf), 
+    bar = ifelse(grepl("ofsf", source_funding), "Demand Other Funds Channeled Through SRFs","Demand DWSRF Funds")
+  ) |>
+  dplyr::select(state_fiscal_year, project_type, source_funding, funding_amount, funding_source, bar) |>
+  dplyr::mutate(
+    source_funding = dplyr::case_when(
+      grepl("requested_amount", source_funding) ~ "Requested Amount",
+      grepl("project_cost", source_funding) ~ "Project Cost",
+      .default = source_funding
+    ),
+    plt_str = paste0(bar, ": ", format_currency(funding_amount), " (", source_funding, ")")
+  )
+
+
+combined_bars_by_type <- dplyr::bind_rows(available_funds_by_type, funding_amount_by_type, demand_by_type) |>
+  dplyr::filter(funding_amount >0)|>
+  dplyr::mutate(
+    bar = forcats::fct(bar, levels = c(
+      "Available Other Funds Channeled Through SRFs",
+      "Available DWSRF Funds",
+  
+      "On Fundable List Other Funds Channeled Through SRFs",
+      "On Fundable List DWSRF Funds",
+
+      "Demand Other Funds Channeled Through SRFs",
+      "Demand DWSRF Funds"
+    )),
+    project_type = forcats::fct(project_type)
+  )
+```
+
 
 # Data Viz -----
-https://funding-tracker.s3.us-east-1.amazonaws.com/MI/overview/state-funds-compare-demand-available-funds-expected-funds-yoy.html
-
-## Comparison of demand for funds, available funds, and funds on fundable list ----
+## Comparison of demand for funds, available funds, and funds on fundable list
 
 ```{r}
 
-osfs_funding_long <- osfs_funding_summary |>
-  dplyr::select(
-    state_fiscal_year,
-    total_funding_amount_,
-    funding_rule,
-    total_demand,
-    demand_rule
-    ) |>
-  tidyr::pivot_longer(
-    cols = c(total_funding_amount_, total_demand),
-    names_to = "source",
-    values_to = "funding"
-  ) |>
+# 1. Define a group for dodging and a stack order within each group
+bar_data <- combined_bars_by_type |>
+  dplyr::filter(project_type == type) |>
   dplyr::mutate(
-    rule = dplyr::if_else(source == "total_funding_amount_", funding_rule, demand_rule),
-    source = dplyr::recode(source,
-      "total_funding_amount_" = "On Fundable List OFSF",
-      "total_demand"          = "Demand for Funds OFSF"
-    )
-  ) |>
-  dplyr::select(state, state_fiscal_year, source, funding, rule, -funding_rule, -demand_rule)
-
-
-dwsrf_funding_long <- dwsrf_funding_summary |>
-  dplyr::select(
-    state_fiscal_year,
-    total_funding_amount_,
-    funding_rule,
-    total_demand,
-    demand_rule
-    ) |>
-  tidyr::pivot_longer(
-    cols = c(total_funding_amount_, total_demand),
-    names_to = "source",
-    values_to = "funding"
-  ) |>
-  dplyr::mutate(
-    rule = dplyr::if_else(source == "total_funding_amount_", funding_rule, demand_rule),
-    source = dplyr::recode(source,
-      "total_funding_amount_" = "On Fundable List DWSRF",
-      "total_demand"          = "Demand for Funds DWSRF"
-    )
-  ) |>
-  dplyr::select(state, state_fiscal_year, source, funding, rule, -funding_rule, -demand_rule)
-
-available_funding_long <- available_funding_summary |>
-  tidyr::pivot_longer(
-    cols = c(total_funding_available, total_funding_available_state_funds),
-    names_to = "source",
-    values_to = "funding"
-  )|>
-  dplyr::mutate(
-    source = dplyr::recode(source,
-          "total_funding_available" = "Available DWSRF Funds",
-          "total_funding_available_state_funds" = "Available OFSF Funds"
-        ),
-    rule = NA_character_
-  )  
-
-state_funds <- dplyr::bind_rows(
-  osfs_funding_long,
-  dwsrf_funding_long,
-  available_funding_long
-  ) |>
-  dplyr::mutate(
-    category = dplyr::case_when(
-      grepl("OFSF", source) ~ "OFSF",
-      .default = "DWSRF"
+    dodge_group = dplyr::case_when(
+      grepl("Available", plt_str)         ~ 1L,
+      grepl("On Fundable List", plt_str) ~ 2L,
+      grepl("Demand", plt_str)           ~ 3L
     ),
-    source = stringr::str_remove(source, " (DWSRF|OFSF)")
-    )  
-
-library(ggplot2)
-
-# Step 1: Define dodge order and bar width constants
-bar_width <- 0.25
-dodge_offsets <- c("Available Funds" = -bar_width, "On Fundable List" = 0, "Demand for Funds" = bar_width)
-plot_title <- "Comparison of demand for funds, available funds, and funds on fundable list"
-
-plot_data <- state_funds |>
-  dplyr::mutate(
-    year_num = as.numeric(state_fiscal_year),
-    fill_group = paste(source, category) |>
-      factor(levels = c(
-        "Available Funds OFSF",      
-        "Available Funds DWSRF",     
-        "On Fundable List OFSF",
-        "On Fundable List DWSRF",
-        "Demand for Funds OFSF",
-        "Demand for Funds DWSRF"
-      )) , 
-    # create a numeric dodge position as a new x variable
-    x_dodge = dplyr::case_when(
-      source == "Available Funds"  ~ year_num - bar_width,
-      source == "On Fundable List" ~ year_num,
-      source == "Demand for Funds" ~ year_num + bar_width
+    # stack order within each dodge group (DWSRF on bottom, Other on top)
+    stack_order = dplyr::case_when(
+      funding_source == "DWSRF Funds"                          ~ 1L,
+      funding_source == "Other Funds Channeled Through SRFs"   ~ 2L
     )
-  ) |>
-  dplyr::mutate(
-    text = paste0(source, " ", category, " ", state_fiscal_year, ":<br>", scales::dollar(funding)) 
   )
 
-state_funds_p <- ggplot(plot_data, aes(x = x_dodge, y = funding, fill = fill_group, text = text)) +
-  geom_col(
-    width = bar_width - 0.01,
-    position = "stack",
-    color = "black"
-  ) +
-  scale_fill_manual(
-    values = c(
-      "Available Funds DWSRF"       = "#6bc842",
-      "Available Funds OFSF"        = "#3d7f1c",
-      "On Fundable List DWSRF"      = "#791a7b",
-      "On Fundable List OFSF"       = "#da1cddff",
-      "Demand for Funds DWSRF"      = "#172f60",
-      "Demand for Funds OFSF"       = "#396dd4ff"
-    ),
-    labels = c(
-      "Available Funds DWSRF"       = "Available DWSRF Funds",
-      "Available Funds OFSF"        = "Available Other Federal and State Funds",
-      "On Fundable List DWSRF"      = "On DWSRF Fundable List",
-      "On Fundable List OFSF"       = "On Other Federal and State Funds Fundable List",
-      "Demand for Funds DWSRF"      = "DWSRF Demand for Funds",
-      "Demand for Funds OFSF"       = "Other Federal and State Funds Demand for Funds"
-    )
-  ) +
-  guides(fill = guide_legend(reverse = TRUE)) +
-  scale_x_continuous(
-    breaks = sort(unique(plot_data$year_num)),
-    labels = sort(unique(plot_data$state_fiscal_year))
-  ) +
-  labs(x = "", y = "", fill = NULL, title = plot_title) +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-
-
-state_funds_gp <- plotly::ggplotly(state_funds_p, tooltip = "text") |>
-  plotly::layout(
-    title = list(text = paste0(plot_title, '<br>',
-                   get_subtitle_str(state_funds$state_fiscal_year, state_name)))
-  )
-
-# define desired final label order
-legend_order <- c(
-  "Available DWSRF Funds",
-  "Available Other Federal and State Funds",
-  "On DWSRF Fundable List",
-  "On Other Federal and State Funds Fundable List",
-  "DWSRF Demand for Funds",
-  "Other Federal and State Funds Demand for Funds"
+# 2. Build a complete spine so every year × dodge_group × stack_order exists
+spine <- tidyr::expand_grid(
+  state_fiscal_year = unique(bar_data$state_fiscal_year),
+  dodge_group       = 1:3,
+  stack_order       = 1:2
 )
 
-# rename traces
-for (i in seq_along(state_funds_gp$x$data)) {
-  old_name <- state_funds_gp$x$data[[i]]$name
-  if (!is.null(old_name) && old_name %in% names(label_lookup)) {
-    state_funds_gp$x$data[[i]]$name <- label_lookup[[old_name]]
+bar_data <- spine |>
+  dplyr::left_join(bar_data, by = c("state_fiscal_year", "dodge_group", "stack_order")) |>
+  dplyr::mutate(funding_amount = tidyr::replace_na(funding_amount, 0))
+
+# 3. Compute cumulative stack heights
+bar_data <- bar_data |>
+  dplyr::arrange(state_fiscal_year, dodge_group, stack_order) |>
+  dplyr::group_by(state_fiscal_year, dodge_group) |>
+  dplyr::mutate(
+    ymax = cumsum(funding_amount),
+    ymin = ymax - funding_amount
+  ) |>
+  dplyr::ungroup()
+
+# 4. Compute xmin/xmax — anchor every year to the same integer regardless of missingness
+bar_width <- 0.25
+dodge_gap <- 0.05
+group_gap <- 1.0
+
+year_levels <- sort(unique(bar_data$state_fiscal_year))
+n_groups    <- 3L
+
+offsets <- seq(
+  from       = -((n_groups - 1) / 2) * (bar_width + dodge_gap),
+  by         = bar_width + dodge_gap,
+  length.out = n_groups
+)
+
+bar_data <- bar_data |>
+  dplyr::mutate(
+    x_centre = match(state_fiscal_year, year_levels) * group_gap + offsets[dodge_group],
+    xmin     = x_centre - bar_width / 2,
+    xmax     = x_centre + bar_width / 2
+  )
+
+# 5. Drop zero-height rects (missing combos) so they don't affect the legend or tooltips
+plot_data <- bar_data |>
+  dplyr::filter(funding_amount > 0) 
+
+# 6. Plot
+  plot_tile_demand = "Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List"
+
+  demand_p <- ggplot2::ggplot(plot_data) +
+    ggplot2::geom_rect(
+      ggplot2::aes(
+        xmin = xmin, xmax = xmax,
+        ymin = ymin, ymax = ymax,
+        fill = bar,
+        text = plt_str
+      ),
+      color = "black",
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = seq_along(year_levels) * group_gap,
+      labels = year_levels
+    ) +
+    ggplot2::scale_y_continuous(labels = label_currency()) +  
+    ggplot2::scale_fill_manual(
+      values = c(
+        "Available Other Funds Channeled Through SRFs"        = "#3d7f1c",
+        "Available DWSRF Funds"                               = "#6bc842",
+        "On Fundable List Other Funds Channeled Through SRFs" = "#791a7b",
+        "On Fundable List DWSRF Funds"                        = "#d927dcff",
+        "Demand Other Funds Channeled Through SRFs"           = "#3861b2ff",
+        "Demand DWSRF Funds"                                  = "#172f60"
+      ),
+      name = ""
+    ) +
+    ggplot2::labs(
+      title = plot_tile_demand, 
+      x = "State Fiscal Year", 
+      y = "Funding Amount") +
+    epic_chart_theme
+
+
+demand_gp <- ggplotly(demand_p, tooltip = "text") |>
+  plotly::layout(title = list(text = paste0(
+    plot_tile_demand,
+    '<br>',
+    get_subtitle_str(bar_data$state_fiscal_year, state_name)
+      )
+    )
+  )
+
+if (save_plots) {
+    run_save_plots(
+      gg_plot   = demand_p,
+      gp_object = demand_gp,
+      name = "test-ofsf-demand-yoy"
+      )
   }
+
+```
+
+
+## Comparison of demand for funds, available funds, and funds on fundable list by type ----
+
+```{r}
+
+for (type in levels(combined_bars_by_type$project_type)) {
+
+  # 1. Define a group for dodging and a stack order within each group
+bar_data_by_type <- combined_bars_by_type |>
+  dplyr::filter(project_type == type) |>
+  dplyr::mutate(
+    dodge_group = dplyr::case_when(
+      grepl("Available", plt_str)         ~ 1L,
+      grepl("On Fundable List", plt_str) ~ 2L,
+      grepl("Demand", plt_str)           ~ 3L
+    ),
+    # stack order within each dodge group (DWSRF on bottom, Other on top)
+    stack_order = dplyr::case_when(
+      funding_source == "DWSRF Funds"                          ~ 1L,
+      funding_source == "Other Funds Channeled Through SRFs"   ~ 2L
+    )
+  )
+
+  if (nrow(bar_data_by_type) == 0) next 
+
+# 2. Build a complete spine so every year × dodge_group × stack_order exists
+spine_by_type <- tidyr::expand_grid(
+  state_fiscal_year = unique(bar_data_by_type$state_fiscal_year),
+  dodge_group       = 1:3,
+  stack_order       = 1:2
+)
+
+bar_data_by_type <- spine_by_type |>
+  dplyr::left_join(bar_data_by_type, by = c("state_fiscal_year", "dodge_group", "stack_order")) |>
+  dplyr::mutate(funding_amount = tidyr::replace_na(funding_amount, 0))
+
+# 3. Compute cumulative stack heights
+bar_data_by_type <- bar_data_by_type |>
+  dplyr::arrange(state_fiscal_year, dodge_group, stack_order) |>
+  dplyr::group_by(state_fiscal_year, dodge_group) |>
+  dplyr::mutate(
+    ymax = cumsum(funding_amount),
+    ymin = ymax - funding_amount
+  ) |>
+  dplyr::ungroup()
+
+# 4. Compute xmin/xmax — anchor every year to the same integer regardless of missingness
+bar_width <- 0.25
+dodge_gap <- 0.05
+group_gap <- 1.0
+
+year_levels_by_type <- sort(unique(bar_data_by_type$state_fiscal_year))
+n_groups    <- 3L
+
+offsets <- seq(
+  from       = -((n_groups - 1) / 2) * (bar_width + dodge_gap),
+  by         = bar_width + dodge_gap,
+  length.out = n_groups
+)
+
+bar_data_by_type <- bar_data_by_type |>
+  dplyr::mutate(
+    x_centre = match(state_fiscal_year, year_levels_by_type) * group_gap + offsets[dodge_group],
+    xmin     = x_centre - bar_width / 2,
+    xmax     = x_centre + bar_width / 2
+  )
+
+# 5. Drop zero-height rects (missing combos) so they don't affect the legend or tooltips
+plot_data_by_type <- bar_data_by_type |>
+  dplyr::filter(funding_amount > 0) 
+
+# 6. Plot
+  plot_tile_demand_by_type = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ', type)
+
+  plot_by_type <- ggplot2::ggplot(plot_data_by_type) +
+    ggplot2::geom_rect(
+      ggplot2::aes(
+        xmin = xmin, xmax = xmax,
+        ymin = ymin, ymax = ymax,
+        fill = bar,
+        text = plt_str
+      ),
+      color = "black",
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = seq_along(year_levels_by_type) * group_gap,
+      labels = year_levels_by_type
+    ) +
+    ggplot2::scale_y_continuous(labels = label_currency()) +  
+    ggplot2::scale_fill_manual(
+      values = c(
+        "Available Other Funds Channeled Through SRFs"        = "#3d7f1c",
+        "Available DWSRF Funds"                               = "#6bc842",
+        "On Fundable List Other Funds Channeled Through SRFs" = "#791a7b",
+        "On Fundable List DWSRF Funds"                        = "#d927dcff",
+        "Demand Other Funds Channeled Through SRFs"           = "#3861b2ff",
+        "Demand DWSRF Funds"                                  = "#172f60"
+      ),
+      name = ""
+    ) +
+    ggplot2::labs(
+      title = plot_tile_demand_by_type, 
+      x = "State Fiscal Year", 
+      y = "Funding Amount") +
+    epic_chart_theme
+
+
+plot_by_type_gp <- ggplotly(plot_by_type, tooltip = "text") |>
+  plotly::layout(title = list(text = paste0(
+    plot_tile_demand_by_type,
+    '<br>',
+    get_subtitle_str(bar_data_by_type$state_fiscal_year, state_name)
+      )
+    )
+  )
+
+
+
+
+if (save_plots) {
+    run_save_plots(
+      gg_plot   = plot_by_type,
+      gp_object = plot_by_type_gp,
+      name = paste0("test-",
+        gsub("_", "-", janitor::make_clean_names(type)),
+        "-ofsf-demand-yoy"
+      )
+    )
+  }
+
 }
-
-# reorder traces to match desired legend order
-trace_names <- sapply(state_funds_gp$x$data, function(tr) tr$name %||% "")
-new_order <- order(match(trace_names, legend_order, nomatch = length(legend_order) + 1))
-state_funds_gp$x$data <- state_funds_gp$x$data[new_order]
-
-state_funds_gp
 
 ```
 

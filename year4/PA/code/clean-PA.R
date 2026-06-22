@@ -162,7 +162,7 @@ clean_pa_y4 <- function() {
   
   # Hone in on project id duplication
   # pa_clean |> dplyr::group_by(project_id) |> dplyr::tally() |>dplyr::arrange(dplyr::desc(n))
-  ####### Decision: No duplicates from funding lists
+  ####### Decision: No duplicates from funding lists (except from No Information-planned from lead list), one from comprehensive (project_id == 81135)
   
   # Check for disinfection byproduct in description
   # pa_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))

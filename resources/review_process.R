@@ -1,9 +1,9 @@
 source("resources/review_helpers.R")
 source("resources/view_code_review.R")
 
-year <- "year3"
-sfy <- "SFY25"
-state_abb <- "MN"
+year <- "year5"
+sfy <- "SFY26"
+state_abb <- "PA"
 review_number <- "1"
 
 year_title <- stringr::str_extract(year, "\\d+")
@@ -13,6 +13,7 @@ dict_path <- paste0(year,"/", state_abb, "/data/", state_abb, "_Y", year_title, 
 data_paths_check <- list.files(paste0(year,"/", state_abb, "/data"), include.dirs = TRUE, full.names = TRUE)
 
 data_paths <- data_paths_check[grepl(".csv", data_paths_check)]
+data_paths <- data_paths[!basename(data_paths) %in% c("api_calls.csv", "review_findings.csv")]
 
 script_path <- paste0(year,"/", state_abb, "/code/clean-", state_abb, ".R")
 

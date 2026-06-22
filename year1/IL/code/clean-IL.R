@@ -7,7 +7,6 @@ clean_il_y1 <- function() {
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
-      funding_amount = clean_numeric_string(estimated_loan_amount),
       disadvantaged = ifelse(disadvantaged_community_principal_forgiveness == "N/E", "Yes", "No"),
       # replace "N/E" with 0 for principal forgiveness since N/E is different from the NAs in other docs
       disadvantaged_community_principal_forgiveness = str_replace(disadvantaged_community_principal_forgiveness, "N/E", "0"),
@@ -20,7 +19,6 @@ clean_il_y1 <- function() {
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
-      funding_amount = clean_numeric_string(estimated_loan_amount),
       disadvantaged = "No Information",
       principal_forgiveness = "No Information",
       project_type = "Lead",
@@ -33,7 +31,6 @@ clean_il_y1 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -46,7 +43,6 @@ clean_il_y1 <- function() {
   il_ppl_pla_ap <- data.table::fread("year1/IL/data/IL_Y1_SFY23_Base_IIJA_Gen_Supp_Planning_Approval_List.csv", colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -64,7 +60,6 @@ clean_il_y1 <- function() {
   il_ppl_no_pla_ap <- data.table::fread("year1/IL/data/IL_Y1_SFY23_Base_IIJA_Gen_Supp_NoPlanning_Approval_List.csv", colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -81,7 +76,6 @@ clean_il_y1 <- function() {
                      colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -95,7 +89,6 @@ clean_il_y1 <- function() {
   il_lead_pla_ap <- data.table::fread("year1/IL/data/IL_Y1_SFY23_LSLR_Planning_Approval_List.csv", colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -116,7 +109,6 @@ clean_il_y1 <- function() {
   il_lead_no_pla_ap <- data.table::fread("year1/IL/data/IL_Y1_SFY23_LSLR_NoPlanning_Approval_List.csv", colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      funding_amount = "No Information",
       disadvantaged = "No Information",
       expecting_funding = "No",
       principal_forgiveness = "No Information",
@@ -156,8 +148,15 @@ clean_il_y1 <- function() {
       state_fiscal_year = "2023",
       project_name = as.character(NA),
       project_cost = as.character(NA),
-      requested_amount = as.character(NA),
       project_rank = as.character(NA),
+      funding_amount = case_when(
+        list %in% c("fundable", "lead fundable", "ec fundable") ~ clean_numeric_string(estimated_loan_amount),
+        TRUE ~ "No Information"
+      ),
+      requested_amount = case_when(
+        list %in% c("fundable", "lead fundable", "ec fundable") ~ "No Information",
+        TRUE ~ clean_numeric_string(estimated_loan_amount)
+        ),
       project_id = ifelse(l17_number=="TBD", "No Information", l17_number)
     ) |>
     dplyr::mutate(

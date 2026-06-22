@@ -7,9 +7,9 @@ clean_il_y3 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      #requested_amount = clean_numeric_string(requested_loan_amount),  
       funding_amount = clean_numeric_string(estimated_loan_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       list = "fundable"
@@ -20,9 +20,9 @@ clean_il_y3 <- function() {
                    colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      #requested_amount = clean_numeric_string(requested_loan_amount),  
       funding_amount = as.character(convert_to_numeric(principal_forgiveness_reserved, fill_na_0 = TRUE) + convert_to_numeric(loan_funding_reserved, fill_na_0 = TRUE)),
       principal_forgiveness =clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       project_type = "Lead",
@@ -34,9 +34,9 @@ clean_il_y3 <- function() {
                    colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      #requested_amount = clean_numeric_string(requested_loan_amount),  
-      funding_amount = clean_numeric_string(principal_forgiveness),
+      funding_amount = as.character(convert_to_numeric(principal_forgiveness, fill_na_0 = TRUE) + convert_to_numeric(pwslp_funds_reserved, fill_na_0 = TRUE)),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      requested_amount = "No Information",
       project_score = loan_priority_score,
       expecting_funding = "Yes",
       project_type = "Emerging Contaminants",
@@ -51,7 +51,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      #requested_amount = clean_numeric_string(requested_loan_amount),  
+      requested_amount = clean_numeric_string(requested_loan_amount),
       project_score = loan_priority_score,
       expecting_funding = "No",
       list = "exhausted"
@@ -64,7 +64,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      #requested_amount = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       list = "planning approval"
     )
@@ -76,7 +76,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      #requested_amount = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       list = "no planning approval"
     )
@@ -88,7 +88,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      #requested_amount = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead planning approval"
@@ -101,7 +101,7 @@ clean_il_y3 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      #requested_amount = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead no planning approval"
@@ -112,9 +112,9 @@ clean_il_y3 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      #requested_amount = clean_numeric_string(requested_loan_amount),  
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
+      requested_amount = clean_numeric_string(requested_loan_amount),
       expecting_funding = "No",
       project_type = "Emerging Contaminants",
       list = "ec no planning approval"
@@ -140,7 +140,6 @@ clean_il_y3 <- function() {
       project_id = ifelse(is.na(project_id), "No Information", project_id),
       project_name = as.character(NA),
       project_cost = as.character(NA),
-      requested_amount = clean_numeric_string(requested_loan_amount),
       project_description = str_squish(project_description),
       project_description = str_to_sentence(project_description),
       project_type = dplyr::case_when(
@@ -176,14 +175,14 @@ clean_il_y3 <- function() {
   il_clean <- il_clean |>
     dplyr::mutate(keep = dplyr::case_when(
       project_id == "6024" & list =="no planning approval" ~ FALSE , # decision: default to exhausted list
-      project_id == "6308" ~ TRUE , # decision: keep both, different information (funding amounts)
       project_id == "6375" & list == "exhausted" ~ FALSE, # decision:default to ec fundable, following up with the state, bring pwsid from exhausted list
       project_id == "6376" & list == "exhausted" ~ FALSE, # decision:default to ec fundable, following up with the state, bring pwsid from exhausted list
       project_id == "6742" ~ TRUE , # decision: keep both, different info (requested amount)
       project_id == "6813" ~ TRUE , # decision: keep both, different info (requested amount) 
-      project_id == "7109" & list == "ec fundable" ~ FALSE, #decision: default to fundable, more info 
-      project_id == "7110" & list == "ec fundable" ~ FALSE, #decision: default to fundable, more info  
-      project_id == "7111" & list == "ec fundable" ~ FALSE, #decision: default to fundable, more info   
+      project_id == "6308" & list =="fundable" ~ FALSE , #decision: default to ec fundable, more info, see updated definition in DD 
+      project_id == "7109" & list == "fundable" ~ FALSE, #decision: default to ec fundable, more info, see updated definition in DD 
+      project_id == "7110" & list == "fundable" ~ FALSE, #decision: default to ec fundable, more info, see updated definition in DD  
+      project_id == "7111" & list == "fundable" ~ FALSE, #decision: default to ec fundable, more info, see updated definition in DD
       project_id == "7140" & list == "exhausted" ~ FALSE, # decision:default to ec fundable, following up with the state, bring pwsid from exhausted list 
       project_id == "7141" & list == "exhausted" ~ FALSE, # decision:default to ec fundable, following up with the state, bring pwsid from exhausted list 
       project_id == "7173" & list == "exhausted" ~ FALSE, # decision:default to ec fundable, following up with the state, bring pwsid from exhausted list 
@@ -199,8 +198,14 @@ clean_il_y3 <- function() {
   
   ####### Decision:  
   # if between planning approval and exhausted funding, default to exhausted funding (more recent, more info)
-  # if between fundable and any other list, default to fundable; if project description differ, then keep both projects
   # if from the same list, keep both (we are not certain they are not different phases of the same project)
+  
+  # For projects that appear in both the Base/IIJA Gen Supp Fundable List and EC Fundable List,
+  # we will default to using the funding amount info in the EC Fundable List AND
+  # PF is sum of Principal Forgiveness from both lists is the total principal forgiveness 
+  
+  # Projects: 6308, 7109, 7110, 7111
+  # all projects either have 0 PF or the ec fundable list is the only instance of PF, so no summation needed
   
   # Check for disinfection byproduct in description
   #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))

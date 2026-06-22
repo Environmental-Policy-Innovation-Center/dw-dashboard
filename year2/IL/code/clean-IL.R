@@ -7,7 +7,7 @@ clean_il_y2 <- function() {
                     colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      requested_amount = clean_numeric_string(requested_loan_amount),  
+      requested_amount = "No Information",  
       funding_amount = clean_numeric_string(requested_loan_amount),
       principal_forgiveness = clean_numeric_string(disadvantaged_community_principal_forgiveness),
       disadvantaged = ifelse(as.numeric(disadvantaged_community_principal_forgiveness) > 0, "Yes", "No Information"),
@@ -35,8 +35,8 @@ clean_il_y2 <- function() {
                    colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      requested_amount = clean_numeric_string(requested_loan_amount),  
-      funding_amount = clean_numeric_string(principal_forgiveness_reserved),
+      requested_amount = "No Information",
+      funding_amount = clean_numeric_string(requested_loan_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness_reserved),
       project_score = loan_priority_score,
       expecting_funding = "Yes",
@@ -67,7 +67,7 @@ clean_il_y2 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      requested_amount = "No Information",
+      requested_amount = clean_numeric_string(estimated_loan_amount),
       expecting_funding = "No",
       list = "planning approval"
     )
@@ -79,7 +79,7 @@ clean_il_y2 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      requested_amount = "No Information",
+      requested_amount = clean_numeric_string(project_loan_amount),
       expecting_funding = "No",
       list = "no planning approval"
     )
@@ -91,7 +91,7 @@ clean_il_y2 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      requested_amount = "No Information",
+      requested_amount = clean_numeric_string(estimated_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead planning approval"
@@ -104,7 +104,7 @@ clean_il_y2 <- function() {
     dplyr::mutate(
       funding_amount = "No Information",
       principal_forgiveness = "No Information",
-      requested_amount = "No Information",
+      requested_amount = clean_numeric_string(project_loan_amount),
       expecting_funding = "No",
       project_type = "Lead",
       list = "lead no planning approval"
@@ -173,124 +173,127 @@ clean_il_y2 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
-  ####### SANITY CHECKS START #######
+    ####### SANITY CHECKS START #######
+    
+    # Hone in on project id duplication
+    # il_clean |>
+    #   dplyr::group_by(project_id) |>
+    #   dplyr::tally() |>
+    #   dplyr::filter(n>1)
   
-  # Hone in on project id duplication
-  # il_clean |>
-  #   dplyr::group_by(project_id) |>
-  #   dplyr::tally() |>
-  #   dplyr::filter(n>1)
-
-  # # Check project id
-  # il_clean |> dplyr::filter(project_id == "4188")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "4188" & list =="exhausted")) 
-
-  # Decision: default to ec fundable
-
-  # Check project id
-  # il_clean |> dplyr::filter(project_id == "5443")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "5443" & list =="exhausted"))
+    # # Check project id
+    # il_clean |> dplyr::filter(project_id == "4188")
   
-  # Decision: default to ec fundable
-
-  # Check project id
-  # il_clean |> dplyr::filter(project_id == "5877")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "5877" & list =="exhausted"))
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "4188" & list =="exhausted")) 
   
-  # Decision: default to ec fundable
-
-   # Check project id
-  # il_clean |> dplyr::filter(project_id == "6043")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "6043" & list =="ec fundable"))
+    # Decision: default to ec fundable
   
-  # Decision: default to fundable (more info)
-
-   # Check project id
-  # il_clean |> dplyr::filter(project_id == "6307")
-
-  il_clean <- il_clean |>
-    dplyr::group_by(project_id) |>
-    dplyr::filter(!(project_id == "6307" & list =="exhausted")) |>
-    dplyr::ungroup()
+    # Check project id
+    # il_clean |> dplyr::filter(project_id == "5443")
   
-  # Decision: default to ec fundable
-
-  # Check project id
-  # il_clean |> dplyr::filter(project_id == "6375")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "6375" & list =="exhausted"))
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "5443" & list =="exhausted"))
+    
+    # Decision: default to ec fundable
   
-  # Decision: default to ec fundable
-
-  # Check project id
-  # il_clean |> dplyr::filter(project_id == "6376")
-
-  il_clean <- il_clean |>
-    dplyr::filter(!(project_id == "6376" & list =="exhausted"))
+    # Check project id
+    # il_clean |> dplyr::filter(project_id == "5877")
   
-  # Decision: default to ec fundable
-
-  ####### Decision:  
-  # if between planning approval and exhausted funding, default to exhausted funding (more recent, more info)
-  # if between fundable and any other list, default to fundable; if project description differ, then keep both projects
-  # if from the same list, keep both (we are not certain they are not different phases of the same project)
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "5877" & list =="exhausted"))
+    
+    # Decision: default to ec fundable
   
-  # Check for disinfection byproduct in description
-  #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
-  ####### Decision: No disinfection byproduct string
+     # Check project id
+    # il_clean |> dplyr::filter(project_id == "6043")
   
-  # Check for lead subtypes
-  # il_clean |>
-  #   dplyr::filter(project_type=="Lead") |>
-  #   dplyr::mutate(
-  #     lead_type = dplyr::case_when(
-  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-  #       TRUE ~ "unknown"
-  #     )
-  #   ) |>
-  #   dplyr::filter(lead_type == "both")
-
-  ####### Decision: No lead projects classified as both
-  # Check for lead subtypes: Unknown
-  # il_clean |>
-  #   dplyr::filter(project_type=="Lead") |>
-  #   dplyr::mutate(
-  #     lead_type = dplyr::case_when(
-  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-  #       TRUE ~ "unknown"
-  #     )
-  #   ) |>
-  #   dplyr::filter(lead_type == "unknown")
-
-  ####### Decision: project with borrower == "Lemont" & state_fiscal_year == "2024" remains "unknown")
-  # community_served	borrower	pwsid	project_id	project_name	project_type	project_cost	requested_amount	funding_amount	principal_forgiveness	population	project_description	disadvantaged	project_rank	project_score	expecting_funding	state	state_fiscal_year	list	lead_type
-	# Lemont	IL0311620	No Information		Lead		No Information	No Information	No Information	No Information	Replace 2,135 water services with unknown material.	No Information		No Information	No	Illinois	2024	lead no planning approval	unknown
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "6043" & list =="fundable")) |>
+      dplyr::mutate(
+        principal_forgiveness = ifelse(project_id=="6043", "2100000", principal_forgiveness),
+      )
+    
+    # Decision: this is the only project in this year on the fundable and ec fundable lists
+    # Funding amount is from ec fundable, PF is sum of fundable and ec fundable pf
   
-  ####### SANITY CHECKS END #######
+     # Check project id
+    # il_clean |> dplyr::filter(project_id == "6307")
   
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
-
-  run_tests(il_clean)
+    il_clean <- il_clean |>
+      dplyr::group_by(project_id) |>
+      dplyr::filter(!(project_id == "6307" & list =="exhausted")) |>
+      dplyr::ungroup()
+    
+    # Decision: default to ec fundable
+  
+    # Check project id
+    # il_clean |> dplyr::filter(project_id == "6375")
+  
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "6375" & list =="exhausted"))
+    
+    # Decision: default to ec fundable
+  
+    # Check project id
+    # il_clean |> dplyr::filter(project_id == "6376")
+  
+    il_clean <- il_clean |>
+      dplyr::filter(!(project_id == "6376" & list =="exhausted"))
+    
+    # Decision: default to ec fundable
+  
+    ####### Decision:  
+    # if between planning approval and exhausted funding, default to exhausted funding (more recent, more info)
+    # if from the same list, keep both (we are not certain they are not different phases of the same project)
+    
+    # Check for disinfection byproduct in description
+    #il_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+    ####### Decision: No disinfection byproduct string
+    
+    # Check for lead subtypes
+    # il_clean |>
+    #   dplyr::filter(project_type=="Lead") |>
+    #   dplyr::mutate(
+    #     lead_type = dplyr::case_when(
+    #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+    #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+    #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+    #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+    #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+    #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+    #       TRUE ~ "unknown"
+    #     )
+    #   ) |>
+    #   dplyr::filter(lead_type == "both")
+  
+    ####### Decision: No lead projects classified as both
+    # Check for lead subtypes: Unknown
+    # il_clean |>
+    #   dplyr::filter(project_type=="Lead") |>
+    #   dplyr::mutate(
+    #     lead_type = dplyr::case_when(
+    #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+    #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+    #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+    #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+    #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+    #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+    #       TRUE ~ "unknown"
+    #     )
+    #   ) |>
+    #   dplyr::filter(lead_type == "unknown")
+  
+    ####### Decision: project with borrower == "Lemont" & state_fiscal_year == "2024" remains "unknown")
+    # community_served	borrower	pwsid	project_id	project_name	project_type	project_cost	requested_amount	funding_amount	principal_forgiveness	population	project_description	disadvantaged	project_rank	project_score	expecting_funding	state	state_fiscal_year	list	lead_type
+  	# Lemont	IL0311620	No Information		Lead		No Information	No Information	No Information	No Information	Replace 2,135 water services with unknown material.	No Information		No Information	No	Illinois	2024	lead no planning approval	unknown
+    
+    ####### SANITY CHECKS END #######
+    
+    # il_clean <- il_clean |>
+    #   dplyr::select(-list)
+  
+    run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   
   return(il_clean)

@@ -13,11 +13,11 @@ Simply changing the `state_name` will subset the data and update the plot's subt
 ## Imports & Settings
 
 ```{r}
-state_name <- "Minnesota"
-state_abbr <- "MN"
+state_name <- "Illinois"
+state_abbr <- "IL"
 
 # export plots to AWS and Drive?
-save_plots <- TRUE
+save_plots <- FALSE
 
 ```
 
@@ -1677,7 +1677,7 @@ sc_dac_ef <- state_projects |>
   dplyr::mutate(
     population = as.numeric(population),
     small_community = dplyr::case_when(
-      population < 10000 ~ "Yes",
+      population <= 10000 ~ "Yes",
       .default = "No"
   )) |>
   dplyr::select(-population) |>
@@ -1685,6 +1685,7 @@ sc_dac_ef <- state_projects |>
   dplyr::group_by(state_fiscal_year, small_community, disadvantaged) |>
   dplyr::tally() |>
   dplyr::mutate(
+    disadvantaged = ifelse(is.na(disadvantaged), "No Information", disadvantaged),
     interaction = interaction(small_community, disadvantaged),
   interaction = dplyr::case_when(
     interaction =="No.No" ~ "Not small community, Not disadvantaged",

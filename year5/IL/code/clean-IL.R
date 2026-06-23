@@ -285,20 +285,39 @@ clean_il_y5 <- function() {
   #       TRUE ~ "unknown"
   #     )
   #   ) |>
-  #   dplyr::filter(lead_type == "unknown") 
+  #   dplyr::filter(lead_type == "unknown")
+
+  il_lead_unknow_id <- il_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "unknown") |>
+    dplyr::pull(project_id)
+
+  #drop No Information
+  il_lead_unknow_id <- il_lead_unknow_id[!grepl("No Information", il_lead_unknow_id)]
   
-  #   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
-  #              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
-  # 1:             <NA> North Aurora IL0890600       7428         <NA>         Lead         <NA>   No Information No Information        No Information No Information Replace 8,000 lf of watermain and service lines          <NA>         <NA> No Information
-  #    expecting_funding    state state_fiscal_year                      list lead_type
-  #               <char>   <char>            <char>                    <char>    <char>
-  # 1:                No Illinois              2026 lead no planning approval   unknown
-  ####### Decision: Project is replacement?
+  ####### Decision: 26 projects unknown --> all LSLR
+
+  il_clean <- il_clean |>
+      dplyr::mutate(
+       project_description = dplyr::case_when(
+         borrower == "Broadview Estates Mhp" & pwsid == "IL1190120"  ~ paste0(project_description, " | FT: LSLR"), #unknow project id
+         project_id %in% il_lead_unknow_id ~ paste0(project_description, " | FT: LSLR"),
+              .default = project_description
+       )
+      )
   
   ####### SANITY CHECKS END #######
-  
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
   
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

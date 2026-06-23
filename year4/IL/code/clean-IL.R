@@ -284,9 +284,6 @@ clean_il_y4 <- function() {
   
   ####### SANITY CHECKS END #######
 
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
-
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   

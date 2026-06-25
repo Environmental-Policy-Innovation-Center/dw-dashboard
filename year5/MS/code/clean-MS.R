@@ -7,7 +7,7 @@ clean_ms_y5 <- function() {
       expecting_funding = "Yes",
       requested_amount = clean_numeric_string(loan_funds_requested),
       project_description = stringr::str_squish(project_title),
-      list = "base fundable",
+      list = "SFY27 Base/IIJA Gen Supp Fundable List",
       disadvantaged = ifelse(dc == "Y", "Yes", "No")
     )
     
@@ -20,7 +20,7 @@ clean_ms_y5 <- function() {
       requested_amount = clean_numeric_string(loan_funds),
       project_description = stringr::str_squish(project_name),
       disadvantaged = "No Information",
-      list = 'base planning'
+      list = 'SFY27 Base/IIJA Gen Supp Planning List'
     )
   
   ms_merge <- bind_rows(base_funding_list, base_planning_list)
@@ -62,13 +62,47 @@ clean_ms_y5 <- function() {
   # 0490006 and 0540013 are treated as same project, drop from planning list
   
   ms_clean <- ms_clean |>
-    dplyr::filter(!(project_id == "0540013" & list == "base planning")) |>
-    dplyr::filter(!(project_id == "0490006" & list == "base planning"))
+    dplyr::filter(!(project_id == "0540013" & list == "SFY27 Base/IIJA Gen Supp Planning List")) |>
+    dplyr::filter(!(project_id == "0490006" & list == "SFY27 Base/IIJA Gen Supp Planning List"))
     
   
   # Check for disinfection byproduct in description
   # ms_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
   ####### Decision: No disinfection byproduct string
+
+   # Check for lead subtypes
+  # ms_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  # dplyr::mutate(
+  #   lead_type = dplyr::case_when(
+  #   stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #   stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #   stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #  # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #  stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #  stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #   TRUE ~ "unknown"
+  # )) |>
+  #   dplyr::filter(lead_type == "both")
+####### Decision: No lead projects classified as both
+  
+## Check for lead subtypes: Unknown
+  # ms_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+  ### Decision: no unknowns
+    
   
   ####### SANITY CHECKS END #######
   

@@ -9,8 +9,8 @@ This notebook combines data used in the `funding-data-yoy` and `project-data-yoy
 
 ```{r}
 # filters data and changes plot names
-state_name <- "Illinois"
-state_abbr <- "IL"
+state_name <- "Mississippi"
+state_abbr <- "MS"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -347,190 +347,190 @@ demand_gp <- ggplotly(demand_p, tooltip="text") |>
 # Demand for funds project type breakdown (by type UPDATED)
 
 ```{r}
+
+make_rect_layer <- function(data, aes_mapping) {
+  if (nrow(data) > 0) {
+    ggplot2::geom_rect(data = data, mapping = aes_mapping)
+  } else {
+    ggplot2::geom_blank()
+  }
+}
+
 # Combine into one data frame with a category column
 combined_project_type <- dplyr::bind_rows(
   financial_by_project_type |> 
-    dplyr::transmute(state_fiscal_year, project_type,  value = total_funding_available, category = "Available Funds", alpha_var = NA_character_),
+    dplyr::transmute(state_fiscal_year, project_type, value = total_funding_available, category = "Available Funds", alpha_var = NA_character_),
   funding_amount_df_summary |> 
     dplyr::rename(`On fundable list` = funding_amount) |>
-    dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type),  value = `On fundable list`, category = "On Fundable List", alpha_var = source_funding),
+    dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type), value = `On fundable list`, category = "On Fundable List", alpha_var = source_funding),
   demand_df_summary |> 
     dplyr::rename(`Demand for Funds` = demand) |>
-    dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type),  value = `Demand for Funds`, category = "Demand for Funds", alpha_var = source_demand)
+    dplyr::transmute(state_fiscal_year, project_type = ifelse(project_type == "Emerging Contaminants", "Emerging Contaminants (EC)", project_type), value = `Demand for Funds`, category = "Demand for Funds", alpha_var = source_demand)
   ) |>
-  dplyr::filter(
-      !value == 0
-    ) |>
-  dplyr::mutate(
-    project_type = forcats::fct(project_type)
-  ) 
+  dplyr::filter(!value == 0) |>
+  dplyr::mutate(project_type = forcats::fct(project_type))
 
-for (type in levels(combined_project_type$project_type)){
-  
+for (type in levels(combined_project_type$project_type)) {
+
   stacked_bars_type <- dplyr::bind_rows(
-    funding_amount_df_summary |> 
+    funding_amount_df_summary |>
       dplyr::rename(`On fundable list` = funding_amount) |>
       dplyr::transmute(
-        state_fiscal_year, 
+        state_fiscal_year,
         project_type = dplyr::case_when(
-            project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
-            .default = project_type
-        ),  
-        value = `On fundable list`, 
-        category = "On Fundable List", 
-        alpha_var = source_funding, 
-        stack_var = source_funding
+          project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
+          .default = project_type
         ),
-    demand_df_summary |> 
+        value     = `On fundable list`,
+        category  = "On Fundable List",
+        alpha_var = source_funding,
+        stack_var = source_funding
+      ),
+    demand_df_summary |>
       dplyr::rename(`Demand for Funds` = demand) |>
       dplyr::transmute(
-        state_fiscal_year, 
-          project_type = dplyr::case_when(
-            project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
-            .default = project_type
-        ),  
-        value = `Demand for Funds`, 
-        category = "Demand for Funds", 
-        alpha_var = source_demand, 
-        stack_var = source_demand)
+        state_fiscal_year,
+        project_type = dplyr::case_when(
+          project_type == "Emerging Contaminants" ~ "Emerging Contaminants (EC)",
+          .default = project_type
+        ),
+        value     = `Demand for Funds`,
+        category  = "Demand for Funds",
+        alpha_var = source_demand,
+        stack_var = source_demand
+      )
   ) |>
-    dplyr::filter(
-      project_type == type
-    )
+    dplyr::filter(project_type == type)
 
-# Pre-compute stacked positions within each category
+  # Pre-compute stacked positions within each category
   stacked_positioned_type <- stacked_bars_type |>
     dplyr::group_by(state_fiscal_year, category) |>
     dplyr::mutate(
       ymax = cumsum(value),
       ymin = ymax - value,
       stack_var = dplyr::case_when(
-        stack_var == "requested_amount" ~ "Requested Amount",
-        stack_var == "project_cost" ~ "Project Cost",
-        stack_var == "funding_amount" ~ "Funding Amount", 
-        stack_var == "requested_amount_ef" ~ "Requested Amount", 
+        stack_var == "requested_amount"      ~ "Requested Amount",
+        stack_var == "project_cost"          ~ "Project Cost",
+        stack_var == "funding_amount"        ~ "Funding Amount",
+        stack_var == "requested_amount_ef"   ~ "Requested Amount",
         stack_var == "total_project_cost_ef" ~ "Project Cost",
         .default = "check"
       )
     ) |>
     dplyr::ungroup() |>
     dplyr::mutate(
-      state_fiscal_year = as.factor(
-        state_fiscal_year
-      ),
+      state_fiscal_year = as.factor(state_fiscal_year),
       plt_str = paste0(category, ": ", scales::label_currency()(value), " (", stack_var, ")")
-    ) 
-
-  plot_tile_demand_type = paste0('Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ', type)
-
-  avail_funds_layer <- if (nrow(financial_by_project_type|> dplyr::ungroup() |> dplyr::filter(project_type == type)) > 0) {
-    ggplot2::geom_rect(
-      data = financial_by_project_type |>
-          dplyr::ungroup() |>
-          dplyr::filter(project_type == type) |>
-          dplyr::mutate(
-            state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),  
-            category = "Available Funds",
-            plt_str = paste0(category, ": ", scales::label_currency()(total_funding_available))
-          ),
-      ggplot2::aes(
-          xmin = as.numeric(state_fiscal_year) - 0.275 - 0.125,
-          xmax = as.numeric(state_fiscal_year) - 0.275 + 0.125,
-          ymin = 0,
-          ymax = total_funding_available,
-          fill = category,
-          text = plt_str
-        )
     )
-  } else {
-    ggplot2::geom_blank()
-  }
 
+  plot_tile_demand_type <- paste0(
+    "Comparing Demand for Funds to Available Funds and Funds for projects on Fundable List: ", type
+  )
 
+  # Pre-compute xmin/xmax as real columns so plotly can resolve them
+  # even when the data frame is zero rows
+  avail_funds_data <- financial_by_project_type |>
+    dplyr::ungroup() |>
+    dplyr::filter(project_type == type) |>
+    dplyr::mutate(
+      state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),
+      category = "Available Funds",
+      plt_str  = paste0(category, ": ", scales::label_currency()(total_funding_available)),
+      xmin     = as.numeric(state_fiscal_year) - 0.275 - 0.125,
+      xmax     = as.numeric(state_fiscal_year) - 0.275 + 0.125
+    )
 
+  fundable_list_data <- stacked_positioned_type |>
+    dplyr::filter(category == "On Fundable List") |>
+    dplyr::mutate(
+      xmin = as.numeric(state_fiscal_year) - 0.125,
+      xmax = as.numeric(state_fiscal_year) + 0.125
+    )
+
+  demand_funds_data <- stacked_positioned_type |>
+    dplyr::filter(category == "Demand for Funds") |>
+    dplyr::mutate(
+      xmin = as.numeric(state_fiscal_year) + 0.275 - 0.125,
+      xmax = as.numeric(state_fiscal_year) + 0.275 + 0.125
+    )
+
+  avail_funds_layer <- make_rect_layer(
+    avail_funds_data,
+    ggplot2::aes(
+      xmin = xmin, xmax = xmax,
+      ymin = 0, ymax = total_funding_available,
+      fill = category, text = plt_str
+    )
+  )
+
+  fundable_list_layer <- make_rect_layer(
+    fundable_list_data,
+    ggplot2::aes(
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax,
+      fill = category, alpha = stack_var, text = plt_str
+    )
+  )
+
+  demand_funds_layer <- make_rect_layer(
+    demand_funds_data,
+    ggplot2::aes(
+      xmin = xmin, xmax = xmax,
+      ymin = ymin, ymax = ymax,
+      fill = category, alpha = stack_var, text = plt_str
+    )
+  )
 
   demand_type_p <- ggplot2::ggplot() +
-    # Available Funds — left
-    # ggplot2::geom_rect(
-    #   data = financial_by_project_type |>
-    #     dplyr::ungroup() |>
-    #     dplyr::filter(project_type == type) |>
-    #     dplyr::mutate(
-    #       state_fiscal_year = factor(state_fiscal_year, levels = levels(stacked_positioned_type$state_fiscal_year)),  
-    #       category = "Available Funds",
-    #       plt_str = paste0(category, ": ", scales::label_currency()(total_funding_available))
-    #     ),
-    #   ggplot2::aes(
-    #     xmin = as.numeric(state_fiscal_year) - 0.275 - 0.125,
-    #     xmax = as.numeric(state_fiscal_year) - 0.275 + 0.125,
-    #     ymin = 0,
-    #     ymax = total_funding_available,
-    #     fill = category,
-    #     text = plt_str
-    #   )
-    # )  +
     avail_funds_layer +
-    # On Fundable List — center
-    ggplot2::geom_rect(
-      data = dplyr::filter(stacked_positioned_type, category == "On Fundable List" & project_type == type),
-      ggplot2::aes(
-        xmin = as.numeric(state_fiscal_year) - 0.125,
-        xmax = as.numeric(state_fiscal_year) + 0.125,
-        ymin = ymin, ymax = ymax,
-        fill = category, alpha = stack_var, text = plt_str
-      )
-    ) +
-    # Demand for Funds — right
-    ggplot2::geom_rect(
-      data = dplyr::filter(stacked_positioned_type, category == "Demand for Funds" & project_type == type),
-      ggplot2::aes(
-        xmin = as.numeric(state_fiscal_year) + 0.275 - 0.125,
-        xmax = as.numeric(state_fiscal_year) + 0.275 + 0.125,
-        ymin = ymin, ymax = ymax,
-        fill = category, alpha = stack_var, text = plt_str
-      )
-    ) +
+    fundable_list_layer +
+    demand_funds_layer +
     ggplot2::scale_fill_manual(values = c(
-      "Available Funds"              = "#4ea324",
-      "Demand for Funds"             = "#172f60",
-      "On Fundable List"             = "#791a7b",
+      "Available Funds"                = "#4ea324",
+      "Demand for Funds"               = "#172f60",
+      "On Fundable List"               = "#791a7b",
       "Demand for Funds (Lead and EC)" = "#B15712",
       "On Fundable List (Lead and EC)" = "#ff6f00ff"
     )) +
-    ggplot2::scale_alpha_manual(values = c(
-      "Funding Amount" = 1,
-      "Project Cost" = 1,
-      "Requested Amount" = 0.8
-    ), ) +
+    ggplot2::scale_alpha_manual(
+      values = c(
+        "Funding Amount"   = 1,
+        "Project Cost"     = 1,
+        "Requested Amount" = 0.8
+      ),
+      na.value = 1
+    ) +
     ggplot2::scale_x_continuous(
       breaks = seq_along(levels(stacked_positioned_type$state_fiscal_year)),
       labels = levels(stacked_positioned_type$state_fiscal_year)
-      ) +  
-    ggplot2::scale_y_continuous(labels = label_currency()) + 
+    ) +
+    ggplot2::scale_y_continuous(labels = scales::label_currency()) +
     ggplot2::labs(
-      x = "",
-      y = "",
-      fill = "",
-      title = plot_tile_demand_type,
+      x        = "",
+      y        = "",
+      fill     = "",
+      title    = plot_tile_demand_type,
       subtitle = get_subtitle_str(stacked_positioned_type$state_fiscal_year, state_name)
-      ) +
-        guides(alpha = "none") +
+    ) +
+    ggplot2::guides(alpha = "none") +
     epic_chart_theme
 
-  demand_type_gp <- ggplotly(demand_type_p, tooltip="text") |>
-      layout(title = list(text = paste0(plot_tile_demand_type,
-                                        '<br>',
-                                        get_subtitle_str(stacked_positioned_type$state_fiscal_year, state_name)
-                                        )))
-    
+  demand_type_gp <- plotly::ggplotly(demand_type_p, tooltip = "text") |>
+    plotly::layout(title = list(text = paste0(
+      plot_tile_demand_type,
+      "<br>",
+      get_subtitle_str(stacked_positioned_type$state_fiscal_year, state_name)
+    )))
+
   if (save_plots) {
     run_save_plots(
-      gg_plot=demand_type_p,
-      gp_object=demand_type_gp,
-      name = paste0("prelim-",
+      gg_plot   = demand_type_p,
+      gp_object = demand_type_gp,
+      name = paste0(
+        "prelim-",
         gsub("_", "-", janitor::make_clean_names(type)),
         "-compare-unmet-demand-available-funds-expected-funds-yoy"
-        )
+      )
     )
   }
 }

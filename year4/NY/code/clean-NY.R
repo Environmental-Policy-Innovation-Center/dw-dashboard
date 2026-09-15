@@ -204,6 +204,30 @@ clean_ny_y4 <- function() {
 
   ny_clean <- ny_clean |>
     dplyr::bind_rows(all_projects |> dplyr::filter(project_id == "19093" & state_fiscal_year == "2025") |> dplyr::mutate(state_fiscal_year = "2026", principal_forgiveness = as.character(NA), funding_amount = as.character(NA)))
+  
+  # Final Amendment #3: No changes to IUP
+  
+  # Final Amendment #4: Filed March 18, 2026
+  
+  ny_clean <- ny_clean |>
+    dplyr::mutate(
+      project_cost = ifelse(project_id == "19036", "7000000", project_cost),
+      project_score = ifelse(project_id == "19862", "40", project_score),
+      project_cost = ifelse(project_id == "15616", "1400000", project_cost),
+      project_cost = ifelse(project_id == "18764", "1500000", project_cost),
+      project_cost = ifelse(project_id == "18715", "3400000", project_cost),
+      project_cost = ifelse(project_id == "18423", "1100000", project_cost),
+    )
+  
+  # Final Amendment #5: Filed June 3, 2026
+  
+  ny_clean <- ny_clean |>
+    dplyr::mutate(
+      project_cost = ifelse(project_id == "19537", "6600000", project_cost),
+      project_cost = ifelse(project_id == "19203", "50000", project_cost),
+      project_cost = ifelse(project_id == "18458", "6691234", project_cost),
+      project_cost = ifelse(project_id == "19051", "50000", project_cost),
+    )
 
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))

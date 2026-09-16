@@ -94,6 +94,7 @@ clean_mn_y3 <- function() {
       project_cost = case_when(
         !is.na(estimated_project_cost) ~ estimated_project_cost,
         TRUE ~ project_cost),
+      project_cost = clean_numeric_string(project_cost),  
       funding_amount = clean_numeric_string(funding_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       disadvantaged = replace_na(disadvantaged, "No Information"),
@@ -156,7 +157,7 @@ clean_mn_y3 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
-  ### Decision: 24 unknowns 16--> LSLR, 8 cannot be ressolved
+  ### Decision: 24 unknowns 16--> LSLR, 8 ressolved by analyst
   
    mn_clean <- mn_clean |>
       dplyr::mutate(
@@ -165,6 +166,15 @@ clean_mn_y3 <- function() {
               .default = project_description
        )
       )
+  
+  mn_clean <- mn_clean |>
+      dplyr::mutate(
+       project_description = dplyr::case_when(
+        project_id %in% c("1730027-28", "1730027-29", "1730027-30", "1730027-31", "1690011-21", "1690011-22", "1690011-23", "1690011-24") & project_type == "Lead" ~ paste0(project_description, " | FT: LSLR"),     
+        .default = project_description
+       )
+      )
+  
 
 ####### SANITY CHECKS END #######
   

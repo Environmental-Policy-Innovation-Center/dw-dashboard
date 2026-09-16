@@ -153,7 +153,7 @@ clean_mn_y4 <- function() {
 #     )
 #   ) |>
 #   dplyr::filter(lead_type == "unknown") 
-### Decision: 41 unknowns 15--> LSLR, 26 cannot be ressolved
+### Decision: 41 unknowns 15--> LSLR, 26 ressolved by analyst
 
   mn_clean <- mn_clean |>
       dplyr::mutate(
@@ -163,6 +163,16 @@ clean_mn_y4 <- function() {
        )
       )
 
+    mn_clean <- mn_clean |>
+      dplyr::mutate(
+       project_description = dplyr::case_when(
+        project_id %in% c("1180008-16", "1180008-17", "1560023-13", "1560023-14", "1560023-15", "1690007-10", "1690007-11", "1690007-09", "1850013-02", "1850013-03", "1850013-04", "1220010-08", "1220001-13", "1640003-18", "1640003-20", "1420010-06", "1730027-34", "1730027-35", "1790013-07", "1690011-21", "1690011-22", "1690011-24", "1690011-30", "1690011-31", "1620026-31", "1090011-05") & project_type == "Lead" ~ paste0(project_description, " | FT: LSLR"),     
+        .default = project_description
+       )
+      )
+  
+  
+  
 ####### SANITY CHECKS END #######
   
   # Produce Other Federal and State Funds dataset

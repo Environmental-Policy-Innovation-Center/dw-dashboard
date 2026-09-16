@@ -1,4 +1,4 @@
-clean_mn_year_0 <- function() {
+clean_mn_y0 <- function() {
   
   # comp ppl contains all of not eligible and fundable projects
   mn_comp_ppl <- data.table::fread("year0/MN/data/mn-comp-ppl.csv",
@@ -185,7 +185,8 @@ clean_mn_year_0 <- function() {
   
   run_tests(mn_clean)
   rm(list=setdiff(ls(), "mn_clean"))
-  
+ 
+  return(mn_clean)
 }
 
 

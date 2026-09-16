@@ -89,6 +89,7 @@ clean_mn_y2 <- function() {
       project_cost = case_when(
         !is.na(estimated_project_cost) ~ estimated_project_cost,
         TRUE ~ project_cost),
+      project_cost = clean_numeric_string(project_cost),  
       funding_amount = clean_numeric_string(funding_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
       disadvantaged = replace_na(disadvantaged, "No Information"),

@@ -101,10 +101,54 @@ clean_in_y2 <- function() {
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-# in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+# duplicate_ids <- in_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts)) |> dplyr::filter(counts >1)
 
-# in_clean |> dplyr::filter(project_id == )
-####### Decision : From previous workflow,"DW210251 01" was duplicated, but distinct due to project id typo. We decided to "double count" overlap between Q1 and Q4 lists
+in_clean <- in_clean |>
+    dplyr::left_join(
+      tibble::tribble(
+        ~project_id,    ~list,                         ~keep, ~add_to_list,                                 
+        "DW231617 01", "SFY23 Q1 LSLR fundable",      "y",   "not ef in Q4",                             
+        "DW231617 01", "SFY23 Q4 LSLR comprehensive", "n",   NA,                                         
+        "DW231509 01", "SFY23 Q1 LSLR fundable",      "y",   "not ef in Q4",                             
+        "DW231509 01", "SFY23 Q4 LSLR comprehensive", "n",   NA,                                         
+        "DW230891 01", "SFY23 Q1 fundable",           "y",   "not ef in Q4; not dac in Q4",               
+        "DW230891 01", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW224245 06", "SFY23 Q1 LSLR fundable",      "y",   "not ef in Q4",                             
+        "DW224245 06", "SFY23 Q4 LSLR comprehensive", "n",   NA,                                         
+        "DW224189 01", "SFY23 Q1 fundable",           "y",   "not ef in Q4",                             
+        "DW224189 01", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW223648 01", "SFY23 Q1 fundable",           "y",   "not ef in Q4; not dac in Q4",               
+        "DW223648 01", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW223404 01", "SFY23 Q1 fundable",           "y",   "not ef in Q4",                             
+        "DW223404 01", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW223085 02", "SFY23 Q1 fundable",           "y",   "not ef in Q4",                             
+        "DW223085 02", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW222320 01", "SFY23 Q1 LSLR fundable",      "y",   "not ef in Q4",                             
+        "DW222320 01", "SFY23 Q4 LSLR comprehensive", "n",   NA,                                         
+        "DW222156 01", "SFY23 Q1 fundable",           "y",   "not ef in Q4; not dac in Q4; recat ec in Q4",
+        "DW222156 01", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW221802 06", "SFY23 Q1 LSLR fundable",      "y",   "not ef in Q4; dac in Q4",                   
+        "DW221802 06", "SFY23 Q4 LSLR comprehensive", "n",   NA,                                         
+        "DW220482 03", "SFY23 Q1 fundable",           "y",   "not ef in Q4; recat ec in Q4",              
+        "DW220482 03", "SFY23 Q4 comprehensive",      "n",   NA,                                         
+        "DW210837 02", "SFY23 Q1 fundable",           "y",   "not ef in Q4; not dac in Q4",               
+        "DW210837 02", "SFY23 Q4 comprehensive",      "n",   NA,                                                                              
+        "DW181987 03", "SFY23 Q1 fundable",           "y",   "not ef in Q4",                             
+        "DW181987 03", "SFY23 Q4 comprehensive",      "n",   NA
+      )
+    ) |>
+    dplyr::mutate(
+      keep = tidyr::replace_na(keep,"y")
+    ) |>
+    dplyr::filter(keep == "y") |>
+    dplyr::mutate(
+      list = ifelse(!is.na(add_to_list), paste0(list, "; ", add_to_list), list)
+    ) |>
+    dplyr::select(-c(keep, add_to_list))
+ 
+####### Decision: 2026/07/16 we’ll stick with Q1 info since more comparable with other states. 
+# And make separate note that project may have moved into Q4 list for internal tracking
+# Duplicate DW210251 01, legitimately 2 dif projects 
 
 # Check for disinfection byproduct in description
 # in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
@@ -144,7 +188,17 @@ clean_in_y2 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
   
-  ######## Decision: Can't amend based on description
+  ######## Decision: c("DW223404 01", "DW223085 02", "DW222156 01", "DW222929 02", "DW221230 01") --> LSLR
+ 
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      project_description = ifelse(
+        project_type == "Lead" & project_id %in% c("DW223404 01", "DW223085 02", "DW222156 01", "DW222929 02", "DW221230 01"),
+        paste0(project_description, "|FT: LSLR"),
+        project_description
+      )
+    )
+
 
 ####### SANITY CHECKS END #######
   

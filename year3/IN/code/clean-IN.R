@@ -101,12 +101,50 @@ clean_in_y3 <- function() {
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-# in_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+## duplicate_ids <-  in_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts)) |> dplyr::filter(counts >1)
 
-####### Decision : Duplicates due to Q1 and Q4 overlap
+  in_clean <- in_clean |>
+    dplyr::left_join(
+      tibble::tribble(
+        ~project_id,    ~list,                         ~keep, ~add_to_list,                    
+        "DW160935 02", "SFY24 Q1 fundable",           "y",   "not ef in Q4; not dac in Q4", 
+        "DW160935 02", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW220482 04", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW220482 04", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW222156 01", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW222156 01", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW223648 01", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW223648 01", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW230648 01", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW230648 01", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW233070 03", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW233070 03", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW233461 02", "SFY24 Q1 fundable",           "y",   "not ef in Q4; recat ec in Q4",
+        "DW233461 02", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW234049 02", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW234049 02", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW234171 04", "SFY24 Q1 LSLR fundable",      "y",   "not ef in Q4",                
+        "DW234171 04", "SFY24 Q4 LSLR comprehensive", "n",   NA,                            
+        "DW234671 03", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW234671 03", "SFY24 Q4 comprehensive",      "n",   NA,                            
+        "DW240392 02", "SFY24 Q1 fundable",           "y",   "not ef in Q4",                
+        "DW240392 02", "SFY24 Q4 comprehensive",      "n",   NA
+      )
+    ) |>
+    dplyr::mutate(
+      keep = tidyr::replace_na(keep,"y")
+    ) |>
+    dplyr::filter(keep == "y") |>
+    dplyr::mutate(
+      list = ifelse(!is.na(add_to_list), paste0(list, "; ", add_to_list), list)
+    ) |>
+    dplyr::select(-c(keep, add_to_list))
+
+####### Decision: 2026/07/16 we’ll stick with Q1 info since more comparable with other states. 
+# And make separate note that project may have moved into Q4 list for internal tracking
 
 # Check for disinfection byproduct in description
-#in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+# in_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
 ####### Decision : No disinfection byproduct string
   
 # Check for lead subtypes: Both
@@ -143,7 +181,15 @@ clean_in_y3 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
   
-  ######## Decision: Can't amend based on description
+  ######## Decision: DW224189 02 LSLR, DW241207 01 LSLI
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id == "DW224189 02" ~ paste0(project_description, "|FT: LSLR"),
+        project_type == "Lead" & project_id == "DW241207 01" ~ paste0(project_description, "|FT: LSLI"),
+        .default = project_description
+      )
+    )
   
 ####### SANITY CHECKS END #######
   

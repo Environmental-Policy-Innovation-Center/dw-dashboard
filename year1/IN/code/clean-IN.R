@@ -112,7 +112,15 @@ clean_in_y1 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
   
-  ######## Decision: Can't amend based on description
+  ######## Decision: DW222929 02, DW223404 01, DW222156 01, DW223085 02, DW222227 02,  DW223085 02 --> LSLR
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      project_description = ifelse(
+        project_type == "Lead" & project_id %in% c("DW222929 02", "DW223404 01", "DW222156 01", "DW223085 02", "DW222227 02",  "DW223085 02"),
+        paste0(project_description, "|FT: LSLR"),
+        project_description
+      )
+    )
 ####### SANITY CHECKS END #######
   
   run_tests(in_clean)

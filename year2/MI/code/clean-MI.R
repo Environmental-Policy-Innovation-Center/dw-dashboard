@@ -55,15 +55,58 @@ clean_mi_y2 <- function() {
   
   # Hone in on project id duplication
   
-  mi_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  # mi_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
   # mi_clean |> dplyr::filter(project_id == "7588-01")
   ####### Decision: Keep as two separate projects, one gets funding from Gen and the other from Lead
  
-  
   # Check for disinfection byproduct in description
-  mi_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
+  # mi_clean |> dplyr::filter(grepl("disinfection byproduct", tolower(project_description)))
   ####### Decision: No disinfection byproduct string
-    
+   
+
+  # Check for lead subtypes: Both
+    # mi_clean |>
+    #     dplyr::filter(project_type=="Lead") |>
+    #     dplyr::mutate(
+    #       lead_type = dplyr::case_when(
+    #         stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+    #         stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+    #         stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+    #         # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+    #         stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+    #         stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+    #         TRUE ~ "unknown"
+    #       )
+    #     ) |>
+    #     dplyr::filter(lead_type == "both")
+
+  ####### Decision: no projects classified as both
+  
+  # Check for lead subtypes: Unknown
+  # mi_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+
+  # Decision: c("7859-01", "7798-01", "7835-01") --> LSLR
+
+   mi_clean <- mi_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("7859-01", "7798-01", "7835-01") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    )
   ####### SANITY CHECKS END #######
 
   run_tests(mi_clean)

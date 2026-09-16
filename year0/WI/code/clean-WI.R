@@ -74,8 +74,8 @@ clean_wi_y0 <- function() {
   wi_clean <- wi_clean |>
     dplyr::mutate(
            project_type = case_when(
-            grepl(ec_str, project_description) ~ "Emerging Contaminants",
-            grepl("lead|lsl", project_description) ~ "Lead",
+            grepl(ec_str, project_description, ignore.case = TRUE) ~ "Emerging Contaminants",
+            grepl("lead|lsl", project_description, ignore.case = TRUE) ~ "Lead",
             TRUE ~ "General"),
            borrower = as.character(NA),
            pwsid = as.character(NA),

@@ -172,8 +172,31 @@ clean_wi_y3 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
 
-  ### Decision: 87 lead unknown --> cannot resolve
+  ### Decision: 86 lead unknown --> resolved to LSLR
+
+  id_lslr <-  wi_clean |>
+     dplyr::filter(project_type=="Lead") |>
+     dplyr::mutate(
+       lead_type = dplyr::case_when(
+         stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+         stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+         stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+         # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+         stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",         stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+         TRUE ~ "unknown"
+       )
+     ) |>
+     dplyr::filter(lead_type == "unknown") |> pull(project_id)
   
+  wi_clean <- wi_clean |>
+    dplyr::mutate(
+      project_description = ifelse(
+       project_type == "Lead" & project_id %in% id_lslr,
+      paste0(project_description, " | FT: LSLR"),
+      project_description
+      )
+    )
+
 
 ####### SANITY CHECKS END #######
   

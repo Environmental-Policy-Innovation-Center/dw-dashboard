@@ -85,7 +85,14 @@ clean_nj_y2 <- function() {
   #   dplyr::filter(lead_type == "unknown") 
 
   ### Decision: 7 Unknown;
-  # unknown # unknown # remediation --> replacement # unknown # removal --> replacement # removal --> replacement # abatement --> replacement
+  # 1 unknown 6 replacement
+  nj_clean <- nj_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("1409001-001", "0512001-001", "1302001-005", "0412001-006", "0424001-005", "0817001-001") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    )
   ####### SANITY CHECKS END #######
   
   run_tests(nj_clean)

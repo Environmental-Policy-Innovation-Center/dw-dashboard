@@ -108,6 +108,16 @@ clean_nj_y4 <- function() {
   #   dplyr::filter(lead_type == "unknown") 
 
   ### Decision: 23 Unknown
+  # 9 --> LSLR, the rest remain unknown. Of note, some of the unknown may be recategorized to General, but the DD uses BIL eligibility to assign type, and these project fall within the requiremnt for Lead. Checked with Danielle and decision is to leave as is.
+    nj_clean <- nj_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("1302001-005", "1520001-008", "1409001-001", "1530004-020", "0424001-005", "0512001-001", "0817001-001", "1322001-001", "0412001-006") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    )
+
+  
   ####### SANITY CHECKS END #######
   
   run_tests(nj_clean)

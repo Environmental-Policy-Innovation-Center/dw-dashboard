@@ -284,16 +284,14 @@ clean_il_y2 <- function() {
     #   ) |>
     #   dplyr::filter(lead_type == "unknown")
   
-    ####### Decision: project with borrower == "Lemont" & state_fiscal_year == "2024" remains "unknown")
-    # community_served	borrower	pwsid	project_id	project_name	project_type	project_cost	requested_amount	funding_amount	principal_forgiveness	population	project_description	disadvantaged	project_rank	project_score	expecting_funding	state	state_fiscal_year	list	lead_type
-  	# Lemont	IL0311620	No Information		Lead		No Information	No Information	No Information	No Information	Replace 2,135 water services with unknown material.	No Information		No Information	No	Illinois	2024	lead no planning approval	unknown
-    
+    ####### Decision: project with borrower == "Lemont" & state_fiscal_year == "2024" --> LSLR
+    il_clean <- il_clean |>
+      dplyr::mutate(
+          project_description = ifelse(project_type=="Lead" & borrower == "Lemont", paste0(project_description, " |FT: LSLR"), project_description)
+        )
     ####### SANITY CHECKS END #######
-    
-    # il_clean <- il_clean |>
-    #   dplyr::select(-list)
   
-    run_tests(il_clean)
+  run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   
   return(il_clean)

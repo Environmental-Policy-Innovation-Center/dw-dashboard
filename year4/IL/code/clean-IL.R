@@ -274,13 +274,12 @@ clean_il_y4 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
 
-#   community_served     borrower     pwsid project_id project_name project_type project_cost requested_amount funding_amount principal_forgiveness     population                             project_description disadvantaged project_rank  project_score
-#              <char>       <char>    <char>     <char>       <char>       <char>       <char>           <char>         <char>                <char>         <char>                                          <char>        <char>       <char>         <char>
-# 1:             <NA> North Aurora IL0890600       7428         <NA>         Lead         <NA>   No Information No Information        No Information No Information Replace 8,000 lf of watermain and service lines          <NA>         <NA> No Information
-#    expecting_funding    state state_fiscal_year                      list lead_type
-#               <char>   <char>            <char>                    <char>    <char>
-# 1:                No Illinois              2026 lead no planning approval   unknown
-  ####### Decision: Project is replacement?
+  ####### Decision: 7428 project_id --> replacement
+
+  il_clean <- il_clean |>
+      dplyr::mutate(
+          project_description = ifelse(project_type=="Lead" & project_id == "7428", paste0(project_description, " |FT: LSLR"), project_description)
+        )
   
   ####### SANITY CHECKS END #######
 

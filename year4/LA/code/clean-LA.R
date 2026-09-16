@@ -170,7 +170,6 @@ clean_la_y4 <- function() {
   #la_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision : No disinfection byproduct string
     
-    
   # Check for lead subtypes: Both
   # la_clean |>
   #     dplyr::filter(project_type=="Lead") |>
@@ -203,7 +202,16 @@ clean_la_y4 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") 
-  ######## Decision: Can't amend based on description, this correspond to a project from a lead specific list.
+  
+  ######## Decision: 1021002-01-GS --> lsli
+
+  la_clean <- la_clean |>
+    dplyr::mutate(
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id == "1021002-01-GS" ~ paste0(project_description, " | FT: LSLI"),
+        .default = project_description
+      )
+    )
 
   ####### SANITY CHECKS END #######
   

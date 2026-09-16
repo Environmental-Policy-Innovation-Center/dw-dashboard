@@ -1,0 +1,539 @@
+﻿epic_id,Entity,Project,PWS ID,"SDWIS
+Population",Estimated Loan Amount,Loan Type,Estimated Award Date,Rate,County,District Office
+1,Adams County Regional Water District,Ductile Iron Water Line Replacement,OH0100012,21810,1500000,Construction,Oct-26,STD,Adams,SEDO
+2,Adams County Regional Water District,Pumpkin Ridge Tank Rehab,OH0100012,21810,650000,Construction,Aug-26,STD,Adams,SEDO
+3,Adams County Regional Water District,Winchester Industrial Park Water System Improvements,OH0100012,21810,3690000,Construction,Oct-26,STD,Adams,SEDO
+4,Adams County Regional Water District,WTP Filter Rehab,OH0100012,21810,1200000,Construction,Oct-26,STD,Adams,SEDO
+5,Addyston,"Distribution, LSL, and Transmission Main Replacement",OH3100012,900,838190,Design,Sep-26,PLN/DES,Hamilton,SWDO
+6,Addyston,"Distribution, LSL, and Transmission Main Replacement",OH3100012,900,10728381,Construction,Jun-27,DIS 0%/LSL,Hamilton,SWDO
+7,Addyston,Sekitan Avenue Water Main and LSL Replacement,OH3100012,900,1327083,Construction,Jun-27,DIS 0%/LSL,Hamilton,SWDO
+8,Adena,Blairmont Road Water Line,OH4100003,820,94530,Design,Sep-26,PLN/DES,Jefferson,SEDO
+9,Adena,Blairmont Road Water Line,OH4100003,820,907780,Construction,Dec-26,DIS 0%,Jefferson,SEDO
+10,Akron,Backwash Pumps Rebuild and MCC Replacement,OH7700011,280000,1850000,Construction,Mar-27,STD,Summit,NEDO
+11,Akron,Backwash Pumps Rebuild and MCC Replacement Design,OH7700011,280000,188000,Design,Aug-26,PLN/DES,Summit,NEDO
+12,Akron,Downtown Water Infrastructure Replacement Master Plan,OH7700011,280000,1000000,Planning,Dec-26,PLN/DES,Summit,NEDO
+13,Akron,Emergency Water Main Connections,OH7700011,280000,1100000,Construction,Aug-26,STD,Summit,NEDO
+14,Akron,Force Main Rehabilitation,OH7700011,280000,15000000,Construction,Aug-26,STD,Summit,NEDO
+15,Akron,High Serv Pump Ball Valve & Limitorque Manual Valve Replace,OH7700011,280000,3195464,Construction,Aug-26,STD,Summit,NEDO
+16,Akron,Kenmore Blvd - 28th Street Water Main Connection,OH7700011,280000,520000,Construction,Aug-26,STD,Summit,NEDO
+17,Akron,Lead Service Line Replacement Program 2026,OH7700011,280000,5700000,Construction,Jul-26,LSL PF,Summit,NEDO
+18,Akron,Lead Service line Replacement Program 2027,OH7700011,280000,9600000,Construction,Dec-26,LSL PF,Summit,NEDO
+19,Akron,PWS Regionalization 2026,OH7700011,3738,1627332,Construction,Jan-27,DIS 1%-REG,Summit,NEDO
+20,Akron,Raw Water Intake Valve Replacement & Repair ph 1,OH7700011,280000,397697,Construction,Sep-26,STD,Summit,NEDO
+21,Akron,Water Main Replacement Program 2026,OH7700011,280000,3546369,Construction,Jul-26,STD,Summit,NEDO
+22,Akron,Water Main Replacement Program 2027,OH7700011,280000,3788892,Construction,Jun-27,STD,Summit,NEDO
+23,Akron,Water Plant Advanced Treatment Facility,OH7700011,280000,83000000,Construction,May-27,EC,Summit,NEDO
+24,Akron,Water Plant Advanced Treatment Facility Design,OH7700011,280000,1558581,Design,Sep-26,EC,Summit,NEDO
+25,Akron,Water Plant Water Main Upgrade,OH7700011,280000,319050,Construction,Sep-26,STD,Summit,NEDO
+26,Akron,Water Storage Tank AMP Years 5-8,OH7700011,280000,7350000,Construction,Jul-26,STD,Summit,NEDO
+27,Akron,Wheeling and Lake Erie RR Yard Water Main Repair,OH7700011,280000,600888,Construction,May-27,STD,Summit,NEDO
+28,Albany,Water Tower Project,OH0500003,901,58388,Design,Aug-26,PLN/DES,Athens,SEDO
+29,Albany,Water Tower Project,OH0500003,901,1268612,Construction,May-27,SML,Athens,SEDO
+30,Amanda,WTP Iron Filter Improvements,OH2300012,757,359400,Construction,Mar-27,DIS 0%,Fairfield,CO
+31,Amesville,Water Distribution Improvements,OH0500112,255,145500,Design,Sep-26,PLN/DES,Athens,SEDO
+32,Amesville,Water Distribution Improvements,OH0500112,255,3000000,Construction,Jun-27,SML,Athens,SEDO
+33,Antwerp,Water Treatment Plant Improvements,OH6300012,1741,8444000,Construction,Oct-26,DIS 0%,Paulding,NWDO
+34,Aqua Ohio Inc.,Aqua Ohio - Massillon,OH7604512,95636,9000000,Construction,Aug-26,Reg/EC,Stark,NEDO
+35,Aqua Ohio Inc.,Aqua Ohio - Massillon Tie into PCA Corp,OH7604512,95636,1000000,Construction,Aug-26,Reg/EC,Stark,NEDO
+36,Aqua Ohio Inc.,Ashtabula Lead & GRR Service Line Replacement 2026,OH0400711,32408,7000000,Construction,Jul-26,LSL PF,Ashtabula,NEDO
+37,Aqua Ohio Inc.,Marion Lead Service Line Replacement 2026,OH5100414,46317,7000000,Construction,Jul-26,LSL PF,Marion,NWDO
+38,Aqua Ohio Inc.,Struthers Lead and GRR Service Line Replacement 2026,OH5001611,58551,7000000,Construction,Jul-26,LSL PF,Mahoning,NEDO
+39,Aqua Ohio Inc.,Tiffin Lead Service Line Replacement 2026,OH7400614,20279,7000000,Construction,Jul-26,LSL PF,Seneca,NWDO
+40,Arcanum,Water Tower Replacement,OH1900112,2100,142500,Design,Sep-26,PLN/DES,Darke,SWDO
+41,Arcanum,Water Tower Replacement,OH1900112,2100,2796500,Construction,May-27,DIS 0%,Darke,SWDO
+42,Ashtabula County,Austinburg to Harpersfield Interconnect,OH0400803,5886,4300000,Construction,Aug-26,DIS 1%-REG,Ashtabula,NEDO
+43,Ashtabula County,Jefferson Booster Station Replacement,OH0400803,14757,1240000,Construction,Dec-26,STD,Ashtabula,NEDO
+44,Ashtabula County,Lake Road Water Line Replacement,OH0400803,14757,1240000,Construction,Dec-26,STD,Ashtabula,NEDO
+45,Ashtabula County,Northeast Regional Water Line Extension,OH0400803,3522,21000000,Construction,Jan-27,DIS 1%-REG,Ashtabula,NEDO
+46,Aurora,South Water Tower Replacement,OH6789112,15852,6730000,Construction,Jan-27,STD,Portage,NEDO
+47,Baltimore,Water Line Improvements,OH2300112,2995,5497000,Construction,Jan-27,DIS 1%,Fairfield,CO
+48,Baltimore,Well Replacement Project,OH2300112,2995,124700,Design,Aug-26,PLN/DES,Fairfield,CO
+49,Baltimore,Well Replacement Project,OH2300112,2995,500000,Construction,Feb-27,DIS 1%,Fairfield,CO
+50,Barberton,Identification/Potholing Program for LCRI Inventory,OH7700411,31298,400000,Planning,Jul-26,PLN/DES,Summit,NEDO
+51,Barberton,Wolf Creek Dam Improvements,OH7700411,31298,5820000,Construction,Oct-26,STD,Summit,NEDO
+52,Barnesville,North Water Line Extension,OH0700011,6500,7502075,Construction,Aug-26,DIS 1%-REG,Belmont,SEDO
+53,Barnesville,PFOA WTP Improvements,OH0700011,6500,449850,Design,Jan-27,EC,Belmont,SEDO
+54,Beach City,2nd Avenue Southeast Water Line Replacement,OH7600212,1031,10000,Planning,Aug-26,PLN/DES,Stark,NEDO
+55,Beach City,2nd Avenue Southeast Water Line Replacement,OH7600212,1031,80000,Design,Dec-26,PLN/DES,Stark,NEDO
+56,Beach City,2nd Avenue Southeast Water Line Replacement,OH7600212,1031,524719,Construction,May-27,DIS 0%,Stark,NEDO
+57,Beach City,Justus/Dolphin Water Line Replacement,OH7600212,1031,50000,Planning,Aug-26,PLN/DES,Stark,NEDO
+58,Beach City,Justus/Dolphin Water Line Replacement,OH7600212,1031,300000,Design,Dec-26,PLN/DES,Stark,NEDO
+59,Beach City,Justus/Dolphin Water Line Replacement,OH7600212,1031,1368820,Construction,May-27,DIS 0%,Stark,NEDO
+60,Bellaire,West Water Tank Rehab,OH0700114,4278,1733000,Construction,Oct-26,DIS 1%,Belmont,SEDO
+61,Bellbrook,WTP Improvements,OH2901112,9475,70000,Planning,Sep-26,EC,Greene,SWDO
+62,Belle Center,W. Buckeye Street & Elizabeth Street Water Line Replacement,OH4600012,834,442255,Construction,Oct-26,SML,Logan,SWDO
+63,Belpre,Beach Street Water Main Extension,OH8400012,6441,170633,Design,Aug-26,PLN/DES,Washington,SEDO
+64,Belpre,Beach Street Water Main Extension,OH8400012,6441,2014875,Construction,Mar-27,DIS 1%-REG,Washington,SEDO
+65,Belpre,Braun Street Water Main Extension,OH8400012,6441,179247,Design,Aug-26,PLN/DES,Washington,SEDO
+66,Belpre,Braun Street Water Main Extension,OH8400012,6441,1799938,Construction,Mar-27,DIS 1%-REG,Washington,SEDO
+67,Belpre,Farson Street Water Main Extension,OH8400012,6441,228950,Design,Aug-26,PLN/DES,Washington,SEDO
+68,Belpre,Farson Street Water Main Extension,OH8400012,6441,2099943,Construction,Oct-26,DIS 1%-REG,Washington,SEDO
+69,Belpre,Hill Street Water Main Extension,OH8400012,6441,121300,Design,Aug-26,PLN/DES,Washington,SEDO
+70,Belpre,Hill Street Water Main Extension,OH8400012,6441,1114150,Construction,Oct-26,DIS 1%-REG,Washington,SEDO
+71,Belpre,Well #2 Rehabilitation,OH8400012,6441,38000,Design,Jul-26,PLN/DES,Washington,SEDO
+72,Belpre,Well #2 Rehabilitation,OH8400012,6441,500950,Construction,Apr-27,DIS 1%,Washington,SEDO
+73,Beverly,Water Storage Tank Replacement,OH8400112,1900,1227200,Construction,Aug-26,DIS 0%,Washington,SEDO
+74,Beverly,"Water System Improvements, PFAS/PFOS Treatment",OH8400112,1900,270000,Design,Aug-26,EC,Washington,SEDO
+75,Beverly,"Water System Improvements, PFAS/PFOS Treatment",OH8400112,1900,2926500,Construction,Apr-27,EC,Washington,SEDO
+76,Blanchester,Reservoir 3 Improvements,OH1400111,4243,751280,Construction,Oct-26,DIS 1%,Clinton,SWDO
+77,Bloomingburg,Water Treatment Plant Replacement,OH2400012,878,6480000,Construction,Aug-26,SML,Fayette,CO
+78,Bloomville,Water Tower and Water Line Replacement,OH7400212,956,109000,Design,Aug-26,PLN/DES,Seneca,NWDO
+79,Bloomville,Water Tower and Water Line Replacement,OH7400212,956,2099700,Construction,Mar-27,DIS 0%,Seneca,NWDO
+80,Bolivar,"4"" Water Line Replacement",OH7900212,998,1814816,Construction,Jun-27,SML,Tuscarawas,SEDO
+81,Bowerston,New Water Treatment Plant and Raw Water Improvements Project,OH3400112,483,6620500,Construction,Mar-27,DIS 0%,Harrison,SEDO
+82,Bowling Green,Carter Park Water Tower & Western Water Tower Improvements,OH8700311,31578,3600000,Construction,Jul-26,STD,Wood,NWDO
+83,Bowling Green,"Hillcrest, Parkwood, Ash & Coleman Water Line Improvements",OH8700311,31578,1750000,Construction,May-27,STD,Wood,NWDO
+84,Bowling Green,Nims Road Water Line Improvements,OH8700311,31578,1500000,Construction,May-27,STD,Wood,NWDO
+85,Bowling Green,South College Drive Water Line Improvements,OH8700311,31578,2000000,Construction,Mar-27,STD,Wood,NWDO
+86,Bowling Green,Water Treatment Plant Clarifier Improvements,OH8700311,31578,3135000,Construction,Oct-26,STD,Wood,NWDO
+87,Bowling Green,Water Treatment Plant Membrane Expansion,OH8700311,31578,15524250,Construction,Jan-27,STD,Wood,NWDO
+88,Bradford,Lead Service Line Replacement,OH1900212,2000,800000,Construction,Apr-27,LSL PF,Miami,SWDO
+89,Bremen,Water Distribution Replacement & Tank Repair,OH2300212,1425,656800,Design,Aug-26,PLN/DES,Fairfield,CO
+90,Bremen,Water Distribution Replacement & Tank Repair,OH2300212,1425,4686500,Construction,Dec-26,DIS 0%,Fairfield,CO
+91,Bridgeport,Lombardy Heights Tank Rehabilitation,OH0700612,2830,287247,Construction,Feb-27,DIS 1%,Belmont,SEDO
+92,Bridgeport,Old Cadiz Rd Tank Removal and Oak St Booster Rehab,OH0700612,2830,53853,Design,Aug-26,PLN/DES,Belmont,SEDO
+93,Bridgeport,Old Cadiz Rd Tank Removal and Oak St Booster Rehab,OH0700612,2830,423133,Construction,Jun-27,DIS 1%,Belmont,SEDO
+94,Brown County Rural Water Association,Wahlsburg Tank,OH0802012,32090,8750000,Construction,Oct-26,STD,Brown,SWDO
+95,Buckeye Water District,SR 45 Tank Replacement,OH1502911,10300,1745000,Construction,Jun-27,STD,Columbiana,NEDO
+96,Buckeye Water District,SR 45 Tank Replacement Design,OH1502911,10300,155000,Design,Jan-27,PLN/DES,Columbiana,NEDO
+97,Burr Oak Regional Water District,Water Expansion - Morgan County Booster,OH0700612,2830,585900,Construction,Dec-26,DIS 1%,Athens,SEDO
+98,Butler County,Supply Main Rehabilitation,OH0900303,116572,4000000,Design,Aug-26,PLN/DES,Butler,SWDO
+99,Butler County,Supply Main Rehabilitation,OH0900303,116572,40000000,Construction,May-27,STD,Butler,SWDO
+100,Cadiz,Charleston Street Water Line Replacement,OH3400214,3353,57800,Design,Aug-26,PLN/DES,Harrison,SEDO
+101,Cadiz,Charleston Street Water Line Replacement,OH3400214,3353,498974,Construction,May-27,DIS 1%,Harrison,SEDO
+102,Cambridge,Lead Service Line Replacement Phase 3,OH3000111,10520,1005600,Construction,Apr-27,LSL PF,Guernsey,SEDO
+103,Cambridge,PFAS Water Treatment Plant Modifications,OH3000111,10520,120000,Planning,Aug-26,EC,Guernsey,SEDO
+104,Cambridge,PFAS Water Treatment Plant Modifications,OH3000111,10520,120000,Design,Oct-26,PLN/DES,Guernsey,SEDO
+105,Cambridge,Raw Water System Improvements,OH3000111,10520,16471000,Construction,Apr-27,STD,Guernsey,SEDO
+106,Canfield,Fairground Blvd Water Line Improvement,OH5000503,7706,850000,Construction,Feb-27,SML,Mahoning,NEDO
+107,Canfield,Fairground Blvd Water Line Improvement Design,OH5000503,7706,56147,Design,Aug-26,PLN/DES,Mahoning,NEDO
+108,Canton,GRR Service Line Replacement Project,OH7608112,107113,17943750,Construction,Oct-26,LSL PF,Stark,NEDO
+109,Carroll,Village Water Line Extension,OH2300312,524,653620,Design,Oct-26,PLN/DES,Fairfield,CO
+110,Catawba,Water Treatment Plant Aeration and Filtration,OH1200312,241,93050,Construction,Sep-26,DIS 0%,Clark,SWDO
+111,Chagrin Falls,Bell Street Water Main Replacement,OH1800212,4991,1250000,Construction,Sep-26,SML,Cuyahoga,NEDO
+112,Chagrin Falls,Center Street Water Main Replacement,OH1800212,4991,650000,Construction,May-27,SML,Cuyahoga,NEDO
+113,Chagrin Falls,Chagrin Falls Regional Water System Improvements,OH1800212,4991,1600000,Construction,Jan-27,SML,Cuyahoga,NEDO
+114,Chagrin Falls,Church Street Water Main Replacement,OH1800212,4991,750000,Construction,Mar-27,SML,Cuyahoga,NEDO
+115,Chagrin Falls,East Washington St. High Pressure Water Main Replacement,OH1800212,4991,1500000,Construction,Dec-26,SML,Cuyahoga,NEDO
+116,Chagrin Falls,High Street Water Main Replacement,OH1800212,4991,1250000,Construction,Mar-27,SML,Cuyahoga,NEDO
+117,Chagrin Falls,Miles Road Water Main Replacement,OH1800212,4991,3000000,Construction,Jul-26,SML,Cuyahoga,NEDO
+118,Chagrin Falls,Utilities Admin Building Upgrade and Expansion,OH1800212,4991,1100000,Construction,Jul-26,SML,Cuyahoga,NEDO
+119,Chauncey,Water Line Replacement Project,OH0500512,1428,104610,Design,Aug-26,PLN/DES,Athens,SEDO
+120,Chesterhill,Water System Improvements,OH5800112,823,99800,Design,Aug-26,PLN/DES,Morgan,SEDO
+121,Chesterhill,Water System Improvements,OH5800112,823,857700,Construction,Oct-26,DIS 0%,Morgan,SEDO
+122,Chesterhill,Water System Improvements PFAS,OH5800112,823,172200,Design,Aug-26,EC,Morgan,SEDO
+123,Chesterhill,Water System Improvements PFAS,OH5800112,823,2562200,Construction,Apr-27,EC,Morgan,SEDO
+124,Cincinnati,Alms - Chapel Water Main Replacement,OH3102612,750200,4051413,Construction,Jan-27,STD/LSL PF,Hamilton,SWDO
+125,Cincinnati,Bader - Henshaw Water Main Replacement,OH3102612,750200,5435460,Construction,Apr-27,STD/LSL PF,Hamilton,SWDO
+126,Cincinnati,Blaesi - Camargo Water Main Replacement,OH3102612,750200,4119107,Construction,Jan-27,STD/LSL PF,Hamilton,SWDO
+127,Cincinnati,Budd St Water Main Replacement,OH3102612,750200,12810035,Construction,Jan-27,STD,Hamilton,SWDO
+128,Cincinnati,Burch - Shaw Area Water Main Replacement,OH3102612,750200,4821149,Construction,Dec-26,STD/LSL PF,Hamilton,SWDO
+129,Cincinnati,Concord - Morgan Water Main Replacement,OH3102612,750200,2643591,Construction,Jan-27,STD/LSL PF,Hamilton,SWDO
+130,Cincinnati,Fire Flow 23 Water Main Replacement,OH3102612,750200,4259225,Construction,Jan-27,STD/LSL PF,Hamilton,SWDO
+131,Cincinnati,Handasyde - Perkins Water Main Replacement,OH3102612,750200,4660689,Construction,Oct-26,STD/LSL PF,Hamilton,SWDO
+132,Cincinnati,McHenry - Wooster Area Water Main Replacement,OH3102612,750200,4684603,Construction,Dec-26,STD/LSL PF,Hamilton,SWDO
+133,Cincinnati,Mt Hope/Warsaw Water Main and LSL Replacement,OH3102612,750200,3982453,Construction,Dec-26,STD/LSL PF,Hamilton,SWDO
+134,Cincinnati,Observatory Water Main Replacement - Oakley Abandonment,OH3102612,750200,3731017,Construction,Sep-26,STD/LSL PF,Hamilton,SWDO
+135,Cincinnati,Plum/Court Water Main and LSL Replacement,OH3102612,750200,4761000,Construction,Feb-27,STD/LSL PF,Hamilton,SWDO
+136,Cincinnati,Vine St Water Meter Replacement,OH3102612,750200,2439479,Construction,Oct-26,STD/LSL PF,Hamilton,SWDO
+137,Cincinnati,Voll - Martha Water Main Replacement,OH3102612,750200,1255127,Construction,Jul-26,STD/LSL PF,Hamilton,SWDO
+138,Cincinnati,Western Hills Feeder Phase 2 Water Main Replacement,OH3102612,750200,12000000,Construction,Mar-27,STD/LSL PF,Hamilton,SWDO
+139,Circleville,North End Water Line & Paving Capital Improvements - Phase 1,OH6500412,13927,4433000,Construction,Sep-26,STD/LSL PF,Pickaway,CO
+140,Circleville,Utility Improvements for South Court Street,OH6500412,13927,2634000,Construction,Sep-26,STD/LSL PF,Pickaway,CO
+141,Circleville,WTP Improvements,OH6500412,13927,75750000,Construction,Dec-26,STD,Pickaway,CO
+142,Clark County,Donnelsville Water System,OH1201112,4221,10120000,Construction,Jul-26,DIS 1%-REG,Clark,SWDO
+143,Clarksville,Water Meter Replacement,OH1400203,562,239531,Construction,Sep-26,DIS 0%,Clinton,SWDO
+144,Clear Water Corporation,Water System Upgrades,OH6100103,2670,233700,Design,Sep-26,PLN/DES,Noble,SEDO
+145,Clear Water Corporation,Water System Upgrades,OH6100103,2670,2412300,Construction,Apr-27,SML,Noble,SEDO
+146,Cleveland,CWD LSLR YEAR 5-1,OH1801212,1308955,12375000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+147,Cleveland,CWD LSLR YEAR 5-10,OH1801212,1308955,8250000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+148,Cleveland,CWD LSLR YEAR 5-11,OH1801212,1308955,8250000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+149,Cleveland,CWD LSLR YEAR 5-12,OH1801212,1308955,8250000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+150,Cleveland,CWD LSLR YEAR 5-13,OH1801212,1308955,1787500,Construction,Aug-26,LSL PF,Cuyahoga,NEDO
+151,Cleveland,CWD LSLR YEAR 5-14,OH1801212,1308955,1787500,Construction,Apr-27,LSL PF,Cuyahoga,NEDO
+152,Cleveland,CWD LSLR YEAR 5-15,OH1801212,1308955,4500000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+153,Cleveland,CWD LSLR YEAR 5-16,OH1801212,1308955,5056406,Construction,May-27,LSL PF,Cuyahoga,NEDO
+154,Cleveland,CWD LSLR YEAR 5-17,OH1801212,1308955,3657000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+155,Cleveland,CWD LSLR YEAR 5-18,OH1801212,1308955,3231500,Construction,May-27,LSL PF,Cuyahoga,NEDO
+156,Cleveland,CWD LSLR YEAR 5-19,OH1801212,1308955,1440000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+157,Cleveland,CWD LSLR YEAR 5-2,OH1801212,1308955,12375000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+158,Cleveland,CWD LSLR YEAR 5-20,OH1801212,1308955,4350000,Construction,May-27,LSL PF,Cuyahoga,NEDO
+159,Cleveland,CWD LSLR YEAR 5-3,OH1801212,1308955,12375000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+160,Cleveland,CWD LSLR YEAR 5-4,OH1801212,1308955,8250000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+161,Cleveland,CWD LSLR YEAR 5-5,OH1801212,1308955,8250000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+162,Cleveland,CWD LSLR YEAR 5-6,OH1801212,1308955,8250000,Construction,Dec-26,LSL PF,Cuyahoga,NEDO
+163,Cleveland,CWD LSLR YEAR 5-7,OH1801212,1308955,12375000,Construction,Apr-27,LSL PF,Cuyahoga,NEDO
+164,Cleveland,CWD LSLR YEAR 5-8,OH1801212,1308955,12375000,Construction,Apr-27,LSL PF,Cuyahoga,NEDO
+165,Cleveland,CWD LSLR YEAR 5-9,OH1801212,1308955,12375000,Construction,Apr-27,LSL PF,Cuyahoga,NEDO
+166,Cleveland,Kirtland Crib Rehabilitation Phase 1,OH1801212,1308955,15000000,Construction,Aug-26,STD,Cuyahoga,NEDO
+167,Clyde,Water Treatment Plant Improvements,OH7200211,6325,50000,Planning,Oct-26,PLN/DES,Sandusky,NWDO
+168,Coal Grove,PFAS General Plan,OH4400012,2167,175000,Planning,Aug-26,EC,Lawrence,SEDO
+169,Columbus,4th Water Plant Construction CIP 690600-100000,OH2504412,1305946,1600000000,Construction,Oct-26,STD,Franklin,CO
+170,Columbus,Ann Street Area Water Line Improvements CIP 690236-100164,OH2504412,1305946,8800000,Construction,Dec-26,STD,Franklin,CO
+171,Columbus,Beechwood Road Area WL Improvements-CIP 690236-100165,OH2504412,1305946,7900000,Construction,Apr-27,STD,Franklin,CO
+172,Columbus,Broadview Road 30-Inch Transmission Main (CIP 690502-100002),OH2504412,1305946,14250000,Construction,Feb-27,STD,Franklin,CO
+173,Columbus,Chesapeake Ave Area Water Line Improvement CIP 690236-100154,OH2504412,1305946,7900000,Construction,Dec-26,STD,Franklin,CO
+174,Columbus,Chittenden Ave Area Water Line Improvement CIP 690236-100162,OH2504412,1305946,7900000,Construction,Dec-26,STD,Franklin,CO
+175,Columbus,DRWP GAC Improvements Project; CIP No. 690618-100000,OH2504412,1305946,10000000,Design,Oct-26,EC,Franklin,CO
+176,Columbus,Gerbert Road Area WL Improvements (CIP 690236-100166),OH2504412,1305946,7900000,Construction,Dec-26,STD,Franklin,CO
+177,Columbus,HCWP & PAWP Drain & Water System Imps CIP #690552-100000,OH2504412,1305946,4400000,Construction,Oct-26,STD,Franklin,CO
+178,Columbus,HCWP Automation Upgrade; CIP No. 691200-100002,OH2504412,1305946,2500000,Construction,Mar-27,STD,Franklin,CO
+179,Columbus,Heyl Ave Area Water Line Imps CIP# 690236-100135,OH2504412,1305946,7900000,Construction,Jul-26,STD,Franklin,CO
+180,Columbus,Hudson St-Arcadia Ave Transmission Main CIP 690502-100003,OH2504412,1305946,650000,Design,Dec-26,PLN/DES,Franklin,CO
+181,Columbus,Lead Service Line Public Outreach,OH2504412,1305946,2527488,Planning,Jul-26,PLN/DES,Franklin,CO
+182,Columbus,"Lead Service Line Replacements - Part 4, CIP 690236-110006",OH2504412,1305946,11100000,Construction,Oct-26,STD/LSL PF,Franklin,CO
+183,Columbus,"Lead Service Line Replacements - Part 5, CIP 690236-110007",OH2504412,1305946,11100000,Construction,Oct-26,STD/LSL PF,Franklin,CO
+184,Columbus,"Lead Service Line Replacements - Part 6, CIP 690236-110008",OH2504412,1305946,11100000,Construction,Dec-26,STD/LSL PF,Franklin,CO
+185,Columbus,"Lead Service Line Replacements - Part 7, CIP 690236-110009",OH2504412,1305946,11100000,Construction,Feb-27,STD/LSL PF,Franklin,CO
+186,Columbus,"Lead Service Line Replacements - Part 8, CIP 690236-110010",OH2504412,1305946,11100000,Construction,Apr-27,STD/LSL PF,Franklin,CO
+187,Columbus,"Lead Service Line Replacements - Part 9, CIP 690236-110011",OH2504412,1305946,11100000,Construction,Jun-27,STD/LSL PF,Franklin,CO
+188,Columbus,LSL Repl Program Project Management CIP 690236-110004,OH2504412,1305946,20000000,Design,Aug-26,PLN/DES,Franklin,CO
+189,Columbus,"Morse Rd. 48-Inch Trans. Main Lowering, CIP 690502-100005",OH2504412,1305946,2750000,Construction,Dec-26,STD,Franklin,CO
+190,Columbus,Oaklawn Street Area Water Line Improvements-CIP 690236-10016,OH2504412,1305946,7900000,Construction,Dec-26,STD,Franklin,CO
+191,Columbus,PAWP Filter Console Replacement; CIP No. 690592-100000,OH2504412,1305946,1250000,Planning,Jun-27,PLN/DES,Franklin,CO
+192,Columbus,PAWP Treatment Residuals Disposal Improvs CIP 690579-100000,OH2504412,1305946,76000000,Construction,Apr-27,STD,Franklin,CO
+193,Columbus,S High St & I270 Area WL Ph 1 CIP 690236-100180,OH2504412,1305946,2300000,Construction,Sep-26,STD,Franklin,CO
+194,Columbus,"Shamrock Dr Area Water Line Improvements, CIP 690236-100156",OH2504412,1305946,7850000,Construction,Sep-26,STD,Franklin,CO
+195,Columbus,Sludge Line Improvements; CIP 691606-100007,OH2504412,1305946,700000,Planning,Aug-26,PLN/DES,Franklin,CO
+196,Columbus,SWWTP Substation Replacement CIP No. 690026-100000,OH2504412,1305946,4500000,Construction,Dec-26,STD,Franklin,CO
+197,Columbus,"Yale Avenue Area Water Line Improvements, CIP 690236-100163",OH2504412,1305946,8100000,Construction,Oct-26,STD,Franklin,CO
+198,Conneaut,Naylor Drive Water Line Extension,OH0400411,12538,500000,Construction,Dec-26,STD,Ashtabula,NEDO
+199,Conneaut,WTP Improvement Project,OH0400411,12538,155000,Design,Aug-26,PLN/DES,Ashtabula,NEDO
+200,Conneaut,WTP Improvement Project,OH0400411,12538,1395000,Construction,Dec-26,STD,Ashtabula,NEDO
+201,Continental,Alley Water Line Replacement,OH6900212,1153,23500,Design,Aug-26,PLN/DES,Putnam,NWDO
+202,Continental,Alley Water Line Replacement,OH6900212,1153,375345,Construction,Mar-27,SML,Putnam,NWDO
+203,Coolville,Water System Improvements,OH0500603,859,1975000,Construction,Sep-26,DIS 0%,Athens,SEDO
+204,Crooksville,Booster Station and Water Line Improvements,OH6400111,2534,357600,Design,Oct-26,PLN/DES,Perry,SEDO
+205,Crooksville,Booster Station and Water Line Improvements,OH6400111,2534,3369700,Construction,Jun-27,DIS 1%,Perry,SEDO
+206,Cuyahoga Falls,Lead Line Service Replacement,OH7701012,51114,2590487,Construction,Jul-26,LSL,Summit,NEDO
+207,Cuyahoga Falls,Lead Service Line Replacement Ph 2,OH7701012,51114,3000000,Construction,Jun-27,LSL,Summit,NEDO
+208,Cuyahoga Falls,WTP RO Softening Improvements,OH7701012,51114,24100000,Construction,Aug-26,STD,Summit,NEDO
+209,Dayton,Advanced Metering Infrastructure Ph 1,OH5703512,141407,8200000,Construction,Sep-26,STD,Montgomery,SWDO
+210,Dayton,Advanced Metering Infrastructure Ph 1 Design,OH5703512,141407,300000,Design,Sep-26,PLN/DES,Montgomery,SWDO
+211,Dayton,"Advanced PFAS Treatment @Ottawa WTP, CMAR Construction",OH5703512,141407,315000000,Construction,Dec-26,EC,Montgomery,SWDO
+212,Dayton,Calvary Reservoir Inspection and Rehabilitation Design,OH5703512,141407,1000000,Design,Apr-27,PLN/DES,Montgomery,SWDO
+213,Dayton,"Expansion of Miami Well Field Recharge Lagoon, Ph 3",OH5703512,141407,41000000,Construction,Jan-27,EC,Montgomery,SWDO
+214,Dayton,Lead Service Line Compliance Program Ph 3,OH5703512,141407,700000,Planning,Aug-26,PLN/DES,Montgomery,SWDO
+215,Dayton,Lead Service Line Replacement Ph 1,OH5703512,141407,20000000,Construction,Apr-27,LSL PF,Montgomery,SWDO
+216,Dayton,Ottawa Treatment Plant Drain Gates Replacement,OH5703512,141407,3000000,Construction,Sep-26,STD,Montgomery,SWDO
+217,Dayton,Ottawa WTP Laboratory Renovation,OH5703512,141407,425000,Construction,Apr-27,STD,Montgomery,SWDO
+218,Dayton,Ottawa WTP Laboratory Renovation Design,OH5703512,141407,75000,Design,Aug-26,PLN/DES,Montgomery,SWDO
+219,Defiance,N66 Booster Station Replacement,OH2000111,16494,1300000,Construction,Feb-27,STD,Defiance,NWDO
+220,Defiance,Wayne Ave Water Line Replacement,OH2000111,16494,2500000,Construction,Feb-27,STD,Defiance,NWDO
+221,"Del-Co Water Company, Inc.",County Road 19 Booster Station,OH2101412,150000,5200000,Construction,Apr-27,STD,Delaware,CO
+222,"Del-Co Water Company, Inc.",Lackey Old State Water Transmission Line,OH2101412,150000,8087900,Construction,Sep-26,STD,Delaware,CO
+223,"Del-Co Water Company, Inc.",Olentangy East Transmission Line,OH2101412,150000,4631900,Construction,Sep-26,STD,Delaware,CO
+224,"Del-Co Water Company, Inc.",Village of Cardington Water Line Extension,OH2101412,1928,3622850,Construction,Dec-26,REG,Delaware,CO
+225,Delphos,First Street Water Line Replacement,OH0200412,7101,62200,Design,Aug-26,PLN/DES,Allen,NWDO
+226,Delphos,First Street Water Line Replacement,OH0200412,7101,778834,Construction,Feb-27,DIS 1%/LSL PF,Allen,NWDO
+227,Delphos,"LSL Replacement 2026: Jackson, Harmon, Moening & Grant St.",OH0200412,7101,2142494,Construction,Aug-26,DIS 1%/LSL PF,Allen,NWDO
+228,Delphos,North and South Jefferson Street Water Line Replacement,OH0200412,7101,66688,Design,Jul-26,PLN/DES,Allen,NWDO
+229,Delphos,North and South Jefferson Street Water Line Replacement,OH0200412,7101,916933,Construction,Dec-26,DIS 1%,Allen,NWDO
+230,Delphos,Pierce Street Water Line Replacement,OH0200412,7101,1118690,Construction,Jan-27,DIS 1%/LSL PF,Allen,NWDO
+231,East Liverpool,SR 39 Lead Service Line Replacement,OH1500811,12586,2848818,Construction,Oct-26,STD/LSL PF,Columbiana,NEDO
+232,East Palestine,Unity Township Utilities Expansion,OH1500912,4761,14745000,Construction,Apr-27,DIS 1%-REG,Columbiana,NEDO
+233,Elyria,Chlorine Room Modification and Upgrade,OH4700411,68000,1800000,Construction,Dec-26,STD,Lorain,NEDO
+234,Elyria,Furnace Street Water Tank,OH4700411,68000,2000000,Construction,Jan-27,STD,Lorain,NEDO
+235,Elyria,Gulf Road Connection to Village of Sheffield,OH4700411,68000,600000,Construction,Sep-26,STD,Lorain,NEDO
+236,Elyria,Gulf Road Water Main Replacement,OH4700411,68000,1000000,Construction,Mar-27,STD,Lorain,NEDO
+237,Elyria,High Service Pump and VFDs,OH4700411,68000,5500000,Construction,Aug-26,STD,Lorain,NEDO
+238,Elyria,River Crossing to Village of Sheffield,OH4700411,68000,1250000,Construction,Mar-27,STD,Lorain,NEDO
+239,Elyria,West Ave Water Main Replacement,OH4700411,68000,1100000,Construction,Feb-27,STD,Lorain,NEDO
+240,Fairport Harbor,Water Meter Replacement and AMI Implementation,OH4300411,3180,955700,Construction,Mar-27,DIS 1%,Lake,NEDO
+241,Fairport Harbor,Water System Regionalization - Secondary Interconnection,OH4300411,3180,108200,Design,Aug-26,PLN/DES,Lake,NEDO
+242,Fairport Harbor,Water System Regionalization - Secondary Interconnection,OH4300411,3180,1053800,Construction,Mar-27,DIS 1%,Lake,NEDO
+243,Fayette,Water Tower Replacement,OH2600412,1340,225000,Design,Aug-26,PLN/DES,Fulton,NWDO
+244,Fayette,Water Tower Replacement,OH2600412,1340,3662800,Construction,Jun-27,DIS 0%,Fulton,NWDO
+245,Fort Recovery,Water Treatment Plant Reconstruction Project,OH5400212,1501,4397000,Construction,Dec-26,SML,Mercer,NWDO
+246,Franklin County,Timberlake Subdivision Water Distribution Sys Reconstruction,OH2501003,8575,803931,Design,Oct-26,PLN/DES,Franklin,CO
+247,Franklin County,Timberlake Subdivision Water Distribution Sys Reconstruction,OH2501003,8575,9647172,Construction,Jun-27,SML,Franklin,CO
+248,Franklin County,WDS Infrastructure Reconstruction Project (GEMS),OH2501003,8575,719398,Design,Aug-26,PLN/DES,Franklin,CO
+249,Franklin County,WDS Infrastructure Reconstruction Project (GEMS),OH2501003,8575,3632777,Construction,May-27,SML,Franklin,CO
+250,Gallia County Rural Water Association,GAC for PFAS Removal,OH2700012,20995,7100000,Construction,May-27,EC,Gallia,SEDO
+251,Gallipolis,PFAS Filter Improvements,OH2700112,7134,448600,Design,Aug-26,PLN/DES,Gallia,SEDO
+252,Gallipolis,PFAS Filter Improvements,OH2700112,7134,4809500,Construction,May-27,EC,Gallia,SEDO
+253,Gallipolis,Water Line Replacement Phase 2,OH2700112,7134,8315000,Construction,Mar-27,DIS 1%,Gallia,SEDO
+254,Gallipolis,Water Meter System Improvements,OH2700112,7134,765000,Construction,Mar-27,DIS 1%,Gallia,SEDO
+255,Genoa,2026 Water Line Improvements,OH6201003,3110,400000,Construction,Oct-26,SML,Ottawa,NWDO
+256,Gnadenhutten,South Walnut Street Water Line Replacement,OH7900512,1240,50000,Planning,Aug-26,PLN/DES,Tuscarawas,SEDO
+257,Gnadenhutten,South Walnut Street Water Line Replacement,OH7900512,1240,75700,Design,Aug-26,PLN/DES,Tuscarawas,SEDO
+258,Gnadenhutten,South Walnut Street Water Line Replacement,OH7900512,1240,753240,Construction,Sep-26,DIS 0%,Tuscarawas,SEDO
+259,Granville,Boosted Zone 1 Water Line Improvements - Phases 2 & 3,OH4500612,5946,215000,Design,Sep-26,PLN/DES,Licking,CO
+260,Granville,Boosted Zone 1 Water Line Improvements - Phases 2 & 3,OH4500612,5946,3530000,Construction,Jan-27,SML,Licking,CO
+261,Granville,JEDD Water Line Extension,OH4500612,5946,6500000,Construction,Jan-27,SML,Licking,CO
+262,Granville,River Road Water Line Extension - Phases 2 and 3,OH4500612,5946,65000,Design,Sep-26,PLN/DES,Licking,CO
+263,Granville,River Road Water Line Extension - Phases 2 and 3,OH4500612,5946,500000,Construction,Jan-27,REG,Licking,CO
+264,Granville,WTP Aerator Improvements,OH4500612,5946,100000,Design,Jun-27,PLN/DES,Licking,CO
+265,Granville,WTP Aerator Improvements,OH4500612,5946,800000,Construction,Jun-27,SML,Licking,CO
+266,Granville,WTP Filter Rehabilitation,OH4500612,5946,445000,Construction,May-27,SML,Licking,CO
+267,Granville,WTP Lime Sludge Lagoon and Sanitary Improvements,OH4500612,5946,3500000,Construction,May-27,SML,Licking,CO
+268,Granville,WTP Wellfield Expansion,OH4500612,5946,150000,Design,Dec-26,PLN/DES,Licking,CO
+269,Granville,WTP Wellfield Expansion,OH4500612,5946,1815000,Construction,May-27,SML,Licking,CO
+270,Greenville,Lead Service Line Replacement - Phase 1A & 1B,OH1900714,13227,15494295,Construction,Sep-26,LSL PF,Darke,SWDO
+271,Greenville,Lead Service Line Replacement - Phase 2,OH1900714,13227,15260789,Construction,Apr-27,LSL PF,Darke,SWDO
+272,Greenwich,Greenwich Water Treatment Plant,OH3900312,1476,6437629,Construction,Sep-26,DIS 0%,Huron,NWDO
+273,Heath,Dorsey Mill Water Main Replacement,OH4500912,10310,3704200,Construction,May-27,STD,Licking,CO
+274,Hecla Water Association,Water for Waterloo,OH4401612,275,8870050,Construction,May-27,DIS 0%-REG,Lawrence,SEDO
+275,Hecla Water Association,Water for Waterloo,OH4401612,34942,595000,Design,Aug-26,PLN/DES,Lawrence,SEDO
+276,"Highland County Water Company, Inc.","Southeast Water System Fortification, Phase 1 Marshall Area",OH3600514,28421,3843000,Construction,Dec-26,STD,Highland,SWDO
+277,"Highland County Water Company, Inc.","Southeast Water System Fortification, Phase 2 Fairfax Area",OH3600514,28421,12457000,Construction,Jun-27,STD,Highland,SWDO
+278,Hillsboro,Greystone Drive WL Replacement,OH3600614,6650,850828,Construction,May-27,DIS 1%/LSL PF,Highland,SWDO
+279,Hillsboro,Greystone Drive WL Replacement,OH3600614,6650,73985,Design,Sep-26,PLN/DES,Highland,SWDO
+280,Hiram,Water Treatment Plant Improvements,OH6701612,1406,1500000,Construction,Dec-26,SML,Portage,NEDO
+281,Hubbard,Hubbard-Masury Rd Water Line Looping,OH7801415,8339,1259776,Construction,Jun-27,SML,Trumbull,NEDO
+282,Hubbard,Hubbard-Masury Rd Water Line Looping Design,OH7801415,8339,110000,Design,Jan-27,PLN/DES,Trumbull,NEDO
+283,Hubbard,North Main St Water Line Improvement Design,OH7801415,8339,175000,Design,Oct-26,PLN/DES,Trumbull,NEDO
+284,Hubbard,North Main St Water Line Improvements,OH7801415,8339,2174450,Construction,Apr-27,SML,Trumbull,NEDO
+285,Huron,"Back-up Raw Water Intake, Pump Station and Force Main",OH2201011,6893,4050980,Construction,Oct-26,SML,Erie,NWDO
+286,Indian Hill,Water Treatment Plant PFAS,OH3101112,15000,649091,Design,Jul-26,EC,Hamilton,SWDO
+287,Indian Hill,Water Treatment Plant PFAS,OH3101112,15000,18565000,Construction,Mar-27,EC,Hamilton,SWDO
+288,Ironton,10th Street Water Line Improvements,OH4400711,11129,834000,Design,Oct-26,PLN/DES,Lawrence,SEDO
+289,Ironton,10th Street Water Line Improvements,OH4400711,11129,8201600,Construction,May-27,STD,Lawrence,SEDO
+290,Ironton,North 5th St Water Line Replacement,OH4400711,11129,26280,Design,Aug-26,PLN/DES,Lawrence,SEDO
+291,Ironton,North 5th St Water Line Replacement,OH4400711,11129,251480,Construction,Feb-27,STD,Lawrence,SEDO
+292,Ironton,PFAS Design,OH4400711,11129,1190000,Design,Aug-26,EC,Lawrence,SEDO
+293,Ironton,Rice Property Site Water Line,OH4400711,11129,486099,Construction,Sep-26,STD,Lawrence,SEDO
+294,Ironton,Shawnee Trail Water Line Extension,OH4400711,11129,326000,Design,Aug-26,PLN/DES,Lawrence,SEDO
+295,Ironton,Shawnee Trail Water Line Extension,OH4400711,11129,3123000,Construction,Mar-27,STD,Lawrence,SEDO
+296,Ironton,Washington St Water Line Improvements,OH4400711,11129,818000,Design,Oct-26,PLN/DES,Lawrence,SEDO
+297,Ironton,Washington St Water Line Improvements,OH4400711,11129,8039100,Construction,May-27,STD,Lawrence,SEDO
+298,Ironton,WTP Emergency Generator,OH4400711,11129,53000,Design,Sep-26,PLN/DES,Lawrence,SEDO
+299,Ironton,WTP Emergency Generator,OH4400711,11129,1389322,Construction,Dec-26,STD,Lawrence,SEDO
+300,Jackson,Broadway St Water Line Project,OH4000111,9691,692952,Construction,Apr-27,DIS 1%,Jackson,SEDO
+301,Jamestown,Water System Improvements,OH2901712,1997,11082600,Construction,Oct-26,DIS 0%,Greene,SWDO
+302,Jefferson County,Amsterdam Water Distribution System Upgrades,OH4101103,13983,4595632,Construction,May-27,STD,Jefferson,SEDO
+303,Jefferson County,Bergholz Water System Improvements,OH4101103,13983,350000,Design,Oct-26,PLN/DES,Jefferson,SEDO
+304,Jefferson County,Bergholz Water System Improvements,OH4101103,13983,680000,Construction,Jun-27,STD,Jefferson,SEDO
+305,Jefferson Regional Water Authority,Water Treatment Plant Improvements,OH5703012,4813,3235220,Construction,Apr-27,DIS 1%,Montgomery,SWDO
+306,Jeffersonville,New Potable Water Well,OH2400612,1356,190382,Construction,Aug-26,DIS 0%,Fayette,CO
+307,Kenton,Detroit Street Water Line and LSL Phase 2,OH3300612,8360,1626124,Construction,Sep-26,DIS 1%/LSL PF,Hardin,NWDO
+308,Kenton,Downtown Water Line Replacement Phase 2B,OH3300612,8360,2859960,Construction,Oct-26,DIS 1%/LSL PF,Hardin,NWDO
+309,Killbuck,Water Line Upgrades,OH3800712,950,25000,Planning,Aug-26,PLN/DES,Holmes,NEDO
+310,Killbuck,Water Line Upgrades,OH3800712,950,110800,Design,Oct-26,PLN/DES,Holmes,NEDO
+311,Killbuck,Water Line Upgrades,OH3800712,950,1454189,Construction,Jan-27,SML,Holmes,NEDO
+312,Kingston,Meter Replacement,OH7100912,1032,1129000,Construction,Oct-26,DIS 0%,Ross,SEDO
+313,Kingston,Replacement of Lead Water Service Lines,OH7100912,1032,2087400,Construction,Oct-26,LSL PF,Ross,SEDO
+314,Kingston,WTP/Well Field Renovation Project,OH7100912,1032,92000,Design,Sep-26,PLN/DES,Ross,SEDO
+315,Kingston,WTP/Well Field Renovation Project,OH7100912,1032,1130500,Construction,Jun-27,DIS 0%,Ross,SEDO
+316,LaGrange,Water Meter Replacement,OH4700603,2400,866137,Construction,Jul-26,SML,Lorain,NEDO
+317,LaGrange,Water Tower Rehabilitation,OH4700603,2400,15000,Design,Oct-26,PLN/DES,Lorain,NEDO
+318,LaGrange,Water Tower Rehabilitation,OH4700603,2400,339180,Construction,Oct-26,SML,Lorain,NEDO
+319,Lakeview,Emergency Water Connection,OH4601512,1083,43000,Design,Dec-26,PLN/DES,Logan,SWDO
+320,Lakeview,Emergency Water Connection,OH4601512,1083,844125,Construction,Jun-27,DIS 0%,Logan,SWDO
+321,Laura,Water Tower Replacement,OH5500612,487,85000,Design,Sep-26,PLN/DES,Miami,SWDO
+322,Laura,Water Tower Replacement,OH5500612,487,2135430,Construction,Jan-27,SML,Miami,SWDO
+323,Laura,Water Treatment Plant Improvements,OH5500612,487,30000,Design,Sep-26,PLN/DES,Miami,SWDO
+324,Laura,Water Treatment Plant Improvements,OH5500612,487,258500,Construction,Jan-27,SML,Miami,SWDO
+325,Leesburg,Emergency Connection to Highland  County,OH3600712,1315,255300,Design,Sep-26,PLN/DES,Highland,SWDO
+326,Leesburg,Emergency Connection to Highland  County,OH3600712,1315,4707927,Construction,Jun-27,SML,Highland,SWDO
+327,Leetonia,Main Street Water Line Replacement,OH1501412,1833,322850,Construction,Jul-26,DIS 0%,Columbiana,NEDO
+328,Leipsic,Poplar St Water Line Replacement,OH6900612,2348,29000,Design,Aug-26,PLN/DES,Putnam,NWDO
+329,Leipsic,Poplar St Water Line Replacement,OH6900612,2348,607840,Construction,Feb-27,DIS 0%,Putnam,NWDO
+330,Leipsic,Water Treatment Plant,OH6900612,2348,14774450,Construction,Dec-26,DIS 0%,Putnam,NWDO
+331,Lewisburg,Well Field Improvements,OH6800812,1800,702108,Construction,Oct-26,SML,Preble,SWDO
+332,Licking County,Edgewater Beach Water Line Extension,OH4500812,3415,5732000,Construction,May-27,REG,Licking,CO
+333,Licking County,Hanover Marne Phase 2 Water Line Extension,OH4500812,3415,15016181,Construction,Jun-27,REG,Licking,CO
+334,Licking County,SR 13 Tank & Water Line Extension for Edgewater/Jacksontown,OH4500812,3415,3890800,Construction,Apr-27,REG,Licking,CO
+335,Lima,East Regional Water Line Loop,OH0200811,65619,650000,Design,Oct-26,PLN/DES,Allen,NWDO
+336,Lima,East Regional Water Line Loop,OH0200811,65619,6500000,Construction,Jun-27,STD,Allen,NWDO
+337,Lithopolis,Water Treatment Plant Filter Addition,OH2301112,1573,1199000,Construction,Aug-26,SML,Fairfield,CO
+338,Lithopolis,Wellfield Expansion,OH2301112,1573,628550,Construction,Jan-27,SML,Fairfield,CO
+339,Little Hocking Water Association,Phase 1A Water Line Extension,OH8400212,9892,11752000,Construction,Sep-26,Reg/EC,Washington,SEDO
+340,Little Hocking Water Association,Phase 2A Water Line Extension,OH8400212,9892,5505000,Construction,Jun-27,Reg/EC,Washington,SEDO
+341,Little Hocking Water Association,SR339 Transmission and Barlow Tank and Booster,OH8400212,9892,1479000,Design,Aug-26,PLN/DES,Washington,SEDO
+342,Little Hocking Water Association,SR339 Transmission and Barlow Tank and Booster,OH8400212,9892,14009500,Construction,Jun-27,DIS 1%,Washington,SEDO
+343,Logan,RO Membrane Skid for WTP,OH3700612,6704,335800,Design,Sep-26,PLN/DES,Hocking,SEDO
+344,Logan,RO Membrane Skid for WTP,OH3700612,6704,3014400,Construction,May-27,DIS 1%,Hocking,SEDO
+345,Lorain,Water Main Replacement Year 2,OH4700711,64152,6000000,Construction,Aug-26,STD,Lorain,NEDO
+346,Lordstown,Lordstown Water Extension Phase 2,OH7804403,3515,1706431,Design,Oct-26,PLN/DES,Trumbull,NEDO
+347,Lordstown,Lordstown Water Extension Phase 2,OH7804403,3515,18000000,Construction,Apr-27,SML,Trumbull,NEDO
+348,Loveland,City of Loveland PFAS Treatment,OH1300812,12800,15750000,Construction,Jun-27,EC,Hamilton,SWDO
+349,Lynchburg,Water System Improvements Phase 1,OH3600915,1515,2720000,Construction,Jan-27,DIS 0%,Highland,SWDO
+350,Madison Water District,"Distribution, Storage and WTP Improvements",OH7006712,2050,5578175,Construction,Oct-26,DIS 0%,Richland,NWDO
+351,Madison Water District,Water District Regionalizaion,OH7006712,2050,3719595,Construction,Oct-26,DIS 0%-REG,Richland,NWDO
+352,Mahoning Valley Sanitary District,MVSD Ph V - Winchester Ave Connector Water Line,OH7801811,55,4700000,Construction,May-27,DIS 0%,Trumbull,NEDO
+353,Malvern,Water Line Replacement Phase 2,OH1000112,1200,4677001,Construction,Oct-26,DIS 0%/LSL PF,Carroll,NEDO
+354,Manchester,Water Line Replacement Phase 3,OH0100112,2043,395000,Design,Aug-26,PLN/DES,Adams,SEDO
+355,Manchester,Water Line Replacement Phase 3,OH0100112,2043,3960250,Construction,Feb-27,DIS 0%,Adams,SEDO
+356,Martins Ferry,Jefferson Street Water Line,OH0701212,6980,50000,Planning,Aug-26,PLN/DES,Belmont,SEDO
+357,Martins Ferry,Jefferson Street Water Line Replacement,OH0701212,6980,111500,Design,Aug-26,PLN/DES,Belmont,SEDO
+358,Martins Ferry,Jefferson Street Water Line Replacement,OH0701212,6980,650420,Construction,Apr-27,DIS 1%,Belmont,SEDO
+359,Martins Ferry,PFAS WTP Improvements,OH0701212,6980,100000,Planning,Aug-26,EC,Belmont,SEDO
+360,Martins Ferry,PFAS WTP Improvements,OH0701212,6980,500000,Design,Aug-26,EC,Belmont,SEDO
+361,Martins Ferry,PFAS WTP Improvements,OH0701212,6980,5000000,Construction,Feb-27,EC,Belmont,SEDO
+362,Martins Ferry,Water Line and Lead Service Line Replacement,OH0701212,6980,100000,Planning,Aug-26,PLN/DES,Belmont,SEDO
+363,Martins Ferry,Water Line and LSL Replacement,OH0701212,6980,100000,Design,Aug-26,PLN/DES,Belmont,SEDO
+364,Martins Ferry,Water Line and LSL Replacement,OH0701212,6980,3500000,Construction,Feb-27,LSL PF,Belmont,SEDO
+365,Matamoras,New Water Treatment Plant,OH8400512,896,5660580,Construction,Jan-27,Reg/EC,Washington,SEDO
+366,McArthur,Water System Improvements,OH8200212,1920,1794580,Construction,Jun-27,DIS 0%,Vinton,SEDO
+367,McGuffey,Water Tower Rehab,OH3300712,710,30000,Design,Aug-26,PLN/DES,Hardin,NWDO
+368,McGuffey,Water Tower Rehab,OH3300712,710,533000,Construction,Apr-27,DIS 0%,Hardin,NWDO
+369,Medina County,Westfield Center WTP Upgrades,OH5260712,4708,32639960,Construction,Oct-26,SML,Medina,NEDO
+370,Miamisburg,King Richard Transmission Main,OH5701212,19790,9300000,Construction,Dec-26,STD,Montgomery,SWDO
+371,Middleport,PFAS Reduction,OH5300112,2446,339655,Design,Aug-26,EC,Meigs,SEDO
+372,Middleport,PFAS Reduction,OH5300112,2446,4440432,Construction,Feb-27,EC,Meigs,SEDO
+373,Mid-Ohio Water and Sewer District,Bulk Fill Station,OH4901012,5176,433640,Construction,Oct-26,SML,Madison,CO
+374,Mid-Ohio Water and Sewer District,Bulk Fill Station Design,OH4901012,5176,61364,Design,Jul-26,PLN/DES,Madison,CO
+375,Mid-Ohio Water and Sewer District,London Lead Service Line Replacement,OH4901012,5176,1000000,Construction,Aug-26,LSL PF,Madison,CO
+376,Mid-Ohio Water and Sewer District,Plain City Lead Service Line Replacement,OH4901012,5176,1941200,Construction,Aug-26,LSL,Madison,CO
+377,Mid-Ohio Water and Sewer District,Plain City North Water Line Extension,OH4901012,5176,660000,Design,Oct-26,PLN/DES,Madison,CO
+378,Mid-Ohio Water and Sewer District,SR 161 Elevated Water Storage Tank,OH4901012,5176,9261000,Construction,Oct-26,SML,Madison,CO
+379,Mid-Ohio Water and Sewer District,SR 56/US 40 & Summerford Water Line Extension,OH4901012,5176,5247350,Construction,Oct-26,REG,Madison,CO
+380,Mingo Junction,Farmers Lane Watermain Replacement,OH4101612,3350,155000,Construction,Apr-27,DIS 1%,Jefferson,SEDO
+381,Mingo Junction,Penn Avenue Water Main Replacement,OH4101612,3350,215000,Design,Jan-27,PLN/DES,Jefferson,SEDO
+382,Mingo Junction,Penn Avenue Water Main Replacement,OH4101612,3350,848000,Construction,Apr-27,DIS 1%,Jefferson,SEDO
+383,Montgomery County,Greater Moraine System Redundancy,OH5701315,150207,56000000,Construction,Jun-27,STD,Montgomery,SWDO
+384,Mount Orab,Water Towers - Rehabilitations,OH0801011,6607,1335000,Construction,Feb-27,DIS 1%,Brown,SWDO
+385,Mount Pleasant,Water Line Replacement and Corrosion Control,OH4101712,450,315070,Construction,Oct-26,DIS 0%,Jefferson,SEDO
+386,Munroe Falls,Water Main River Crossing,OH7702703,5042,234628,Construction,Oct-26,SML,Summit,NEDO
+387,Muskingum County,Northwest Muskingum County Water Project,OH6000412,21540,23500000,Construction,May-27,STD,Muskingum,SEDO
+388,Muskingum County,Powelson Area Water Main Extensions,OH6000412,610,6400000,Construction,May-27,DIS 0%-REG,Muskingum,SEDO
+389,Muskingum County,Powelson Area Water Main Extensions,OH6000412,21540,444000,Design,Aug-26,PLN/DES,Muskingum,SEDO
+390,Muskingum County,Sunflower Rd and Getz Rd Water Main Extension,OH6000412,83,762000,Construction,Jan-27,DIS 0%-REG,Muskingum,SEDO
+391,Muskingum County,Water Treatment Plant and Well Field Expansion - Maysville,OH6000412,21540,7754000,Construction,Dec-26,REG,Muskingum,SEDO
+392,Napoleon,Maumee River Water Line Crossing,OH3500811,8858,5500000,Construction,Feb-27,SML,Henry,NWDO
+393,Nelsonville,Water System Improvements Phase 4,OH0501214,6656,4841900,Construction,Sep-26,DIS 1%,Athens,SEDO
+394,Nevada,Water Line Replacement Phase 2,OH8800312,814,148000,Design,Aug-26,PLN/DES,Wyandot,NWDO
+395,New Concord,WTP Clarifier #2 Rehabilitation,OH6001711,2491,607000,Construction,Oct-26,DIS 0%,Muskingum,SEDO
+396,New Holland,Water System Improvements,OH6501612,830,4346000,Construction,Apr-27,DIS 0%/LSL PF,Pickaway,CO
+397,New Lexington,Water Distribution Improvements - Priority Phase,OH6400411,5161,1180000,Construction,Sep-26,DIS 1%,Perry,SEDO
+398,New Richmond,New Richmond Water System Improvements,OH1301212,2698,2000000,Construction,Jun-27,SML,Clermont,SWDO
+399,Newark,Lead Service Line Replacement Project #9,OH4502314,49934,1700000,Construction,Jun-27,LSL PF,Licking,CO
+400,Newark,Water Treatment Plant Upgrade,OH4502314,49934,1500000,Planning,Jan-27,PLN/DES,Licking,CO
+401,Newport Water and Sewer District,Bells Run Water System Extension,OH8400612,1582,6300000,Construction,Jun-27,DIS 0%-REG,Washington,SEDO
+402,Newport Water and Sewer District,Bells Run Water System Extension,OH8400612,1582,429500,Design,Sep-26,PLN/DES,Washington,SEDO
+403,Niles,Lead Service Line Replacement,OH7802403,21961,10000000,Construction,Jan-27,LSL PF,Trumbull,NEDO
+404,Noble County Water Authority,Waterline Extension & Interconnect Final Phase B,OH6100503,2368,1530000,Construction,Aug-26,REG,Noble,SEDO
+405,North Lewisburg,Water Line System Improvements,OH1100812,1850,2821875,Construction,May-27,DIS 0%/LSL PF,Champaign,SWDO
+406,Northwestern Water & Sewer District,Duxbury/Waterford Water Line Replacements,OH8752812,19758,1500000,Construction,Dec-26,STD,Wood,NWDO
+407,Northwestern Water & Sewer District,Miltonville Water Line Replacement,OH8752212,3615,5000000,Construction,Dec-26,SML,Wood,NWDO
+408,Northwestern Water & Sewer District,"Miltonville, OVITT, Forst Roads Water Line Project",OH8752212,3615,7669719,Construction,Dec-26,SML,Wood,NWDO
+409,Northwestern Water & Sewer District,Walbridge Water Line Phase 1,OH8752812,19758,2500000,Construction,Dec-26,STD,Wood,NWDO
+410,Oak Harbor,Benton Street Improvements,OH6202603,4400,1223605,Construction,May-27,DIS 1%,Ottawa,NWDO
+411,Oak Hill,Water System Improvements,OH4000411,3067,332105,Design,Sep-26,PLN/DES,Jackson,SEDO
+412,Oak Hill,Water System Improvements,OH4000411,3067,4916576,Construction,May-27,DIS 1%,Jackson,SEDO
+413,Oakwood,Water Meter Installation Project,OH6300312,727,803900,Construction,Apr-27,SML,Paulding,NWDO
+414,Obetz,"New 300,000 Gal Water Tower",OH2502212,3167,4340140,Construction,Feb-27,SML,Franklin,CO
+415,Obetz,Water System Improvements,OH2502212,3167,453195,Design,Aug-26,PLN/DES,Franklin,CO
+416,Obetz,WTP Filter Replacement,OH2502212,3167,1554050,Construction,May-27,SML,Franklin,CO
+417,Old Straitsville Water Association,Rock Run Booster Station Upgrades,OH6401403,2950,229450,Construction,Dec-26,DIS 1%,Perry,SEDO
+418,Oregon,Water Line Replacement - Starr Avenue Addition,OH4800911,19950,2594612,Construction,Oct-26,STD,Lucas,NWDO
+419,Orwell,U.S. 322 Water Main Replacement,OH0401012,1660,150000,Design,Oct-26,PLN/DES,Ashtabula,NEDO
+420,Orwell,U.S. 322 Water Main Replacement,OH0401012,1660,6010000,Construction,Mar-27,DIS 0%,Ashtabula,NEDO
+421,Ottawa County,Ottawa County Regional & Village of Marblehead Regional,OH6205011,20428,2647400,Construction,Sep-26,REG,Ottawa,NWDO
+422,Oxford,Ardmore Drive Water Main Replacement,OH0902312,24000,400000,Construction,Mar-27,STD,Butler,SWDO
+423,Oxford,Lead Service Line Replacement,OH0902312,24000,200000,Construction,Jan-27,LSL PF,Butler,SWDO
+424,Payne,North Main Street Water Line Replacement,OH6300712,1550,724510,Construction,Aug-26,DIS 0%/LSL PF,Paulding,NWDO
+425,Payne,Water Treatment Plant Improvements,OH6300712,1550,328500,Design,Aug-26,PLN/DES,Paulding,NWDO
+426,Payne,Water Treatment Plant Improvements,OH6300712,1550,2190000,Construction,Dec-26,DIS 0%,Paulding,NWDO
+427,Perry County,Phase 6 Water Line Extension,OH6402703,1802,3597900,Construction,Sep-26,DIS 0%-REG,Perry,SEDO
+428,Perrysburg,Water Main Replacement Contract 11,OH8701803,27000,3500000,Construction,Sep-26,STD,Wood,NWDO
+429,Phillipsburg,Water System Improvements,OH5702112,490,300000,Design,Apr-27,EC,Montgomery,SWDO
+430,Philo,Market St WL Replacement / 2nd St WL Ext,OH6001912,974,332320,Construction,Dec-26,DIS 0%,Muskingum,SEDO
+431,Pickerington,Water Treatment Plant Improvements,OH2301512,19141,25000000,Construction,Mar-27,STD,Fairfield,CO
+432,Pike Water Inc,Pike Water System - Generator,OH6602412,15487,435700,Construction,Sep-26,STD,Pike,SEDO
+433,Pike Water Inc,Pike Water System - Ross County Interconnect,OH6602412,15487,3274000,Construction,Jan-27,STD,Pike,SEDO
+434,Piketon,Elevated Water Tower,OH6600712,2181,381464,Design,Aug-26,PLN/DES,Pike,SEDO
+435,Piketon,Elevated Water Tower,OH6600712,2181,6036700,Construction,Mar-27,DIS 0%,Pike,SEDO
+436,Port Clinton,"Harrison, West Perry & Monroe Street Water Line Improvements",OH6203211,6500,292067,Construction,Feb-27,DIS 1%,Ottawa,NWDO
+437,Port Clinton,Water and Sanitary Sewer Infrastructure Improvements,OH6203211,6500,2835391,Construction,Aug-26,DIS 1%/LSL PF,Ottawa,NWDO
+438,Portage County,Village of Mantua Distribution Replacement Ph 2,OH6702212,1207,4499636,Construction,Jul-26,SML/LSL PF,Portage,NEDO
+439,Portage County,Water Meter Replacement Program,OH6702812,8606,4300000,Construction,Sep-26,SML,Portage,NEDO
+440,Powhatan Point,Water Line Replacement,OH0701412,1592,20000,Planning,Aug-26,PLN/DES,Belmont,SEDO
+441,Put-in-Bay,Ground Storage Tank Rehabilitation,OH6203311,5000,230680,Construction,Oct-26,DIS 1%,Ottawa,NWDO
+442,Put-in-Bay,WTP Multi-Tech and Controls Improvements,OH6203311,5000,1192760,Construction,Jan-27,DIS 1%,Ottawa,NWDO
+443,Put-in-Bay,WTP Pump Riser and Piping,OH6203311,5000,156300,Construction,Aug-26,DIS 1%,Ottawa,NWDO
+444,Putnam Community Water Corporation,Muskingum River Road Water Line Extension,OH8400712,2744,60000,Design,Aug-26,EC,Washington,SEDO
+445,Putnam Community Water Corporation,Muskingum River Road Water Line Extension,OH8400712,2744,1560000,Construction,May-27,Reg/EC,Washington,SEDO
+446,Putnam Community Water Corporation,PFAS Well Mitigation,OH8400712,2744,1086030,Construction,Aug-26,EC,Washington,SEDO
+447,Roaming Shores,Water Tower Replacement,OH0400611,1764,202700,Design,Jul-26,PLN/DES,Ashtabula,NEDO
+448,Roaming Shores,Water Tower Replacement,OH0400611,1764,2500000,Construction,Jun-27,SML,Ashtabula,NEDO
+449,Roseville,Water Line Replacement,OH6002112,1852,36800,Design,Sep-26,PLN/DES,Perry,SEDO
+450,Roseville,Water Line Replacement,OH6002112,1852,410400,Construction,Dec-26,DIS 0%,Perry,SEDO
+451,Rural Lorain County Water Authority,Regionalization - LaGrange Tank & Pheasant Run,OH4701803,1550,23000000,Construction,Dec-26,DIS 0%-REG,Lorain,NEDO
+452,Sabina,Water System Improvements,OH1400912,2564,786000,Design,Sep-26,PLN/DES,Clinton,SWDO
+453,Sabina,Water System Improvements,OH1400912,2564,7878375,Construction,Jun-27,DIS 1%,Clinton,SWDO
+454,Saint Clairsville,Water Distribution System Improvements - Phase 2,OH0701516,5097,7574089,Construction,Oct-26,SML,Belmont,SEDO
+455,Saint Henry,1.5MG Water Tower,OH5401312,2596,7000000,Construction,Mar-27,SML,Mercer,NWDO
+456,Saint Henry,1.5MG Water Tower - Design,OH5401312,2596,180000,Design,Sep-26,PLN/DES,Mercer,NWDO
+457,Saint Henry,WTP Replacement,OH5401312,2596,7000000,Construction,Jun-27,SML,Mercer,NWDO
+458,Saint Henry,WTP Replacement - Design,OH5401312,2596,460000,Design,Dec-26,PLN/DES,Mercer,NWDO
+459,Salem,Water Treatment Plant Rehabilitation Phase II,OH1502011,16850,8769734,Construction,Aug-26,STD,Columbiana,NEDO
+460,Scio,Water Line Replacement & Lead Service Line Removal,OH3401312,763,2689743,Construction,Apr-27,DIS 0%/LSL PF,Harrison,SEDO
+461,Scio,Water Line Replacement & Lead Service Line Removal,OH3401312,763,40000,Planning,Sep-26,PLN/DES,Harrison,SEDO
+462,Scio,Water Line Replacement & Lead Service Line Removal,OH3401312,763,199990,Design,Oct-26,PLN/DES,Harrison,SEDO
+463,Shadyside,PFAS Remediation,OH0701612,3689,1528180,Design,Dec-26,EC,Belmont,SEDO
+464,Shreve,Water Line Replacement Phase 1,OH8503412,1514,2001967,Construction,Jun-27,SML,Wayne,NEDO
+465,Sidney,Wilson & Wilkinson Ave Lead Service Line Replacement,OH7501214,20614,957270,Construction,Oct-26,LSL PF,Shelby,SWDO
+466,Somerset,Water Line Replacement Phase 1,OH6401111,1490,1100000,Construction,Dec-26,DIS 0%,Perry,SEDO
+467,Somerset,Water Line Replacement Phase 2,OH6401111,1490,565000,Construction,Dec-26,DIS 0%,Perry,SEDO
+468,Somerset,Water Line Replacement Phase 3,OH6401111,1490,650000,Construction,Dec-26,DIS 0%,Perry,SEDO
+469,Somerset,Water Line Replacement Phase 4,OH6401111,1490,570000,Construction,Dec-26,DIS 0%,Perry,SEDO
+470,Somerset,Water Line Replacement Phase 5,OH6401111,1490,465708,Construction,Dec-26,DIS 0%,Perry,SEDO
+471,Somerset,Water Meter Replacement and AMI Upgrade,OH6401111,1490,780000,Construction,Sep-26,DIS 0%,Perry,SEDO
+472,South Charleston,SR 42 Water Line Replacement,OH1204212,1660,1728820,Construction,Jun-27,DIS 0%,Clark,SWDO
+473,South Point,Water Treatment Plant PFAS Upgrades,OH4401212,4133,705000,Design,Sep-26,EC,Lawrence,SEDO
+474,South Point,Water Treatment Plant PFAS Upgrades,OH4401212,4133,6430600,Construction,May-27,EC,Lawrence,SEDO
+475,South Vienna,WTP Design and Construction Services,OH1204312,393,1889913,Construction,Sep-26,DIS 0%,Clark,SWDO
+476,South Zanesville,South Zanesville Water System Improvements Phase 1,OH6002212,2800,400000,Design,Aug-26,PLN/DES,Muskingum,SEDO
+477,Springfield,W. High St Water Services 2- Dayton Ave to Yellow Springs St,OH1204412,60680,781530,Construction,Aug-26,STD/LSL PF,Clark,SWDO
+478,Stockport,Emerging Contaminant Mitigation Project,OH5800912,503,362000,Design,Oct-26,EC,Morgan,SEDO
+479,Stratton,Water Meter Project,OH4102512,320,119440,Design,Aug-26,PLN/DES,Jefferson,SEDO
+480,Stratton,Water Meter Project,OH4102512,320,704700,Construction,Oct-26,DIS 0%,Jefferson,SEDO
+481,Thornville,Water Meter Replacement,OH6401212,991,300000,Construction,Aug-26,SML,Perry,SEDO
+482,Thurston,Maple St Water Line Improvements,OH2302903,604,364450,Construction,Sep-26,DIS 0%,Fairfield,CO
+483,Thurston,Oak St Water Line Improvements,OH2302903,604,306450,Construction,Sep-26,DIS 0%,Fairfield,CO
+484,Tipp City,Kiser & Miles Water Main Replacement,OH5553612,24766,1086624,Construction,Mar-27,LSL,Miami,SWDO
+485,Toledo,2027 Lead Service Line Replacement,OH4801411,360000,2000000,Construction,Mar-27,LSL PF,Lucas,NWDO
+486,Toledo,Raw Water Main Improvements,OH4801411,360000,200000000,Construction,Jan-27,STD,Lucas,NWDO
+487,Toronto,Walton Acres Phase 2 Water Line and Streetscape Improvements,OH4102811,5676,1600000,Construction,Jul-26,DIS 1%,Jefferson,SEDO
+488,Tri-County Rural Water & Sewer District,Phase 7 Water Line,OH8403112,3000,4258500,Construction,Apr-27,DIS 1%-REG,Washington,SEDO
+489,Tri-County Rural Water & Sewer District,Phase 7 Water Line Extensions,OH8403112,3000,333900,Design,Sep-26,PLN/DES,Washington,SEDO
+490,Tri-County Rural Water & Sewer District,Water System Improvements - PFAS/PFOS Treatment,OH8403112,3000,240600,Design,Aug-26,EC,Washington,SEDO
+491,Tri-County Rural Water & Sewer District,Water System Improvements - PFAS/PFOS Treatment,OH8403112,3000,2787000,Construction,Apr-27,EC,Washington,SEDO
+492,Trumbull County,Champion/Bazetta Water Booster Pump Station,OH7806503,835,2875200,Construction,Oct-26,DIS 0%,Trumbull,NEDO
+493,Trumbull County,Stillwagon Road Water Improvements,OH7803203,9931,725000,Construction,Oct-26,DIS 1%-REG,Trumbull,NEDO
+494,Trumbull County,Wilson Ave Water Improvement,OH7804303,8270,262000,Construction,May-27,DIS 1%-REG,Trumbull,NEDO
+495,Tuppers Plains/Chester Water District,Colburn Road Water Line Extension,OH5300612,16087,700500,Construction,Jun-27,STD,Meigs,SEDO
+496,Tuscarawas County,Moravian Trail Water Line Extension,OH7902103,370,552700,Design,Aug-26,PLN/DES,Tuscarawas,SEDO
+497,Upper Sandusky,Crawford Water Line Extension,OH8800511,6698,2900000,Construction,Jan-27,DIS 1%-REG,Wyandot,NWDO
+498,Urbana,Phase 3 Water Main Replacement,OH1101212,11428,510578,Construction,Dec-26,STD,Champaign,SWDO
+499,Van Wert,WTP Spray Aeration System,OH8100611,10846,2170000,Construction,Oct-26,STD,Van Wert,NWDO
+500,Wadsworth,Dawna Drive Water Line Replacement,OH5201712,24356,400000,Construction,Sep-26,STD,Medina,NEDO
+501,Wadsworth,Good Ave and Longview Dr WL Replacement,OH5201712,24356,1500000,Construction,Sep-26,STD,Medina,NEDO
+502,Wadsworth,High Street Water Line Replacement,OH5201712,24356,4300000,Construction,Jun-27,STD,Medina,NEDO
+503,Wadsworth,New Low Side Water Tower,OH5201712,24356,344900,Design,Jul-26,PLN/DES,Medina,NEDO
+504,Wadsworth,New Low Side Water Tower,OH5201712,24356,6000000,Construction,Oct-26,STD,Medina,NEDO
+505,Wadsworth,Source Well #20 Installation,OH5201712,24356,1200000,Construction,Mar-27,STD,Medina,NEDO
+506,Wadsworth,Water System Looping Improvements,OH5201712,24356,1900000,Construction,Sep-26,STD,Medina,NEDO
+507,Wadsworth,Water Treatment Plant Phase 2 Upgrade,OH5201712,24356,600000,Construction,Dec-26,STD,Medina,NEDO
+508,Warren,Austin Ave SW & Dover Ave SW Water Line Replacement (Area D),OH7803811,49130,1014900,Construction,Oct-26,STD/LSL PF,Trumbull,NEDO
+509,Warren Community Water and Sewer Association,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,7215,276000,Design,Oct-26,EC,Washington,SEDO
+510,Warren Water Authority,Valve Installation,OH4102903,481,24686,Construction,May-27,DIS 0%,Jefferson,SEDO
+511,Washington Court House,Water Treatment Plant and System Prelim Engineering,OH2400714,14100,752017,Planning,Jul-26,PLN/DES,Fayette,CO
+512,Waverly,South Lock St Roadway and Water Line Improvement,OH6600912,4433,1335015,Construction,Apr-27,DIS 1%/LSL PF,Pike,SEDO
+513,Waverly,Waverly WTP,OH6600912,4433,2200000,Design,Aug-26,PLN/DES,Pike,SEDO
+514,Waynoka Regional Water and Sewer District,Water Treatment Plant Improvements,OH0800811,2428,1066500,Construction,Aug-26,STD/HAB,Brown,SWDO
+515,Wellington,Village-wide LSL Replacement,OH4701511,4802,1085500,Construction,Aug-26,LSL PF,Lorain,NEDO
+516,Wellington,Water Line Loop to Water Main,OH4701511,4802,250000,Construction,Oct-26,DIS 1%,Lorain,NEDO
+517,Wellington,WTP Fire Restoration,OH4701511,4802,1205000,Construction,Oct-26,DIS 1%,Lorain,NEDO
+518,Wellston,Cherrington Hills Improvements,OH4001912,7000,246047,Design,Aug-26,PLN/DES,Jackson,SEDO
+519,Wellston,Cherrington Hills Improvements,OH4001912,7000,3198605,Construction,Apr-27,DIS 1%,Jackson,SEDO
+520,West Farmington,New Water Wells,OH7803911,908,437700,Design,Jan-27,PLN/DES,Trumbull,NEDO
+521,West Farmington,New Water Wells,OH7803911,908,2977500,Construction,Jun-27,DIS 0%,Trumbull,NEDO
+522,West Jefferson,National Pike and Old SR 29 Water Main Loop,OH4902012,4488,515500,Construction,May-27,SML,Madison,CO
+523,West Union,SR 41 Water Main Replacement,OH0100503,3170,781200,Construction,Sep-26,DIS 1%,Adams,SEDO
+524,Western Water Company,PFAS Treatment Process Removal,OH8300512,39508,4000000,Construction,Jun-27,EC,Warren,SWDO
+525,Williamsport,Water Treatment Plant & Water Distribution Improvements,OH6503012,1038,7141218,Construction,Oct-26,DIS 0%,Pickaway,CO
+526,Wintersville,Cadiz Road Water Line,OH4103003,3924,1984650,Construction,Aug-26,SML,Jefferson,SEDO
+527,Wintersville,Wintersville Steubenville Connection,OH4103003,3924,1212580,Construction,Aug-26,SML,Jefferson,SEDO
+528,Woodsfield,Ruble's Lake and WTP Improvements,OH5600711,2598,415000,Design,Apr-27,PLN/DES,Monroe,SEDO
+529,Woodsfield,Ruble's Lake and WTP Improvements,OH5600711,2598,5404000,Construction,Apr-27,DIS 0%,Monroe,SEDO
+530,Woodville,Pine Street Water Line Replacement,OH7200912,2006,20000,Design,Oct-26,PLN/DES,Sandusky,NWDO
+531,Woodville,Pine Street Water Line Replacement,OH7200912,2006,222000,Construction,Jun-27,SML,Sandusky,NWDO
+532,Woodville,Water Street and WWTP Service Loop,OH7200912,2006,4000000,Construction,Aug-26,SML,Sandusky,NWDO
+533,Yorkville,Hydraulic Study,OH4103112,1019,20000,Planning,Aug-26,PLN/DES,Jefferson,SEDO
+534,Youngstown,E. Webb Rd Booster Station Improvements,OH5002303,130530,8991465,Construction,Aug-26,STD,Mahoning,NEDO
+535,Youngstown,Glenwood St Area Lead Service Line Replacement,OH5002303,130530,8800000,Construction,Apr-27,LSL PF,Mahoning,NEDO
+536,Zanesville,Blandy Ave Water Line Relocation Phase 1,OH6002712,29381,1157700,Construction,Jul-26,STD,Muskingum,SEDO
+537,Zanesville,Blandy Ave Water Line Relocation Phase 2,OH6002712,29381,4766200,Construction,May-27,STD,Muskingum,SEDO

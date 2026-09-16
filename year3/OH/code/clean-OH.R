@@ -30,7 +30,7 @@ clean_oh_y3 <- function() {
     #Assigned EC project type and list provenance
       project_type = "Emerging Contaminants",
       list = "EC SDC List",
-      expecting_funding = "No Information"
+      expecting_funding = "No"
     )
 
   # Comprehensive Project List
@@ -45,9 +45,15 @@ clean_oh_y3 <- function() {
         population = clean_numeric_string(sdwis_population),
         pwsid = stringr::str_squish(pws_id),
         community_served = stringr::str_squish(county),
-        expecting_funding = ifelse(epic_project_id %in% not_ef_list, "No", "Yes"),
+        # expecting_funding = ifelse(epic_project_id %in% not_ef_list, "No", "Yes"),
         #  # SDC-funded list over-rides not expecting funding list (only applicable to state funds)
         #  expecting_funding = ifelse(epic_project_id %in% ec_sdc_list, "Yes", expecting_funding),
+        expecting_funding =  dplyr::case_when(
+          !is.na(expecting_funding)  ~ expecting_funding,
+          epic_project_id %in% ec_sdc_list ~ "No", 
+          epic_project_id %in% not_ef_list ~ "No", 
+          .default = "Yes"
+        ),
         requested_amount = clean_numeric_string(estimated_loan_amount),
         project_type = ifelse(epic_project_id %in% ec_sdc_list, "Emerging Contaminants", project_type)
         ) |>
@@ -220,6 +226,8 @@ clean_oh_y3 <- function() {
            principal_forgiveness = replace_na(principal_forgiveness, "0"),
            # set PF to 0 if not expecting funding
            principal_forgiveness = ifelse(epic_project_id %in% not_ef_list, "0", principal_forgiveness),
+           #cleaning up SDC projects PF to 0, as the are no longer part of the fundable list
+           principal_forgiveness = ifelse(epic_project_id %in% ec_sdc_list, "0", principal_forgiveness),
            principal_forgiveness = clean_numeric_string(principal_forgiveness),
            project_score = clean_numeric_string(project_score),
            # fill in extra cols: 
@@ -276,7 +284,7 @@ clean_oh_y3 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "unknown")
-  #Decision: 37 classified as unknown
+  #Decision: 37 classified as unknown resolved
 
   oh_clean <- oh_clean |>
     dplyr::left_join(
@@ -303,7 +311,8 @@ clean_oh_y3 <- function() {
                                   "Burch - Shaw Area Water Main Replacement",
                                   "Erie - Kendall Area Water Main Replacement",
                                   "Branch Only- Beech, Eighth, St. Lawrence LSL",
-                                  "Branch Only- Jonathan, Ruth, Woodburn LSL","Southern Hawthorne Water Main Replacement",
+                                  "Branch Only- Jonathan, Ruth, Woodburn LSL",
+                                  "Southern Hawthorne Water Main Replacement",
                                   "Monastery - Mt. Adams Water Main Replacement",
                                   "MLK - Lakewood Area Water Main Replacement",
                                   "McHenry - Wooster Area Water Main Replacement",
@@ -314,15 +323,18 @@ clean_oh_y3 <- function() {
                                   "Water Main Replacement Program 2024",
                                   "Main Street Downtown Water Project LSL",
                                   "Park & Day Streets Waterline Replacement",
-                                  "Water Distribution System Replacement - Phase 2","LSL Mapping","Water System Upgrades",
+                                  "Water Distribution System Replacement - Phase 2",
+                                  "LSL Mapping","Water System Upgrades",
                                   "Detroit Street",
-                                  "Downtown Waterline Replacement Phase 2B","Water Tank and Watermain Replacement",
+                                  "Downtown Waterline Replacement Phase 2B",
+                                  "Water Tank and Watermain Replacement",
                                   "Water Line Replacement Phase 2",
                                   "Main Street Waterline LSL","Breezy Heights Tank Proposed Wells",
                                   "Water and Sanitary Sewer Infrastructure Improvements",
                                   "Laurel Street Reconstruction",
                                   "Mantua Water Treatment Plant Liquid Chlorine",
-                                  "Village of Mantua Distribution Replacement Ph 2","2023 Waterline and LSL",
+                                  "Village of Mantua Distribution Replacement Ph 2",
+                                  "2023 Waterline and LSL",
                                   "Water Treatment Systems Upgrades",
                                   "2022 Waterline Replacement Program (Areas B and C)",
                                   "Waterline Replacement Project",
@@ -343,7 +355,7 @@ clean_oh_y3 <- function() {
         new_lead_type = c("lslr","lslr","lslr","lslr",
                             "lslr","lslr","lslr","lslr","lslr","lslr","lslr",
                             "lslr","lslr","lslr","lslr","lslr","lslr","lslr",
-                            "lsli","lslr","unknown","lslr","lslr","lslr","lslr",
+                            "lsli","lslr","lslr","lslr","lslr","lslr","lslr",
                             "lslr","lslr","lslr","lslr","lslr","lslr","lslr","lslr",
                             "lslr","lslr","lslr","lslr")
       ),
@@ -356,7 +368,15 @@ clean_oh_y3 <- function() {
       )
     ) |>
     dplyr::select(-new_lead_type)
-    # Decision: 2 were left as unknown
+
+    oh_clean <- oh_clean |>
+      dplyr::mutate(
+        project_description = dplyr::case_when(
+          epic_project_id == "176" ~ paste0(project_description, " | FT: LSLR"),  
+          .default = project_description
+        )
+      )
+
 
   ####### SANITY CHECKS END #######
 

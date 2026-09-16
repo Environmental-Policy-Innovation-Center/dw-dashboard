@@ -253,7 +253,7 @@ clean_oh_y2 <- function() {
 #     ) |>
 #     dplyr::filter(lead_type == "unknown")
 
-  #Decision: 29 classified as "unknown"
+  #Decision: 29 classified as "unknown", all resolved
    
   oh_clean <- oh_clean |>
     dplyr::left_join(
@@ -277,7 +277,8 @@ clean_oh_y2 <- function() {
               requested_amount = c("2913000","2569543", "1782000","2525017","651277","3000000","3975000", "1011322","710729","1066995","6050000","1200000","483200","11458755","1016500","1461635","1186850","3813770", "750000", "1836328","1212564","2307000","1650000", "1210000","2422000", "3796710","2485000","2985486", "3965365"),
               project_description = c("Fire Flow Collection Waterline Replacement",
                             "Hyde Park Area Water Main Replacement",
-                            "McMillan - Calhoun Area Water Main Replacement","Main Street Downtown Water Project LSL",
+                            "McMillan - Calhoun Area Water Main Replacement",
+                            "Main Street Downtown Water Project LSL",
                             "LSL Compliance Phase 2",
                             "Water Main Replacement Program 2024","Water Treatment System Upgrades",
                             "Beech St. Area Infrastructure Reconstruction Project",
@@ -311,9 +312,9 @@ clean_oh_y2 <- function() {
                             "SFY24 Lead PPL","SFY24 Lead PPL","SFY24 Lead PPL",
                             "SFY24 Lead PPL","SFY24 Lead PPL"),
               new_lead_type = c("lslr","lslr",
-                            "lslr","lslr","unknown","lslr","lslr","lslr","lslr",
-                            "lslr","lslr","lslr","unknown","lslr","lslr",
-                            "lslr","lslr","lslr","unknown","lslr","lslr",
+                            "lslr","lslr","lsli","lslr","lslr","lslr","lslr",
+                            "lslr","lslr","lslr","lslr","lslr","lslr",
+                            "lslr","lslr","lslr","lslr","lslr","lslr",
                             "lslr","lslr","lslr","lslr","lslr","lslr",
                             "lslr","lslr")
        ),
@@ -326,7 +327,7 @@ clean_oh_y2 <- function() {
       )
     ) |>
     dplyr::select(-new_lead_type)
-    # Decision: 3 were left as unknown
+   
   ####### SANITY CHECKS END #######
 
   # Run validation tests

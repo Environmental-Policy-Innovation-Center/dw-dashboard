@@ -16,8 +16,8 @@ clean_oh_y4 <- function() {
     janitor::clean_names() |>
     # all of these are expecting funding
     dplyr::mutate(
-      expecting_funding = ifelse(epic_project_id %in% not_ef_list, "No", "Yes")
-          ) |>
+      expecting_funding = ifelse(epic_project_id %in% not_ef_list | epic_project_id %in% ec_sdc_list, "No", "Yes")
+      ) |>
     dplyr::select(-c(estimated_award_date, loan_type, district_office))
   
   
@@ -25,111 +25,138 @@ clean_oh_y4 <- function() {
   oh_dac <- data.table::fread(file.path(base_path, "oh_dac_ppl_amended.csv")) |>
     janitor::clean_names() |>
     # these are all disadvantaged 
-    dplyr::mutate(disadvantaged = "Yes",
-           list = "SFY26 DAC + Regionalization PPL",
-           # based on PPLs from past years, these should be "no info" but I 
-           # need to remove the number for the clean_numeric_string function. 
-           # Also note some are just $0.00 
-           dac_pf = ifelse(estimated_principal_forgiveness %in% 
-                             c("Bypass1", "Bypass2", "Bypass 3"), "Bypass", 
-                           estimated_principal_forgiveness)) |>
+    dplyr::mutate(
+      disadvantaged = "Yes",
+      list = "SFY26 DAC + Regionalization PPL",
+      # based on PPLs from past years, these should be "no info" but I 
+      # need to remove the number for the clean_numeric_string function. 
+      # Also note some are just $0.00 
+      dac_pf = ifelse(
+        estimated_principal_forgiveness %in% c("Bypass1", "Bypass2", "Bypass3", "Bypass4"), 
+        "Bypass", 
+        estimated_principal_forgiveness)) |>
     dplyr::select(epic_project_id, dac_pf, project_score, rate, disadvantaged, list)
   
   
   # merging fundable and dac lists: 
   oh_fund_dac <- merge(oh_fundable, oh_dac, by = "epic_project_id", all = TRUE) |>
     # pasting the rates together for string matching
-    dplyr::mutate(rate = paste(rate.x, rate.y, sep = " "), 
-           # string matching based on rate or project 
-           project_type = case_when(grepl("LSL", rate, ignore.case = TRUE) ~ "Lead",
-                                    grepl("LSL|lead", project, ignore.case=TRUE) ~ "Lead",
-                                    grepl("HAB|PFAS|EC", rate, ignore.case = TRUE) ~ "Emerging Contaminants", 
-                                    grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
-                                    TRUE ~ "General")) |>
+    dplyr::mutate(
+      rate = paste(rate.x, rate.y, sep = " "), 
+      # string matching based on rate or project 
+      project_type = case_when(
+        grepl("LSL", rate, ignore.case = TRUE) ~ "Lead",
+        grepl("LSL|lead", project, ignore.case=TRUE) ~ "Lead",
+        grepl("HAB|PFAS|EC", rate, ignore.case = TRUE) ~ "Emerging Contaminants", 
+        grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
+        TRUE ~ "General"
+      )
+    ) |>
     dplyr::select(-c("rate.x", "rate.y"))
 
   # EC list: 
   oh_ec <- data.table::fread(file.path(base_path, "oh_ec_ppl_amended.csv")) |>
     janitor::clean_names() |>
-    dplyr::mutate(project_type = "Emerging Contaminants",
-           list = "SFY26 EC PPL",
-           disadvantaged = ifelse(grepl("DIS", rate), "Yes", as.character(NA)),
-           # removing numbers from bypass columns 
-           ec_pf = ifelse(estimated_ec_principal_forgiveness %in% 
-                             c("Bypass1", "Bypass2", "Bypass 3"), "Bypass", 
-                          estimated_ec_principal_forgiveness)) |>
-    dplyr::select(epic_project_id, project_type, ec_pf, project_score, disadvantaged, list)
+    dplyr::mutate(
+      project_type = "Emerging Contaminants",
+      list = "SFY26 EC PPL",
+      disadvantaged = ifelse(grepl("DIS", rate), "Yes", as.character(NA)),
+      # removing numbers from bypass columns 
+      ec_pf = ifelse(
+        estimated_ec_principal_forgiveness %in% c("Bypass1", "Bypass2", "Bypass3"), 
+        "Bypass", 
+        estimated_ec_principal_forgiveness
+      ),
+      is_ofsf_proj = ifelse(estimated_ec_principal_forgiveness %in% c("*", "Bypass2"), "Yes", "No")
+    ) |>
+    dplyr::select(epic_project_id, project_type, ec_pf, project_score, disadvantaged, list, is_ofsf_proj)
   
   
   # merging with oh_fund_dac to handle principal forgiveness columns: 
   oh_fund_dac_ec <- merge(oh_fund_dac, oh_ec, by = "epic_project_id", all = T) |>
     # note there are some HAB projects that don't show up in the EC list, but 
     # are captured by our string matching 
-    dplyr::mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
-                                    TRUE ~ project_type.x), 
-           # project scores don't overlap, so just combining columns here
-           project_score = case_when(!is.na(project_score.y) ~ project_score.y, 
-                                     TRUE ~ project_score.x),
-           # pf cols don't overlap, so just combining columns here
-           principal_forgiveness = case_when(!is.na(dac_pf) ~ dac_pf, 
-                                             !is.na(ec_pf) ~ ec_pf, 
-                                             TRUE ~ as.character(NA)),
-           # after storing PF column, set known but empty columns to 0, then string
-           principal_forgiveness = clean_numeric_string(convert_to_numeric(principal_forgiveness, T)),
-           disadvantaged = ifelse(!is.na(disadvantaged.y), disadvantaged.y, disadvantaged.x),
-           list = ifelse(!is.na(list.y), list.y, list.x)
-           ) |>
-    dplyr::select(-c(project_type.y, project_type.x, dac_pf, ec_pf, project_score.x, 
+    dplyr::mutate(
+      project_type = case_when(
+        !is.na(project_type.y) ~ project_type.y, 
+        TRUE ~ project_type.x
+      ), 
+      # project scores don't overlap, so just combining columns here
+      project_score = case_when(
+        !is.na(project_score.y) ~ project_score.y, 
+        TRUE ~ project_score.x),
+      # pf cols don't overlap, so just combining columns here
+      principal_forgiveness = case_when(
+        !is.na(dac_pf) ~ dac_pf, 
+        !is.na(ec_pf) ~ ec_pf, 
+        TRUE ~ as.character(NA)
+      ),
+      # after storing PF column, set known but empty columns to 0, then string
+      principal_forgiveness = clean_numeric_string(convert_to_numeric(principal_forgiveness, T)),
+      disadvantaged = ifelse(!is.na(disadvantaged.y), disadvantaged.y, disadvantaged.x),
+      list = ifelse(!is.na(list.y), list.y, list.x)
+      ) |>
+    dplyr::select(-c(project_type.y, project_type.x,  project_score.x, 
               project_score.y, disadvantaged.x, disadvantaged.y, list.x, list.y)) 
   
-
   
   # lead list: 
   oh_lead <- data.table::fread(file.path(base_path, "oh_lead_ppl_amended.csv")) |>
     janitor::clean_names() |>
     # these are all lead projects
-    dplyr::mutate(project_type = "Lead",
-           list = "SFY26 Lead PPL",
-           principal_forgiveness = ifelse(grepl("LSL PF", rate), "No Information", as.character(NA)),
-           disadvantaged = ifelse(grepl("DIS", rate), "Yes", as.character(NA))) |>
+    dplyr::mutate(
+      project_type = "Lead",
+      list = "SFY26 Lead PPL",
+      principal_forgiveness = ifelse(grepl("LSL PF", rate), "No Information", as.character(NA)),
+      disadvantaged = ifelse(grepl("DIS", rate), "Yes", as.character(NA))
+    ) |>
     dplyr::select(epic_project_id, project_type, principal_forgiveness, disadvantaged, list)
   
-  
   oh_fund_dac_ec_lead <-  merge(oh_fund_dac_ec, oh_lead, by = "epic_project_id", all = T) |>
-    dplyr::mutate(project_type = case_when(!is.na(project_type.y) ~ project_type.y, 
-                                    TRUE ~ project_type.x), 
-           disadvantaged = ifelse(!is.na(disadvantaged.y), disadvantaged.y, disadvantaged.x),
-           list = ifelse(!is.na(list.y), list.y, list.x),
-           principal_forgiveness = ifelse(!is.na(principal_forgiveness.y), principal_forgiveness.y, principal_forgiveness.x)
+    dplyr::mutate(
+      project_type = case_when(
+        !is.na(project_type.y) ~ project_type.y, 
+        TRUE ~ project_type.x), 
+      disadvantaged = ifelse(!is.na(disadvantaged.y), disadvantaged.y, disadvantaged.x),
+      list = ifelse(!is.na(list.y), list.y, list.x),
+      principal_forgiveness = ifelse(!is.na(principal_forgiveness.y), principal_forgiveness.y, principal_forgiveness.x),
+      is_ofsf_proj = dplyr::case_when(
+        !is.na(is_ofsf_proj) ~ is_ofsf_proj,
+        epic_project_id %in% ec_sdc_list ~ "Yes",
+        .default = "No"
+      )
     ) |>
     dplyr::select(-c(project_type.y, project_type.x, disadvantaged.x, disadvantaged.y, list.x, list.y, principal_forgiveness.x, principal_forgiveness.y))
   
+  oh_clean <- oh_fund_dac_ec_lead |>
+    dplyr::mutate(
+      community_served = county, 
+      borrower = entity, 
+      pwsid = pws_id, 
+      project_id = as.character(NA), 
+      project_name = as.character(NA),
+      #project_type 
+      project_cost = as.character(NA), 
+      requested_amount =  clean_numeric_string(estimated_loan_amount), 
+      funding_amount = as.character(NA),
+      principal_forgiveness = replace_na(principal_forgiveness, "0"),
+      # ensure PF is 0 if project not expecting funding, even if listed elsewhere
+      principal_forgiveness = ifelse(epic_project_id %in% not_ef_list, 0, principal_forgiveness),
+      project_description = project, 
+      population = clean_numeric_string(sdwis_population), 
+      #overwrites other operations
+      disadvantaged = ifelse(grepl("DIS", rate), "Yes", "No"),
+      project_rank = as.character(NA), 
+      project_score = clean_numeric_string(project_score), 
+      expecting_funding = dplyr::case_when(
+        is_ofsf_proj == "Yes" ~ "No",
+        .default =  expecting_funding
+      ),
+      list = replace_na(list, "SFY26 Fundable List and Comprehensive List"),
+      state = "Ohio",
+      state_fiscal_year = "2026"
+    )
   
-    oh_clean <- oh_fund_dac_ec_lead |>
-    # resolving project type overlaps 
-      dplyr::mutate(
-           # process numeric cols:
-           population = clean_numeric_string(sdwis_population), 
-           project_score = clean_numeric_string(project_score), 
-           requested_amount =  clean_numeric_string(estimated_loan_amount), 
-           principal_forgiveness = replace_na(principal_forgiveness, "0"),
-           # ensure PF is 0 if project not expecting funding, even if listed elsewhere
-           principal_forgiveness = ifelse(epic_project_id %in% not_ef_list, 0, principal_forgiveness),
-           # process character cols: 
-           pwsid = pws_id, 
-           project_description = project, 
-           community_served = county, 
-           borrower = entity, 
-           funding_amount = as.character(NA),
-           project_id = as.character(NA), 
-           project_name = as.character(NA), 
-           project_cost = as.character(NA), 
-           project_rank = as.character(NA), 
-           disadvantaged = ifelse(is.na(disadvantaged), "No", disadvantaged),
-           list = replace_na(list, "SFY26 Fundable List and Comprehensive List"),
-           state = "Ohio",
-           state_fiscal_year = "2026")
-    
   ####### SANITY CHECKS START #######
   
   # Hone in on project id duplication
@@ -173,59 +200,73 @@ clean_oh_y4 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown")
 
-  #Decision: 26 projects classified as unknown
+  #Decision: 30 projects classified as unknown
 
-    oh_clean <- oh_clean |>
-      dplyr::left_join(
-        data.table::data.table(
-          community_served = c("Ross","Harrison", "Hamilton","Hamilton","Hamilton","Hamilton", "Hamilton","Hamilton","Hamilton","Hamilton", "Hamilton","Pickaway","Allen","Jefferson","Jefferson", "Hardin","Hardin","Williams","Meigs","Ottawa", "Ottawa","Portage","Perry","Clark","Trumbull", "Huron"),
-          borrower = c("Bainbridge", "Bowerston","Cincinnati","Cincinnati","Cincinnati", "Cincinnati","Cincinnati","Cincinnati","Cincinnati", "Cincinnati","Cincinnati","Circleville","Delphos", "Jefferson County","Jefferson County","Kenton", "Kenton","Montpelier","Pomeroy","Port Clinton", "Port Clinton","Portage County","Somerset", "Springfield","Warren","Willard"),
-          requested_amount = c("4975000","1000000","1100000","2253355","4999139","5200676","3101870","3557872","1524764","600000","570000","1701000","1169773","7500000","7500000","4839599","1453797","2561200", "3219700","5982189","325000","3500000","849500","986253","826090","2100000"),
-          project_description = c("Waterline Replacement Project",
-                                "Distribution System and Meter Replacement","Branch Only- Jonathan, Ruth, Woodburn LSL",
-                                "Southern Hawthorne Water Main Replacement",
-                                "Monastery - Mt. Adams Water Main Replacement",
-                                "McHenry - Wooster Area Water Main Replacement",
-                                "Lyon - Wheeler Area Water Main Replacement",
-                                "Fire Flow 23 Water Main Replacement","Baker Water Main Replacement",
-                                "Branch Only - Fairmount LSL",
-                                "Harrison Cora - Fairmount LSL","Utility Improvements for Walnut Street",
-                                "Pierce Street Waterline Replacement","Amsterdam",
-                                "Bergholz Water System Improvements",
-                                "Downtown Waterline Replacement Phase 2B",
-                                "Detroit Street Waterline and LSL Phase 3","Main Street Waterline LSL",
-                                "Breezy Heights Tank/ New Wells / Water Line Replacement",
-                                "Water and Sanitary Sewer Infrastructure Improvements","Laurel Street Reconstruction",
-                                "Village of Mantua Distribution Replacement Ph 2",
-                                "Water Meter Replacement","East High St Water Services",
-                                "2022 Waterline Replacement Program (Area C)",
-                                "Waterline Replacement Project"),
-            list = c("SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
-                                "SFY26 Lead PPL","SFY26 Lead PPL"),
-            new_lead_type = c("lslr","lslr",
-                                "lslr","lslr","lslr","lslr","lslr","lslr","lslr",
-                                "lslr","lslr","lslr","lslr","unknown","lslr",
-                                "lslr","lslr","lslr","lslr","lslr","lslr","lslr",
-                                "lslr","unknown","lslr","lslr")
-          ),
-      by = c("community_served", "borrower", "project_description", "requested_amount", "list")
-    ) |>
+  oh_clean <- oh_clean |>
+    dplyr::left_join(
+      data.table::data.table(
+        community_served = c("Ross","Harrison", "Hamilton","Hamilton","Hamilton","Hamilton", "Hamilton","Hamilton","Hamilton","Hamilton", "Hamilton","Pickaway","Allen","Jefferson","Jefferson", "Hardin","Hardin","Williams","Meigs","Ottawa", "Ottawa","Portage","Perry","Clark","Trumbull", "Huron"),
+        borrower = c("Bainbridge", "Bowerston","Cincinnati","Cincinnati","Cincinnati", "Cincinnati","Cincinnati","Cincinnati","Cincinnati", "Cincinnati","Cincinnati","Circleville","Delphos", "Jefferson County","Jefferson County","Kenton", "Kenton","Montpelier","Pomeroy","Port Clinton", "Port Clinton","Portage County","Somerset", "Springfield","Warren","Willard"),
+        requested_amount = c("4975000","1000000","1100000","2253355","4999139","5200676","3101870","3557872","1524764","600000","570000","1701000","1169773","7500000","7500000","4839599","1453797","2561200", "3219700","5982189","325000","3500000","849500","986253","826090","2100000"),
+        project_description = c("Waterline Replacement Project",
+                              "Distribution System and Meter Replacement",
+                              "Branch Only- Jonathan, Ruth, Woodburn LSL",
+                              "Southern Hawthorne Water Main Replacement",
+                              "Monastery - Mt. Adams Water Main Replacement",
+                              "McHenry - Wooster Area Water Main Replacement",
+                              "Lyon - Wheeler Area Water Main Replacement",
+                              "Fire Flow 23 Water Main Replacement",
+                              "Baker Water Main Replacement",
+                              "Branch Only - Fairmount LSL",
+                              "Harrison Cora - Fairmount LSL",
+                              "Utility Improvements for Walnut Street",
+                              "Pierce Street Waterline Replacement",
+                              "Amsterdam",
+                              "Bergholz Water System Improvements",
+                              "Downtown Waterline Replacement Phase 2B",
+                              "Detroit Street Waterline and LSL Phase 3",
+                              "Main Street Waterline LSL",
+                              "Breezy Heights Tank/ New Wells / Water Line Replacement",
+                              "Water and Sanitary Sewer Infrastructure Improvements",
+                              "Laurel Street Reconstruction",
+                              "Village of Mantua Distribution Replacement Ph 2",
+                              "Water Meter Replacement","East High St Water Services",
+                              "2022 Waterline Replacement Program (Area C)",
+                              "Waterline Replacement Project"),
+          list = c("SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL","SFY26 Lead PPL",
+                              "SFY26 Lead PPL","SFY26 Lead PPL"),
+          new_lead_type = c("lslr","lslr","lslr","lslr","lslr","lslr","lslr","lslr","lslr",
+                              "lslr","lslr","lslr","lslr","lslr","lslr",
+                              "lslr","lslr","lslr","lslr","lslr","lslr","lslr",
+                              "lslr","lslr","lslr","lslr")
+        ),
+    by = c("community_served", "borrower", "project_description", "requested_amount", "list")
+  ) |>
+  dplyr::mutate(
+    project_description = dplyr::case_when(
+      !is.na(new_lead_type) ~ paste0(project_description, " | FT: ", stringr::str_to_upper(new_lead_type)),
+      .default = project_description
+    )
+  ) |>
+  dplyr::select(-new_lead_type)
+  
+  oh_clean <- oh_clean |>
     dplyr::mutate(
       project_description = dplyr::case_when(
-        !is.na(new_lead_type) ~ paste0(project_description, " | FT: ", stringr::str_to_upper(new_lead_type)),
+        epic_project_id %in% c("555", "556") ~ paste0(project_description, " | FT: LSLR"),
+        epic_project_id %in% c("551", "558") ~ paste0(project_description, " | FT: LSLI"),
         .default = project_description
       )
-    ) |>
-    dplyr::select(-new_lead_type)
-    # Decision: 2 were left as unknown
+    )
+  # Decision: resolved all unknowns
 
   ####### SANITY CHECKS END #######
 
@@ -236,12 +277,12 @@ clean_oh_y4 <- function() {
 
   oh_ofsf <- oh_clean |>
     dplyr::mutate(epic_project_id = as.character(epic_project_id)) |>
-    dplyr::filter(epic_project_id %in% ec_sdc_list) |>
+    dplyr::filter(is_ofsf_proj == "Yes") |>
     dplyr::left_join(ec_sdc_table |> dplyr::select(epic_project_id,sdc_ec_grant), by= "epic_project_id") |>
     dplyr::mutate(
       project_cost_ofsf = as.character(NA), #full column is No Information, keeping consistency to core dataset 
-      requested_amount_ofsf = as.character(NA),
-      funding_amount_ofsf = sdc_ec_grant,
+      requested_amount_ofsf = clean_numeric_string(estimated_loan_amount),
+      funding_amount_ofsf = clean_numeric_string(sdc_ec_grant),
       expecting_funding_ofsf = "Yes"
     ) |>
     dplyr::mutate(dplyr::across(dplyr::everything(), as.character)) |>
@@ -251,13 +292,11 @@ clean_oh_y4 <- function() {
   
   save_update_ofsf(oh_ofsf)
 
-
   oh_clean <-   oh_clean |>
       dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
-
   # Run validation tests
   run_tests(oh_clean)
   rm(list=setdiff(ls(), "oh_clean"))

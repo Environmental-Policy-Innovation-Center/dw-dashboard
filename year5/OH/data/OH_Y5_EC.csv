@@ -1,0 +1,44 @@
+﻿epic_id,Entity,Project, PWS ID,Estimated Loan Amount,Estimated EC Related Costs,"Est. EC
+Principal Forgiveness",Loan Type,Estimated Award Date,Project Score,"Readiness
+To Proceed",Rate,County,District Office
+24,Akron,Water Plant Advanced Treatment Facility Design,OH7700011,1558581,1558581,BYPASS 1,Design,Sep-26,7,0,EC,Summit,NEDO
+23,Akron,Water Plant Advanced Treatment Facility,OH7700011,83000000,10000000,BYPASS 1,Construction,May-27,7,0,EC,Summit,NEDO
+34,Aqua Ohio Inc.,Aqua Ohio - Massillon,OH7604512,9000000,9000000,4000000,Construction,Aug-26,33,4,Reg/EC,Stark,NEDO
+35,Aqua Ohio Inc.,Aqua Ohio - Massillon Tie into PCA Corp - Greif Packaging,OH7604512,1000000,1000000,BYPASS 1,Construction,Aug-26,18,1,Reg/EC,Stark,NEDO
+53,Barnesville,PFOA WTP Improvements,OH0700011,449850,449850,BYPASS 2,Design,Jan-27,5,0,EC,Belmont,SEDO
+61,Bellbrook,WTP Improvements,OH2901112,70000,70000,70000,Planning,Sep-26,6,1,EC,Greene,SWDO
+74,Beverly,"Water System Improvements, PFAS/PFOS Treatment",OH8400112,270000,270000,270000,Design,Aug-26,13,2,EC,Washington,SEDO
+75,Beverly,"Water System Improvements, PFAS/PFOS Treatment",OH8400112,2926500,2962500,BYPASS 2,Construction,Apr-27,13,2,EC,Washington,SEDO
+103,Cambridge,PFAS Water Treatment Plant Modifications,OH3000111,120000,120000,120000,Planning,Aug-26,6,1,EC,Guernsey,SEDO
+122,Chesterhill,Water System Improvements PFAS,OH5800112,172200,172200,BYPASS 3,Design,Aug-26,6,2,EC,Morgan,SEDO
+123,Chesterhill,Water System Improvements PFAS,OH5800112,2562200,2562200,BYPASS 2,Construction,Apr-27,6,2,EC,Morgan,SEDO
+168,Coal Grove,PFAS General Plan,OH4400012,175000,175000,175000,Planning,Aug-26,6,0,EC,Lawrence,SEDO
+175,Columbus,DRWP GAC Improvements Project; CIP No. 690618-100000,OH2504412,10000000,10000000,BYPASS 1,Design,Oct-26,5,1,EC,Franklin,CO
+211,Dayton,"Advanced PFAS Treatment @Ottawa WTP, CMAR",OH5703512,315000000,315000000,4000000,Construction,Dec-26,16,4,EC,Montgomery,SWDO
+213,Dayton,"Expansion of Miami Well Field Recharge Lagoon, Ph 3",OH5703512,41000000,41000000,4000000,Construction,Jan-27,16,3,EC,Montgomery,SWDO
+250,Gallia County Rural Water Association,GAC for PFAS Removal,OH2700012,7100000,7100000,BYPASS 3,Construction,May-27,7,3,EC,Gallia,SEDO
+252,Gallipolis,PFAS Filter Improvements,OH2700112,4809500,4809500,BYPASS 2,Construction,May-27,6,1,EC,Gallia,SEDO
+286,Indian Hill,Water Treatment Plant PFAS,OH3101112,649091,649091,BYPASS 3,Design,Jul-26,7,2,EC,Hamilton,SWDO
+287,Indian Hill,Water Treatment Plant PFAS,OH3101112,18565000,18565000,BYPASS 1,Construction,Mar-27,7,2,EC,Hamilton,SWDO
+292,Ironton,PFAS Design,OH4400711,1190000,1190000,BYPASS 3,Design,Aug-26,9,1,EC,Lawrence,SEDO
+340,Little Hocking Water Association,Phase 2A Water Line Extension,OH8400212,5505000,5505000,BYPASS 2,Construction,Jun-27,6,5,Reg/EC,Washington,SEDO
+339,Little Hocking Water Association,Phase 1A Water Line Extension,OH8400212,11752000,11752000,4000000,Construction,Sep-26,6,5,Reg/EC,Washington,SEDO
+348,Loveland,City of Loveland PFAS Treatment,OH1300812,15750000,16950000,4000000,Construction,Jun-27,7,3,EC,Hamilton,SWDO
+360,Martins Ferry,PFAS WTP Improvements,OH0701212,500000,500000,BYPASS 3,Design,Aug-26,6,0,EC,Belmont,SEDO
+359,Martins Ferry,PFAS WTP Improvements,OH0701212,100000,100000,100000,Planning,Aug-26,6,0,EC,Belmont,SEDO
+361,Martins Ferry,PFAS WTP Improvements,OH0701212,5000000,5000000,BYPASS 1,Construction,Feb-27,6,0,EC,Belmont,SEDO
+365,Matamoras,New Water Treatment Plant,OH8400512,5660580,5660580,4000000,Construction,Jan-27,12,3,Reg/EC,Washington,SEDO
+371,Middleport,PFAS Reduction,OH5300112,339655,339655,339655,Design,Aug-26,9,1,EC,Meigs,SEDO
+372,Middleport,PFAS Reduction,OH5300112,4440432,4440432,BYPASS 2,Construction,Feb-27,9,1,EC,Meigs,SEDO
+429,Phillipsburg,Water System Improvements,OH5702112,300000,300000,BYPASS 1,Design,Apr-27,10,1,EC,Montgomery,SWDO
+446,Putnam Community Water Corporation,PFAS Well Mitigation,OH8400712,1086030,1086030,BYPASS 3,Construction,Aug-26,7,2,EC,Washington,SEDO
+444,Putnam Community Water Corporation,Muskingum River Road Water Line Extension,OH8400712,60000,60000,BYPASS 3,Design,Aug-26,6,2,EC,Washington,SEDO
+445,Putnam Community Water Corporation,Muskingum River Road Water Line Extension,OH8400712,1560000,1560000,BYPASS 3,Construction,May-27,6,2,Reg/EC,Washington,SEDO
+463,Shadyside,PFAS Remediation,OH0701612,1528180,1528180,BYPASS 3,Design,Dec-26,11,1,EC,Belmont,SEDO
+473,South Point,Water Treatment Plant PFAS Upgrades,OH4401212,705000,705000,BYPASS 2,Design,Sep-26,11,2,EC,Lawrence,SEDO
+474,South Point,Water Treatment Plant PFAS Upgrades,OH4401212,6430600,6430600,BYPASS 3,Construction,May-27,11,2,EC,Lawrence,SEDO
+478,Stockport,Emerging Contaminant Mitigation Project,OH5800912,362000,362000,BYPASS 2,Design,Oct-26,5,0,EC,Morgan,SEDO
+490,Tri-County Rural Water & Sewer District,Water System Improvements - PFAS/PFOS Treatment,OH8403112,240600,240600,240600,Design,Aug-26,6,2,EC,Washington,SEDO
+491,Tri-County Rural Water & Sewer District,Water System Improvements - PFAS/PFOS Treatment,OH8403112,2787000,2787000,BYPASS 2,Construction,Apr-27,6,2,EC,Washington,SEDO
+509,Warren Community Water and Sewer Assoc,PFAS Remediation Pilot Testing and Detailed Design,OH8402703,276000,276000,BYPASS 3,Design,Oct-26,7,1,EC,Washington,SEDO
+524,Western Water Company,PFAS Treatment Process Removal,OH8300512,4000000,4000000,BYPASS 1,Construction,Jun-27,5,2,EC,Warren,SWDO

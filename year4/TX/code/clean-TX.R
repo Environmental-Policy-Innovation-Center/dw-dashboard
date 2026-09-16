@@ -1,80 +1,154 @@
 clean_tx_y4 <- function() {
   base_path <- file.path("year4", "TX", "data")
   
-  # this includes all projects (Comprehensive List)
+  # General -----
+  ## this includes all projects (Comprehensive List) ----
   tx_ppl <- data.table::fread(file.path(base_path, "tx-y4-iup-appendix-j.csv"),
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "SFY 2026 General IUP"
+      list = "SFY26 General Comprehensive List",
+      project_cost = clean_numeric_string(total_project_cost),
+      disadvantaged = ifelse(!is.na(disadv_percent), "Yes", "No")
     )
   
-  # expecting funding projects (Fundable List)
+  ## appendix I ----
+  tx_ineligible_dis <- data.table::fread(file.path(base_path, "tx-y4-iup-appendix-i.csv"),
+                     colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      list = "SFY26 General Not Disadvantaged List",
+      disadvantaged = "No"
+    ) |>
+    dplyr::select(-project_cost)
+  
+  ## expecting funding projects (Fundable List) ----
+  # there are 4 fundable projects that are general not disadvantaged
   tx_invite <- data.table::fread(file.path(base_path, "tx-y4-iup-appendix-k.csv"),
                      colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       funding_amount = clean_numeric_string(eligible_project_cost),
-      expecting_funding = "Yes"
+      expecting_funding = "Yes",
+      list = "SFY26 General Fundable List",
+      project_cost = "No Information"
     ) |>
-    dplyr::select(pif_number, funding_amount, expecting_funding)
+    dplyr::select(pif_number, funding_amount, expecting_funding, list, project_cost)
 
+ # Lead -----
   tx_lslr <- data.table::fread(file.path(base_path, "tx-y4-lslr-iup-appendix-j.csv"),
-                     colClasses = "character", na.strings = "") |>
+                      colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
       project_type = "Lead",
       funding_amount = "No Information",
       disadvantaged = "Yes",
-      list = "Draft SFY 2026 LSLR IUP"
-  ) |>
+      list = "SFY26 LSL Fundable List"
+    ) |>
     dplyr::rename(
       pif_number = pif_no,
       pws_id = pws_id_no,
-      population = population_served
-    ) 
- 
+      population = population_served,
+      project_cost = total_project_cost
+    )  
   
   # tx_lslr$pif_number %in% tx_ppl$pif_number
   # tx_invite$pif_number %in% tx_ppl$pif_number
+  
+  # EC ----
+  ## Appendix J -----  
+  tx_ec_ineligible_dis <- tibble::tribble(
+    ~pif , 
+    ~list,
+    "17924",
+    "SFY26 EC Not Disadvantaged List"
+  )
 
-  combined_lists<- tx_ppl |>
+  ## comprehensive ----_
+  tx_ec_comp <- data.table::fread(file.path(base_path, "tx-y4-ec-iup-appendix-k.csv"),
+                    colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      disadvantaged = ifelse(pif_number %in% tx_ec_ineligible_dis$pif, "No", "Yes"),
+      list = "SFY26 EC Comprehensive List"
+    ) |>
+    dplyr::rename(
+      project_name = name_of_project
+    )
+  
+  ## fundable ----
+  tx_ec_fundable <- data.table::fread(file.path(base_path, "tx-y4-ec-iup-appendix-l.csv"),
+                    colClasses = "character", na.strings = "") |>
+    janitor::clean_names() |>
+    dplyr::mutate(
+      expecting_funding ="Yes",
+      funding_amount = "No Information",
+      list = "SFY26 EC Fundable List"
+      ) |>
+    dplyr::select(pif_number, expecting_funding, list)
+    
+  tx_ec <- tx_ec_comp |>
+    dplyr::left_join(tx_ec_fundable, by = "pif_number") |>
+    dplyr::mutate(
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c(list.y, list.x)) |>
+    dplyr::mutate(
+      list = ifelse(pif_number == "17924", "SFY26 EC Not Disadvantaged List", list),
+      project_type = "Emerging Contaminants",
+      project_cost = total_project_cost
+    )
+    
+  combined_lists <- tx_ppl |>
+    #comprehensive and ineligible
+    dplyr::left_join(tx_ineligible_dis, by = "pif_number") |>
+    dplyr::mutate(
+      entity = dplyr::coalesce(entity.y, entity.x),
+      disadvantaged = dplyr::coalesce(disadvantaged.y, disadvantaged.x), 
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c(list.y, list.x, disadvantaged.y, disadvantaged.x, entity.y, entity.x)) |>
+    # include fundable
     dplyr::left_join(tx_invite, by = "pif_number") |>
-    dplyr::bind_rows(tx_lslr)
+    dplyr::mutate(
+      project_cost = dplyr::coalesce(project_cost.y, project_cost.x),
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c(list.y, list.x, project_cost.y, project_cost.x)) |>
+    dplyr::bind_rows(tx_lslr) |>
+    dplyr::bind_rows(tx_ec)
 
- 
   # join invited by project id and then process for output
   tx_clean <-  combined_lists |>
     dplyr::mutate(
-           community_served = as.character(NA),
-           borrower = str_squish(entity),
-           pwsid = str_squish(pws_id),
-           pwsid = replace_na(pwsid, "No Information"),
-           project_id = str_squish(pif_number),
-           project_name = replace_na(project_name, "No Information"),
-           project_cost = clean_numeric_string(total_project_cost),
-           requested_amount = as.character(NA),
-           funding_amount = replace_na(funding_amount, "No Information"),
-           principal_forgiveness = as.character(NA),
-           population = clean_numeric_string(population),
-           project_description = str_squish(project_description),
-           project_rank = str_squish(rank),
-           project_score = str_squish(points),
-           project_type = case_when(
-            !is.na(project_type) ~ project_type,
-             grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
-             grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
-             TRUE ~ "General"), 
-           disadvantaged = dplyr::case_when(
-            !is.na(disadvantaged) ~ disadvantaged,
-            is.na(disadv_percent) ~ "No",
-            .default = "Yes"
-           ),
-           project_id = replace_na(project_id, "No Information"),
-           expecting_funding = replace_na(expecting_funding, "No"),
-           state = "Texas",
-           state_fiscal_year = "2026"
+      community_served = as.character(NA),
+      borrower = str_squish(entity),
+      pwsid = str_squish(pws_id),
+      pwsid = replace_na(pwsid, "No Information"),
+      pwsid = ifelse(pwsid=="none", "No Information",pwsid ),
+      project_id = str_squish(pif_number),
+      project_id = replace_na(project_id, "No Information"),
+      project_name = replace_na(project_name, "No Information"),
+      project_type = case_when(
+        !is.na(project_type) ~ project_type,
+        grepl("lsl|lead", project_description, ignore.case=TRUE) ~ "Lead",
+        grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
+        TRUE ~ "General"), 
+      project_cost = project_cost,
+      requested_amount = as.character(NA),
+      funding_amount = replace_na(funding_amount, "No Information"),
+      principal_forgiveness = as.character(NA),
+      project_description = str_squish(project_description),
+      population = clean_numeric_string(population),
+      disadvantaged = disadvantaged,
+      project_rank = str_squish(rank),
+      project_rank = clean_numeric_string(project_rank),
+      project_score = str_squish(points),
+      project_score = clean_numeric_string(project_score),
+      expecting_funding = replace_na(expecting_funding, "No"),
+      state = "Texas",
+      state_fiscal_year = "2026"
     ) |>
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
@@ -84,7 +158,7 @@ clean_tx_y4 <- function() {
 ####### SANITY CHECKS START #######
 
 # Hone in on project id duplication
-#tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+#tx_clean  |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
 ####### Decision : No duplicates
 
@@ -125,7 +199,17 @@ clean_tx_y4 <- function() {
   #     )
   #   ) |>
   #   dplyr::filter(lead_type == "unknown")
+  
+  tx_clean <- tx_clean |>
+    dplyr::mutate(
+      project_type = ifelse(
+        project_id == "16825",
+        "General",
+        project_type
+      )
+    )
 
+ #Decision: 1 unknown --> General
 ####### SANITY CHECKS END #######
   
   tx_clean <- tx_clean |>

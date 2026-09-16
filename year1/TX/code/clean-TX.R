@@ -141,7 +141,20 @@ clean_tx_y1 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") |> View()
 
-  ####### Decision: 18 lead projects classified as unknown
+
+tx_clean <- tx_clean |>
+  dplyr::mutate(
+    project_description = dplyr::case_when(
+      project_id %in% c("14569", "14503") ~ paste0(project_description, " | FT: LSLR"),
+      (pwsid == "TX1750002" & project_type == "Lead")  ~ paste0(project_description, " | FT: LSLI"),
+      (pwsid == "TX2340016" & project_type == "Lead")  ~ paste0(project_description, " | FT: LSLR"),
+      (pwsid == "TX1160039" & project_type == "Lead")  ~ paste0(project_description, " | FT: LSLI"),
+      (pwsid == "TX2200001" & project_type == "Lead")  ~ paste0(project_description, " | FT: LSLI"),
+      (pwsid == "TX2270001" & project_type == "Lead")  ~ paste0(project_description, " | FT: LSLR"),
+      .default = project_description
+    )
+  )
+  ####### Decision: 18 lead projects classified as unknown; 7 either lslr lsli (see above), rest both
   ####### SANITY CHECKS END #######
   
   run_tests(tx_clean)

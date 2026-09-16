@@ -149,7 +149,8 @@ clean_tx_y3 <- function() {
 
   tx_clean <- tx_clean |>
     dplyr::mutate(
-      project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type)
+      project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type),
+      project_description = ifelse(project_id %in% c("16061", "16062"), paste0(project_description, " | FT: LSLR"), project_description)
     )
   
   # Run validation tests

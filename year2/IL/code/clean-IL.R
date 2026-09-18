@@ -289,6 +289,22 @@ clean_il_y2 <- function() {
       dplyr::mutate(
           project_description = ifelse(project_type=="Lead" & borrower == "Lemont", paste0(project_description, " |FT: LSLR"), project_description)
         )
+  # Check pwsid lengths
+  # il_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+         borrower == "Cissna" & pwsid == "IL07500200" ~ "IL0750200",
+         borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
+        .default = pwsid
+      )
+    )
     ####### SANITY CHECKS END #######
   
   run_tests(il_clean)

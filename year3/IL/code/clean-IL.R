@@ -246,11 +246,42 @@ clean_il_y3 <- function() {
   #   dplyr::filter(lead_type == "unknown") 
 
   ####### Decision: No lead projects classified as unknown 
-  
+
+  # Check pwsid lengths
+  # il_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Argenta" & pwsid ==  "IL50050" ~ "IL1150050",
+        borrower == "Fox Lake*" & pwsid == "IL970200" ~ "IL0970200",
+        borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
+        borrower == "East Dubuque" & pwsid == "IL850100" ~ "IL0850100",
+        borrower == "Bensenville" & pwsid == "IL434140" ~ "IL0434140",
+        borrower == "Dalzell" & pwsid == "IL110250" ~ "IL0110250",
+        borrower == "North Chicago" & pwsid == "IL971250" ~ "IL0971250",
+        borrower == "Shannon" & pwsid == "IL150330" ~ "IL0150300",
+        borrower == "Country Club Hills" & pwsid == "IL310540" ~ "IL0310540",
+        borrower == "Edinburg" & pwsid == "IL210150" ~ "IL0210150",
+        borrower == "Assumption" & pwsid == "IL210050" ~ "IL0210050",
+        borrower == "Bond Madison Water Company" & pwsid == "IL50020" ~ "IL0050020",
+        borrower == "Morris" & pwsid == "IL630600" ~ "IL0630600",
+        borrower == "Mount Vernon" & pwsid == "IL810300" ~ "IL0810300",
+        borrower == "Schiller Park" & pwsid == "IL312850" ~ "IL0312850",
+        borrower == "Stonington" & pwsid == "IL210550" ~ "IL0210550",
+        borrower == "Walnut" & pwsid == "IL111100" ~ "IL0111100",
+        borrower == "Buda" & pwsid == "IL10100" ~ "IL0110100",
+        .default = pwsid
+      )
+    )
   ####### SANITY CHECKS END #######
   
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
+
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

@@ -317,6 +317,25 @@ clean_il_y5 <- function() {
        )
       )
   
+    # Check pwsid lengths
+  # il_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Sandwich" & pwsid == "IL034850" ~"IL0374850",
+        borrower == "Apple River" & pwsid == "IL08550050" ~ "IL0850050",
+        borrower == "Winnebago" & pwsid == "IL20105000" ~ "IL2010500",
+        borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
+        .default = pwsid
+      )
+    )
+  
   ####### SANITY CHECKS END #######
   
   run_tests(il_clean)

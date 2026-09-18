@@ -281,6 +281,29 @@ clean_il_y4 <- function() {
           project_description = ifelse(project_type=="Lead" & project_id == "7428", paste0(project_description, " |FT: LSLR"), project_description)
         )
   
+  # Check pwsid lengths
+  # il_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Argenta" & pwsid == "IL50050" ~ "IL1150050",
+        borrower == "Brookfield" & pwsid == "IL031330" ~ "IL0310330",
+        borrower == "Sandwich" & pwsid == "IL034850" ~ "IL0374850",
+        borrower == "Morris" & pwsid == "IL630600" ~ "IL0630600",
+        borrower == "Winnebago" & pwsid == "IL20105000" ~ "IL2010500",
+        borrower == "Apple River" & pwsid == "IL08550050" ~ "IL0850050",
+        borrower == "Mount Vernon" & pwsid == "IL810300" ~ "IL0810300",
+        borrower == "Scales Mound" & pwsid == "IL850400" ~ "IL0850400",        
+        .default = pwsid
+      )
+    )
+  
   ####### SANITY CHECKS END #######
 
   run_tests(il_clean)

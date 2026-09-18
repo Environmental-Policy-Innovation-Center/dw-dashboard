@@ -264,11 +264,26 @@ clean_il_y1 <- function() {
 
   ####### Decision: No lead projects classified as unknonw
  
-    
+  # Check pwsid lengths
+  #  il_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9)
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+         borrower == "Cicero" & pwsid == "IL03010510" ~ "IL0310510",
+         borrower == "Stickney" & pwsid == "IL03013000" ~ "IL0313000",
+        .default = pwsid
+      )
+    )
+
+
   ####### SANITY CHECKS END #######
   
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
+
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

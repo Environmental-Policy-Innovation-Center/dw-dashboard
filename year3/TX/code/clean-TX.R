@@ -144,6 +144,21 @@ clean_tx_y3 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") |> View()
 
+    # Check pwsid lengths
+  # tx_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  tx_clean <- tx_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "San Antonio Water System" & pwsid == "TX00150018" ~ "TX0150018",
+        .default = pwsid
+      )
+    )
 
 ####### SANITY CHECKS END #######
 

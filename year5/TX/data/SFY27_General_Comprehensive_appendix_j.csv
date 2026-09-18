@@ -1,0 +1,803 @@
+Rank,Points,PIF #,Entity,"Owner
+Type",PWS ID,Population,Project Description,"Requested
+Phase(s)",Total Project Cost,"Disadv
+%","Green
+Type",GPR,"Related PIF
+#'s"
+1,476,17882,South Plains WSC,W,TX1520152,4503,"This project evaluates and advances the regionalization of public water systems throughout Lubbock County through strategic interconnections, shared infrastructure, and coordinated system management. The goal is to enhance long-term water supply reliability, improve operational efficiency, and strengthen financial sustainability for participating utilities. Regionalization would allow smaller municipal systems and water supply corporations to benefit from shared treatment capacity, bulk water purchasing, consolidated administrative functions, and regional emergency response planning. By interconnecting systems, participating utilities can reduce redundancy, improve redundancy during drought or equipment failure and ensure compliance with state and federal regulatory standards. The project also supports improved asset management planning.
+Regional collaboration enhances drought resilience, strengthens
+infrastructure redundancy, and promotes sustainable groundwater management within the",PA,1800000,,,,
+2,221,17355,Millersview-Doole WSC,W,TX0480015,4000,"Water line replacements, pump station improvements, SCADA system improvements, WTP improvements, AMR/AMI Meter replacement, distribution system improvements, tank rehabilitations, emergency generators and development of an asset management
+plant.",PADC,67675000,,Yes-BC,2000000,
+3,166,17252,Bitter Creek WSC,W,TX1770007,2874,"The project includes the construction of new wells, replacement and upsizing of water distribution lines, construction of new water storage
+facilities, and development of an asset management plan",PADC,11917000,,,,
+4,152,17399,Seagraves,M,TX0830001,2691,"The City of Seagraves proposes development of a new well field northwest of town to increase water supply capacity and improve regulatory compliance. The project includes conversion of four existing irrigation wells to public water supply use, installation of intruder-resistant fencing, construction of a reverse osmosis (RO) treatment system to address nitrate exceedances, installation of supply lines connecting to the existing elevated storage tank, and
+construction of RO concentrate waste ponds",PDC,4750000,0.7,,,
+5,152,17315,Midland Co UD,D,,100,"Midland County Utility District (MCUD) is a utility district formed to deliver water to residents and commercial/industrial customers outside the city limits of Midland, Texas. The district includes a servic area of 84.5 square miles located generally east and south of the city A superfund chromium plume site named WCR 112 Chromium Plume exists within the district and is under EPA/TCEQ monitoring and treatment efforts. The EPA and TCEQ are interested in working with MCUD to provide a potable water alternative for the customers present.",PD,2515678,,,,
+6,147,17347,Marlin,M,TX0730002,5967,Marlin Water System Improvements Phase II,PDC,15197561,0.7,,,
+7,144,17445,Red River Authority,D,TX2440007,156,"Project will make improvements in the RRA Farmers Valley System
+including new tank, distribution lines, and pump station upgrade",PDC,920000,0.7,,,
+8,129,17831,Chester WSC,W,TX2290002,1237,"Rehabilitation of all water plants, storage tanks, and waterlines in the
+system.",PDC,29110000,,,,
+9,117,17365,"Riverbend Water
+Resources District",D,TX0190021,66694,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant and Finish Water Line",PADC,497525990,0.7,Yes-BC,26167930,
+10,114,17413,Westwood Shores MUD,D,TX2280016,1561,"Westwood Shores MUD proposes construction of a riser pipe connection to the existing Ground Storage Tank (GST), associated yard piping, and a control and meter building to accommodate a future water supply source. The future supply may include a connection to the Trinity River Authority (TRA) / City of Trinity system, development of a third groundwater well, or another supply source to
+be determined.",PADC,2566390,0.7,Yes-CE,2566390,
+11,109,17666,Santa Rosa,M,TX0310009,2883,"The City of Santa Rosa owns and operates two adjacent 0.5-MGD water treatment facilities that have experienced deterioration due to age and limited rehabilitation since their original construction. Several treatment components are outdated or in poor condition, impacting the reliability and performance of the system. This project will provide critical upgrades and rehabilitation to the treatment facilities to improve operational reliability, enhance system resiliency, and ensure the continued delivery of safe drinking water to the residents of Santa
+Rosa.",PDC,14160000,0.7,,,
+12,107,17303,Quanah,M,TX0990002,2262,"The City of Quanah aims to enhance its water system by improving it existing distribution lines and installing two new disinfecting boosting stations. The distribution lines are aging, dilapidated, and need to be replaced. An asset management plan and water conservation plan is
+included.",PDC,19054000,0.7,Yes-BC,9947000,
+13,102,17830,Childress,M,TX0380001,6606,"Procuring vital water infrastructure to ensure community resilience in
+the face of the catastrophic ongoing drought",PDC,16739700,0.7,,,
+14,101,17465,Ranger,M,TX0670004,2629,"The City of Ranger intends to replace; over 8 miles of existing distribution lines with new C900 PVC water lines, over 1,000 existing water meters with new AMI meters, and install new and replacement fire hydrants throughout the City. Additionally, the City intends to construct a new 500,000 gallon composite elevated storage tank to increase storage capacity as the current standpipes usable capacity is limited. The installation of a new groundwater well will increase overall supply but more importantly provide a redundant source of water. SCADA system improvements will also be incorporated along with the improvements above. An Asset Management Plan will also be provided to foster regular maintenance.",PADC,19323000,0.7,Yes-BC,19323000,
+15,100,17512,Smyer,M,TX1100010,474,"The proposed project includes improvements at the water treatment plant and distribution system to bring the system into compliance with TCEQ requirements. An asset management plan will be prepared as
+part of this project.",PDC,5454000,0.7,Yes-BC,1427000,
+16,99,17421,"Texas Water Utilities, L.P.",P,TX1410002,3738,"The applicant proposes to install an additional membrane filtration train and support components to the existing Lometa WTP to improve compliance and production reliability. The project will also include the
+development of an asset management plan",PDC,15645000,0.7,Yes-BC,15645000,
+17,99,17634,Overton,M,TX2010002,3023,"The City of Overton needs to construction a new water well and plant in order to meet the existing demand and provide for future demand. The city plans to construct a new water well complete with a stand-alone water plant, including ground storage tank, disinfection system, and high service pumps in order to meet system demand and maintain the existing infrastructure. The existing water system has deteriorated over time and results in excessive maintenance and
+water loss.",PDC,1981440,0.7,,,
+18,97,17393,Jackson WSC,W,TX2120016,6454,"Funding for JWSC pipe replacement, ground storage tank and new well & one new plant project. JWSC has been cited by TCEQ for violations for lack of: ""well capacity"", ""service pump capacity"",
+""pressure tank capacity"" and/or ""elevated storage capacity"".",PDC,22841500,0.7,Yes-CE,15259000,
+19,97,17268,Diboll,M,TX0030001,5207,"This project will include upgrades of deteriorating AC waterlines throughout the City as well as the rehabilitation of 3 wells to provide adequate supply. The development and implementation of an Asset
+Management Plan will also be included in this projec",PDC,11910000,0.7,,,
+20,96,17869,La Grulla,M,TX2140006,12489,"The project will replace distribution lines in undersized areas and expand service to areas not currently served and implement an asset management plan. The project will also rehabilitate the storage tanks
+and the booster pumping stations",PDC,19125000,0.7,Yes-BC,3000000,
+21,96,17575,"Texas Water Utilities, L.P.",P,TX0910035,1860,"The Ridgecrest Water System proposes increasing water production capacity through the drilling of a new raw water well. Additionally, there is concern for radionuclide buildup in drinking water produced b the applicant, as high radionuclide concentrations pose a major healt risk if ingested through drinking water over long periods of time. An asset management plan included in this project will support project radionuclide monitoring and management efforts.",PADC,22111000,0.7,Yes-BC,22111000,
+22,95,17281,Coke County WSC,W,TX0410017,410,"Coke County WSC seeks to replace the entirety of their water line system. The existing lines are deteriorating and need to be replaced. They also seek to rehabilitate one of the two pump stations. The development of an Asset Management Plan will also be included as
+part of the proposed project.",PDC,39738000,0.7,Yes-BC,39738000,
+23,88,17808,Mathis,M,TX2050003,4322,"To address existing water demand challenges and improve resiliency of the water supply for the City of Mathis, a project to construct a new well and its relevant appurtances to meet current and future water
+demands is proposed.",PADC,1815000,0.7,,,
+24,86,17352,Mercedes,M,TX1080007,16648,"Water system improvements include but are not limited to waterline
+replacements, pump station improvements, asset management plans, and purchase of additional water rights",PADC,59768000,0.7,,,
+25,79,17592,Carthage,M,TX1830001,15000,"This project consists of the comprehensive rehabilitation and modernization of the community's water treatment plant to ensure
+continued delivery of safe, reliable drinking water",PDC,13455600,0.7,,,
+26,78,17473,Groveton,M,TX2280001,918,Water System Upgrades and Water Distribution Line Replacement,PDC,4440000,0.7,,,
+27,77,17692,Stryker Lake WSC,W,TX0370033,978,Water System Improvements,PDC,1000000,0.7,Yes-BC,590000,
+28,76,17612,Port Mansfield PUD,D,TX2450004,319,"This project modernizes the community's water infrastructure through the installation of a 250,000-300,000-gallon elevated storage tank, smart meters, and comprehensive pump room and pipe rehabilitations. Central to these upgrades is the implementation of a formal Asset Management Plan through the TWDB contract, ensuring that these new investments are systematically maintained, tracked,
+and funded for their entire service life",PDC,4645000,0.7,,,
+29,74,17302,Blanco,M,TX0160002,3192,"The City of Blanco proposes to replace aging and deteriorated asbestos cement water mains along 7th Street, 9th Street, 12th Street, Main Street, and Pecan Street and to construct a new booster pump station to improve system performance. The existing AC mains are prone to leakage and failure, contributing to water loss, non-revenue water, and service interruptions. The proposed improvements will reduce real water loss, improve pressure stability and hydraulic performance, enhance operational reliability, support compliance with TCEQ system capacity requirements, and strengthe system resiliency during drought and emergency conditions. Funding
+for an asset management plan is also included",PDC,7896000,,,,
+30,70,17573,"Texas Water Utilities, L.P.",P,TX1110004,5517,"Proposed project will include addition of a backup well for each pressure plane and WTP, an increase in ground storage, and increase in pressure storage, and an increase in service pump capacity to comply with TCEQ's 85% capacity requirements. An asse
+management plan will also be prepared as part of this project",PDC,12003000,0.7,Yes-BC,12003000,
+31,69,17389,Rio Hondo,M,TX0310006,2311,"The city continues to have a high water loss rate, based on the water loss audit and water use survey. The city has numerous asbestos cement water lines in the older part of town that are nearly 60 years old and prone to ongoing cracks, breaks and substantial leaks. The city also has numerous TCEQ violations in the water distribution system and at the water treatment plant that include distribution system monitoring deficiencies, dead-end main flushing deficiencies, not keeping the distribution system watertight and free of excessive solids, inoperable equipment including the raw water pumps, submersible pump that transfers sludge to the filter backwash basin, insufficient raw water pump capacity, WTP has reached 90% of its treatment capacity, GST corrosion, leaks and manual controls, and failure to prevent discharge of WTP sludge residuals into or adjacent
+to any water of the state.",PDC,4715000,0.7,Yes-BC,1750000,
+32,68,17798,"Texas Water Utilities, L.P.",P,TX1500037,2256,"Proposed project will include an expansion of the existing WTP to restore compliance with TCEQ capacity requirements. An asset
+management plan will also be prepared as part of this project",PDC,9041000,0.7,Yes-BC,9041000,
+33,66,17590,"Green Acres Mobile Home
+Park",P,TX0710066,150,"The proposed project consists of constructing an on-site arsenic
+treatment facility within the existing service area",PDC,831000,0.7,,,
+34,66,17490,Laguna Madre WD,D,TX0310005,46710,"The Laguna Madre Water District is seeking funding through the
+DWSRF to perform much needed upgrades at their WTP, as well as necessary distribution system upgrades.",PDC,16450000,0.7,,,
+35,66,17608,Holiday Lakes,M,TX0200018,991,"Rehabilitation of Water System including Treatment, Storage,
+Transmission and Distribution Improvement",PADC,5325000,0.7,,,
+36,65,17343,La Feria,M,TX0310003,7226,"The City of La Feria is seeking to enhance its drought resiliency via new water sources and new water storage facilities. This project will create resiliency by adding two critical facilities to supplement its
+water supply and create much needed water storage",PDC,14700000,0.7,,,
+37,64,17679,Sharyland WSC,W,TX1080033,73699,"Sharyland Water Supply Corporation (SWSC) is seeking funding through the DWSRF to enhance service delivery and improve the overall performance, redundancy, and resilience of its water system. Proposed projects include groundwater wells to supplement existing surface water supply and expanding capacity and infrastructure performance upgrades at SWSC's existing water treatment plants
+(WTPs).",PDC,21300000,0.7,,,
+38,63,17266,Denning WSC,W,TX2030004,648,"The project includes constructing Plant No. 2 with a pump station, water well, ground storage tank, and pressure tank. In addition to the plant, the WSC will replace 41,500 linear feet of water main that is
+smaller than 2"".",PADC,3519647,0.7,Yes-BC,120000,
+39,62,17250,Bartlett,M,TX2460006,1633,Bartlett New Municipal Well,PADC,5678198,,,,
+40,62,17483,Jones River Bend WSC,W,TX1490036,80,"Treated water will flow from Beeville's pressurized pipeline through a pressure reducing valve and RPZ backflow prevention valve into a 2-inch PVC pipeline to a vault near the JRBWSC distribution system. The vault will house Beeville's wholesale water meter with cut-off valves, and potentially a pressure reducing valve on the JRBWSC side. The project will include customer meters and, if funding allows,
+new service lines throughout the JRBWSC area",PADC,1199950,0.7,,,
+41,61,17503,New Home,M,TX1530004,326,"The City has had high Arsenic and Flouride levels that exceed the
+MCL of 0.01 and 4 mg/L for several consecutive years and the City is under EPA enforcement action",PADC,1682641.69,,,,
+42,61,17391,Beeville,M,TX0130001,13664,"This project will include a centralized brackish groundwater reverse osmosis system fed by existing groundwater wells, construction of new groundwater wells, installation of new water lines, and expansion
+of the Cleveland Street Water Treatment Plant",PADC,34000000,0.7,,,
+43,61,17766,Vernon,M,TX2440001,11002,"The City of Vernon is seeking funding to replace a section of the
+supply line from the City's well field",PADC,5000000,0.7,,,
+44,60,17257,Centerville,M,TX1450002,905,Centerville Watermain Replacement,PDC,2242292,0.7,,,
+45,60,17278,Fort Griffin SUD,D,TX2090005,695,"The project consists of replacing existing water lines in order to reduce water loss, installing a new hydropneumatic pump station, installing main line check meters and rehabilitating two elevated
+tanks.",PDC,4599000,,Yes-BC,4500000,
+46,60,17827,Lake Livingston WSSSC,W,TX1870166,6011,"Expand the existing surface water treatment capacity from 1.0 MGD
+to 2.0 MGD.",PADC,22662106,,,,
+47,59,17484,"Texas Water Utilities, L.P.",P,TX1700580,66,"The applicant proposes to drill an additional well to provide backup well capacity, and additional pressure tank capacity for the 1485 Limited Crystal Springs WTP. An additional well is required as the utility only has one operating well that is at the end of its useful life. The project will also include the development of an asset
+management plan.",PADC,2858000,0.7,Yes-BC,2858000,
+48,59,17740,Tenaha,M,TX2100002,1746,"The project includes replacing approximately 25,120 LF of small diameter 1.5"" and 2"" water mains with 6"" C900 water mains. The water main replacement is targeting small diameter, aging lines that are accounting for a significant portion of the City's current water loss",PDC,3056740,0.7,,,
+49,59,17340,Athens,M,TX1070005,12857,"This project involves the design and construction of the major structural, mechanical, and electrical components of a new Raw Water Intake Facility, and removal of the existing facility. This project also provides water loss mitigation by installing new pumps that are better matched to the City's distribution system demands, eliminating the need to flush treated water from the distribution system during
+very low demand periods",DC,17025000,0.7,Yes-BC,17025000,
+50,59,17341,Athens,M,TX1070005,12857,"The City of Athens has significant portions of their water distribution system that have a great deal of water loss due to old, leaking pipes. This project involves rehabilitation and replacement of pipes to help
+address the water loss problem.",DC,16950000,0.7,Yes-BC,16950000,
+51,58,17624,Presidio County WID #1 dba Redford Water,D,TX1890012,82,"Redford Water Supply is a rural public water system located approximately 15 miles Southeast of Presidio, along Highway 170 in Presidio County. The system is supplied by groundwater and is currently under enforcement for exceeding the Maximum Contaminan Level for arsenic. The Water Supply proposes the implementation of a treatment system, metering infrastructure, and SCADA controls to address identified deficiencies in the Redford Water Supply System.",PDC,2825000,0.7,Yes-CE,500000,
+52,58,17797,Paxton WSC,W,TX2100031,1137,"The project includes drilling a water well and constructing a reverse osmosis treatment facility to remove elevated levels of total dissolved
+solids.",PADC,2911240,0.7,Yes-BC,120000,
+53,58,17265,Wolfe City,M,TX1160005,1398,"Project includes a new elevated storage tank, rehabilitation of existing
+elevated storage tank, and replacement of distribution lines",PDC,10954000,0.7,,,
+54,57,17648,Rehobeth WSC,W,TX1830012,1095,"Install a new designated fill line to the elevated storage tank, disinfection system relocation, distribution line improvements, and
+install a new aerator",PDC,4033500,,,,
+55,57,17586,"Texas Water Utilities, L.P.",P,TX0910040,2037,"Proposed project will include addition of a backup well, and an increase in pressure storage and service pump capacity to comply with TCEQ's 85% capacity requirements. An asset management plan
+will also be prepared as part of this project",PADC,5219000,0.7,Yes-BC,5219000,
+56,56,17351,Medina WSC,W,TX0100013,780,"Improvements: Finch EST & GST Rehabilitation; Stringtown new 50,000 Gallon GST; Stringtown Pressure Tank; Smart Water Meters & Water Line Replacement for Leaks; and Proposed two (2) new
+PRVs. An Asset Management Plan",PDC,1100000,0.7,Yes-BC,500000,
+57,56,17487,"Texas Water Utilities, L.P.",P,TX1010931,975,"The applicant proposes an additional well for redundancy, adding additional tank capacity and performing ACR analysis to reach 85% Capacity Rule compliance. This project will include an asset
+management plan.",PADC,4332000,0.7,Yes-BC,4332000,
+58,56,17329,Knox City,M,TX1380002,1037,"The City's aging water distribution system is currently experiencing an estimated 60 percent combined water loss. The proposed project will replace deteriorated pipelines, install system-wide AMI meters, integrate a SCADA monitoring system, rehabilitate storage and emergency well infrastructure, and implement an asset management plan. Improvements will significantly reduce water loss, improve system reliability and monitoring, resolve compliance issues with the TCEQ, implement an asset management plan, and enhance the
+delivery of safe drinking water",PDC,26409000,0.7,,3871492,
+59,56,17500,"Texas Water Utilities, L.P.",P,TX2340007,2145,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. Also, the existing water lines all need to be replaced as it is first generation PVC and subject to severe leakage and water loss. An asset management plan will also be prepared as
+part of this project.",PADC,16486000,0.7,Yes-BC,16486000,
+60,56,17606,Winters,M,TX2000003,2345,"The City of Winters' distribution system line is composed of aging and deteriorating water lines that need replacement. It is proposed the cit shall replace parts of the distribution system. In addition, the project proposes to also replace water meters. The project includes the
+preparation of an asset management plan",PDC,4867000,0.7,Yes-BC,4867000,
+61,56,17313,Cisco,M,TX0670001,4076,"The City of Cisco seeks to replace the entire distribution system from the water treatment plant and all throughout the city, along with a parallel line running from the water treatment plant to the college pump station. The high service pump station needs to be rehabilitated. The EQ basin pump is old and needs to be rehabilitated The development of an Asset Management Plan will also be included
+as part of the proposed project.",PDC,87033000,0.7,Yes-BC,87000000,
+62,56,17574,"Texas Water Utilities, L.P.",P,TX1680004,2175,"The applicant proposes to drill an additional well to reach firm capacity and incorporate distribution improvements to enhance water production and plant efficiency. The project will also include the
+development of an asset management plan",PADC,46072000,0.7,Yes-BC,46072000,
+63,56,17362,North Rural WSC,W,TX1820009,3610,"North Rural Water Supply Corporation (NRWSC) has experienced significant water loss due to main breaks and leaks in aging water lines within its distribution system. The primary 8-inch diameter water lines, originally installed in the 1960s, have exceeded their useful service life and are targeted for replacement to reduce water loss and improve system reliability. While NRWSC has proactively replaced portions of these lines as funding has allowed, assistance is needed to complete replacement of the remaining 8-inch lines within the East
+Pressure Plane.",PDC,3865000,0.7,Yes-BC,2022000,
+64,55,17446,Mingus,M,TX1820008,365,"Install waterline loops to increase water quality and replace old deteriorated and leaking waterlines within the City to prevent water
+loss and comply with regulatory requirements",PDC,1710000,0.7,,,
+65,55,17799,Terrell Co WCID # 1,D,TX2220002,800,"Terrell County WCID consistently experiences both real and apparent water loss, struggles to maintain consistent water quality, and is unable to utilize the existing distribution system without frequent leak The proposed project includes replacement of the entire existing water distribution system, water meters, SCADA integration, rehabilitation of existing water wells, installation of a new elevated storage tank (EST), replacement of fire hydrants and associated
+appurtenances, and restoration of all affected roadways",PDC,49003000,0.7,Yes-CE,49000000,
+66,55,17361,Nacogdoches,M,TX1740003,50226,"The proposed project consists of improvements to the City's drinking water system, including the replacement and/or rehabilitation of aging and deteriorated water distribution lines to reduce water loss, improve system reliability, and enhance water quality. Targeted water lines experience frequent leaks, elevated maintenance demands, and contribute to overall system inefficiencies.",PDC,15240000,0.7,,,
+67,54,17379,Toyah,M,TX1950004,61,"The City of Toyah is a disadvantaged community serving 30 connections that has experienced long-term noncompliance due to inadequate surface water treatment, lack of licensed operators, and aging infrastructure. The system is relying on hauled water from the City of Pecos, which is not financially sustainable. This Planning, Acquisition, and Design study will evaluate protecting the existing mountain spring at its source to prevent surface contamination and allow reclassification as groundwater requiring only chlorination. The study will include water rights clarification, source classification, infrastructure assessment, and environmental review. The goal is to develop a sustainable, low-operator-dependency regional solution in collaboration with the City of Balmorhea and Reeves County partners.",PA,1800000,0.7,,,
+68,54,17778,Strawn,M,TX1820005,1000,"Drill and permit a fourth groundwater well at the City of Strawn
+Desdemona Pump Station in accordance with TCEQ requirements",PDC,360000,0.7,,,
+69,54,17888,Zavala Co WCID # 1,D,TX2540003,1294,"Replace asbestos cement and cast iron water distribution lines with PVC piping, install gate valves for system isolation, and replace undersized piping to reduce water loss and restore adequate system
+pressure.",PC,3081960,0.7,,,
+70,54,17427,Daingerfield,M,TX1720001,2135,Waterline Replacements,PDC,4889785,0.7,,,
+71,53,17338,Annona,M,TX1940004,363,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, and Finish Water Line",PADC,400000,0.7,Yes-BC,26167930,
+72,53,17491,Hooks,M,TX0190002,2518,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,1000000,0.7,Yes-BC,26167930,
+73,53,17759,Texarkana,M,TX0190004,37000,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,300000,0.7,Yes-BC,26167930,
+74,52,17470,Shallowater,M,TX1520003,3119,"3 new brackish wells, advanced water treatment, additional storage,
+fire protection, distribution pump station, transmission pump station, transmission line and water infrastructur",C,50169490,,,,
+75,52,17623,Pflugerville,M,TX2270014,64528,"The City of Pflugerville declared a water shortage emergency on March 4, 2026, due to a break in the existing 15-mile 30-inch diameter raw water pipeline that transports water from the Colorado River to Lake Pflugerville. The City instituted Stage 3 water restrictions and is in the process of installing a temporary raw water pipe system to bypass the failed section. Approximately 320 linear feet of 24"" HDPE piping and specialized fittings will be installed to bring the 30"" line back into service while the failed segment is being repaired. This project includes materials and labor associated with the leak investigation and dewatering effort, the installation of the 24"" HDPE bypass system, replacement of the failed segment of the existing 30"" line, testing and reconnection of the cathodic protection system for this segment, environmental controls required to protect the creek, and restoration and installation of erosion controls of the
+disturbed areas.",C,2590500,,,,
+76,52,17330,Loraine,M,TX1680002,504,"The project scope primarily consists of replacing various portions of the City's potable water distribution pipeline and valves. The project scope also includes well rehabilitation, constructing a new well, and
+demolition of two old ground storage tanks",PDC,6539000,0.7,Yes-BC,3594000,
+77,52,17652,Rio Grande City,M,TX2140018,15987,"The City of Rio Grande City proposes critical water system improvements to address increase in daily demand, severe low pressure concerns, aging infrastructure, and operational safety hazards. The project includes replacement of the existing 8-inch asbestos cement (AC) water line with a 12-inch PVC water main to adequately serve the east side of town, installation of isolation valves systemwide to improve maintenance and reduce contamination risks, construction of a 1.0-MGD elevated storage tank in Las Lomas (Alto Vista) to stabilize system pressures, and essential upgrades at the water treatment plant, including rehabilitation of treatment processes, pump replacements, SCADA modernization, and restoration of
+redundant capacity",PDC,14200000,0.7,,,
+78,51,17299,Avery,M,TX1940005,408,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,400000,0.7,Yes-BC,26167930,
+79,51,17805,"Texas Water Utilities, L.P.",P,TX1700435,1086,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,3801000,0.7,Yes-BC,3801000,
+80,51,17477,Hudspeth Co WCID # 1,D,TX1150007,2045,"Hudspeth County Water Control and Improvement District No. 1(HCWC&ID No 1) currently relies on a 53-year-old, 30-mile transmission pipeline and a 52-year-old pump station from Van Horn, both of which experience recurring failures that disrupt water service to Sierra Blanca. To improve system reliability and comply with potential TCEQ requirements for an alternative water source, the District proposes developing a new groundwater well and implementing critical system upgrades. These improvements include SCADA installation, emergency backup generators, and rehabilitation or replacement of the existing pump station and transmission pipeline to reduce pipeline failures and ensure long-term operational
+resilience.",ADC,60865022,0.7,,,
+81,51,17332,Alamo,M,TX1080001,20008,"The project will include development of a brackish ground water well and installation of reverse osmosis water treatment facilities to augment the City's source of surface water supply due to ongoing surface water shortages in the Rio Grande Valley area. The project will provide for the treatment of 1.0 MGD of brackish ground water and will serve as an alternate source of water for the City's water service area and community. Project also includes the preparation of
+an Asset Management Plan",PDC,20420000,0.7,Yes-BC,20400000,
+82,51,17398,Brazosport WA,D,TX0200497,140233,"The Brazosport Water Authority is proposing to expand the water treatment plant constructing improvements that would provide an additional 11.3 MGD to the plant capacity, bringing the total plant
+capacity to 29.2 MGD.",PC,26213900,,,,
+83,51,17635,Joaquin,M,TX2100010,1620,"The project includes developing two (2) additional water wells and
+expanding the existing reverse osmosis treatment rack to improve the City's water supply",PADC,2293549,0.7,Yes-BC,84000,
+84,51,17519,Legacy WSC,W,TX2400051,2341,"The scope of our proposed project would be to upsize planned infrastructure of the Legacy Water Supply Corporation to provide first-time centralized service to the three Colonia regions including planning and development of source, treatment, storage, and distribution of a potable water supply for the unserved Colonias. This project also includes provision of service to existing struggling Public Water Supply systems Los Botines WSC and Los Botines Vaquero
+Village Water System.",PADC,59624461,0.7,,,
+85,50,17397,Rochelle WSC,W,TX1540004,282,"Replacement of non-functioning gate valves and aged water lines in
+the distribution system",PDC,400000,0.7,,,
+86,50,17452,Fair Play WSC,W,TX1830007,730,"The project includes water line replacements and looping, and ground
+storage and pressure tank improvements.",PDC,2421854,0.5,,,
+87,50,17622,Coolidge,M,TX1470001,955,Coolidge Water Systems Improvement Project,PDC,7877191,0.7,,,
+88,50,17796,De Berry WSC,W,TX1830006,1101,"Water supply improvements includes two remote water wells with approximately 3,700 LF of 4"" raw water main. Green sand pressure filters are proposed to filter elevated oxidized manganese. The CR 338 water main improvements include approximately 8,000 LF of 4"" water main to replace old, frequently leaking, undersized water mains that are contributing a significant amount of water loss in the WSC's total water loss amounts. The WSC also intends to replace the
+existing water meters.",PADC,2451875,0.7,Yes-BC,160000,
+89,50,17424,Canyon Park WSC,W,TX1870034,1200,Replacement of undersized and inadequate water lines.,PDC,5945000,0.7,Yes-BC,250000,
+90,50,17412,Trinidad,M,TX1070004,1482,"Upgrades and rehabilitation of the water distribution system of the
+City of Trinidad. It includes main transmission lines, distribution lines, valves, water meters, and fire hydrants",PDC,9732005,0.7,,,
+91,50,17637,Trinidad,M,TX1070004,1482,"The project will include rehabilitation and improvements of the Water
+Treatment Plant and Surface Water Intake Structures",PDC,14212240,0.7,,,
+92,50,17369,Olton,M,TX1400004,1552,"The City of Olton is requesting funds to expand its current well field by
+adding one additional water well and supply line",PDC,525000,0.3,,,
+93,50,17903,Medina County Public Utility Agency,C,,45894,"New ASR test well and monitor well for Medina County Public Utility
+Agency. Six interconnections between water systems for a total of
+19.90 miles.",PADC,87100000,,Yes-BC,87100000,
+94,50,17571,"Texas Water Utilities, L.P.",P,TX0100037,3654,"The Lake Medina Shores Water System urgently requires storage and service pump improvements to meet outstanding water demands and achieve compliance without further enforcement actions. The
+project will include an asset management plan",PADC,22096000,0.7,Yes-BC,22096000,
+95,49,17505,"Texas Water Utilities, L.P.",P,TX1580020,255,"Proposed project will include addition of a backup well, and an increase in service pump capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,2751000,0.7,Yes-BC,2751000,
+96,49,17511,"Texas Water Utilities, L.P.",P,TX0100039,507,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,5368000,0.7,Yes-BC,5368000,
+97,49,17773,Waskom,M,TX1020003,2923,"The proposed project is intended to expand water supply with further well field development, reduce water loss with water line and meter replacements, and provide more monitoring and control of the system
+with a SCADA system.",PADC,5463685,0.7,Yes-BC,140000,
+98,49,17502,Falfurrias,M,TX0240001,4473,"The City of Falfurrias is seeking funding from the DWSRF to address the urgent need to improve the condition, efficiency, and resiliency of
+its water system.",PDC,14900000,0.5,,,
+99,48,17743,Tri-Try WSC,W,TX2170004,81,"This project includes the construction of a new pump station for the
+WSC at their entry point.",PC,600000,,,,
+100,48,17761,Tri-Try WSC,W,TX2170004,81,"This project will reduce TTHM levels to gain compliance with the
+Stage 2 Disinfection Biproducts (DBP) Rule, as well as address activ TCEQ compliance issues.",PDC,275000,,,,
+101,48,17249,Bangs,M,TX0250001,1540,"Project includes preparation of Geographic Information System, water line leak detection, and replacement of approximately 35,000 linear feet of aging cast iron and asbestos concrete water line with
+PVC or HDPE water lines.",PDC,2464000,0.7,,,
+102,48,17602,Palestine,M,TX0010001,31272,New Water Wells,PDC,14850000,0.7,,,
+103,47,17832,Olmito WSC,W,TX0310026,13300,"This project will include the development of a brackish ground water well and installation of reverse osmosis water treatment facilities to augment Olmito WSC's source of surface water supply due ongoing surface water shortages in the Rio Grande Valley area.
+Additional water supply capacity is currently needed based on the current number of active connections and ACR in place.
+This project will provide for the treatment of 1.0 MGD of brackish groundwater and will serve as an alternate source of water for the Olmito WSC water service area and community to improve Olmito WSC's water supply reliability.
+The project also includes the preparation of an Asset Management Plan.",PADC,20960000,0.7,Yes-BC,20000000,
+104,47,17570,"Texas Water Utilities, L.P.",P,TX1500008,414,"Proposed project includes an expansion of the existing WTP. The proposed project also includes development of an asset
+management plan.",PDC,5774000,0.7,Yes-BC,5774000,
+105,47,17567,"Texas Water Utilities, L.P.",P,TX1010028,801,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,4607000,0.7,Yes-BC,4607000,
+106,47,17294,Harris Co MUD # 189,D,TX1011809,8872,"The proposed project consists of the planning, design and construction of a Surface Water Transmission Line to serve Harris County MUD No. 189. The major goal of the project is to comply with the City of Houston Ground Water Supply and Groundwater Reduction Plan Wholesale Agreement for Area 3 of the Harris-Galveston Subsidence District by reducing and maintaining groundwater withdrawals to be no more than forty percent of HC
+MUD 189's annual total water demand",C,6057700,0.7,,,
+107,47,17631,Cameron,M,TX1660001,5489,"The City of Cameron proposes to construct a new 500,000-gallon elevated storage tank and approximately 9,500 linear feet of 12-inch water main, including system interconnections, valves, and fire hydrants, to correct a critical operational deficiency within the water distribution system. The City currently lacks adequate redundancy to remove an existing elevated storage tank from service for inspection or maintenance without risking widespread pressure loss and service interruptions. The proposed improvements will provide necessary storage redundancy, reduce water loss, improve system isolation and looping, enhance pressure stability and fire flow capability, and strengthen overall system resiliency in accordance with TCEQ design criteria. Funding is included for development of an asset managemen
+plan.",PDC,11132870,,,,
+108,47,17619,Malone,M,TX1090004,231,"Replace existing undersized cast iron mains that are in poor condition
+throughout various locations and replace AMI meters.",PDC,499000,0.7,Yes-CE,180000,
+109,47,17613,Burton,M,TX2390002,297,"New Water Plant and Main Water Line & Existing Water Plant
+Rehabilitation",PADC,5470000,0.7,Yes-BC,2400000,
+110,47,17429,De Berry WSC,W,TX1830006,1101,"DeBerry WSC is facing leaks due to an aging infrastructure. This
+project aims to detect and monitor leaks, aiding in water distribution line replacement planning and reducing water loss",PC,480000,0.7,,,
+111,47,17432,De Berry WSC,W,TX1830006,1101,"To address aging infrastructure and reduce water loss, a project is proposed to replace small-diameter water pipelines. It includes installing new pipelines, valves, and related components, covering ha a mile of replacement. This project will be outside of TWDB Water System Improvements PIF as this will focus on a specific area.",PADC,1290000,0.7,Yes-BC,1290000,
+112,46,17572,"Texas Water Utilities, L.P.",P,TX1500011,81,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,2840000,0.7,Yes-BC,2840000,
+113,46,17576,"Texas Water Utilities, L.P.",P,TX2370042,115,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,2610000,0.7,Yes-BC,2610000,
+114,46,17504,"Texas Water Utilities, L.P.",P,TX1700434,135,"The applicant proposes to drill an additional well to reach firm capacity. The project will also include the development of an asset
+management plan.",PADC,2853000,0.7,Yes-BC,2853000,
+115,46,17568,"Texas Water Utilities, L.P.",P,TX2390021,213,"Proposed project will include addition of a backup well, and an increase in pressure storage capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be
+prepared as part of this project.",PADC,2678000,0.7,Yes-BC,2678000,
+116,46,17566,"Texas Water Utilities, L.P.",P,TX1010517,315,"Proposed project will include addition of a backup well, and an increase in pressure storage and service pump capacity to comply with TCEQ's 85% capacity requirements. An asset management plan
+will also be prepared as part of this project",PADC,3752000,0.7,Yes-BC,3752000,
+117,46,17385,Red River Authority,D,TX0960001,360,"Project will make system improvements in the RRA Estelline Turkey
+Water System including pressure tank, tank replacement and pump station upgrades.",PDC,850000,0.7,,,
+118,46,17350,Spur,M,TX0630012,843,"The City of Spur's drinking water system is constrained by aging mains, limited valving, and single-source supply requiring large portions of the system being depressurized to locate and repair leaks These conditions have led to loss of life, significant water loss, Boil Water Notices, fire-flow deficiencies, and costly service disruptions despite the city's staffs' best efforts. William and Wayne Consulting LLC have identified the replacement of approx. 18,000LF of main 4"" and 6"" line with improved water lines, valves, hydrants, and potential new service meters. This would Improve the existing condition of the current system and reduce significant financial and water waste.",PDC,4999999.3,0.7,Yes-BC,5000000,
+119,46,17364,Wallis,M,TX0080015,1292,"The City's Public Water Supply System is within 13 connections of its minimum capacity requirements and is poised for growth given its location to the Harris-Fort Bend County Metropolitan Area. A recent study concluded that replacement of an existing elevated storage tower, replacement of undersized distribution lines, upgrades to service pumps and the addition of distribution lines will provide the needed capacity. The replacement of undersized distribution pipes wi have a secondary benefit by reducing water loss because many of those lines are galvanized pipes which are prone to leaks and breaks Additionally, the City completed an Assistance Action with the TCEQ in January 2025 for low water pressure in their distribution system.",DC,7491000,0.7,Yes-BC,2500000,
+120,46,17325,Eden,M,TX0480001,2120,"The City desires to replace aging water lines that are prone to breaking and leaking water. The project will reduce water losses and
+increase system reliability",PDC,2351000,0.3,Yes-BC,2351000,
+121,46,17374,Bay City,M,TX1610001,18061,"The City of Bay City is seeking funding through the DWSRF to implement critical water system improvements that will enhance reliability, reduce water loss, increase storage capacity, and modernize operational controls. The proposed project includes a waterline extension to improve system looping and fire flow, rehabilitation of aging water mains, construction of a new 750,000-gallon ground storage tank, implementation of a water loss reduction program, and modernization of the City's SCADA system. Together, these improvements will strengthen the City's drinking water distribution system, improve operational efficiency, and support current and future growth while maintaining regulatory compliance.",PDC,8400000,0.7,,,
+122,46,17435,De Berry WSC,W,TX1830006,1101,"A project focus on improving the resiliency of the water supply for
+DeBerry WSC by constructing a new well.",PADC,1820000,0.7,,,
+123,46,17436,De Berry WSC,W,TX1830006,1101,"The project aims to increase well production, rehabilitate appurtances
+associated with the wells, carry out winterization and improve the water quality of the water produced at the wells",PDC,1990000,0.7,,,
+124,46,17439,De Berry WSC,W,TX1830006,1101,An additional water source will help with the supply of safe and quality water for the community now and in the future. A planning project to identify and connect to an alternate water source is proposed.,PA,390000,0.7,,,
+125,46,17251,Beckville,M,TX1830002,1152,"This project includes constructing a secondary reverse osmosis treatment train, rehabilitation of the elevated storage tank, and water
+main replacement of undersized and leaking water mains.",PDC,3155950,0.7,Yes-BC,60000,
+126,46,17479,Hughes Springs,M,TX0340003,2760,"Replacement of old deteriorated water lines that are contributing to
+water loss and frequent maintenance.",PDC,4500000,0.3,,,
+127,46,17461,Hearne,M,TX1980004,4959,"Installation of a new groundwater well, a new elevated storage tank,
+and chemical building including appurtenances",PDC,9910000,0.7,,,
+128,46,17387,Pearsall,M,TX0820002,7325,"This project will upgrade Pearsall's water system by replacing aging waterlines, valves, and meters. It includes tie-ins to existing lines and ensures accurate measurement of customer water use. These improvements will reduce leaks and improve overall system reliability.",DC,3671478,0.7,,,
+129,46,17684,Splendora,M,TX1700087,9612,"The proposed project includes replacing two existing ground storage tanks, deteriorated and undersized distribution system water mains and valves to correct deficiencies in capacity, pressure, and water loss. The proposed project includes performance of a comprehensive water conservation leak detection survey and the development of an Asset Management Plan with a Capital Improvement Plan.",PDC,9922000,0.7,,,
+130,46,17485,Lago Vista,M,TX2270092,9650,"Drinking water infrastructure improvements at Water Treatment Plant (WTP) #3 and comprehensive rehabilitation of WTP #1 to protect public health, ensure regulatory compliance, and strengthen long-ter
+system resiliency",DC,43100000,,,,
+131,45,17282,High Valley WSC,W,TX2270126,200,"High Valley WSC has a serious problem with water loss through old
+and dilapidated elements of their water distribution system",DC,3200000,0.7,Yes-BC,3200000,
+132,45,17489,Rolling Hills WS,W,TX1110032,252,"Rolling Hills Water Service will be installing an AMI metering system,
+and replacing portions of the distribution system",PDC,3635000,0.7,Yes-CE,3635000,
+133,45,17486,Robert Lee,M,TX0410002,1025,"The proposed project will the replacement of a 250,000-gallon ground storage tank, a 30-mile raw water line to increase the City's raw wate supply, the replacement of all water meters, replacement of water lines that have a history of leaks and need for repairs, and the
+development of an asset management plan.",PDC,23296000,0.7,Yes-BC,20362000,
+134,45,17578,McCamey,M,TX2310001,1885,Replace current cast iron water lines,PDC,2919000,,,,
+135,45,17811,South Jasper WSC,W,TX1210063,2721,"New well, elevated storage, and production facility to serve the
+western area.",PDC,8060886,0.7,,,
+136,45,17581,Stamford,M,TX1270003,3101,"The City of Stamford (City) aims to enhance their water distribution system by improving its existing distribution lines. The distribution line are aging and need to be replaced. Additionally, the City is addressin maintenance issues by installing additional isolation valves on the distribution line and also replacing aging hydrants for reliable fire protection. An asset management plan and water conservation plan i
+included.",PDC,4862000,0.7,Yes-BC,4862000,
+137,45,17828,La Grange,M,TX0750003,4452,"The project intends to replace existing distribution system lines that
+are leaking and resulting in water loss",DC,13000000,0.7,Yes-BC,8045000,
+138,45,17638,Yoakum,M,TX0620003,5846,"The project intends to replace existing distribution system pipes that
+are leaking and resulting in water loss",PDC,7050000,0.7,Yes-BC,3500000,
+139,45,17885,Huntsville,M,TX2360001,47864,"The project intends to replace existing distribution system pipes that
+are leaking and resulting in water loss",DC,14395000,0.7,Yes-BC,8519000,
+140,45,17344,Lake Livingston WSSSC,W,TX1870166,6011,"Water transmission lines to connect Wiggins Village #'s 1 & 2, Putnam's Landing, Lake Livingston Estates 2 & 3, Lake Livingston Estates 1, Oakridge North, and the State Park to the Pineshadows
+East system to create a regional drinking water system",PADC,26983405,0.7,,,
+141,45,17620,Blum,M,TX1090007,434,"The purpose of this project is to replace/upsize undersized water
+mains and replace non-working isolation valves.",PDC,499000,0.7,Yes-CE,175000,
+142,44,17396,Three Community WSC,W,TX1070071,1077,"The System has a history of water leaks and low pressure as a result of ""piece meal"" additions to the system over time. This is primarily due to undersized lines and old-line materials (brittle ""grey pipe"").
+Additionally, the existing wells, service pumps and pressure tanks are
+not able to produce sufficient water to meet the current system demands, as required by the regulatory agency, TCEQ",PADC,21054200,0.7,Yes-BC,12612000,
+143,44,17428,De Berry WSC,W,TX1830006,1101,"The aging pipelines in the service area require performance evaluation for timely maintenance. This project proposes hydraulic modeling to assess pipe upsizing and replacement needs. It may include GIS mapping, flow studies, and related activities. A final repor will provide recommendations on pipeline upgrades to meet current
+and future demands.",P,220000,0.7,,,
+144,44,17437,De Berry WSC,W,TX1830006,1101,"A project for electrical upgrades at each well and at the plant site is
+proposed. This may include emergency generators, VFDs and other necessary electrical items",PDC,820000,0.7,Yes-BC,820000,
+145,44,17366,Palo Pinto WSC,W,TX1820004,347,"This project consists of replacing the City's existing elevated storage
+tank and constructing a new pump station near the wholesale water purchase meter with the City of Mineral Wells",PADC,5265000,0.7,Yes-BC,2950000,
+146,44,17441,Malakoff,M,TX1070002,3039,"Replace the existing water distribution system cast iron and AC water line with PVC pipe, and install new valves and service connections. Elevated Tank Rehab, WTP rehab and others misc. improvements.",PDC,14677000,0.7,,,
+147,43,17518,Leary,M,TX0190093,451,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,400000,0.7,Yes-BC,26167930,
+148,43,17324,Linden,M,TX0340004,1813,System Study and Water Distribution Line Replacements,PDC,6372650,0.7,,,
+149,43,17564,Lilly Grove SUD,D,TX1740014,2435,"The proposed project consists of improvements to the City's drinking water system, including the water meter replacements and the replacement and/or rehabilitation of aging and deteriorated water distribution lines to reduce water loss, improve system reliability, and enhance water quality. Targeted water lines experience frequent leaks, elevated maintenance demands, and contribute to overall system inefficiencies. Existing water meters are manual read and have documented inaccuracies reported. The project includes the
+development of an asset management plan",PDC,5370000,,,,
+150,43,17317,Redwater,M,TX0190008,2901,"Construction of a new elevated storage tank, ground storage tank, and high service pumps to bring City into compliance with TCEQ Minimum Capacity Requirements, as well as construction of transmission and distribution piping to enhance service to hydraulicall isolated areas of the system. Also develop Hydraulic Model and Asse
+Management Plan.",PADC,7056000,0.7,,,
+151,43,17290,Bishop,M,TX1780002,3186,"The City of Bishop's West Bishop Pump Station currently supplies 40% groundwater and 60% purchased surface water from the South Texas Water Authority. The proposed project will rehabilitate existing Well No. 9 (currently out of service), construct a new well on City-owned property, and rehabilitate the West Bishop Pump Station.
+Including storage facilities, new storage capacity, and pump replacements to meet current demands, achieve water self-sufficiency, and ensure TCEQ compliance. The project will also include the development of a Water System Asset Management Plan to support long-term infrastructure management and capital planning.",PDC,8742832,0.7,Yes-BC,2878430,
+152,43,17562,Lower Valley WD,D,TX0710154,69405,"The proposed project is a comprehensive water supply and distribution improvement initiative designed to enhance system reliability, address existing water access deficiencies, and strengthen drought resilience throughout the Lower Valley Water District (LVWD) service area. Improvements to include new distribution lines along North Loop Drive, replacement of 12 miles of aging AC waterlines on Alameda, and developing a new 1,000 GPM production well to
+strengthen drought-resilient supply",PDC,58763449,0.7,,,
+153,43,17615,Strawn,M,TX1820005,1000,"Furnish and install a new elevated storage tank to replace the existin
+standpipe.",PDC,3250000,0.7,Yes-BC,3250000,
+154,43,17275,Flat Fork WSC,W,TX2100007,1091,"NEW PRODUCTION WELL, TRANSMISSION LINE &
+DISTRIBUTION IMPROVEMENTS",PADC,3402059.76,0.7,Yes-BC,1329286,
+155,43,17617,Zavala Co WCID # 1,D,TX2540003,1294,"Meeting TCEQ Emergency Power Plan requirements by proposing Two (2) Emergency Generators (250KW and 100KW) for the Water
+Treatment Plant and the Automated Meter Power Supply System",PDC,442750,0.7,,,
+156,43,17507,Millsap WSC,W,TX1840007,1477,"Millsap WSC proposes to replace the existing ground storage tank at Pump Station No. 1 with a new elevated storage tank and upsize an existing waterline along Young Road to improve and maintain
+adequate pressures throughout the distribution system",PDC,3765000,0.7,Yes-BC,3765000,
+157,43,17420,Archer City,M,TX0050001,1601,"Replace deteriorated cast iron water distribution lines to reduce water loss and upgrade metering system to AMI system for increased accuracy in leak detection, water conservation and usage efficiency.",PDC,3980000,0.7,,,
+158,43,17671,Seymour,M,TX0120001,2576,"Improvements to the City's existing water wells to meet TCEQ regulations and increase accessibility to groundwater in drought
+conditions.",PDC,1030000,0.7,,,
+159,43,17802,Richland SUD,D,TX1540008,2802,Adding and replacing lines in all areas of the Richland SUD system,PDC,19308000,0.7,Yes-BC,15072640,
+160,43,17565,M & M WSC,W,TX0030026,3204,"Waterline replacements, storage tank rehabilitation, and new
+generators",PDC,5547600,0.3,,,
+161,43,17625,Presidio,M,TX1890002,3430,"Addressing deficiencies in water quality, capacity, pressure, and
+water loss by upgrading or replacing the system and consolidating services to connect unserved residents",DC,6050000,0.7,,,
+162,43,17630,Redland WSC,W,TX0030028,3637,Water Distribution and Plant Upgrades,PDC,3924000,0.7,,,
+163,43,17806,South Newton WSC,W,TX1760022,3729,"Update and Rehabilitate the District's three(3) ground water treatmen
+plants.",PDC,12134805,0.7,,,
+164,43,17259,Colorado City,M,TX1680001,3973,City has need for replacement of existing distribution lines,PDC,7275000,0.7,Yes-BC,,
+165,43,17496,Jacksboro,M,TX1190002,4397,"The City of Jacksboro has aging and undersized portions of its water distribution system. Jacksboro proposes pumping facility
+improvements, water line replacement, and EST rehabilitation.",PDC,8040000,0.3,,,
+166,43,17589,Mineola,M,TX2500002,4823,"Water system improvements aimed at improving the infrastructure of
+aging and failing lines throughout the system",PDC,4997500,0.7,,,
+167,43,17563,Bellmead,M,TX1550001,10494,"The City is in need of additional water supply for both redundancy an to support growth. The City proposes a new Groundwater Supply Well coupled with the necessary treatment, storage and supply
+infrastructure.",PADC,13812500,0.7,,,
+168,43,17381,Port Arthur,M,TX1230009,55779,"Replace existing 1,750 LF of existing 36"" water transmission main",C,3990286,0.7,,,
+169,43,17382,Port Arthur,M,TX1230009,55779,"Replacement of 34,690 LF of existing 2"" water lines",PDC,15039077,0.3,,,
+170,43,17383,Port Arthur,M,TX1230009,55779,"Replacement of approximately 5,300 LF of existing 12"" water lines.",PDC,5746525,0.7,,,
+171,43,17384,Port Arthur,M,TX1230009,55779,"Replacement of approximately 7,850 LF of an existing 10"" waterline.",PDC,5954188,0.7,,,
+172,43,17270,Eagle Pass Water Works System,M,TX1620001,58692,"Water treatment plant and distribution system improvements to rehabilitate existing aging infrastructure, and meet capacity and
+operational needs",PDC,350419954,0.7,,,
+173,42,17825,Lake Livingston WSSSC,W,TX1870045,372,"LLWSC proposes to construct up to three groundwater production
+wells to expand capacity by approximately 1 MGD",PADC,6553760,,,,
+174,42,17438,Cumby,M,TX1120001,777,"Project includes drilling a new water supply well, installation of a pum station, disinfection, installation of a ground storage tank, and
+transmission line",PADC,7460000,0.7,,,
+175,41,17440,Lott,M,TX0730001,644,"Make improvements to the City's water system including a new well, replacing old, failing distribution lines, and rehabilitating existing
+storage facilities.",PADC,14130000,0.7,,,
+176,41,17283,Johnson City,M,TX0160001,1952,"The City has a serious water loss problem because of leaking and deficient water pipes. This project will endeavor to repair and/or
+replace these leaking pipes",DC,8000000,0.7,Yes-BC,8000000,
+177,41,17515,"Texas Water Utilities, L.P.",P,TX2040067,2544,"Proposed project will include addition of a backup well, and an increase in ground and pressure storage and service pump capacity to comply with TCEQ's 85% capacity requirements. An asset
+management plan will also be prepared as part of this project",PADC,7402000,0.7,Yes-BC,7402000,
+178,41,17464,Pineland,M,TX2020002,817,Construction of a pump station and storage facilities at the Well 3 site to provide redundant system pressure maintenance during times when the existing elevated storage tank is taken offline for repair and maintenance. Proposed facility will also support pressure maintenance in the northern part of the City during normal operations,PDC,2080500,0.5,,,
+179,41,17812,Pinehurst,M,TX1810009,2235,"The City of Pinehurst proposes to construct a new water plant to
+improve the City existing water system",PDC,9845450,0.7,,,
+180,41,17310,Breckenridge,M,TX2150001,5170,"The City desires to replace clarifier components to repair the mechanism that recently failed due to sludge accumulation at the bottom. Improvements include the demolition of the existing equipment and replacement with a new scraper mechanism and
+electrical equipment",PDC,3806000,0.7,,,
+181,40,17658,Rochester,M,TX1040002,248,"This project includes a new 0.02 MG GST, an AMR meter system,
+and the replacement of aged water lines",PDC,695500,0.7,Yes-BC,115000,
+182,40,17301,Kosse,M,TX1470003,461,Rehab EST and add auto-read meters to distribution system.,PDC,3674000,0.7,,,
+183,40,17263,Cumby,M,TX1120001,777,"Project includes replacement of distribution lines and a transmission
+line, and a new elevated storage tank",PADC,9788000,0.7,,,
+184,40,17422,Kellyville-Berea WSC,W,TX1580003,985,Water System Improvements.,PDC,8360930,0.7,,,
+185,40,17609,Petersburg,M,TX0950003,1205,"The project includes installation of approximately 9,800 LF of 6-inch and 890 LF of 8-inch waterline, fire hydrants, valving, and all associated appurtenances along Avenue H and Main Street. In addition, the project will also implement system wide SCADA
+improvements.",PDC,5000000,0.7,Yes-BC,250000,
+186,40,17598,Nash,M,TX0190006,3818,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,1000000,0.7,Yes-BC,26167930,
+187,40,17632,Redwater,M,TX0190008,4356,"Intake Structure, Raw Water Pump Station, Raw Water Transmission
+Line, Water Treatment Plant, Finish Water Line",PADC,400000,0.7,Yes-BC,26167930,
+188,40,17649,Cotulla,M,TX1420001,5640,"New water well 10, treatment, ground storage tank and pipeline to connect into the existing system. New storage tank for Well 9 with pipeline to connect to the well and pipeline to connect to existing
+system. Feasibility study/conceptual design for a new WTP",PADC,25190000,0.7,,,
+189,40,17855,Military Highway WSC,W,TX1080234,6740,"Construct a new 2,000 gpm San Pedro pump station and 1.5 MG ground storage tank to serve a new San Pedro pressure zone and improve system pressures in the San Pedro area. Construct a new
+0.25 MG San Pedro elevated storage tank and decommission the existing 0.10 MG elevated storage tank to meet TCEQ minimum elevated storage requirements for the new San Pedro pressure zone. Construct a new 0.25 MG Rangerville elevated storage tank and decommission the existing 0.10 MG elevated storage tank to meet TCEQ minimum elevated storage requirements in the Las Rusias pressure zone. Drill and equip two new municipal water supply wells to increase available water supply and improve system reliability.",PDC,44995000,0.7,,,
+190,40,17297,Hillsboro,M,TX1090001,8867,Hillsboro Watermain Improvements,PDC,45500725,0.7,,,
+191,40,17583,Sweetwater,M,TX1770002,10622,"The City of Sweetwater (City) desires to enhance the reliability of its water system by expanding the City's groundwater well field and increasing the total ground storage. An asset management plan will
+be developed as part of this project.",PADC,16160000,0.7,Yes-BC,1213000,
+192,39,17514,"Texas Water Utilities, L.P.",P,TX2500058,1878,"Proposed project will include addition of backup wells, and an increase in pressure storage and service pump capacity to comply with TCEQ's 85% capacity requirements. An asset management plan
+will also be prepared as part of this project",PADC,7969000,0.7,Yes-BC,7969000,
+193,39,17322,Eastland,M,TX0670002,3609,"The proposed project will include the installation of a new water transmission line to replace leaking infrastructure, thereby reducing water loss and improving system efficiency. An asset management
+plan is also included",PDC,5882000,0.7,Yes-BC,5882000,
+194,39,17305,Ballinger,M,TX2000001,3862,"The City of Ballinger has proposed several water treatment plant (WTP) improvements along with storage upgrades and replacement of distribution and transmission lines in various locations of the
+distribution system and an asset management plan",PDC,30844000,,Yes-BC,25541980,
+195,39,17639,Marble Falls,M,TX0270026,8059,"The City of Marble Falls proposes to replace deteriorated asbestos cement (AC) water mains and upgrade undersized 2-inch residential waterlines to 6-inch and 8-inch PVC to address pressure deficiencies improve fire flow capacity, reduce water loss, and enhance system reliability. Improvements include waterline replacements on Sunset Drive, along Pecan Valley Drive, and along Avenue J; installation of new valves and associated appurtenances; service reconnections; and proper abandonment of existing AC mains. The project will reduce water loss, eliminate hydraulic restrictions, and improve the reliability and resiliency of potable water service to an eligible
+disadvantaged community",PDC,7510000,0.7,,,
+196,39,17776,Lakeway MUD,D,TX2270012,22500,"Lakeway MUD will need to expand their water treatment plant from
+7.3 to 14 mgd at their existing site, an unplanned capital improvemen expenditure, in order to meet the urgent water needs of Travis Count MUDs #11-13 and West Travis County PUA; Lakeway MUD will provide wholesale potable water service to these new water customers.",C,18000000,,,,
+197,39,17380,Pharr,M,TX1080009,79715,"The City of Pharr is seeking funding through the DWSRF to enhance and improve the overall performance, redundancy, and resilience of its water system. Proposed projects include a new groundwater source to supplement existing surface water supply. Additionally, the City intends to upgrade its water meter system to smart meters.",PDC,21700000,0.7,,,
+198,38,17339,Anson,M,TX1270001,1765,Construction of a new 2.0 MGD Membrane Water Treatment Plant and replacement of water lines and valves within distribution system.,PADC,11165000,0.7,,,
+199,37,17585,Meadow,M,TX2230002,623,"The City of Meadow is under regulatory enforcement due to arsenic Maximum Contaminant Level (MCL) exceedances in their groundwater supply. To achieve compliance, the City proposes to install a reverse osmosis (RO) water treatment system to remove arsenic, resolve compliance issues, and provide a long term treatment solution. The project will also include construction of an
+evaporation pond to manage disposal of treatment waste streams",PDC,6750000,0.7,,,
+200,37,17516,"Texas Water Utilities, L.P.",P,TX1580063,267,"The Indian Hills Harbor Water System proposes drilling a new raw water production well to meet firm capacity requirements and address the noncompliance issues at the water treatment facility. The project
+will include an asset management plan",PADC,6891000,0.7,Yes-BC,6891000,
+201,37,17433,De Berry WSC,W,TX1830006,1101,"The project proposed is to improve the water measurement and reduce loss by replacing meters, meter boxes, and related components with AMR/AMI technology. The number of replacements will depend on available funding, and an asset management plan will
+be developed.",PDC,1255000,0.7,Yes-CE,1255000,
+202,37,17410,Coleman,M,TX0420001,3942,"Supply line replacement, galvanized service line replacements, water meter replacements, rehabilitation of existing elevated tanks, installation of aeration at main water source, disinfection
+improvements, and preparation of an asset management plan",PDC,34803400,0.7,Yes-BC,1124150,
+203,36,17363,O'Donnell,M,TX1530001,704,"Improvements to the distribution system including line replacement,
+ground storage improvements, and additional water production.",PDC,17846000,,Yes-BC,17846000,
+204,36,17492,"Texas Water Utilities, L.P.",P,TX1010096,978,"Proposed project will include an increase in pressure storage and service pump capacity to comply with TCEQ's 85% capacity requirements. An asset management plan will also be prepared as
+part of this project.",PDC,2202000,0.7,Yes-BC,2202000,
+205,36,17455,Farwell,M,TX1850002,1359,"The project includes project planning and asset management, ground storage tank, and the development of a new wellfield for the City of Farwell. The project will include water rights acquisition and the desig
+and construction of associated water transmission lines.",PADC,15000000,0.7,,,
+206,36,17284,Hutchins,M,TX0570012,5804,"This is a Water Loss Mitigation Project. The rehabilitation of leaking pipes and modernization improvements identified with this project are imperative to address the overwhelming water system challenges faced by the City of Hutchins, a disadvantaged community just south
+of downtown Dallas",DC,14900000,0.3,Yes-BC,14900000,
+207,36,17323,Eastland Co WSD,D,TX0670019,16284,"Re-clear the pipeline ROW and replace the existing raw water transmission pipeline with a new fusion-welded, high-density polyethylene (HDPE) pipeline. Additionally, the treated water supply line from the WTP to the City of Eastland will be replaced with a new HDPE pipeline. The project will also include the development of an
+asset management plan.",PDC,26986000,0.7,,7216000,
+208,36,17375,Mercedes,M,TX1080007,16449,"The City of Mercedes is seeking funds from the DWSRF to replace
+their malfunctioning residential water meters city-wide",PDC,2746897.2,0.7,Yes-CE,2055922,
+209,36,17238,Kendleton,M,TX0790018,1000,"Rehabilitation of Water System including Treatment, Storage,
+Transmission and Distribution Improvement",PADC,15000000,0.7,Yes-BC,3000000,
+210,35,17457,"Texas Water Utilities, L.P.",P,TX2080003,441,"The applicant proposes to incorporate a new automatic meter reading system (AMR) and a new SCADA system into the existing Hermleigh WTP to improve metering accuracy and better manage plant processes. The project will also include the development of an asset management plan to address maintenance, increase productivity, and
+eliminate unnecessary wastes",PADC,7477000,0.7,Yes-CE,7477000,
+211,35,17506,Slaton,M,TX1520004,5858,"The City of Slaton is proposing the installation of a new ground storage tank, new groundwater wells with rehabilitation of existing wells, existing pump station rehabilitation, and the installation of
+approximately 14,000 LF of new PVC water lines",PDC,9822000,0.3,Yes-BC,4311560,
+212,35,17356,MacKenzie MWA,D,TX0230004,9290,"The Mackenzie Municipal Water Authority (MMWA) proposes targeted infrastructure improvements to increase energy efficiency through green infrastructure, operational reliability, and system resiliency at its water treatment plant and pump stations. The project includes installation of interior LED lighting and exterior solar lighting, a solar bank at the water plant, new raw water, effluent, and backwash flow meters, permanent backup generators at the water treatment plant and pump stations, generator docking stations, a portable generator, and an effluent reuse system for plant irrigation. These improvements will enhance system monitoring, reduce energy consumption, improve emergency preparedness during power outages, and promote water conservation through beneficial reuse.",PDC,3600000,0.7,Yes-BC,610000,
+213,35,17286,Anthony,M,TX0710001,3811,"The Town of Anthony needs to construct a 250,000 gallon elevated water tank to replace an existing 72 year old 125,000 gallon standpipe. The standpipe is in deteriorated condition, does not provide minimum storage and pressure requirements as required by the state, and does not comply with current AWWA and OSHA safety standards. Other improvements include chlorination system, pump upgrades, new pump station, electrical and controls, and emergency standby power. Town has past occasional issues with arsenic in the
+water supply, but is currently in compliance.",DC,4318724.3,0.7,,,
+214,34,17561,Lexington,M,TX1440002,1365,Smart Metering System and Prepare Asset Management Plan,PDC,1900000,0.7,Yes-CE,1900000,
+215,34,17271,El Jardin WSC,W,TX0310022,12900,"Water meter replacements for the entirety of El Jardin's service area
+from analog meters to ultrasonic meters.",DC,2097958.5,0.3,Yes-CE,1598445,
+216,34,17454,Tom Green Co FWSD # 2,D,TX2260004,490,"Replace filter media and under-drain, repair clear well, install master
+meters and leak detection",PDC,500000,0.7,,,
+217,34,17269,Dublin,M,TX0720001,4000,"The proposed project includes replacing water meters with radio read meters, replacing cast iron water lines under railroad rights of way with cased plastic lines, installing aeration in the City elevated tank
+and replacing/installing isolation gates valves",PDC,1645000,0.7,Yes-BC,1645000,
+218,34,17312,Brownwood,M,TX0250002,18862,"The City of Brownwood (City) aims to enhance the water distribution system by improving the existing elevated storage tanks (ESTs) and a high service Pump Station (PS). The ESTs are aging and need to be internally and externally repainted to preserve the useful service life. The Existing PS only has 2 of 3 total pump installed and is lookin to install a third pump to increase the total operating capacity. The City is addressing water age issues by installing a control valve downstream of the Brown County Water Improvements District take point. The City also wants to include distribution line improvements as well as the rehabilitation of an existing pump station building and adding a new pump station building. An asset management plan will
+also be developed.",PDC,7299000,0.7,,,
+219,34,17628,Corsicana,M,TX1750002,68459,"Replacement of failing section of existing 30-inch Transmission Line from the Navarro Mills Water Treatment Plant to a 36-inch Line in order to reduce water loss, decrease repairs and maintenance cost
+on existing line and upsize line to accommodate flow of the WTP.",PADC,16954000,0.7,,,
+220,33,17277,Fort Griffin SUD,D,TX2090005,350,"The project includes extending water service to areas on the north
+side of Lake Cisco that do not currently have service as well as providing an emergency interconnect with the City of Cisco",PADC,3717000,0.7,,,
+221,33,17418,Crawford,M,TX1550011,887,Crawford AMI Water Meter Replacement,PDC,1973883,0.7,,,
+222,33,17430,De Berry WSC,W,TX1830006,1101,"The service area is experiencing aging infrastructure, water loss, and operational challenges. This project aims to assess asset conditions and develop a plan to enhance system reliability using data from hydraulic modeling, leak detection, and other relevant studies.",P,405000,0.7,,,
+223,33,17467,Roaring Springs,M,TX1730002,231,"Roaring Springs will be drilling a new production water well and installing a new transmission line from the new well to the city's standpipe. An asset management plan will be developed as part of
+this project.",PADC,4180000,0.7,,,
+224,33,17327,Grandfalls,M,TX2380003,395,"The City of Grandfalls (City) aims to enhance its water system by
+upgrading the existing residential metering system and preparing an asset management plan.",PDC,1444000,0.7,Yes-CE,1444000,
+225,33,17809,Marathon WS & SS Corp,W,TX0220013,430,"Marathon WSC, in an effort to increase efficiency, improve operations and conserve water would contract for smart meters and an
+advanced metering infrastructure system",PDC,696900,0.7,,,
+226,33,17431,Mount Calm,M,TX1090005,474,"Replacement of existing distribution system, level-up the existing elevated storage tank, and replace old, outdated meters with new
+radio-read meters.",PDC,9116000,0.7,,,
+227,33,17493,Santa Anna,M,TX0420002,1090,"This project includes the replacement of most of the City of Santa Anna's distribution system including the replacement of all water meters, replacement of 99,645 LF of water lines ranging in size from 3/4 inch to 8 inch. The City is also planning replace all meters within their distribution system with meters that are compatible with either AMR or AMI network systems. The City also wants to increase their storage capacity by including a 200,000-gallon ground storage tank that will require the acquisition of land. This project also includes the
+development of an asset management plan.",PADC,30174000,0.7,Yes-BC,28590000,
+228,33,17415,San Saba,M,TX2060001,3121,"Replace existing meter system with new drive-by AMR system.
+Rehabilitate two existing storage tanks",PDC,2060000,0.7,Yes-CE,,
+229,33,17309,San Jacinto SUD,D,TX2040033,3993,"Develop a new water supply well and construct associated water system improvements for San Jacinto Special Utility District to increase system capacity, improve reliability, and ensure adequate
+supply for existing customers and anticipated growth.",PDC,2025500,0.7,,,
+230,32,17466,Hidalgo Co DD # 1,D,TX1080088,85224,"Planning, Design, Permitting, and Construction of a 5 MGD Water
+Treatment Plant with intake pump station, reservoir, and distribution system connection.",PDC,71380000,,Yes-BC,71380000,
+231,31,17449,Wortham,M,TX0810003,980,"The City has aging infrastructure resulting in high water loss and a
+burden upon public works staff to maintain the system. Much of the City's distribution piping is old and needs to be replaced",PDC,6920000,0.7,,,
+232,31,17318,Coahoma,M,TX1140002,3552,"The City of Coahoma has recently assumed ownership of the former Howard County WCID No. 1 water system, adding approximately 960 connections to its service area. The absorbed system relies entirely on aging 6-inch and 10-inch transmission mains from the City of Big Spring for both water supply and system pressure, with no independent production or storage facilities. The proposed project will replace these deteriorated transmission lines, construct pressure-boosting and storage facilities to improve reliability and maintain regulatory pressure requirements, and develop an Asset Management Plan to support long-term operational sustainability and
+infrastructure planning",PADC,25178000,,Yes-BC,770000,
+233,31,17629,Corsicana,M,TX1750002,68459,"Extend new water main loop around the new SH-31 bypass from the Halbert Lake WTP to the west side and south side of the City. This will allow for an extra feed to west side of the City along with an additional feed to the wholesale customers of City of Richland, Angus
+WSC and MEN WSC.",PADC,16014000,0.7,,,
+234,31,17610,Pittsburg,M,TX0320001,4432,"The City of Pittsburg, Texas is seeking assistance for funding several improvements to water distribution, metering, and storage facilities, as well as the development of a water system model to help better
+direct future water system improvements",PDC,6973100,0.7,Yes-CE,1500000,
+235,30,17587,Oak Ridge,M,TX0490021,468,"Water System Improvements for the Town of Oak Ridge project will involve the rehabilitation of the existing standpipe, hydraulic modeling of the system, upgrading the service pump capacity, and upgrading the existing meters to a Radio Automated Meter Reading (AMR)
+system.",PDC,5458000,0.7,,,
+236,30,17448,Thornton,M,TX1470005,530,Upgrade water system components and distribution lines.,PADC,10206000,0.7,,,
+237,30,17662,Rule,M,TX1040003,597,"This project involves the replacement of old cast iron lines with new
+lines, an AMR meter system, EST rehab, and backup power generation.",PDC,995500,0.7,Yes-CE,180000,
+238,30,17262,Covington,M,TX1090021,717,"The proposed project includes: A new well to increase system capacity, a new pump station, existing pump upgrades; Rehabilitation of transmission lines; Rehabilitation of distribution lines; Proposed
+EST.",PADC,9309000,0.7,,,
+239,30,17450,Covington,M,TX1090021,717,"The proposed project includes: A new well to increase system capacity, a new pump station, existing pump upgrades; Rehabilitation of transmission lines; Rehabilitation of distribution lines; Proposed
+EST.",PADC,9930000,0.7,,,
+240,30,17345,Lorenzo,M,TX0540002,834,"The City of Lorenzo is proposing to sandblast and recoat their two existing ground storage facilities along with install various isolation
+valves throughout the City.",PDC,1300000,0.7,,,
+241,30,17425,Cross Plains,M,TX0300003,926,"The project includes the installation of AMR meters and meter
+reading system.",PDC,500000,0.7,Yes-CE,500000,
+242,30,17292,Grapeland,M,TX1130002,1419,"Rehabilitation/replacement of components within the water system and distribution system need upgrades and improvements.
+Improvements include water line upgrades, replacement of old valves
+and fire hydrants, and EST rehab",PDC,6277000,0.7,,,
+243,30,17308,Itasca,M,TX1090003,1562,Itasca Water System Improvements,PDC,8315418,0.7,Yes-BC,1575000,
+244,30,17459,Grand Saline,M,TX2340003,3219,"Water System Improvements: New Water Wells, EST Rehabilitation
+and Improvements, and Waterline Replacements",PADC,6850000,0.7,Yes-BC,1500000,
+245,30,17640,Crystal City,M,TX2540001,6354,"Replacement of Asbestos Cement fresh water pipes with larger,
+safer, and more efficient PVC Pipe",PDC,1970250,0.7,,,
+246,30,17300,Corsicana,M,TX1750002,68459,"City plans to establish new pressure plane in order to establish higher pressures within higher elevations of the City's service area. This would include new elevated storage tank, system isolation/pressure reducing valves, pump station and water transmission line upgrades.",PADC,16926000,0.7,,,
+247,30,17481,Johnson County SUD,D,TX1260018,65427,"The proposed project includes the use of reverse osmosis (RO) and granular activated carbon (GAC) technologies to prepare for the new PFAS limits initiated by EPA in Spring 2024. Given the introduction of PFAS into source waters from wastewater effluent discharge, JCSUD is implementing RO and GAC technologies to be prepared to reduce emerging contaminants from its source water. The proposed project is looking for DWSRF funding in the event that EC funding for construction is not available. The proposed project also includes the
+development of an asset management plan",PADC,396827000,,Yes-BC,396827000,
+248,29,17288,Gordon,M,TX1820007,744,"The project consists of installing new wells, pump station, storage, and transmission lines to convey a new groundwater supply to the
+City.",PADC,8800000,,,,
+249,29,17285,Hitchcock,M,TX0840004,7341,"The purpose of this project is to improve the City's water distribution
+system through the installation of additional valves and the targeted replacement of water mains.",DC,9100000,,Yes-BC,9100000,
+250,28,17336,Miles,M,TX2000002,920,"The City of Miles needs to replace the undersized 6-inch transmission lines running from the city of San Angelo to the City of Miles, rehabilitate the Harriet Pump Station, and replace aging infrastructure
+at the City's Water Treatment Plant.",PDC,37196000,,Yes-BC,25175000,
+251,28,17306,Barton WSC,W,TX0720013,1104,"Barton WSC is initiating a project to enhance the integrity of their water distribution system by addressing existing water loss issues. The project will involve replacing aging, leaking water lines to significantly reduce losses and ensure compliance with minimum
+pressure requirements as outlined in 30 TAC 290.44(d)",PDC,19125000,,Yes-BC,10497000,
+252,27,17499,Johnson County SUD,D,TX1260018,65427,"The proposed project includes the use of reverse osmosis (RO) and granular activated carbon (GAC) technologies to prepare for the new PFAS limits initiated by EPA in Spring 2024. Given the introduction of PFAS into source waters from wastewater effluent discharge, JCSUD is implementing RO and GAC technologies to be prepared to reduce emerging contaminants from its source water. This project is focused on funding an expansion of the existing SWATS WTP that JCSUD has contracted treatment capacity from. The proposed project also includes the development of an asset management plan.",PADC,336695000,,Yes-BC,336695000,
+253,26,17627,Tehuacana,M,TX1470013,224,"The purpose of this project is replace/upsize undersized water mains that are causing maintenance and operation issues within the system Replacement of ex. valves, fire hydrants and installation of new valves, fire hydrants are also needed throughout for better operation and maintenance of the overall system. Replacing and improving the existing distribution system will also help reduce overall water loss.",PDC,499000,,,,
+254,26,17474,Houston,M,TX1010013,2314157,"Accelerated rehabilitation and replacement of small diameter (2""-20"") water distribution infrastructure to address deficiencies affecting wate quality, fire flow availability, water loss, sub-standard water lines, system design and asset age. Includes replacement of lines undersized for current usage, improve integrity of water supply, and replacement of end-of-life components (lines, valves, appurtenances) Work to be performed within existing City rights-of-way under task
+order-based contracts.",C,42000000,,,,
+255,26,17475,Houston,M,TX1010013,2314157,"Accelerated rehabilitation and replacement of large diameter (>20"") water distribution infrastructure to address deficiencies affecting wate quality, fire flow availability, water loss, system design and asset age. Includes replacement of lines undersized for current usage, improve integrity of water supply, and replacement of end-of-life components (lines, valves, appurtenances). Work to be performed within existing City rights-of-way under task order-based contracts.",C,42000000,,,,
+256,26,17476,Houston,M,TX1010013,2314157,"Replacement of small diameter distribution infrastructure serving
+disadvantaged communities within the City of Houston",DC,35388150,,,,
+257,25,17434,Itasca,M,TX1090003,1625,"New well, rehab existing GST, rehab existing EST, and replace
+distribution pipe",PDC,17633000,,,,
+258,23,17810,Raywood WSC,W,TX1460006,1605,"Raywood WSC is proposing a new 150,000 Gallon Elevated Storage Tank, a new groundwater well along with treatment equipment and
+approximately 29,000 linear feet of waterline",PDC,10880000,,,,
+259,23,17320,Kirby,M,TX0150010,8142,"The City needs 2 water wells installed. An old well needs to be replaced with a new one and the city needs an additional third well
+installed for a total of 3 wells",PDC,5236200,,,,
+260,23,17254,Bowie,M,TX1690001,5534,"The expansion of the City of Bowie's SWTP is required to ensure the
+minimum treatment capacity mandated by TCEQ",DC,40500000,,,,
+261,22,17377,MacBee SUD,D,TX2340012,7548,"The proposed project includes construction of transmission and distribution line improvements, a booster pump station, and upgrades to an elevated storage tank to allow decommissioning of the Jackson pump station and associated groundwater wells. The project will convert the Jackson pressure plane from groundwater to treated surface water supplied by the existing treatment plant. The current groundwater supply has proven insufficient to reliably meet regulatory requirements and development of additional groundwater sources is limited. The proposed improvements will enhance regulatory compliance, improve system reliability and pressure stability, and provide a sustainable long-term water supply. Community will also request funds to pursue an asset management plan.",PADC,13563828.7,,Yes-BC,13463830,
+262,22,17328,Hawley WSC,W,TX1270006,8436,"Hawley Water Supply Corporation is proposing to upgrade an existing booster pump station, Install two (2) new booster pump stations for two (2) respective pressure planes, and upsize various transmission lines throughout their distribution system along with preparation of an
+asset management plan.",PADC,40135000,,,206000,
+263,21,17775,"Texas Water Utilities, L.P.",P,TX2390043,3075,"The proposed project includes rehabilitation of multiple wells, replacement of existing high service pump stations, addition of new ground, pressure, and elevated storage, and prioritized replacement of existing distribution lines. The project will also include the
+development of an asset management plan",PADC,90364000,,Yes-BC,90364000,
+264,21,17453,Moffat WSC,W,TX0140028,4558,"The Moffat Water Supply Corporation needs to replace all of their
+water meters because of failure. They also need to replace numerous segments of leaking pipe because of excessive leakage",DC,3425000,,Yes-CE,3425000,
+265,20,17900,Evadale WCID # 1,D,TX1210011,963,"EWCID1 is currently having issues with its water distribution system and their water lines are deteriorating and undersized. This project wi provide additional distribution capacity and replace deteriorated
+distribution.",PDC,968800,,,,
+266,20,17423,Crescent Heights WSC,W,TX1070016,2379,"A new public water supply well, pressure facilities, and line upgrades.",PDC,4466400,,,,
+267,20,17791,Trinity Rural WSC,W,TX2280011,5059,"NORTH SYSTEM -Project includes property acquisition and construction of a relocated standpipe from the Chita System. SCADA integration to improve distribution storage and system reliability.
+SOUTH SYSTEM -Improvements include restoration of the existing raw water intake pipeline, removal of an undersized intake line, and installation of an additional intake pump to increase raw water supply. Construction of new treatment facilities, installation of additional filtration and transfer pumping, chemical system modifications, electrical upgrades, SCADA integration, and construction of a new clearwell. PINECREST PLANT -Project includes replacement of existing ground storage tanks, electrical building upgrades, installatio of standby power, air system improvements, and replacement of pump motors. LAKE L PLANT -Improvements include installation of standby power, construction of a relocated standpipe from the Chita System, and SCADA system upgrades. CHITA SYSTEM -
+Construction of a new distr",PADC,37712490,,,,
+268,20,17501,Lampasas,M,TX1410001,7757,"Improvements to the City's two (2) aging water supply entry points to improve chloramine boosting, chemical mixing, data collection, and
+flow metering.",C,4800598,,,,
+269,20,17818,Freeport,M,TX0200005,10621,"The project intends to replace existing distribution system pipes that
+are leaking and resulting in water loss",DC,12810000,,Yes-BC,5950000,
+270,19,17462,Henderson,M,TX2010001,13385,"The City of Henderson has water rights from Lake Striker located approximately 15 miles southwest of Henderson. These improvements will consist of infrastructure to transport the raw water from the lake as well as a 2.0 MGD surface water treatment plant. This project will allow the City to transition from an aging groundwater
+field to a more reliable surface water source",PADC,47675000,,Yes-BC,500000,
+271,19,17488,Robertson County WSC,W,TX1980013,3611,"The project includes an elevated storage tank, 290,400 LF of water
+line replacement and an asset management plan",PDC,40835000,,Yes-BC,40835000,
+272,18,17402,Brandon-Irene WSC,W,TX1090018,2199,"Brandon-Irene WSC has an average 54% water loss percentage over the past five years with the 2024 percentage at 62%. The project will replace 9.6 miles of water main lines that need to be replaced to reduce water loss due to leaks. After completion of the project, the water supply hopes to reduce the water loss percentage by at least 50% and in ten years have no more than a 15% water loss
+percentage.",ADC,4211241.8,,Yes-BC,4211242,
+273,18,17616,B & B WSC,W,TX1750028,3027,"Replace old, deteriorated and under capacity water main and pump station(s). One of the pump stations is out of service and must be replaced while the other pump station is in violation of TCEQ that must be addressed. Replacing the main and pump station is essentia to meeting TCEQ requirements. This is part of a multi-phase project.",PADC,7500000,,,,
+274,18,17409,Travis Co WCID # 17,D,TX2270027,696,"Water line replacements to mitigate water loss in the River Ridge
+CCN.",PDC,6791000,,Yes-BC,6791000,
+275,18,17654,Roby,M,TX0760001,1147,"The City of Roby desires to replace aging and deteriorated water
+distribution lines throughout the system to reduce water losses and increase system reliability",PDC,7520000,,Yes-BC,7520000,
+276,18,17360,Lone Pine WSC,W,TX0010021,1206,"New Water Well, Ground Storage, Linework, Meters",PADC,5790000,,,,
+277,18,17584,Tolar,M,TX1110012,1461,"The City of Tolar is a growing community proposing the installation of two new municipal water wells, associated raw water transmission lines, and distribution system improvements to increase overall water supply capacity and support current and future demand.",PADC,6009000,,,,
+278,18,17388,BCY WSC,W,TX0010018,3108,"Planning, property acquisition, design, bidding, and construction of
+water system improvements.",PADC,6325000,,Yes-BC,1500000,
+279,18,17800,Navarro Mills WSC,W,TX1750024,3852,"The WSC completed a Water System Study in 2022 which identified multiple capacity issues throughout the water treatment and distribution system resulting in the need for upgrades to bring the
+facilities into compliance with TCEQ regulations",PDC,2500000,,,,
+280,18,17346,Madisonville,M,TX1570001,6111,"The Madisonville Water Well and Waterline Project will construct a new water production facility on the east side of I-45 including a new well, storage tank, booster pumps, and related treatment facilities as well as linework to deliver the new water to the existing elevated storage tank. Project will also include about 10,500 linear feet of distribution system improvements. Project will include the
+development of an Asset Management Plan.",PDC,9945000,,,,
+281,17,17406,Travis Co WCID # 17,D,TX2270027,4404,"Water line replacement project to mitigate water loss for the Apache
+Shores CCN.",PDC,12969000,,Yes-BC,12969000,
+282,17,17520,Liberty Hill,M,TX2460013,8777,"This project includes the City of Liberty Hill's Advanced Water Purification Facility for direct potable reuse. This project is essential t ensuring a reliable, sustainable, and efficient water supply for Liberty Hill that supports both current needs and future growth while implementing innovative water reuse strategies. This project will also help the City comply with stricter total phosphorus limits imposed at the South Fork WWTP through treatment and reuse of effluent via the
+AWPF.",PADC,228000000,,,,
+283,17,17248,Aqua WSC,W,TX0110013,9777,"The project will construct a transmission waterline to connect
+Brownsboro Station to the proposed HWY 183 elevated storage tank (EST).",C,6449000,,,,
+284,16,17334,Mertzon,M,TX1180002,781,"The project will consist of replacing aging and deteriorated water distribution lines and valves. The City will also acquire approximately 17 acres of land from TxDOT and will add a new groundwater well on
+the acquired land",PDC,21448000,,Yes-BC,13727000,
+285,16,17333,Mason,M,TX1600001,2228,"Improvements to the distribution system including line replacement, ground storage improvements, and additional water production and
+an asset management plan.",PDC,16482000,,Yes-BC,15658000,
+286,16,17577,Sonora,M,TX2180001,2766,"System has Asbestos Concrete (AC) water lines and other water line that are prone to leaks and breaks which will be replaced with durable, modern materials to reduce water loss, eliminate health risks associated with asbestos, and extend the service life of the
+distribution system",PADC,18124000,,Yes-BC,18214000,
+287,16,17411,South Plains WSC,W,,704,"The project includes treatment, supply, and other infrastructure to
+correct TCEQ violations and other deficiencies in the South Plains Water Supply Corporation System.",PDC,11200000,,,,
+288,16,17870,Brock,M,,964,"The Town of Brock has no public water system under its own PWS ID. This project will be to create a public water system to allow
+residents to get off of well water",PADC,4344000,,,,
+289,16,17447,West Tawakoni,M,TX1160012,2543,"This project includes replacing old leaking waterlines to reduce high water loss, increase water conservation and mitigate low pressure
+issues. Also to upgrade treatment capacity for water quality.",PDC,8670000,,,,
+290,16,17414,Willow Park,M,TX1840027,6804,"The project consists of replacing old, deteriorated water lines in the
+West Oak area of the City's distribution system to reduce water loss and repair costs and provide more reliable service",PDC,5000000,,Yes-BC,5000000,
+291,16,17824,Orange,M,TX1810004,22205,"Construct a new Water Well Plant for the City of Orange, Texas.",PDC,38668538,,,,
+292,16,17801,Georgetown,M,TX2460001,191639,"Rattlesnake Pump Station will contain ground storage tanks, a high
+services pump station, electrical and administration buildings and possibly additional chemical feed facilities.",C,93000000,,,,
+293,15,17456,Alleyton,,TX0450087,192,"The applicant proposes the use of additional water sources and support components to improve compliance and production reliability for the existing Alleyton Groundwater Supply. The project will also
+include the development of an asset management plan",PADC,4203000,,Yes-BC,4203000,
+294,15,17604,Trent,M,TX2210009,368,"The City desires to upgrade/replace the existing elevated storage tank and replace the existing 8"" Asbestos Cement transmission supply line that is the only source of water. The line experiences frequent breaks that shut off water supply to the City. The City also desires to replace all existing AC water lines within the distribution system and replace the existing EST that was constructed in 1927.
+An asset management plan will also be developed",PDC,17282000,,Yes-BC,17282000,
+295,15,17463,Liverpool,M,TX0200555,585,"This project includes the instillation of a new approximately 120 gpm
+water well and necessary piping",DC,1411665,,Yes-BC,203500,
+296,15,17319,East Garrett WSC,W,TX0700024,1521,"East Garrett WSC is proposing water system improvements to reduce water loss and enhance distribution system performance. The project includes the replacement of existing leaking water lines to improve system efficiency and ensure compliance with minimum pressure requirements in accordance with 30 TAC 290.44(d). Asset
+management plan is part of the project too.",PDC,8761000,,Yes-BC,8761000,
+297,15,17469,"Texas Water Utilities, L.P.",P,TX0270011,1650,"The applicant proposes to install additional membrane filtration treatment and water distribution lines to achieve compliance and expand water production. Further improvements include the addition of new wells to meet capacity requirements. The project will also
+include the development of an asset management plan",PDC,13864000,,Yes-BC,13864000,
+298,15,17736,Tatum,M,TX2010034,1902,"RO filter system, replacement of waterlines, new water well, ground
+storage tank, SCADA system, 2 generators",PADC,6675000,,Yes-BC,1000000,
+299,15,17331,Lake Palo Pinto Area WSC,W,TX1820069,2247,"This project is targeted mainly at making distribution system improvements to bring the system in compliance with TCEQ minimum line size requirements (30 TAC ?290.44(c)). It also includes pump station improvements to eliminate an existing inline booster pump station, and replace old infrastructure, provide better pressure maintenance for areas of the existing system, and provide operationa flexibility through SCADA improvements and piping installation at the
+Water Treatment Plant.",PDC,4783000,,Yes-BC,1800000,
+300,15,17804,Upper Jasper Co WA,D,TX1210060,3048,"Project replaces about 78,000 linear feet of water lines which have a history of breaks, resulting in water loss, destruction of roads becaus the lines are beneath county roads. Project will include an asset
+management plan",PDC,12190000,,,,
+301,15,17826,Lake Livingston WSSSC,W,TX1870165,3284,"Expand the existing surface water treatment capacity from 0.75 MGD
+to between 1.5 and 1.75 MGD.",PADC,22662106,,,,
+302,15,17579,Crockett Co WCID # 1,D,TX0530012,3800,"The Crockett County WCID plans to address critical system deficiencies by replacing failing water distribution lines, installing new fire hydrants and isolation valves, and adding a backup generator at the water operations office. These improvements will enhance system reliability, improve leak isolation and fire protection capability, and ensure continued operation of critical water system functions during power outages, thereby supporting regulatory compliance and the
+delivery of safe and reliable drinking water",PDC,10827000,,Yes-BC,10827000,
+303,15,17498,Norwood WSC,W,TX0010047,4701,Proposed pump station and water line improvements.,PADC,3275475.38,,Yes-BC,1275911,
+304,15,17626,Primera,M,TX0310094,5257,"The City of Primera proposes to develop a new groundwater supply and reverse osmosis water treatment plant to improve water system reliability, provide an alternate water source, and ensure long-term compliance with state and federal drinking water standards. The project will include groundwater exploration, test well drilling, production well construction, environmental review and clearance, permitting, planning, hydraulic modeling of the existing water distribution system, design, and construction of a new reverse osmosis treatment facility and associated infrastructure. The project will also include preparation and calibration of a hydraulic model of th city's existing water distribution system to evaluate system capacity, pressures, storage, and fire flow availability under current and future conditions. The model will be used to optimize integration of the new groundwater supply and treatment facility, identify system improvements, and ensure reliable delivery of treated potable",PADC,18282900,,,,
+305,15,17400,Springs Hill SUD,W,TX0940022,35472,"SH 46 Pump Station is a project designed to provide storage
+capacity, pumping capacity, pressure increase, and upgrade transition mains within Springs Hill's Zone 2 area",C,4000000,,,,
+306,14,17239,Bushland WSC,W,TX1880002,300,New well with added booster pump and well house,PDC,2435250,,,,
+307,14,17738,East Medina Co SUD,D,TX1630020,2505,"Construction of 100,000-gallon elevated storage tank at East Medina
+County SUD Plant 4",PDC,2888000,,,,
+308,14,17267,Denton,M,TX0610002,157147,"A small subdivision of 21 homes in Denton County is facing an urgent need for a permanent water solution. Currently the homes rely on a private water system supported by two community wells, both of which have failed and are considered beyond repair. The system has multiple compliance issues with the TCEQ, including a history of faile biological testing, in which, during a bacteriological test, E. coli was detected. In addition, data showed PFOS level at 6.33 ng/L, among other problematic PFAS readings, and a high concentration of
+manganese.",ADC,1428654.4,,,,
+309,14,17348,Maud,M,TX0190007,988,"Replace current undersized and deteriorating water lines. Additionally
+create a loop system for ease of maintenance.",PDC,4666500,,,,
+310,14,17368,Payne Springs WSC,W,TX1070119,1449,"The project constructs a pump station, ground storage tank, generator, and pressure tanks to integrate three wells at the Payne Springs site. The new pump station will blend water from all wells and discharge it into the system, improving reliability and system
+efficiency.",PADC,3307173.46,,Yes-BC,3307174,
+311,14,17342,La Coste,M,TX1630004,1488,"The City's existing water well is undersized and failing and cannot be rehabilitated. A new well will need to be drilled to replace it. The City does not have a Water Utility Master Plan. The City's CCN extends over a large amount of undeveloped land. The Master Plan is neede to help them direct their efforts to serve these undeveloped areas.
+The City has many undersized galvanized pipes that are leaking and in need of repair. However, many of the existing pipes are not shown on maps and will need to be located to determine the size and length so that an estimated replacement cost can be established. It is believed that these lines are a significant contributor to the systems
+annual non-revenue loss",PADC,3578668,,,,
+312,14,17291,Granite Shoals,M,TX0270049,5328,"Replace existing 150,000 gallon elevated water tower with an
+350,000 gallon elevated water and replace 2"" water lines with 6"" water lines",PDC,5108650,,,,
+313,14,17240,Alpine,M,TX0220001,6000,"The City has a history of high water loss and water main breaks. The project will include replacement of water mains and the construction of valves and fire hydrants to assist with system operations, flushing,
+and redundancy",PADC,7230000,,,,
+314,14,17242,Alpine,M,TX0220001,6000,"Aging well field transmission lines causing water loss and insufficient
+supply.",PADC,257000,,,,
+315,14,17243,Alpine,M,TX0220001,6000,"In effort to decrease water loss, the City of Alpine intends to replace
+the transmission lines from the water supply wells to water storage tanks that are prone to breaks and leaks.",PADC,6441000,,,,
+316,14,17854,West Cedar Creek MUD,D,TX1070190,22045,"Proposed Water line improvements along S.H. 274 in Seven Points and County Line Road in Tolosa to reduce water loss, improve system efficiency, and replace the deteriorated ground storage tank
+at the Tolosa WTP.",PADC,5960024.7,,Yes-BC,5960025,
+317,14,17264,Del Rio,M,TX2330001,46500,"Includes replacement of sections of existing 10 miles (approx.) of water distribution system that were identified as undersized/failing in the order of priority that was identified in the 2010 Water Model and Leak Detection Study. This project is the continuation of the City's program to replace water lines, which started with the previous work
+under Phase I- Waterline Replacement Project",PDC,42241888,,,,
+318,13,17321,Carl's Corner,M,TX1090070,201,"The City's water well only produces ten gallons per minute to serve approximately 71 connections which is severely below the amount of the TCEQ requirement of 0.6 gpm per connection. The City desires to increase its water supply by constructing a new water well. Eight households are currently having water hauled to their homes due to lack of water distribution daily. Currently all water lines within the City distribution system are no greater than two-inches (2""). Some of the water lines cross private property and/or lie outside City right-of-way. There are no fire hydrants within the City's current distribution system. The City desires to upgrade and replace its entire distribution system and valves while restoring fire suppression with the addition of fire hydrants throughout its water distribution system.",DC,11607800,,,,
+319,13,17460,Upper Jasper Co WA,D,TX1210064,975,"Proposed new elevated storage tank and rehabilitation of existing
+standpipe. Project will include an asset management pla",PDC,3870000,,,,
+320,13,17293,Upper Jasper Co WA,D,TX1210060,3048,"Transmission water line, storage, and pumping to connect to the City
+of Jasper water system",PADC,5085000,,,,
+321,13,17647,West Hardin WSC,W,TX1000055,4473,New Water Well and Water Distribution Line Improvements,PDC,2276500,,,,
+322,13,17354,Merkel,M,TX2210002,4530,"The project includes replacement of cast iron and galvanized water lines in the water system that old and deteriorated resulting in
+frequent water breaks and are in need of replacement",PDC,22025200,,,,
+323,13,17482,Moffat WSC,W,TX0140028,4530,"Moffat WSC would like to begin construction on a new well that would serve as another water source. In addition, Moffat WSC would like to upsize a few waterlines that have more connections than allowed per
+TCEQ and are dead ends.",PDC,7700000,,,,
+324,13,17889,Johnson County SUD,D,TX1260018,65517,"The project consists of a new 42-inch water transmission main designed to transport drinking water from Arlington, TX to Joshua, TX
+for use by the Johnson County Special Utility Distric",PADC,347000000,,,,
+325,13,17509,Lawn,M,TX2210005,660,The project includes replacement of water transmission main.,PADC,5156000,,Yes-BC,5156000,
+326,13,17426,Cushing,M,TX1740001,967,"Remove and Replace existing waterlines and rehabilitate an existing
+water storage tank",PDC,5068500,,,,
+327,13,17607,Ames-Minglewood WSC,W,TX1460005,1174,"Water Well, above ground storage tank, pump house and
+appurtenances, water lines and system interconnec",PADC,7700000,,,,
+328,13,17478,Huntington,M,TX0030002,2121,"Remove and replace existing waterlines in the distribution system an
+misc. water plant upgrades.",PDC,4316500,,,,
+329,13,17458,Goodsprings WSC,W,TX2010016,2913,Replacement of Waterlines,PDC,3480000,,Yes-BC,2500000,
+330,13,17403,Sturdivant-Progress WSC,W,TX1820011,3357,"Sturdivant Progress WSC has multiple locations in the system with small diameter pipes that restrict flow and cause high head loss in the transmission pipes, as well as replacing compressors at multiple
+pump stations.",PDC,3430000,,Yes-BC,,
+331,13,17261,Coryell City WSD,D,TX0500013,6105,"Coryell City WSD's Proposed project consists of replacing
+approximately 26,000 LF of waterline.",PDC,2812715.5,,,,
+332,13,17497,Brownsville PUB,M,,190158,"Design a new 64-MGD raw water pump station on the Rio Grande River (near the existing station) to pump raw water to BPUB's existing reservoir, including an intake/screen/wet well structure, enclosed pump building, electrical building, flow meter vault, discharge
+structure, and the connecting pipeline",PDC,55164000,,,,
+333,12,17401,Springs Hill SUD,W,TX0940022,35472,"The project consists of the construction of a main service electrical feed which also includes a new generator. The construction of the tank will encompass all necessary appurtenances, along with the
+installation of piping and mechanical connections",C,2750000,,,,
+334,12,17417,Baylor County SUD,W,TX0120004,2535,"Construct a new water treatment plant to provide treated water for
+Baylor SUD customers.",PDC,13600000,,,,
+335,12,17480,Deerhaven WCID,D,TX1500126,336,"Deerhaven WCID proposes to complete a Phase 3 project of
+interconnections of its water distribution system, replace undersized lines, and install new fire hydrants",C,827140.5,,,,
+336,11,17287,Lone Oak,M,TX1160018,881,"The City of Lone Oak is experiencing issues with various water lines i
+their system due to undersized lines and dead-ends.",PDC,808000,,,,
+337,11,17494,Santo SUD,D,TX1820010,3546,"A major portion of Santo SUDS's distribution system is overcapacity and is in need of upsizing to meet the demand of the growing population. The pressure tank at the Bugle Mt. pump station needs
+upsizing as well",PDC,40887000,,Yes-BC,40887000,
+338,11,17871,Angus WSC,W,TX1750010,1206,"In an effort to comply with TCEQ guidelines, reduce water loss, and better facilitate public water supply. The system is planning to make
+needed upgrades.",PADC,2253740,,,,
+339,10,17471,"Holiday Harbor Gold Coast
+WSC",W,TX1580006,249,Water System Improvements,PADC,3459450,,,,
+340,10,17774,Kenedy,M,TX1280002,2500,"This project consists of the rehabilitation of approximately 7000 522 feet of cast iron water main most of which was installed in the 1970s and is currently suffering severe tuberculation, Extending the existing main distribution line which is a 12 inch C900 PVC pipe to connect with the existing 12 inch PVC line that was installed to allow for a larger diameter main in flow rate to the fairgrounds and Kennedy ISD campus complex and ground storage tanks. This second feed will allow or much improved much improved flow rates to all facilities
+within the 12 inch loop that this project will provide",PADC,9217819,,,,
+341,10,17633,Campbell WSC,W,TX1160017,2598,"Construct New Well, Water Plant, and Ground Storage Tank.
+Replace and upsize distribution system and transmission piping",PADC,13194000,,,,
+342,10,17892,Woden WSC,W,TX1740020,2823,"6-inch Water Main Connecting portions of the Distribution System, Water Tank Rehab, New Pump Building, Replace Office/File Building",PADC,2260000,,,,
+343,10,17335,South Newton WSC,W,TX1760022,3729,"Rehabilitate and repair (3) existing elevated water tanks that are
+under enforcement action from TCEQ",PDC,2633858,,,,
+344,10,17253,Bowie,M,TX1690001,5534,Expansion of the existing raw water pump station.,PDC,1102400,,,,
+345,10,17367,Bacliff MUD,D,TX0840011,8778,"Bacliff MUD's proposed project consists of drilling a new water well to
+provide water during emergency conditions",PDC,1192298.4,,,,
+346,9,17725,Benton City WSC,W,TX1630034,32400,"Construction of a New Ground Storage Tank and Water Well and
+Asset Management Plan",PADC,3000000,,,,
+347,9,17779,Benton City WSC,W,TX1630034,32400,"New Water Well Supply, Treatment, Ground Storage Tank and
+Booster Pump Station & Asset Management Plan",PDC,5200000,,,,
+348,9,17405,Terrell,M,TX1290006,20336,"This project includes several elements to rehabilitate the water distribution system and reduce main break frequency in
+disadvantaged areas within the City of Terrel",DC,14550000,,Yes-BC,14550000,
+349,8,17593,Morgan Mill WSC,W,TX0720012,500,"The project includes the installation of a new well and pump station and supply line to improve the systems ability to maintain adequate
+supply.",PADC,1500000,,,1600000,
+350,8,17468,"Texas Water Utilities, L.P.",P,TX0270078,126,"This project is needed to maintain reliable water supply for the affected population in the Quail Creek Groundwater Supply by drilling two new wells. This project will also help address the ongoing disinfection byproducts compliance issue and will include an asset
+management plan.",PADC,3347000,,Yes-BC,3347000,
+351,7,17280,Fredericksburg,M,TX0860001,11257,"The City has a history of low pressures observed in the system. The City proposes a new groundwater well, ground storage tank, pump station expansion, and new transmission line in an effort to increase the minimum pressures observed in the system. This project is consistent with the state water plan to increase water supply.",PADC,29394683,,,,
+352,7,17748,Benton City WSC,W,TX1630034,32400,"The Project proposes to construct a new Ground Storage Tank,
+Elevated Tank, Pump Station, and Transmission Main and Develop an Asset Management Plan",PDC,11610000,,,,
+353,6,17378,Parker County SUD,D,TX1840025,475,"Rehabilitation and restoration of existing infrastructure within the
+Greenwood groundwater system",PDC,3093200,,Yes-BC,898700,
+354,6,17276,Flat WSC,W,TX0500016,771,"Flat WSC proposes to replace approximately 14,453 linear feet of aging, leak-prone 4-inch distribution mains with new fused HDPE waterline in targeted areas of the system experiencing repeated leaks and failures. The project will reduce system water loss and non-revenue water, improve distribution system reliability, and enhance
+long-term operational efficiency",PDC,1623032.19,,,,
+355,6,17307,Big Lake,M,TX1920001,2965,"Replacement of various portions of the City's potable water distribution pipelines and valves that have reached the end of their service life and require replacement. An asset management plan will
+also be prepared.",PDC,20680000,,,,
+356,6,17316,Hondo,M,TX1630002,11044,"The City proposes priority water system improvements identified through engineering analysis and capital planning to correct regulator deficiencies, address localized storage and production capacity limitations within the Prison Pressure Plane (PPP), and improve overall distribution system reliability. The PPP is currently operating at or near TCEQ minimum storage requirements and lacks sufficient redundancy to maintain reliable service during peak demand or emergency conditions. The project includes construction of additional ground storage, pump station improvements, replacement of an existing well pump, installation of major transmission mains, and targeted distribution system looping and pipeline upgrades.
+Distribution improvements will eliminate dead-end mains, improve circulation, reduce water age, enhance fire flow capability, and
+strengthen pressure stability.",PDC,7645010,,,,
+357,6,17569,Snyder,M,TX2080001,11104,"The City of Snyder (City) desires to enhance their water distribution
+system by upgrading the existing residential metering system and preparing an asset management plan.",PDC,7466000,,Yes-CE,7466000,
+358,6,17770,Walker Co SUD,D,TX2360069,2842,Replace the existing Falba and Pierce wells at the current sites,PDC,6275000,,,,
+359,6,17605,Bynum,M,TX1090048,276,"Replace existing 65,000-gallon water storage tank and piping on site which is also in poor condition. It is also recommended for AMI/AMR
+meters to be installed to help with water loss.",PDC,499000,,Yes-CE,100000,
+360,6,17416,Colorado Co WCID # 2,D,TX0450014,979,"Colorado County WCID #2 proposes to install a 50,000 gallon ground storage tank and associated service pumps and refurbish an existing 50,000 gallon elevated storage tower. To also include an existing water well to provide more connection capacity and redundancy in
+their aging public water supply system",DC,750000,,Yes-BC,30000,
+361,6,17721,Austin,M,TX2270001,1153430,"A pilot Aquifer Storage & Recovery (ASR) project will inform planning and design of a full-scale ASR facility to meet possible shortages
+associated with drought and climate change.",PDC,28690000,,,,
+362,6,17722,Austin,M,TX2270001,1153430,"Ullrich WTP On-site Generation of Chlorine and Ammonium Sulfate
+Conversion",PDC,74559230,,,,
+363,5,17408,Paradise,M,TX2490010,627,"Construct new, (City's first), water pumping station and storage
+facility, and new water well",PADC,5171000,,,,
+364,5,17664,San Leanna,M,TX2270017,748,"The project proposed to improve water measurement and reduce loss by replacing meters, meter boxes, and related components with AMR/AMI technology. The number of replacements will depend on available funding, and an asset management plan will be developed.",PDC,1170000,,Yes-CE,1170000,
+365,5,17582,Sterling City,M,TX2160001,888,"The City of Sterling City aims to replace 50,000 LF of asbestos cement pipes, repair an existing HSPS, rehabilitate its existing groun storage tanks, replace failing service meters with AMI meters, and
+implement an asset management plan.",PDC,21294000,,Yes-BC,21294000,
+366,5,17326,Glen Rose,M,TX2130001,2848,"Glen Rose has experienced significant water loss in certain areas of its water distribution system. One of the proposed projects is intended to reduce these losses by replacing existing water lines that have been identified as contributing to elevated loss percentages. The scope includes the replacement of three water lines, consisting of one asbestos-cement line and two steel lines. In addition, the project includes the replacement of existing ground storage tanks at Well Sites 2 and 6, as well as the replacement of existing standpipes at Well Sites 3 and 4. These improvements will address aging infrastructure, enhance system reliability and pressure maintenance, improve water quality, and ensure compliance with current regulatory
+and operational standards",PDC,5488000,,Yes-BC,707000,
+367,5,17495,Seminole,M,TX0830012,7386,"The proposed project will add additional storage to the treatment system, as well as develop additional ground water sources for the City. The project will also feature improvements and rehabilitation of existing pump stations within the distribution system. Additionally, the City desires to increase treatment capacity to include 2 mgd worth of
+R.O. Treatment. An asset management plan will also be completed.",PADC,25488000,,,,
+368,5,17580,McCoy WSC,W,TX0070023,9798,"The McCoy WSC is experiencing growth in customers and will address this growth by adding an additional well. Additionally they will be replacing meters that are old and inaccurate to address water loss. The WSC is also ensure safety and health by addressing the
+lead and copper rule.",PADC,12645000,,,,
+369,5,17419,Haltom City,M,TX2200014,45777,"The project intends to replace existing distribution system pipes that
+are leaking and resulting in water loss",DC,16308700,,Yes-BC,10057600,
+370,5,17311,Jayton,M,TX1320001,458,"The City of Jayton proposes to replace all existing customer water meters with a new Advanced Metering Infrastructure (AMI) system. The project includes installation of AMI-compatible meters, metering infrastructure, and replacement of all meter boxes and related appurtenances to improve system accuracy, efficiency, and water
+accountability",PDC,625000,,Yes-CE,506300,
+371,5,17611,Pleasant Grove WSC,W,TX0810015,1399,"We plan on constructing 28,776 LF of 4"" PVC waterlines, replacing a 1,500-gallon hydropneumatic tank with a 5,000-gallon
+hydropneumatic tank, and constructing a 100 gpm water well",PDC,4382105,,,,
+372,5,17304,Acton MUD,D,TX1110007,20458,"AMUD is proposing water system improvements to address growth in the distribution system which includes upgrading a main arterial distribution main in the system to areas which are currently limited by the size of main. Several areas also require the extension of main lines to provide additional pressure in areas where future
+developments are anticipated",PDC,9810000,,,,
+373,4,17256,Castroville,M,TX1630033,150,"Replacement of a 6,000-gallon ground storage tank with a 50,000-
+gallon ground storage tank, and an asset management plan",PDC,1026000,,,,
+374,4,17780,East Medina Co SUD,D,TX1630030,1365,"Construction of pipeline and interconnection of East Medina County
+SUD Unit 3 PWS with East Medina County SUD Unit 1 PWS",PADC,2790000,,,,
+375,4,17298,Eldorado,M,TX2070001,1574,"Repair and re-coat 50,000 gallon elevated storage tank to meet
+current TCEQ standards; leak detection survey; GIS of water system and asset management plan.",PC,493500,,,,
+376,4,17359,Mountain WSC,W,TX0500020,2108,"Mountain WSC's proposed project would replace aging waterline along Cedar Ridge Road, addressing leaks to mitigate water loss. This proposed project also includes the creation of an Asset
+Management Plan.",PADC,494942.92,,,,
+377,4,17777,East Medina Co SUD,D,TX1630020,2505,"Construction of pipeline and interconnection of East Medina County
+SUD Unit 2 PWS with East Medina County SUD Unit 1 PWS",PADC,5613000,,,,
+378,4,17255,Castroville,M,TX1630005,3913,"Replacement of approximately 26,800 LF of asbestos cement water
+main",PDC,19720000,,,,
+379,4,17786,East Medina Co SUD,D,TX1630010,6153,"Construction of pipeline and interconnection of East Medina County
+SUD Unit 1 PWS with East Medina County SUD Unit 2 PWS",PADC,5720000,,,,
+380,4,17314,Josephine,M,TX0430036,6960,"Propose a new 0.5MG Elevated Storage Tank (EST) and perform
+water system modeling",PADC,8232000,,,,
+381,4,17781,Benton City WSC,W,TX1630034,32400,"To Replace all Existing Customer's Service Meters with an Advanced
+Metering Infrastructure (AMI) type of Meter and the Development of an Asset Management Plan",PDC,9005000,,Yes-CE,4000000,
+382,4,17357,Mountain WSC,W,TX0500020,2108,"Mountain WSC's proposed project would replace undersized 1.5"" water lines along Old Osage Road to meet system goals. The intentions for this proposed project include meeting system demands, decreasing water loss and maintenance costs, as well as meeting
+TCEQ recommendations.",ADC,495373.6,,,,
+383,4,17358,Mountain WSC,W,TX0500020,2108,"Mountain WSC's proposed project would replace undersized lines including 1"", 1.5"", and 2"" inch waterlines throughout the system to
+meet TCEQ recommendations.",DC,488373.6,,,,
+384,4,17273,Elm Creek WSC,W,TX1550026,5262,"Short Description: Elm Creek WSC's proposed project would focus on replacing portions of waterlines causing strain and water loss on the system. This proposed project includes waterline replacements
+on Munz Road and Tower Drive.",ADC,1694826.9,,,,
+385,4,17241,Alpine,M,TX0220001,6000,"The City of Alpine, in an effort to increase efficiency, improve operations and conserve water, would contract for smart meters and
+an advanced metering infrastructure (AMI) system.",PDC,3678000,,,,
+386,4,17370,Parker County SUD,D,TX1840079,6000,"PCSUD will upsize the existing 6-inch FM 1189 line and I-20 bore to a 12-inch line and shift the alignment to Wolf Hollow Road. The new lin and bore will be routed west of the existing crossing and tie into the
+Jack Wright Pump Station to support area growth.",PADC,10720890,,Yes-BC,10720890,
+387,4,17371,Parker County SUD,D,TX1840079,6300,"PCSUD plans to upsize the FM 113 and W. I-20 lines to increase
+capacity.",PADC,6139450,,Yes-BC,6139450,
+388,4,17372,Parker County SUD,D,TX1840079,6300,"PCSUD plans to upsize the existing 6-inch water line from the Jack Wright Pump Station to Poe Prairie Road to an 8-inch line. The project also includes replacing the existing bore east of FM 1189 that crosses the Brazos River. The new river crossing will consist of an 8-
+inch water line installed within a 24-inch bore",PADC,4796971,,Yes-BC,4796971,
+389,4,17603,Parker County SUD,D,TX1840079,6300,"PCSUD plans to upsize the FM 1189 and Cougar Road lines to increase capacity between the Sugar Tree and Dennis Pump
+Stations.",PADC,7032509,,Yes-BC,7032509,
+390,3,17744,Montgomery Co FWSD # 6,D,TX1700142,408,"FWSD#6's water plant is in need of pressure tank replacement,
+ground storage tank repairs, new water well, and replacement of old water lines within the distribution system",PDC,1075000,,,,
+391,3,17686,Sheridan WSC,W,TX0450016,1164,"Pressure Storage Facilities Upgrades and Distribution System Upgrades to Facilitate the Development of a Open Interconnection
+with Lake Sheridan Estates",DC,4000000,,Yes-BC,12000,
+392,3,17510,Walker Co SUD,D,TX2360069,8808,"Project allows for the replacement of nearly 59,000 linear feet of waterline which has been the source of significant water loss. Project also include the replacement of an existing ground storage tank and the development of an asset management plan for the District.",PDC,7745000,,,,
+393,3,17823,Orange,M,TX1810004,22205,Design and construction of 500k Gallon Elevated Water Storage tank,PDC,10068520,,,,
+394,3,17289,Graford,M,TX1820003,736,"Replace antiquated and deteriorated waterlines to improve water conservation. Improve water storage quality with upgraded chemical treatment equipment at pump station. Ensure water supply continuity with a new ground storage tank at pump station and rehab for the
+elevated storage tank in town",PDC,1301500,,,,
+395,3,17296,Hico,M,TX0970002,1379,"The project includes installing two new wells, a new ground storage
+tank, upgrading the high service pump station, rehabbing the elevate tank, and replacing old cast iron water lines",PDC,5000000,,Yes-BC,2885000,
+396,3,17443,Grandview,M,TX1260004,2004,"To reduce water loss and increase water conservation by replacing
+old, deteriorated waterlines and secure water availability with new ground storage tank.",PDC,2500000,,,,
+397,3,17444,Grandview,M,TX1260004,2004,"This project consists of drilling two new water wells and installing a new back up generator at the elevated storage tank site to ensure adequate supply of public drinking water for the residents of
+Grandview.",PADC,4560000,,,,
+398,3,17258,Chico,M,TX2490004,2127,"Install new ground storage tank and transfer station to move water between pressure planes in order to meet the TCEQ 0.6 gpm per
+connection rule",PADC,1625000,,,2055000,
+399,3,17614,Hamlin,M,TX1270002,2164,"The City of Hamlin aims to enhance their water distribution system by improving its existing distribution lines, valves, and hydrants. The distribution lines are aging, dilapidated, and need to be replaced.
+Additionally, the City is addressing additional water loss issues and water use efficiency by replacing all aging mechanical meters on the distribution system with AMI meters. An asset management plan and
+water conservation plan is included",PDC,25687000,,Yes-BC,13994000,
+400,3,17295,Martin Springs WSC,W,TX1120015,4095,New Elevated Storage Tank and Waterline Replacements,PADC,5575000,,,,
+401,3,17442,Elm Creek WSC,W,TX1550026,5262,"Elm Creek WSC's proposed project includes rehabilitation of a
+current groundwater well including pump replacement",PDC,626125,,,,
+402,3,17373,Parker County SUD,D,TX1840079,6000,"The project includes constructing an additional clearwell to store
+MF/RO-treated water. The existing clearwell will also be replaced due to significant corrosion and structural deterioration",PDC,5563800,,,,
+403,3,17376,Parker County SUD,D,TX1840079,6000,"This project replaces the existing intake with a new raw water intake
+and pump station.",PADC,13822450,,,,
+404,3,17260,Coryell City WSD,D,TX0500013,6105,"Coryell City WSD's proposed project includes the replacement of a
+transmission line near their largest plant",PAC,2156874,,,,
+405,3,17618,Coryell City WSD,D,TX0500013,6105,"Coryell City WSD's proposed project includes replacement of a
+transmission line near the system's Riddle Plant",PADC,3079592.2,,,,
+406,3,17395,River Oaks,M,TX2200069,7556,"The City of River Oak's proposed project consists of replacing the
+raw water pump, and installation of a variable frequency drive",PDC,656250,,,,
+407,3,17245,Anna,M,TX0430027,35000,"24"" Collin County Outer Loop Water Line",PADC,12850000,,,,
+408,3,17517,Austin,M,TX2270001,1153430,"The proposed South IH-35 Reservoir is planned as a 3-million-gallon
+elevated reservoir 100'-150' in height and will include foundational piping for a future pump station",C,45611000,,,,
+409,3,17714,Austin,M,TX2270001,1153430,"Replace Center Street Pump Station with a new, electrically upgrade
+facility providing a firm pumping capacity of 46 MGD",PDC,69035360,,,,
+410,3,17720,Austin,M,TX2270001,1153430,"A new 2-million-gallon elevated reservoir and transmission main for
+the Southwest B Pressure Zone",PDC,31865000,,,,
+411,2,17407,Springs Hill SUD,W,TX0940022,35472,"The Project consists of the construction of a new 0.5 MG concrete ground storage tank, designed in accordance with the provided drawings and specifications. It also includes an 8-foot-tall masonry wall around the perimeter. It includes site preparation with erosion an
+sediment control measures.",C,3750000,,,,
+412,1,17272,Elm Creek WSC,W,TX1550026,5262,"Elm Creek WSC's proposed project consists of constructing a new
+500,000-gallon composite elevated storage tank",ADC,6167500,,,,
+413,1,17274,Elm Creek WSC,W,TX1550026,5262,"Elm Creek WSC's proposed project would install three emergency generators, one at each of their plants. This project would ensure that there is adequate backup power to supply their consumers with water
+to the appropriate pressure during a power outage",ADC,653002.45,,,,
+414,1,17807,Hurst,M,TX2200054,38500,CIP replacement program,DC,21700000,,,,
+415,1,17451,Everman,M,TX2200010,6347,"Construction of approximately 6,100 linear feet of 12'' diameter water supply transmission main from Oak Grove Road to the Police
+Department site ground storage tank.",PDC,2938089,,,,
+416,0,17404,Carbon,M,TX0670015,285,"The project includes the installation of AMR meters and meter
+reading system.",PDC,400000,,Yes-CE,266450,
+417,0,17790,Woodloch,M,TX1700112,747,"Rehabilitate the Town of Woodloch's primary water supply well to restore production capacity lost due to suspected damage or leakage in the down-hole column pipe. The project will address declining well output, ensure adequate system pressure, and maintain reliable
+potable water service for the community",PDC,2000000,,,650000,
+418,0,17244,Amherst,M,TX1400006,902,"This project includes construction of a new 200,000-gallon ground storage tank along with rehabilitating the city's existing 200,000-gallon ground storage tank. Additionally, the City will replace a deteriorated section of water distribution line along Main Street from Bulldog Road to Highway 84, reconnecting existing fire hydrants, service
+connections, and all related appurtenances.",PDC,2000000,,,,
+419,0,17891,Pinehurst Decker Prairie WSC,W,TX1700507,1000,"Major upgrade of existing water plant due to aging and failing equipment (originally installed 1983), response to new highway construction requirements for MCTRA and new housing development
+in the area.",C,842635,,,,
+420,0,17337,Alto,M,TX0370001,1225,"Rehabilitate existing water plant components and replace existing
+waterlines including new water meters.",PDC,4859000,,,,
+421,0,17513,Hardin Co WCID # 1,D,TX1000016,1290,"This project will replace all existing residential water meters with more efficient
+electronic auto-read meters.",PDC,425000,,Yes-CE,180000,
+422,0,17472,Holiday Beach WSC,W,TX0040015,1604,Replace existing water distribution lines.,PDC,3800000,,,,
+423,0,17386,Bayview MUD,D,TX0840010,1850,"Bayview MUD's proposed project includes rehabilitation of an elevated storage tank that provides system pressure and storage vita
+to meeting system demands.",DC,452175,,,,
+424,0,17349,McLennan Co WCID # 2,D,TX1550002,2370,"New elevated storage tank, service pump replacement, cooling tower
+replacement, and rehabilitation of ground storage tanks",DC,4809500,,,,
+425,0,17621,Coryell City WSD,D,TX0500013,6105,"Coryell City WSD's proposed project includes improvements to the
+Riddle booster station.",PADC,2346330,,,,
+426,0,17390,River Oaks,M,TX2200069,7556,"The City of River Oaks' proposed project includes the replacement of
+the clearwell roof.",PDC,1865250,,,,
+427,0,17392,River Oaks,M,TX2200069,7556,"The City of River Oaks' proposed project consists of rehabilitation of
+the clearwell interior.",PDC,1040750,,,,
+428,0,17394,River Oaks,M,TX2200069,7556,"the City of River Oak's proposed project includes the reconstruction
+of the access road to the water treatment plant.",PDC,1219000,,,,
+429,0,17279,Fort Stockton,M,TX1860001,8142,"The project will provide additional storage for the City through a new water storage tank, which will help provide more consistent pressures to existing and potential customers on the east side of the City. A large diameter water main will complete a needed large diameter loop to provide capacity and redundancy to the east part of the City.",PDC,6250000,,,,
+430,0,17246,Anna,M,TX0430027,35000,West 3.0 MG EST,PADC,21000000,,,,
+431,0,17247,Anna,M,TX0430027,35000,Grayson Pump Station,PADC,22900000,,,,

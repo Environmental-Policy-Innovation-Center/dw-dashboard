@@ -91,6 +91,22 @@ clean_tn_y2 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown")
 
+  # Check pwsid lengths
+  # tn_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  tn_clean <- tn_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Cumberland Utility District" & pwsid == "TN0000531/ TN0000520" ~ "TN0000531",
+        .default = pwsid
+      )
+    )
+
   ####### Decision: No lead projects classified as unknown
 
   ####### SANITY CHECKS END #######

@@ -377,6 +377,28 @@ clean_oh_y3 <- function() {
         )
       )
 
+      # Check pwsid lengths
+  # oh_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  oh_clean <- oh_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Coolville" & pwsid == "OH500603" ~ "OH0500603",
+        borrower == "Bridgeport" & pwsid == "OH700612" ~ "OH0700612",
+        borrower == "Granville" & pwsid == "OH450612" ~ "OH4500612",
+        borrower == "Highland Ridge W And S Association" & pwsid == "OH403203" ~ "OH8403203",
+        borrower == "Le-Ax Regional Water District" & pwsid == "OH501111" ~ "OH0501111",
+        borrower == "Perry County" & pwsid == "OH64022703" ~ "OH6402703",
+        borrower == "Spencerville" & pwsid == "OH201312" ~ "OH0201312",
+        borrower == "Trenton" & pwsid == "OH903012" ~ "OH0903012",
+        .default = pwsid
+      )
+    ) 
 
   ####### SANITY CHECKS END #######
 

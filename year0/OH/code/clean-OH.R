@@ -233,6 +233,22 @@ clean_oh_y0 <- function() {
       )
     ) |>
     dplyr::select(-new_lead_type)
+
+  # Check pwsid lengths
+  # oh_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  oh_clean <- oh_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Hillsboro" & pwsid == "OH36000614" ~ "OH3600614",
+        .default = pwsid
+      )
+    )  
   
   ####### SANITY CHECKS END #######
 

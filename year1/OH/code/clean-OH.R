@@ -237,6 +237,28 @@ clean_oh_y1 <- function() {
     ) |>
     dplyr::select(-new_lead_type)
   
+    # Check pwsid lengths
+  # oh_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  oh_clean <- oh_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Fairport Harbor" & pwsid == "OH-4300411" ~ "OH4300411",
+        borrower == "Germantown" & pwsid ==   "OH701012" ~ "OH5701012",
+        borrower == "Alliance" & pwsid ==   "OH760011" ~ "OH7600011",
+        borrower == "Miamisburg" & pwsid ==   "OH701212" ~ "OH5701212",
+        borrower == "Perry County" & pwsid ==   "OH402703" ~ "OH6402703",
+        borrower == "Twin City Water and Sewer District" & pwsid == "OH79001711" ~ "OH7901711",
+        borrower == "Bowerston" & pwsid == "OH34001121" ~ "OH3400112",
+        .default = pwsid
+      )
+    )  
+
   ####### SANITY CHECKS END #######
   
   run_tests(oh_clean)

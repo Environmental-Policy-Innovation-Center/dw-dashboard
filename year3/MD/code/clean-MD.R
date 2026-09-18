@@ -158,6 +158,22 @@ clean_md_y3 <- function() {
   
 ######## Decision: 9 projects classified as unknown, adressed upstream
   
+       # Check pwsid lengths
+  # md_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  md_clean <- md_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "EASTON UTILITIES" & pwsid == "MD020003" ~ "MD0200003",
+        .default = pwsid
+      )
+    ) 
+  
 ####### SANITY CHECKS END #######
   
 

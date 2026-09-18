@@ -112,6 +112,23 @@ clean_md_y0 <- function() {
   
 ######## Decision: No projects classified as unknown
   
+    # Check pwsid lengths
+  # md_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  md_clean <- md_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+        borrower == "MAYOR & CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+        .default = pwsid
+      )
+    ) 
+  
 ####### SANITY CHECKS END #######
   
   run_tests(md_clean)

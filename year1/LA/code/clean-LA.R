@@ -191,6 +191,23 @@ clean_la_y1 <- function() {
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
 
+  
+  # Check pwsid lengths
+  # la_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  la_clean <- la_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "City of Natchitoches" & pwsid == "LA106007" ~ "LA1069007",
+        .default = pwsid
+      )
+    )                
+   
   run_tests(la_clean)
   rm(list=setdiff(ls(), "la_clean"))
   

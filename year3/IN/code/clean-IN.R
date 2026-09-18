@@ -191,6 +191,23 @@ clean_in_y3 <- function() {
       )
     )
   
+  # Check pwsid lengths
+  # in_clean |>
+  #   dplyr::mutate(
+  #     length_pwsid = stringr::str_length(pwsid)
+  #   ) |> 
+  #   dplyr::filter(!length_pwsid == 9) |>
+  #   dplyr::filter(!pwsid == "No Information")   
+
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Jackson County Water Utility" & pwsid == "IN36003/52360" ~ "IN5236003",
+        borrower == "Tipton" & pwsid == "IN528004" ~"IN5280004",
+        .default = pwsid
+      )
+    )    
+
 ####### SANITY CHECKS END #######
   
   run_tests(in_clean)

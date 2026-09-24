@@ -92,6 +92,7 @@ clean_il_y5 <- function() {
       requested_amount = clean_numeric_string(total_funding_requested),
       project_score = priority_score,
       expecting_funding = "No",
+      project_type = "Lead",
       list = "lead exhausted"
     )
   
@@ -306,7 +307,8 @@ clean_il_y5 <- function() {
   #drop No Information
   il_lead_unknow_id <- il_lead_unknow_id[!grepl("No Information", il_lead_unknow_id)]
   
-  ####### Decision: 26 projects unknown --> all LSLR
+  ####### Decision: 26 projects unknown --> all LSLR  (27; including galvanized)
+
 
   il_clean <- il_clean |>
       dplyr::mutate(

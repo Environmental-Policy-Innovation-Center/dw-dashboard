@@ -108,6 +108,20 @@ clean_tx_y2 <- function() {
   #   dplyr::filter(lead_type == "unknown") |> View()
 
 # Decision: 1 unknown stays unknown
+  
+    tx_clean <- tx_clean |>
+    dplyr::mutate(
+      project_type = dplyr::case_when(
+        project_id %in% c("14913") ~ "Lead",
+        .default = project_type
+      ),
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("14913") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    ) 
+  
+  
 ####### SANITY CHECKS END #######
   
   run_tests(tx_clean)

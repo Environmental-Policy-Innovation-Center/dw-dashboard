@@ -112,6 +112,19 @@ clean_nj_y3 <- function() {
       )
     )
 
+  # Galvanized to lead assessment
+  nj_clean <- nj_clean |>
+    dplyr::mutate(
+      project_type = dplyr::case_when(
+        project_id %in% c("1005001-017", "1013001-002") ~ "Lead",
+        .default = project_type
+      ),
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("1005001-017", "1013001-002") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    ) 
+  
   ####### SANITY CHECKS END #######
   
   run_tests(nj_clean)

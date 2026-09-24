@@ -159,14 +159,29 @@ clean_tx_y3 <- function() {
         .default = pwsid
       )
     )
-
-####### SANITY CHECKS END #######
-
+  
   tx_clean <- tx_clean |>
     dplyr::mutate(
       project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type),
       project_description = ifelse(project_id %in% c("16061", "16062"), paste0(project_description, " | FT: LSLR"), project_description)
     )
+  
+  # Galvanized to lead assessment
+  tx_clean <- tx_clean |>
+    dplyr::mutate(
+      project_type = dplyr::case_when(
+        project_id %in% c("15554") ~ "Lead",
+        .default = project_type
+      ),
+      project_description = dplyr::case_when(
+        project_type == "Lead" & project_id %in% c("15554") ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    ) 
+  
+####### SANITY CHECKS END #######
+
+  
   
   # Run validation tests
   run_tests(tx_clean)

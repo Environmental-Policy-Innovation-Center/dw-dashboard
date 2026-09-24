@@ -94,6 +94,19 @@ clean_tn_y3 <- function() {
 
   ####### Decision: No lead projects classified as unknown
 
+  # Galvanized to lead assessment
+  tn_clean <- tn_clean |>
+    dplyr::mutate(
+      project_type = dplyr::case_when(
+        borrower == "Erwin Utilities"	&	project_description == "Waterline Replacement (Replacing water service laterals constructed of galvanized iron and associated appurtenances throughout the distribution system.)" ~ "Lead",
+        .default = project_type
+      ),
+      project_description = dplyr::case_when(
+        borrower == "Erwin Utilities"	&	project_description == "Waterline Replacement (Replacing water service laterals constructed of galvanized iron and associated appurtenances throughout the distribution system.)" ~ paste0(project_description, " | FT: LSLR"),
+        .default = project_description
+      )
+    ) 
+
   ####### SANITY CHECKS END #######
 
   run_tests(tn_clean)

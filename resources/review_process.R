@@ -1,9 +1,9 @@
 source("resources/review_helpers.R")
 source("resources/view_code_review.R")
 
-year <- "year5"
-sfy <- "SFY27"
-state_abb <- "MS"
+year <- "year4"
+sfy <- "SFY26"
+state_abb <- "NJ"
 review_number <- "1"
 
 year_title <- stringr::str_extract(year, "\\d+")

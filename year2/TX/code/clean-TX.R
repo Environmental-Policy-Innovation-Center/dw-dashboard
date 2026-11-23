@@ -52,11 +52,12 @@ clean_tx_y2 <- function() {
            disadvantaged = ifelse(is.na(disadv_percent) & is.na(disadvantaged), "No", "Yes"),
            # ec list is No Info, invitation list is already Yes, anything on General PPL that's NA is No
            expecting_funding = case_when(
-             is.na(expecting_funding) & list=="ec" ~ "No Information",
+             is.na(expecting_funding) & list=="SFY 2024 EC IUP" ~ "No Information",
              is.na(expecting_funding) ~ "No",
              TRUE ~ expecting_funding),
            funding_amount = as.character(NA),
            pwsid = replace_na(pwsid, "No Information"),
+           pwsid = ifelse(pwsid == "0", "No Information", pwsid), 
            project_id = replace_na(project_id, "No Information"),
            state = "Texas",
            state_fiscal_year = "2024"
@@ -67,31 +68,35 @@ clean_tx_y2 <- function() {
   
   ####### SANITY CHECKS START #######
 
-# Hone in on project id duplication
-#tx_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  # Check pwsid
+  # tx_clean |> dplyr::filter(!pwsid == "No Information") |> dplyr::mutate(length_pwsid = stringr::str_length(pwsid)) |> dplyr::filter(!length_pwsid == 9)
+  ####### Decision : Consistent PWSIDs
 
-# Check for disinfection byproduct in description
-#tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
-  
-####### Decision : No disinfection byproduct string
+  # Hone in on project id duplication
+  # tx_clean |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision : No duplicates
 
-# Check for lead subtypes: Both
-# tx_clean |>
-#     dplyr::filter(project_type=="Lead") |>
-#     dplyr::mutate(
-#       lead_type = dplyr::case_when(
-#         stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-#         stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-#         stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-#         # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-#         stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-#         stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-#         TRUE ~ "unknown"
-#       )
-#     ) |>
-#     dplyr::filter(lead_type == "both") |> View()
+  # Check for disinfection byproduct in description
+  # tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  ####### Decision : No disinfection byproduct string
 
-  # Check for lead subtypes: Unknown
+  # Check for lead subtypes: Both
+  # tx_clean |>
+  #     dplyr::filter(project_type=="Lead") |>
+  #     dplyr::mutate(
+  #       lead_type = dplyr::case_when(
+  #         stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #         stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #         stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #         # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #         stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #         stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #         TRUE ~ "unknown"
+  #       )
+  #     ) |>
+  #     dplyr::filter(lead_type == "both") |> View()
+
+  # # Check for lead subtypes: Unknown
   # tx_clean |>
   #   dplyr::filter(project_type=="Lead") |>
   #   dplyr::mutate(
@@ -107,9 +112,10 @@ clean_tx_y2 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") |> View()
 
-# Decision: 1 unknown stays unknown
+  # Decision: 1 unknown stays unknown
   
-    tx_clean <- tx_clean |>
+  #Galvanized recat General --> Lead
+  tx_clean <- tx_clean |>
     dplyr::mutate(
       project_type = dplyr::case_when(
         project_id %in% c("14913") ~ "Lead",
@@ -121,8 +127,7 @@ clean_tx_y2 <- function() {
       )
     ) 
   
-  
-####### SANITY CHECKS END #######
+  ####### SANITY CHECKS END #######
   
   run_tests(tx_clean)
   rm(list=setdiff(ls(), "tx_clean"))

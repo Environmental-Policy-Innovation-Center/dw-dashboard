@@ -102,12 +102,10 @@ clean_tx_y3 <- function() {
 
 # Hone in on project id duplication
 #tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-
 ####### Decision : project_id = 16056 Different projects, same id
 
 # Check for disinfection byproduct in description
 #tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
-  
 ####### Decision : No disinfection byproduct string
 
 # Check for lead subtypes: Both
@@ -144,7 +142,15 @@ clean_tx_y3 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown") |> View()
 
-    # Check pwsid lengths
+  # Decision: 5 unknown ; addressed 1--> recat to General, 2 --> LSLR, 2 --> both (in state dataset script)
+
+    tx_clean <- tx_clean |>
+    dplyr::mutate(
+      project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type),
+      project_description = ifelse(project_id %in% c("16061", "16062"), paste0(project_description, " | FT: LSLR"), project_description)
+    )
+  
+  # Check pwsid lengths
   # tx_clean |>
   #   dplyr::mutate(
   #     length_pwsid = stringr::str_length(pwsid)
@@ -152,18 +158,13 @@ clean_tx_y3 <- function() {
   #   dplyr::filter(!length_pwsid == 9) |>
   #   dplyr::filter(!pwsid == "No Information")   
 
+  #Decision: 1 non standard 
   tx_clean <- tx_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
         borrower == "San Antonio Water System" & pwsid == "TX00150018" ~ "TX0150018",
         .default = pwsid
       )
-    )
-  
-  tx_clean <- tx_clean |>
-    dplyr::mutate(
-      project_type = ifelse(borrower == "Harlingen Water Works System" & project_id == "15868", "General", project_type),
-      project_description = ifelse(project_id %in% c("16061", "16062"), paste0(project_description, " | FT: LSLR"), project_description)
     )
   
   # Galvanized to lead assessment
@@ -180,8 +181,6 @@ clean_tx_y3 <- function() {
     ) 
   
 ####### SANITY CHECKS END #######
-
-  
   
   # Run validation tests
   run_tests(tx_clean)

@@ -68,6 +68,7 @@ clean_tx_y1 <- function() {
       borrower = stringr::str_squish(entity),
       pwsid = stringr::str_squish(pws_id),
       pwsid = replace_na(pwsid, "No Information"),
+      pwsid = ifelse(pwsid == "No Information", pwsid, stringr::str_to_upper(pwsid)),
       project_id = stringr::str_squish(pif_number),
       project_id = tidyr::replace_na(project_id, "No Information"),
       project_name = as.character(NA),
@@ -99,12 +100,12 @@ clean_tx_y1 <- function() {
   
   ####### SANITY CHECKS START #######
   # Hone in on project id duplication
-  #tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  # tx_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
   ####### Decision : No duplicates, 277 No Information
 
   # Check for disinfection byproduct in description
-  #tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+  # tx_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision : No disinfection byproduct string
   
   # Check for lead subtypes: Both

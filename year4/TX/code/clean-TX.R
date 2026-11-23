@@ -159,7 +159,6 @@ clean_tx_y4 <- function() {
 
 # Hone in on project id duplication
 #tx_clean  |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-
 ####### Decision : No duplicates
 
 # Check for disinfection byproduct in description
@@ -182,7 +181,7 @@ clean_tx_y4 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "both")
 
-  ####### Decision: No lead projects classified as both
+  ####### Decision: 1 lead project (correctly) classified as both
   
   # Check for lead subtypes: Unknown
   # tx_clean |>
@@ -200,6 +199,7 @@ clean_tx_y4 <- function() {
   #   ) |>
   #   dplyr::filter(lead_type == "unknown")
   
+
   tx_clean <- tx_clean |>
     dplyr::mutate(
       project_type = ifelse(
@@ -209,7 +209,7 @@ clean_tx_y4 <- function() {
       )
     )
 
- #Decision: 1 unknown --> General
+ #Decision: 1 unknown --> General; 17045 --> both (addessed in project dataset script)
   
   # Check pwsid lengths
   # tx_clean |>
@@ -227,12 +227,16 @@ clean_tx_y4 <- function() {
       )
     )
   
-####### SANITY CHECKS END #######
-  
+  #non material lead instance
   tx_clean <- tx_clean |>
     dplyr::mutate(
       project_type = ifelse(borrower == "Mexia" & project_id == "16581", "General", project_type)
     )
+  
+  
+####### SANITY CHECKS END #######
+  
+  
   # Run validation tests
   run_tests(tx_clean)
   rm(list=setdiff(ls(), "tx_clean"))

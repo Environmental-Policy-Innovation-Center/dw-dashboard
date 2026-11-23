@@ -103,6 +103,10 @@ clean_mn_y1 <- function() {
 ) 
   
   mn_clean <- mn_combined_full|>
+    dplyr::mutate(
+      funding_amount = ifelse(funding_amount == "0", "No Information", funding_amount),
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness)
+    ) |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)

@@ -2,11 +2,11 @@ clean_al_y0 <- function() {
 
   al_iup <- data.table::fread("year0/AL/data/al-fy21-iup.csv",
                    colClasses = "character", na.strings = "") |>
-    clean_names() |>
+    janitor::clean_names() |>
     dplyr::mutate(list = "SFY22 Base PPL")
 
   al_clean <- al_iup |>
-    mutate(
+    dplyr::mutate(
       community_served = str_squish(county_served),
       borrower = str_squish(applicant_name),
       pwsid = as.character(NA),

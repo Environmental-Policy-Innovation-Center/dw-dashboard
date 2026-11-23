@@ -35,7 +35,8 @@ clean_tn_y1 <- function() {
       revolving_base_principal_forgiveness = convert_to_numeric(revolving_base_principal_forgiveness,fill_na_0 = TRUE),
       principal_forgiveness = principal_forgiveness_amount + principal_forgiveness_amount_2 + revolving_base_principal_forgiveness,
       # [keep] all projects are ranked
-      principal_forgiveness = clean_numeric_string(principal_forgiveness),       
+      principal_forgiveness = clean_numeric_string(principal_forgiveness),
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),       
       disadvantaged = dplyr::case_when(
         grepl("\\*", local_government) ~ "Yes",
         TRUE ~ "No"),

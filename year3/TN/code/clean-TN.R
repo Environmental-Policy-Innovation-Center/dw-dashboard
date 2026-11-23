@@ -37,6 +37,7 @@ clean_tn_y3 <- function() {
       estimated_amount_for_small_systems_principal_forgiveness = convert_to_numeric(estimated_amount_for_small_systems_principal_forgiveness,fill_na_0 = TRUE),
       principal_forgiveness = estimated_amount_for_green_project_subsidy + amount_for_disadvantaged_communities_principal_forgiveness + estimated_amount_for_small_systems_principal_forgiveness,
       principal_forgiveness = ifelse(is.na(rank_order), "No Information", clean_numeric_string(principal_forgiveness)), 
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
       population = clean_numeric_string(pop_served), 
       disadvantaged = case_when(
         grepl("\\*", local_government) ~ "Yes",

@@ -29,6 +29,7 @@ clean_tn_y2 <- function() {
       fy23_bil_principal_forgiveness_amount = convert_to_numeric(fy23_bil_principal_forgiveness_amount,fill_na_0 = TRUE),
       principal_forgiveness = fy23_base_principal_forgiveness_amount + fy23_bil_principal_forgiveness_amount,
       principal_forgiveness = ifelse(is.na(rank_order), "No Information", clean_numeric_string(principal_forgiveness)), 
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
       population = clean_numeric_string(pop_served), 
       disadvantaged = case_when(
         grepl("\\*", local_government) ~ "Yes",

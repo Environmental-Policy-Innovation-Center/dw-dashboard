@@ -127,7 +127,7 @@ clean_in_y0 <- function() {
   in_clean <- in_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
-        borrower == "Cedar Lake" & pwsid == "IN5245047, IN, IN5245067" ~"IN5245047",
+        borrower == "Cedar Lake" & pwsid == "IN5245047, IN, IN5245067" ~ "IN5245047 IN5245067",
         .default = pwsid
       )
     )

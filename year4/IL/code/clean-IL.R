@@ -98,7 +98,8 @@ clean_il_y4 <- function() {
       project_type = "Lead",
       list = "lead planning approval"
     )
-  
+  #Note all loan_priority_score 0 or NA, therefore will be No Information downstream as per DD
+
   ## Lead No Planning Approval List -----
   il_lead_no_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_LSLR_NoPlanning_Approval_List.csv",
                     colClasses = "character", na.strings = "") |>
@@ -111,7 +112,6 @@ clean_il_y4 <- function() {
       list = "lead no planning approval"
     )
     
-  
   ## EC Exhausted Funding List -----
   il_ec_no_pla_ap <- data.table::fread("year4/IL/data/IL_Y4_SFY26_EC_Exhausted_Funding_List.csv",
                     colClasses = "character", na.strings = "") |>
@@ -148,9 +148,9 @@ clean_il_y4 <- function() {
         list == "planning approval" ~ clean_numeric_string(projected_loan_amount),
         list == "no planning approval" ~ clean_numeric_string(projected_loan_amount),
         list == "ec exhausted" ~ clean_numeric_string(requested_loan_amount),
-        list == "lead exhausted" ~ clean_numeric_string(projected_loan_amount),
+        list == "lead exhausted" ~ clean_numeric_string(projected_loan_amount), ## DD may need to be corrected; see error 1
         list == "lead planning approval" ~ clean_numeric_string(projected_loan_amount),
-        list == "lead no planning approval" ~ clean_numeric_string(projected_loan_amount),
+        list == "lead no planning approval" ~ clean_numeric_string(projected_loan_amount), ## DD may need to be corrected; see error 2
         .default = "No Information"
       ),
       project_description = str_squish(project_description),

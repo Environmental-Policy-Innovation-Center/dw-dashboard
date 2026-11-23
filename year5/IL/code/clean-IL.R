@@ -334,6 +334,19 @@ clean_il_y5 <- function() {
         borrower == "Apple River" & pwsid == "IL08550050" ~ "IL0850050",
         borrower == "Winnebago" & pwsid == "IL20105000" ~ "IL2010500",
         borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
+        borrower == "W2e, Incorporated" & pwsid == "IL00000" ~ "No Information",
+
+        borrower == "Chicago Park District" & pwsid == "NA" ~ "No Information",
+        borrower == "Thornton" & pwsid == "IL031090" ~ "IL0313090",
+        borrower == "Hanover Park" & pwsid == "IL031480" ~ "IL0314480",
+        borrower == "Brownsville Water Project, Inc." & pwsid == "IL0000" ~ "IL1930020",
+        borrower == "Zion" & pwsid == "IL-0972000" ~ "IL0972000",
+        borrower == "Annawan" & pwsid == "IL 0730150" ~ "IL0730150",
+        borrower == "Essex" & pwsid == "IL000" ~ "No Information",
+        borrower == "Grand Prairie Sanitary Dist." & pwsid == "tbd" ~ "No Information",
+        # borrower == "Timber Ridge Water Association" & pwsid == "IL07395470" ~ "",
+        borrower == "West Chicago" & pwsid == "IL04330900" ~ "IL0430900",   
+	 
         .default = pwsid
       )
     )

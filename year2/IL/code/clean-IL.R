@@ -212,6 +212,7 @@ clean_il_y2 <- function() {
       dplyr::filter(!(project_id == "6043" & list =="fundable")) |>
       dplyr::mutate(
         principal_forgiveness = ifelse(project_id=="6043", "2100000", principal_forgiveness),
+        disadvantaged = ifelse(project_id=="6043", "Yes", disadvantaged)
       )
     
     # Decision: this is the only project in this year on the fundable and ec fundable lists
@@ -300,11 +301,12 @@ clean_il_y2 <- function() {
   il_clean <- il_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
-         borrower == "Cissna" & pwsid == "IL07500200" ~ "IL0750200",
+         borrower == "Cissna Park" & pwsid == "IL07500200" ~ "IL0750200",
          borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
         .default = pwsid
       )
     )
+  
     ####### SANITY CHECKS END #######
   
   run_tests(il_clean)

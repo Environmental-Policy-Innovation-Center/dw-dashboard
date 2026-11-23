@@ -276,13 +276,41 @@ clean_il_y3 <- function() {
         borrower == "Stonington" & pwsid == "IL210550" ~ "IL0210550",
         borrower == "Walnut" & pwsid == "IL111100" ~ "IL0111100",
         borrower == "Buda" & pwsid == "IL10100" ~ "IL0110100",
+
+        borrower =="Forreston" & pwsid == "IL730200" ~ "IL0730200",
+        borrower =="Downers Grove" & pwsid == "IL251605030" ~ "IL0430300", 
+ 
         .default = pwsid
       )
     )
+  
+  
+  #Check funding amounts
+  # il_clean |>
+  #   dplyr::filter(
+  #     funding_amount == "0"
+  #   ) |> 
+  #   dplyr::pull(project_id)
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      funding_amount = ifelse(project_id %in% c("6801", "6787", "6802"), "No Information", funding_amount),
+      principal_forgiveness = ifelse(project_id %in% c("6801", "6787", "6802"), "No Information", principal_forgiveness)
+    )
+  
+  #Check principal forgiveness
+  pf_to_no_info_id <- il_clean |>
+    dplyr::filter(
+      principal_forgiveness == "0" & !funding_amount == "No Information"
+    ) |> 
+    dplyr::pull(project_id)
+
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      principal_forgiveness = ifelse(project_id %in% pf_to_no_info_id, "No Information", principal_forgiveness)
+    )
   ####### SANITY CHECKS END #######
   
-
-
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))
   

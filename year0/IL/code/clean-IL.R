@@ -112,7 +112,7 @@ clean_il_y0 <- function() {
         TRUE ~ "No Information"
       ),
       principal_forgiveness = dplyr::case_when(
-        list == "Base Fundable" & is.na(convert_to_numeric(disadvantaged_community_principal_forgiveness)) ~ "0",
+        list == "Base Fundable" & is.na(convert_to_numeric(disadvantaged_community_principal_forgiveness)) ~ "0", #captures any non numeric (e.g., N/E and Funding Exhausted )
         list == "Base Fundable" ~ clean_numeric_string(disadvantaged_community_principal_forgiveness),
         list == "LSLR Fundable" ~ clean_numeric_string(estimated_loan_amount),
         .default = "No Information"
@@ -178,7 +178,7 @@ clean_il_y0 <- function() {
     dplyr::filter(!(project_id == "5085" & list =="Base Ineligible"))
 
   # Check project id
-  il_clean |> dplyr::filter(project_id == "5652")
+  # il_clean |> dplyr::filter(project_id == "5652")
   # Decision: Keep both, they are different projects, may have been a typo
 
   # Check project id
@@ -231,9 +231,6 @@ clean_il_y0 <- function() {
   ####### Decision: No lead projects classified as unknonw
     
   ####### SANITY CHECKS END #######
-  
-  # il_clean <- il_clean |>
-  #   dplyr::select(-list)
 
   run_tests(il_clean)
   rm(list=setdiff(ls(), "il_clean"))

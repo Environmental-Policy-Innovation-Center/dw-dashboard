@@ -7,7 +7,7 @@ clean_il_y1 <- function() {
     janitor::clean_names() |>
     dplyr::mutate(
       expecting_funding = "Yes",
-      disadvantaged = ifelse(disadvantaged_community_principal_forgiveness == "N/E", "Yes", "No"),
+      disadvantaged = ifelse(disadvantaged_community_principal_forgiveness == "N/E", "No", "Yes"),
       # replace "N/E" with 0 for principal forgiveness since N/E is different from the NAs in other docs
       disadvantaged_community_principal_forgiveness = str_replace(disadvantaged_community_principal_forgiveness, "N/E", "0"),
       principal_forgiveness = clean_numeric_string(disadvantaged_community_principal_forgiveness),
@@ -280,9 +280,7 @@ clean_il_y1 <- function() {
       )
     )
 
-
   ####### SANITY CHECKS END #######
-  
 
 
   run_tests(il_clean)

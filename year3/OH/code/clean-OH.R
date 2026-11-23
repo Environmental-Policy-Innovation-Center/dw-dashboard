@@ -396,6 +396,8 @@ clean_oh_y3 <- function() {
         borrower == "Perry County" & pwsid == "OH64022703" ~ "OH6402703",
         borrower == "Spencerville" & pwsid == "OH201312" ~ "OH0201312",
         borrower == "Trenton" & pwsid == "OH903012" ~ "OH0903012",
+        borrower == "Wapakoneta" & pwsid == "OH661721" ~ "OH0600712", 
+        borrower == "Fairview" & pwsid == "OH" ~ "No Information", 
         .default = pwsid
       )
     ) 

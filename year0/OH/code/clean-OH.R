@@ -70,7 +70,7 @@ clean_oh_y0 <- function() {
     dplyr::mutate(rate = paste(rate.x, rate.y, sep = " ")) |>
     # finding the presence of HAB or LSL in the rate columns: 
     dplyr::mutate(project_type = case_when(grepl("HAB|PFAS", rate) ~ "Emerging Contaminants", 
-                                    grepl("LSL", rate) | grepl("lead", project, ignore.case=TRUE) ~ "Lead", 
+                                    grepl("LSL", rate) | grepl("lead|lsl", project, ignore.case=TRUE) ~ "Lead", 
                                     # and the other strings listed for the 
                                     # fundbale list
                                     grepl(ec_str, project, ignore.case=TRUE) ~ "Emerging Contaminants", 
@@ -188,20 +188,20 @@ clean_oh_y0 <- function() {
   ####### Decision: No lead projects classified as both
   
   # Check for lead subtypes: Unknown
-  # oh_clean |>
-  #   dplyr::filter(project_type=="Lead") |>
-  #   dplyr::mutate(
-  #     lead_type = dplyr::case_when(
-  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-  #       TRUE ~ "unknown"
-  #     )
-  #   ) |>
-  #   dplyr::filter(lead_type == "unknown") 
+  oh_clean |>
+    dplyr::filter(project_type=="Lead") |>
+    dplyr::mutate(
+      lead_type = dplyr::case_when(
+        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+        TRUE ~ "unknown"
+      )
+    ) |>
+    dplyr::filter(lead_type == "unknown") 
 
   ### 13 unknowns
   
@@ -209,22 +209,27 @@ clean_oh_y0 <- function() {
   oh_clean <- oh_clean |>
     dplyr::left_join(
       data.table::data.table(
-        community_served = c("Harrison",  "Columbiana","Highland","Lorain","Carroll","Muskingum", "Wood","Meigs","Ottawa","Lawrence","Tuscarawas", "Huron","Sandusky"),
-        borrower = c("Cadiz", "East Palestine","Hillsboro","Lorain","Malvern", "New Concord","North Baltimore","Pomeroy","Port Clinton", "Proctorville","Sugarcreek","Wakeman","Woodville"),
+        community_served = c("Harrison",  "Columbiana","Highland","Lorain","Carroll","Muskingum", "Wood","Meigs","Ottawa","Lawrence","Tuscarawas", "Tuscarawas", "Huron","Sandusky"),
+        borrower = c("Cadiz", "East Palestine","Hillsboro","Lorain","Malvern", "New Concord","North Baltimore","Pomeroy","Port Clinton", "Proctorville","Sugarcreek", "Sugarcreek", "Wakeman","Woodville"),
         project_description = c(
-          "Water Distribution and Storage System Imps","Waterline Replacement",
+          "Water Distribution and Storage System Imps",
+          "Waterline Replacement",
           "N. West St. Water System Imps",
-          "East Lorain Waterline Replacement","Phase 1 Waterline Replacement",
+          "East Lorain Waterline Replacement",
+          "Phase 1 Waterline Replacement",
           "Lead Service Line Investigation",
           "Water System Imps (Contract A WL; Contract B Tank)",
           "Water System Improvements",
-          "Water and Sanitary Sewer Infrastructure Improvements","Water System Improvements",
+          "Water and Sanitary Sewer Infrastructure Improvements",
+          "Water System Improvements",
+          "Factory, Main, Maple & Broadway WL and LSL Repl",
           "Factory, Main, Maple & Broadway WL and LSL Repl",
           "Farmer Street and Cooper Street Waterline Imps",
           "Waterline Improvements Phase 3"),
-        new_lead_type = c("lslr","lslr", "lslr","lslr","lslr","lsli","lslr","lslr","lslr", "lslr","lslr","lslr","lslr")
-      ),
-      by = c("community_served", "borrower", "project_description")
+        project_type = rep("Lead", 14),    
+        new_lead_type = c("lslr","lslr", "lslr","lslr","lslr","lsli","lslr","lslr","lslr", "lslr","lslr","lslr","lslr","lslr")
+      ) |> dplyr::distinct(),
+      by = c("community_served", "borrower", "project_description", "project_type")
     ) |>
     dplyr::mutate(
       project_description = dplyr::case_when(

@@ -341,6 +341,7 @@ clean_oh_y2 <- function() {
     dplyr::mutate(
       pwsid = dplyr::case_when(
         borrower == "Trenton" & pwsid == "OH903012" ~ "OH0903012",
+        pwsid == "TBD" ~ "No Information",
         .default = pwsid
       )
     ) 

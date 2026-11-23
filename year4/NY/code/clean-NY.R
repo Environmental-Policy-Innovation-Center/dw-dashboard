@@ -138,9 +138,7 @@ clean_ny_y4 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding,
            state, state_fiscal_year)
   
-  # Remove zero-cost projects per Janet's instructions in data dictionary
-  ny_clean <- ny_clean |>
-    filter(project_cost != "0")
+
   
   ####### SANITY CHECKS START #######
   
@@ -187,10 +185,10 @@ clean_ny_y4 <- function() {
   # Final Amendment #2: February 4, 2026 
   ny_clean <- ny_clean |> 
     dplyr::mutate(
-      project_cost = ifelse(project_id == "17629", "650000", project_cost),
-      project_cost = ifelse(project_id == "18768", "175000", project_cost),
-      project_cost = ifelse(project_id == "18328", "500000", project_cost),
-      project_cost = ifelse(project_id == "18127", "2500000", project_cost),
+      project_cost = ifelse(project_id == "17629", "650000", project_cost), #dropped
+      project_cost = ifelse(project_id == "18768", "175000", project_cost), #dropped
+      project_cost = ifelse(project_id == "18328", "500000", project_cost), #dropped
+      project_cost = ifelse(project_id == "18127", "2500000", project_cost), #dropped
       project_score = ifelse(project_id == "19861", "40", project_score)
       ) 
 
@@ -228,6 +226,10 @@ clean_ny_y4 <- function() {
       project_cost = ifelse(project_id == "18458", "6691234", project_cost),
       project_cost = ifelse(project_id == "19051", "50000", project_cost),
     )
+
+  # Remove zero-cost projects per Janet's instructions in data dictionary
+  ny_clean <- ny_clean |>
+    filter(project_cost != "0")
 
   run_tests(ny_clean)
   rm(list=setdiff(ls(), "ny_clean"))

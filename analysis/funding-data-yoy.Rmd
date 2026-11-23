@@ -11,8 +11,8 @@ This notebook presents data viz and statistics for the SRF Funding Tracker state
 ## Local Variables
 
 ```{r}
-state_name <- "Illinois"
-state_abbr <- "IL"
+state_name <- "Texas"
+state_abbr <- "TX"
 
 # export plots to AWS and Drive?
 save_plots <- FALSE
@@ -1174,7 +1174,7 @@ total_carryover_p <- ggplot2::ggplot(total_carryover) +
         total_carryover, 
         fill = fed_cap_grant, 
         text=text),
-        width = 1
+        width = 0.9
     ) +
     ggplot2::scale_y_continuous(labels=label_currency()) + 
     ggplot2::scale_x_discrete(drop = FALSE) +

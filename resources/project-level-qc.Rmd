@@ -1,0 +1,448 @@
+---
+title: "Funding tracker dataset QC"
+format: html
+---
+
+This notebook performs QC on the project-level data that powers the SRF Funding Tracker.
+The QC is performed on a state state-fiscal-year basis.
+
+## Source scripts
+```{r, warning=FALSE}
+source("resources/inputs.R")
+source("resources/cleaning.R")
+source("resources/testing.R")
+run_code_from_file("aws.txt")
+
+```
+
+## Read Clean Data (All Projects)
+```{r}
+# import project-level data
+all_projects <- s3read_using(read.csv, object="s3://water-team-data/clean_data/srf_project_priority_lists/dwsrf-funding-tracker-all-projects.csv") %>%
+  clean_names() |>
+  dplyr::mutate(state_fiscal_year = as.character(state_fiscal_year))
+```
+
+## Create detailed QC tables
+### IDs
+```{r}
+## IDs #####
+id_columns <- c("pwsid", "project_id")
+
+id_skim <- all_projects |>
+  dplyr::select(state, state_fiscal_year, id_columns) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(id_columns),
+      ~ str_replace(.x, "No Information", NA_character_
+      )
+    )
+   ) |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  skimr::skim_without_charts() |>
+  dplyr::tibble() |>
+  dplyr::select(
+    -skim_type,
+    -character.whitespace,
+    -character.empty
+  ) |>
+  tidyr::pivot_longer(
+    cols = -c(skim_variable, state, state_fiscal_year),
+    names_to = "stats",
+    values_to = "value"
+  ) |>
+  tidyr::pivot_wider(
+    id_cols = c("state", "state_fiscal_year"),
+    names_from = c(stats, skim_variable),
+    values_from = value
+  ) |>
+    janitor::clean_names() 
+
+id_summary <- all_projects |>
+  dplyr::select(state, state_fiscal_year, id_columns) |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    no_info_pwsid = sum(pwsid == "No Information", na.rm = TRUE),
+    no_info_project_id = sum(project_id == "No Information", na.rm = TRUE),
+    pwsid_count_lengths = paste(
+      sort(unique(
+        stringr::str_length(
+          pwsid[!is.na(pwsid) & pwsid != "No Information"]
+        )
+      )),
+      collapse = ","
+    ),
+    non_standard_pwsid = paste(
+      pwsid[
+        stringr::str_length(pwsid) != 9 &
+          !is.na(pwsid) &
+          pwsid != "No Information"
+      ],
+      collapse = ", "
+    )
+    )
+
+id_qc <- id_summary |>
+  dplyr::left_join(id_skim) |>
+  dplyr::relocate(
+    no_info_project_id,
+    .after = character_n_unique_pwsid
+  ) |>
+dplyr::mutate(
+    check_pwsid = character_max_pwsid - character_min_pwsid > 0,
+    check_pwsid = ifelse(is.na(check_pwsid), FALSE, check_pwsid),
+    no_info_check_pwsid = 100*no_info_pwsid/n >= 10,
+    
+    check_duplicates_project_id = no_info_project_id +character_n_unique_project_id < n & n_missing_project_id != n,
+    n_potential_duplicates_project_id = n - character_n_unique_project_id - no_info_project_id,
+    no_info_check_project_id = 100*no_info_project_id/n >= 10
+)
+
+colnames(id_qc)
+
+id_qc <- id_qc |>
+  dplyr::relocate(
+   "non_standard_pwsid",
+   "check_pwsid",
+   "no_info_check_pwsid",
+   .after = character_n_unique_pwsid   
+  ) |>
+   dplyr::relocate(
+  "pwsid_count_lengths",
+  .after = character_max_pwsid
+   ) 
+
+
+colnames(id_qc)
+```
+
+### Text
+```{r}
+text_columns <- c("community_served", "borrower","project_description", "project_name" )
+
+text_skim <- all_projects |>
+  dplyr::select(state, state_fiscal_year, text_columns) |>
+  dplyr::group_by(state, state_fiscal_year) |>
+  skimr::skim_without_charts()
+```
+### Numeric
+```{r}
+numeric_value_columns <- c("project_cost", "requested_amount", "population")
+
+## Numeric #####
+numeric_skim <- all_projects |>
+  dplyr::select(state, state_fiscal_year, numeric_value_columns) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(numeric_value_columns),
+      ~ parse_number(.x, na = c("", "NA", "No Information"))
+      )
+    ) |>
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  skimr::skim_without_charts() |>
+  dplyr::tibble() |>
+      dplyr::select(
+    -skim_type,
+    -numeric.p25,
+    -numeric.p75
+  ) |>
+  dplyr::rename(
+    min = numeric.p0,
+    median = numeric.p50,
+    max = numeric.p100
+  ) |>
+  tidyr::pivot_longer(
+    cols = -c(skim_variable, state, state_fiscal_year),
+    names_to = "stats",
+    values_to = "value"
+  ) |>
+  tidyr::pivot_wider(
+    id_cols = c("state", "state_fiscal_year"),
+    names_from = c(stats, skim_variable),
+    values_from = value
+  ) |>
+    janitor::clean_names()
+
+numeric_summary <- all_projects |>
+  dplyr::select(state, state_fiscal_year, numeric_value_columns) |>
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    no_info_project_cost = sum(project_cost == "No Information", na.rm = TRUE),
+    zero_project_cost = sum(project_cost == "0", na.rm = TRUE),
+    no_info_requested_amount = sum(requested_amount == "No Information", na.rm = TRUE),
+    zero_requested_amount = sum(requested_amount == "0", na.rm = TRUE),
+    no_info_population = sum(population == "No Information", na.rm = TRUE)
+  )
+
+numeric_qc <- numeric_summary |>
+  dplyr::left_join(numeric_skim) |>
+  dplyr::mutate(
+    check_project_cost = min_project_cost < 10000  | max_project_cost > 1000000000,
+    check_requested_amount = min_requested_amount < 10000  | max_requested_amount > 1000000000,
+    check_population = min_population == 0
+  ) |>
+
+  dplyr::relocate(
+  "zero_project_cost",
+  .before = min_project_cost
+    ) |>
+  dplyr::relocate(
+  "zero_requested_amount", 
+  .before = min_requested_amount
+    )|>
+  dplyr::relocate(
+     "no_info_requested_amount",
+     .before = n_missing_requested_amount
+  ) |>
+  dplyr::relocate(
+     "no_info_population",
+     .before = n_missing_population
+  ) |>
+  dplyr::relocate(
+     "check_project_cost",
+     .after = max_project_cost
+  ) |>
+  dplyr::relocate(
+     "check_requested_amount",
+     .after = max_requested_amount
+  ) |>
+  dplyr::relocate(
+     "check_population",
+     .after = max_population
+  ) 
+
+
+# colnames(numeric_qc)
+
+```
+
+### Numeric: Special
+```{r}
+special_numeric_value_columns <- c( "funding_amount", "principal_forgiveness")      
+
+## Special numeric ################
+special_numeric_skim <- all_projects |>
+  dplyr::filter(expecting_funding == "Yes") |>
+  dplyr::select(state, state_fiscal_year, special_numeric_value_columns) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(special_numeric_value_columns),
+      ~ parse_number(.x, na = c("", "NA", "No Information"))
+      )
+    ) |>
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  skimr::skim_without_charts() |>
+  dplyr::tibble() |>
+      dplyr::select(
+    -skim_type,
+    -numeric.p25,
+    -numeric.p75
+  ) |>
+  dplyr::rename(
+    min = numeric.p0,
+    median = numeric.p50,
+    max = numeric.p100
+  ) |>
+  tidyr::pivot_longer(
+    cols = -c(skim_variable, state, state_fiscal_year),
+    names_to = "stats",
+    values_to = "value"
+  ) |>
+  tidyr::pivot_wider(
+    id_cols = c("state", "state_fiscal_year"),
+    names_from = c(stats, skim_variable),
+    values_from = value
+  ) |>
+    janitor::clean_names()
+
+special_numeric_summary <- all_projects |>
+  dplyr::select(state, state_fiscal_year, expecting_funding, special_numeric_value_columns) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(special_numeric_value_columns),
+      ~ parse_number(.x, na = c("", "NA", "No Information"))
+      )
+    ) |>    
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    n_ef = sum((expecting_funding == "Yes")),
+    n_perc_g_75 = sum(expecting_funding == "Yes" & principal_forgiveness/funding_amount > 0.75),
+    n_perc_e_100 = sum(expecting_funding == "Yes" & principal_forgiveness/funding_amount == 1),
+    n_perc_g_100 = sum(expecting_funding == "Yes" & principal_forgiveness/funding_amount > 1), 
+  )
+
+special_numeric_summary_additional <- all_projects |>
+  dplyr::filter(expecting_funding == "Yes") |>
+  dplyr::select(state, state_fiscal_year, special_numeric_value_columns) |>
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  dplyr::summarise(
+    no_info_funding_amount = sum(funding_amount == "No Information", na.rm = TRUE),
+    zero_funding_amount = sum(funding_amount == "0", na.rm = TRUE),
+    no_info_principal_forgiveness = sum(principal_forgiveness == "No Information", na.rm = TRUE),
+    zero_principal_forgiveness = sum(principal_forgiveness == "0", na.rm = TRUE)
+  )
+
+special_numeric_qc <- special_numeric_summary |>
+  dplyr::left_join(special_numeric_summary_additional) |>
+  dplyr::left_join(special_numeric_skim) |>
+  dplyr::relocate(
+    "zero_funding_amount",
+    .before = min_funding_amount
+  ) |>
+  dplyr::relocate(
+    "zero_principal_forgiveness",
+    .before = min_principal_forgiveness
+  ) |>
+  dplyr::relocate(
+    no_info_principal_forgiveness,
+    .before =n_missing_principal_forgiveness
+  ) |>
+  dplyr::relocate(
+    dplyr::any_of(c("n_perc_g_75", "n_perc_e_100", "n_perc_g_100")),
+    .after = last_col()
+  )  
+
+
+```
+
+
+### Categorical
+```{r}
+categorical_value_columns <- c("project_type", "disadvantaged", "expecting_funding")
+
+## Categorical #####  
+categorical_skim <- all_projects |>
+  dplyr::select(state, state_fiscal_year, categorical_value_columns) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(categorical_value_columns),
+      ~ str_replace(.x, "No Information", NA_character_
+      )
+    )
+   ) |>
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::all_of(categorical_value_columns),
+      forcats::fct
+      )
+    ) |> 
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  skimr::skim_without_charts() |>
+  dplyr::select(
+    -c(skim_type, factor.top_counts, factor.ordered)
+  ) |>
+  tidyr::pivot_longer(
+    cols = -c(skim_variable, state, state_fiscal_year),
+    names_to = "stats",
+    values_to = "value"
+  ) |>
+  tidyr::pivot_wider(
+    id_cols = c("state", "state_fiscal_year"),
+    names_from = c(stats, skim_variable),
+    values_from = value
+  ) |>
+    janitor::clean_names()
+
+categorical_summary <- all_projects |>
+  dplyr::select(state, state_fiscal_year, categorical_value_columns) |>
+  dplyr::group_by(
+    state, state_fiscal_year
+  ) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    no_info_project_type = sum(project_type == "No Information", na.rm = TRUE),
+    distinct_project_type = paste(unique(project_type), collapse = ", "),
+    no_info_disadvantaged = sum(disadvantaged == "No Information", na.rm = TRUE),
+    distinct_disadvantaged = paste(unique(disadvantaged), collapse = ", "),
+    no_info_expecting_funding = sum(expecting_funding == "No Information", na.rm = TRUE),
+    distinct_expecting_funding = paste(unique(expecting_funding), collapse = ", ")
+  )
+
+categorical_qc <- categorical_summary |>
+  dplyr::left_join(categorical_skim)|>
+  dplyr::relocate(
+    distinct_project_type,
+    .after = factor_n_unique_project_type
+    ) |>
+  dplyr::relocate(
+    no_info_disadvantaged,
+    .before =n_missing_disadvantaged
+  ) |>
+  dplyr::relocate(
+    distinct_disadvantaged,
+    .after = factor_n_unique_disadvantaged
+    ) |>
+  dplyr::relocate(
+    no_info_expecting_funding,
+    .before =n_missing_expecting_funding
+  ) |>
+  dplyr::relocate(
+    distinct_expecting_funding,
+    .after = factor_n_unique_expecting_funding
+    )
+
+```
+
+### Ratings (TODO)
+```{r}
+# rating_score_columns <- c("project_rank", "project_score")
+
+# rating_score_skim <- all_projects |>
+#   dplyr::select(state, state_fiscal_year, rating_score_columns) |>
+#   dplyr::mutate(
+#     dplyr::across(
+#       dplyr::all_of(rating_score_columns),
+#       forcats::fct
+#       )
+#     ) |>
+#   dplyr::group_by(
+#     state, state_fiscal_year
+#   ) |>
+#   skimr::skim_without_charts() |>
+#   dplyr::select(
+#     -c(skim_type, factor.top_counts, factor.ordered)
+#   ) |>
+#   tidyr::pivot_longer(
+#     cols = -c(skim_variable, state, state_fiscal_year),
+#     names_to = "stats",
+#     values_to = "value"
+#   ) |>
+#   tidyr::pivot_wider(
+#     id_cols = c("state", "state_fiscal_year"),
+#     names_from = c(stats, skim_variable),
+#     values_from = value
+#   ) |>
+#     janitor::clean_names()
+
+```
+
+## Push to sheets
+```{r}
+target_workbook <- "https://docs.google.com/spreadsheets/d/1PcVLM_8fGw7swlIbI51Hevk9whoccB3AnOQ2NKSxDqM"
+
+googlesheets4::write_sheet(id_qc, ss = target_workbook, sheet = "id_qc")
+googlesheets4::write_sheet(numeric_qc, ss = target_workbook, sheet = "numeric_qc")
+googlesheets4::write_sheet(special_numeric_qc, ss = target_workbook, sheet = "special_numeric_qc")
+googlesheets4::write_sheet(categorical_qc, ss = target_workbook, sheet = "categorical_qc")
+
+```
+
+
+```{r}
+```
+

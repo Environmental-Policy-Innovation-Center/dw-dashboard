@@ -3,7 +3,7 @@ source("resources/view_code_review.R")
 
 year <- "year4"
 sfy <- "SFY26"
-state_abb <- "NJ"
+state_abb <- "IL"
 review_number <- "1"
 
 year_title <- stringr::str_extract(year, "\\d+")

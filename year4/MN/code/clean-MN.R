@@ -61,6 +61,33 @@ clean_mn_y4 <- function() {
                                     colClasses = "character", na.strings = "") |> 
     janitor::clean_names()
 
+
+  #Amendment SFY26 Amendment #1:
+  #These projects should be considered on the fundable list – if there’s a duplicate of this information in the above lists, this information supercedes 
+
+  mn_amendment_fundable <- data.table::fread("year4/MN/data/MN_SFY26_Amendment.csv",
+                                    colClasses = "character", na.strings = "") |> 
+    janitor::clean_names() |>
+    dplyr::mutate(
+      community_served = as.character(NA),
+      borrower = project_entity,
+      pwsid = paste0("MN", stringr::str_remove(project_id, "-.*")),
+      project_id = project_id,
+      project_name = as.character(NA),
+      project_cost = clean_numeric_string(total_project_costs),
+      requested_amount = as.character(NA),
+      funding_amount = clean_numeric_string(net_srf),
+      principal_forgiveness = clean_numeric_string(affordability_grant),
+      population = clean_numeric_string(system_population_served),
+      project_rank = clean_numeric_string(ppl_rank), 
+      project_score = clean_numeric_string(ppl_points),
+      expecting_funding = "Yes",
+      list = "SFY26 Amendment #1",
+      .keep = "none"
+    )
+
+
+
   mn_combined_full <- mn_comp_ppl |>
     dplyr::left_join(mn_combined, by="project_id") |>
     dplyr::mutate(
@@ -174,6 +201,26 @@ clean_mn_y4 <- function() {
   
   
 ####### SANITY CHECKS END #######
+  
+  #select rows with amendment data
+  mn_amendment_data <- mn_clean |>
+    dplyr::filter(project_id %in% mn_amendment_fundable$project_id) |>
+    dplyr::bind_rows(mn_amendment_fundable) |>
+    dplyr::group_by(project_id) |>
+    tidyr::fill(dplyr::everything(), .direction = "down") |>
+    dplyr::filter(
+      list == "SFY26 Amendment #1"
+    )
+  
+  #update dataset
+  mn_clean <- mn_clean |>
+    dplyr::filter(!project_id %in% mn_amendment_fundable$project_id) |>
+    dplyr::bind_rows(mn_amendment_data) |>
+    #PF was fully NA previously
+    dplyr::mutate(
+      principal_forgiveness = clean_numeric_string(principal_forgiveness)
+    )
+  
   
   # Produce Other Federal and State Funds dataset
   mn_ofsf <- mn_combined_full |>

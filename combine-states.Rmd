@@ -1,7 +1,7 @@
 ---
 title: "SRF PPL & IUP Standardization"
-author: "Walker Grimshaw & Phil Cork"
-date: "2022-12-20"
+author: "Maria Sevillano"
+date: "2026-07-09"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -35,7 +35,6 @@ source("resources/exporting.R")
 ## State vector with 15 focus states, currently in new lines to allow for commenting out ----
 states <- c(
   "AL", 
-  #"AR",
   "IL", 
   "IN",   
   "LA",
@@ -52,7 +51,7 @@ states <- c(
   "WI"
   )
 
-## Years vector with 5 years, currently in new lines to allow for commenting out ----
+## Years vector with 6 years, currently in new lines to allow for commenting out ----
 years <- c(
   0,
   1,
@@ -89,6 +88,10 @@ for (year in years) {
       func_call <- rlang::parse_expr(glue::glue("clean_{stringr::str_to_lower(state)}_y{year}()"))
       
       result <- eval(func_call)
+
+      if (is.null(result)) {
+          message(glue::glue("⚠️ {state} year {year} returned NULL — check for missing return()"))
+      }
       
       # Assign result to dynamic name
       assign(
@@ -102,6 +105,7 @@ for (year in years) {
     })
   }
 }
+
 
 rm(result)
 

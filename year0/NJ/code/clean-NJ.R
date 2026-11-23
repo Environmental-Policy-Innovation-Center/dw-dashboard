@@ -14,6 +14,7 @@ clean_nj_y0 <- function() {
       borrower = str_squish(project_sponsor),
       pwsid = paste0("NJ", stringr::str_extract(project_number, "^[^-]+")),
       project_id = stringr::str_squish(project_number),
+      project_id = stringr::str_replace(project_id, " ", ""),
       project_name = str_squish(project_name),
       project_type =  case_when(
              grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",

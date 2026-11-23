@@ -23,12 +23,14 @@ clean_nj_y3 <- function() {
       pwsid = paste0("NJ", stringr::str_extract(project_number, "^[^-]+")),
       project_id = stringr::str_squish(project_number),
       project_name = str_squish(project_name),
-      project_type = dplyr::case_when(
-        bil_eligibility == "BIL (GEN)" ~ "General", 
-        bil_eligibility == "BIL (LSLR)" ~ "Lead",
-        bil_eligibility == "BIL (EC)" ~ "Emerging Contaminants",
+      project_type = dplyr::case_when(      
         grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_name, ignore.case=TRUE) ~ "Emerging Contaminants",
+
+        bil_eligibility == "BIL (LSLR)" ~ "Lead",
+        bil_eligibility == "BIL (EC)" ~ "Emerging Contaminants",
+
+        bil_eligibility == "BIL (GEN)" ~ "General", 
         TRUE ~ "General"),
       project_cost = clean_numeric_string(estimated_cost),
       requested_amount = as.character(NA),     
@@ -57,7 +59,6 @@ clean_nj_y3 <- function() {
   
   
   ####### SANITY CHECKS START #######
-  
   # Hone in on project id duplication
   # nj_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(dplyr::desc(n)) |> dplyr::filter(n>1)
 

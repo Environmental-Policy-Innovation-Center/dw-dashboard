@@ -25,12 +25,12 @@ clean_nj_y4 <- function() {
       project_id = stringr::str_squish(project_number),
       project_name = str_squish(project_name),
       project_type = dplyr::case_when(
-        
-        bil_eligibility == "BIL (LSLR)" ~ "Lead",
-        bil_eligibility == "BIL (EC)" ~ "Emerging Contaminants",
          
         grepl("lsl|lead", project_name, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_name, ignore.case=TRUE) ~ "Emerging Contaminants",
+
+        bil_eligibility == "BIL (LSLR)" ~ "Lead",
+        bil_eligibility == "BIL (EC)" ~ "Emerging Contaminants",
 
         bil_eligibility == "BIL (GEN)" ~ "General",
         TRUE ~ "General"),

@@ -13,7 +13,7 @@ state_name <- "Ohio"
 state_abbr <- "OH"
 
 # export plots to AWS and Drive?
-save_plots <- FALSE
+save_plots <- TRUE
 
 ```
 
@@ -277,10 +277,11 @@ demand_ofsf_df <- ofsf_all_projects_df |>
    dplyr::mutate(
     dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), as.numeric),
     dplyr::across(c(funding_amount_ofsf, requested_amount_ofsf, project_cost_ofsf), \(x) ifelse(x == 0, NA, x)),
-    selected_demand_ofsf = coalesce(requested_amount_ofsf, project_cost_ofsf),
+    selected_demand_ofsf = coalesce(requested_amount_ofsf, project_cost_ofsf, funding_amount_ofsf),
     source_demand_ofsf = dplyr::case_when(
       requested_amount_ofsf > 0 ~ "requested_amount_ofsf", 
-      project_cost_ofsf > 0 ~ "project_cost_ofsf", 
+      project_cost_ofsf > 0 ~ "project_cost_ofsf",
+      funding_amount_ofsf > 0 ~ "funding_amount_ofsf",  
       .default = "check"
     )
   )
@@ -344,10 +345,11 @@ demand_dwsrf_df <- dwsrf_all_projects_df |>
    dplyr::mutate(
     dplyr::across(c(funding_amount, requested_amount, project_cost), as.numeric),
     dplyr::across(c(funding_amount, requested_amount, project_cost), \(x) ifelse(x == 0, NA, x)),
-    selected_demand = coalesce(requested_amount, project_cost),
+    selected_demand = coalesce(requested_amount, project_cost, funding_amount), 
     source_demand = dplyr::case_when(
       requested_amount > 0 ~ "requested_amount", 
       project_cost > 0 ~ "project_cost", 
+      funding_amount > 0 ~ "funding_amount",
       .default = "check"
     )
   )

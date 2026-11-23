@@ -1,4 +1,5 @@
 clean_la_y4 <- function() {
+
   # Base Comprehensive -----
   base_comprehensive <- data.table::fread("year4/LA/data/LA_SFY26_comprehensive.csv",
                     colClasses = "character", na.strings = "") |>
@@ -6,7 +7,7 @@ clean_la_y4 <- function() {
     dplyr::mutate(
       project_id = stringr::str_squish(dwrlf_project_number_for_all_bil_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
-      list = "base comprehensive"
+      list = "SFY26 Base Comprehensive List"
     )
 
   # Base Fundable -----
@@ -16,19 +17,25 @@ clean_la_y4 <- function() {
     dplyr::mutate(
       project_id = stringr::str_squish(dwrlf_project_number_for_all_bil_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
-      list = "base fundable",
+      list = "SFY26 Base Fundable List",
       expecting_funding = "Yes",
       principal_forgiveness = clean_numeric_string(amount_of_principal_forgivenes)
     ) |>
-    dplyr::select(project_id, expecting_funding, principal_forgiveness)
+    dplyr::select(project_id, expecting_funding, principal_forgiveness, list)
 
   # Join base ----
   base <- dplyr::left_join(base_comprehensive, base_fundable, by = "project_id") |>
     dplyr::mutate(
       expecting_funding = tidyr::replace_na(expecting_funding, "No"),
-      list = "base"
-    )
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c("list.y", "list.x"))
   
+  # base |>
+  #   dplyr::group_by(project_id) |>
+  #   dplyr::tally() |>
+  #   dplyr::filter(n>1)
+
   # IIJA Comprehensive -----
   iija_comprehensive <- data.table::fread("year4/LA/data/LA_SFY26_comprehensive_IIJA.csv",
                     colClasses = "character", na.strings = "") |>
@@ -36,7 +43,7 @@ clean_la_y4 <- function() {
     dplyr::mutate(
       project_id = stringr::str_squish(dwrlf_project_number_for_all_iija_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
-      list = "IIJA comprehensive"
+      list = "SFY26 IIJA Gen Supp/LSLR/EC Comprehensive List"
     )
   
   # Defaulting to info from fundable list for this project after confirming with Lauren 2026_02_09
@@ -51,11 +58,11 @@ clean_la_y4 <- function() {
     dplyr::mutate(
       project_id = stringr::str_squish(dwrlf_project_number_for_all_iija_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
-      list = "Gen Supp fundable",
+      list = "SFY26 IIJA Gen Supp Fundable List",
       expecting_funding = "Yes",
       principal_forgiveness = clean_numeric_string(amount_of_principal_forgivenes)
     ) |>
-    dplyr::select(project_id, expecting_funding, principal_forgiveness)
+    dplyr::select(project_id, expecting_funding, principal_forgiveness, list)
 
   # IIJA EC Fundable -----
   ec_fundable <- data.table::fread("year4/LA/data/LA_SFY26_fundable_IIJA_EC.csv",
@@ -65,11 +72,11 @@ clean_la_y4 <- function() {
       project_id = stringr::str_squish(dwrlf_project_number_for_all_bil_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
       project_type = "Emerging Contaminants",
-      list = "EC fundable",
+      list = "SFY26 EC Fundable List",
       expecting_funding = "Yes",
       principal_forgiveness = clean_numeric_string(amount_of_principal_forgivenes)
     ) |>
-    dplyr::select(project_id, project_type, expecting_funding, principal_forgiveness)
+    dplyr::select(project_id, project_type, expecting_funding, principal_forgiveness, list)
 
   # IIJA Lead Fundable -----
   lead_fundable <- data.table::fread("year4/LA/data/LA_SFY26_fundable_IIJA_LSL.csv",
@@ -79,27 +86,32 @@ clean_la_y4 <- function() {
       project_id = stringr::str_squish(dwrlf_project_number_for_all_iija_projects_add_either_a_gs_ec_lsli_or_lslr_to_the_end),
       project_id = stringr::str_remove_all(project_id, " "),
       project_type = "Lead",
-      list = "Lead fundable",
+      list = "SFY26 LSLR Fundable List",
       expecting_funding = "Yes",
       principal_forgiveness = clean_numeric_string(amount_of_principal_forgivenes)
     ) |>
-    dplyr::select(project_id, project_type, expecting_funding, principal_forgiveness)
+    dplyr::select(project_id, project_type, expecting_funding, principal_forgiveness, list)
 
   # Join ----
   iija <- dplyr::left_join(iija_comprehensive, gen_supp_fundable, by = "project_id") |>
+    dplyr::mutate(
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c("list.y", "list.x")) |>
     dplyr::left_join(ec_fundable, by = "project_id") |>
     dplyr::mutate(
-      expecting_funding = dplyr::coalesce(expecting_funding.x, expecting_funding.y)
+      expecting_funding = dplyr::coalesce(expecting_funding.x, expecting_funding.y),
+      list = dplyr::coalesce(list.y, list.x)
     ) |>
-    dplyr::select(-expecting_funding.x, -expecting_funding.y) |>
+    dplyr::select(-expecting_funding.x, -expecting_funding.y, -list.y, -list.x) |>
     dplyr::left_join(lead_fundable, by = "project_id") |>
     dplyr::mutate(
-      expecting_funding = dplyr::coalesce(expecting_funding.x, expecting_funding.y)
+      expecting_funding = dplyr::coalesce(expecting_funding.x, expecting_funding.y),
+      list = dplyr::coalesce(list.y, list.x)
     ) |>
-    dplyr::select(-expecting_funding.x, -expecting_funding.y) |>
+    dplyr::select(-expecting_funding.x, -expecting_funding.y, -list.y, -list.x) |>
     dplyr::mutate(
-      expecting_funding = tidyr::replace_na(expecting_funding, "No"),
-      list = "iija"
+      expecting_funding = tidyr::replace_na(expecting_funding, "No")
     ) |>
     dplyr::mutate(
       project_type = dplyr::coalesce(project_type.x, project_type.y)
@@ -109,13 +121,21 @@ clean_la_y4 <- function() {
     ) |>
     dplyr::select(-project_type.x, -project_type.y, -principal_forgiveness.x, -principal_forgiveness.y)
   
-
+    # iija |>
+    # dplyr::group_by(project_id) |>
+    # dplyr::tally() |>
+    # dplyr::filter(n>1)
 
   # Join ----
   la_bind <- dplyr::bind_rows(base, iija)
 
+  # la_bind |>
+  #   dplyr::group_by(project_id) |>
+  #   dplyr::tally() |>
+  #   dplyr::filter(n>1)
+  
   # Clean ----
-  clean_la <- la_bind |>
+  la_clean <- la_bind |>
     dplyr::mutate(
       community_served = as.character(NA),
       borrower = stringr::str_squish(water_system_name),
@@ -128,9 +148,9 @@ clean_la_y4 <- function() {
         !is.na(project_type) ~ project_type,
         #list = "base" & bil_project %in% c("IIJA-LSL", "IIJA-LSLI") ~ "Lead", #nothing meets this criteria
         #list = "base" & bil_project == "IIJA-EC" ~ "Emerging Contaminants", #nothing meets this criteria
-        list == "iija" & iija_project %in% c("IIJA-LSL", "IIJA-LSLI") ~ "Lead",
-        list == "iija" & iija_project == "IIJA-EC" ~ "Emerging Contaminants",
-        grepl(lead_str, project_description, ignore.case=TRUE) ~ "Lead",
+        grepl("IIJA", list) & iija_project %in% c("IIJA-LSL", "IIJA-LSLI") ~ "Lead",
+        grepl("IIJA", list) & iija_project == "IIJA-EC" ~ "Emerging Contaminants",
+        grepl("lead|lsl", project_description, ignore.case=TRUE) ~ "Lead",
         grepl(ec_str, project_description, ignore.case=TRUE) ~ "Emerging Contaminants",
         TRUE ~ "General"),
       project_cost = as.character(NA),
@@ -147,24 +167,37 @@ clean_la_y4 <- function() {
       state_fiscal_year = "2026") |>
     dplyr::select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year) 
-  
-  la_clean <- clean_la |>
-    dplyr::distinct() #remove cases where both base and iija produce the same info
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list) 
   
   ####### SANITY CHECKS START #######
 
   # Hone in on project id duplication
   #la_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-  ####### Decision : one project ids duplicated in base and iija list, with the same info except for fundable designation for 1111020-01
-  ####### Default to fundable list
+
+  #There are rows that appear in multiple list, but we have retained the same information (except the source list), use distinct without the list feature, but keep it in the df
+  # default to iija list name
+
+  la_clean <- la_clean |>
+    dplyr::arrange(desc(list)) |>
+    dplyr::distinct(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
+           requested_amount, funding_amount, principal_forgiveness, population, project_description,
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, .keep_all = TRUE)
+
+#inspect further duplicates
+# la_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts)) |> dplyr::filter(counts > 1)
+#duplicates are due to expecting funding (and principal forgivenes); default to entry in fundable list
+# duplicate_ids <- la_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts)) |> dplyr::filter(counts > 1) |> dplyr::pull(project_id)
+  
+  # la_clean |>
+  #   dplyr::filter(project_id %in% duplicate_ids) |> View()
 
   la_clean <- la_clean |>
     dplyr::group_by(project_id) |>
-    dplyr::filter(n() == 1 | expecting_funding == "Yes") |>
+    dplyr::filter(n() == 1 | expecting_funding == "Yes") |> #retain projects id that are not duplicated, if they are duplicated, keep rows with expecting funding == Yes (checked that information is the same)
     dplyr::ungroup()
 
-  #la_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  # la_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
+  ####### Decision : deduplicate and keep provenance of iija list, default to fundable list for remaining duplicates
 
   # Check for disinfection byproduct in description
   #la_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))

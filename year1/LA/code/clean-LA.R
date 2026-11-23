@@ -4,8 +4,10 @@ clean_la_y1 <- function() {
   la_srf_ppl <- fread("year1/LA/data/18-Lousiana_Comprehensive_PPL-clean.csv",
                   colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(est_loan_amount = clean_numeric_string(est_loan_amount),
-           population = clean_numeric_string(population)) %>%
+    mutate(
+      est_loan_amount = clean_numeric_string(est_loan_amount),
+      population = clean_numeric_string(population),
+      list = "SFY23 Base Comprehensive List") %>%
     select(-est_date_to_close_loan) %>%
     filter(system_name != "Total")
   
@@ -13,18 +15,25 @@ clean_la_y1 <- function() {
   la_srf_fnd <- fread("year1/LA/data/18-Lousiana_Fundable_PPL.csv",
                   colClasses = "character", na.strings = "") %>%
     clean_names() %>%
-    mutate(expecting_funding = "Yes",
-           est_loan_amount = clean_numeric_string(est_loan_amount),
-           additonal_subsidy_amount = clean_numeric_string(additonal_subsidy_amount),
-           disadvantaged_subsidy = clean_numeric_string(disadvantaged_subsidy),
-           population = clean_numeric_string(population)) %>%
+    mutate(
+      expecting_funding = "Yes",
+      est_loan_amount = clean_numeric_string(est_loan_amount),
+      additonal_subsidy_amount = clean_numeric_string(additonal_subsidy_amount),
+      disadvantaged_subsidy = clean_numeric_string(disadvantaged_subsidy),
+      population = clean_numeric_string(population),
+      list = "SFY23 Base Fundable List"
+    ) %>%
     select(-est_date_to_close_loan) %>%
     filter(system_name != "Total")
   
   # (39,10)
   la_srf_combined <- merge(la_srf_ppl, la_srf_fnd, all=TRUE,
                            by=c("system_name", "pwsid", "est_loan_amount",
-                                "points", "rank", "population", "project_description"))
+                                "points", "rank", "population", "project_description")) |>
+    dplyr::mutate(
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c("list.y", "list.x"))
   
   la_srf_clean <- la_srf_combined %>%
     # process numeric columns
@@ -50,7 +59,7 @@ clean_la_y1 <- function() {
              TRUE ~ "No Information"),
            project_type = case_when(
              # search for keywords from full PPL, otherwise General project
-             grepl(lead_str, project_description) ~ "Lead",
+             grepl("lead|lsl", project_description, ignore.case = TRUE) ~ "Lead",
              grepl(ec_str, project_description) ~ "Emerging Contaminants",
              TRUE ~ "General"))
 
@@ -78,11 +87,14 @@ clean_la_y1 <- function() {
       rank = ifelse(is.na(rank.y), rank.x, rank.y),
       project_type = case_when(
       # search for keywords from full PPL, otherwise General project
-      grepl(lead_str, project_description) ~ "Lead",
+      grepl("lsl|lead", project_description, ignore.case = TRUE) ~ "Lead",
       grepl(ec_str, project_description) ~ "Emerging Contaminants",
       TRUE ~ "General"),
       ) %>%
-    select(-rank.x, -rank.y)
+    select(-rank.x, -rank.y) |>
+    dplyr::mutate(
+      list = "SFY23 IIJA Gen Supp Comprehensive Lists"
+    )
   
   
   ### Fundable Lists
@@ -100,12 +112,19 @@ clean_la_y1 <- function() {
     mutate(expecting_funding = "Yes",
            disadvantaged = ifelse(!is.na(disadvantaged_subsidy), "Yes", "No Information"),
            principal_forgiveness_amount = clean_numeric_string(disadvantaged_subsidy)) %>%
-    select(system_name, est_loan_amount, expecting_funding, disadvantaged, principal_forgiveness_amount)
+    select(system_name, est_loan_amount, expecting_funding, disadvantaged, principal_forgiveness_amount) |>
+    dplyr::mutate(
+      list = "SFY23 IIJA Gen Supp Fundable Lists"
+    )
   
   ### Combined
   la_base <- la_base_app %>%
     left_join(la_base_fund, by=c("system_name", "est_loan_amount")) %>%
-    select(-est_date_to_close_loan)
+    select(-est_date_to_close_loan) |>
+    dplyr::mutate(
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c("list.y", "list.x"))
   
   
   ## EC Docs
@@ -124,7 +143,10 @@ clean_la_y1 <- function() {
                      by=c("system_name", "pwsid", "est_loan_amount", "points",
                           "population", "rank")) %>%
     mutate(project_type = "Emerging Contaminants") %>%
-    distinct()
+    distinct() |>
+    dplyr::mutate(
+      list = "SFY23 EC Comprehensive Lists"
+    )
 
   
   ### Fundable Lists
@@ -142,11 +164,18 @@ clean_la_y1 <- function() {
            expecting_funding = "Yes",
            disadvantaged = ifelse(!is.na(disadvantaged_assistance), "Yes", "No Information"),
            principal_forgiveness_amount = as.character(convert_to_numeric(disadvantaged_assistance, TRUE))) %>%
-    select(system_name, est_loan_amount, disadvantaged, principal_forgiveness_amount, disadvantaged)
+    select(system_name, est_loan_amount, expecting_funding, principal_forgiveness_amount, disadvantaged) |>
+    dplyr::mutate(
+      list = "SFY23 EC Fundable Lists"
+    )
   
   la_ec <- la_ec_app %>%
     left_join(la_ec_fund, by=c("system_name", "est_loan_amount")) %>%
-    distinct()
+    distinct()  |>
+    dplyr::mutate(
+      list = dplyr::coalesce(list.y, list.x)
+    ) |>
+    dplyr::select(-c("list.y", "list.x"))
   
   ## Lead Doc
   la_lead_app <- fread("year1/LA/data/comprehensive-list-lead-38.csv",
@@ -155,44 +184,99 @@ clean_la_y1 <- function() {
     mutate(project_type = "Lead",
            expecting_funding = "No Information",
            points = clean_numeric_string(points)) %>%
-    select(-est_date_to_close_loan)
+    select(-est_date_to_close_loan) |>
+    dplyr::mutate(
+      list = "SFY23 LSLR Comprehensive List"
+    )
   
   ## Merge IIJA Tables
   all_iija <- bind_rows(la_base, la_ec, la_lead_app) %>%
-    mutate(expecting_funding = replace_na(expecting_funding),
-           disadvantaged = replace_na(disadvantaged),
-           pwsid = paste0("LA", pwsid)) %>%
-    rename(borrower = system_name,
-           requested_amount = est_loan_amount,
-           project_rank = rank,
-           project_score = points)
+    mutate(
+      pwsid = paste0("LA", pwsid)) %>%
+    rename(
+      borrower = system_name,
+      requested_amount = est_loan_amount,
+      project_rank = rank,
+      project_score = points,
+      principal_forgiveness = principal_forgiveness_amount
+    
+    )
   
   ## Merge SRF Table
   la_clean <- merge(la_srf_clean, all_iija, by=c("borrower", "requested_amount"), all=TRUE) %>%
-    mutate(pwsid = ifelse(is.na(pwsid.y), pwsid.x, pwsid.y),
-           project_type = ifelse(is.na(project_type.y), project_type.x, project_type.y),
-           population = ifelse(is.na(population.y), population.x, population.y),
-           project_description = ifelse(is.na(project_description.y), project_description.x, project_description.y),
-           disadvantaged = ifelse(is.na(disadvantaged.y), disadvantaged.x, disadvantaged.y),
-           expecting_funding = ifelse(is.na(expecting_funding.y), expecting_funding.x, expecting_funding.y),
-           project_rank = ifelse(is.na(project_rank.y), project_rank.x, project_rank.y),
-           project_score = ifelse(is.na(project_score.y), project_score.x, project_score.y),
-           community_served = as.character(NA),
-           project_id = as.character(NA),
-           project_name = as.character(NA),
-           project_cost = as.character(NA),
-           funding_amount = as.character(NA),
-           disadvantaged = replace_na(disadvantaged, "No Information"),
-           expecting_funding = replace_na(expecting_funding, "No"),
-           principal_forgiveness = replace_na(principal_forgiveness, "0"),
-           state = "Louisiana",
-           state_fiscal_year = "2023") %>%
+    mutate(
+      pwsid = ifelse(is.na(pwsid.y), pwsid.x, pwsid.y),
+      project_type = ifelse(is.na(project_type.y), project_type.x, project_type.y),
+      population = ifelse(is.na(population.y), population.x, population.y),
+      project_description = ifelse(is.na(project_description.y), project_description.x, project_description.y),
+      disadvantaged = ifelse(is.na(disadvantaged.y), disadvantaged.x, disadvantaged.y),
+      expecting_funding = ifelse(is.na(expecting_funding.y), expecting_funding.x, expecting_funding.y),
+      project_rank = ifelse(is.na(project_rank.y), project_rank.x, project_rank.y),
+      project_score = ifelse(is.na(project_score.y), project_score.x, project_score.y),
+      community_served = as.character(NA),
+      project_id = as.character(NA),
+      project_name = as.character(NA),
+      project_cost = as.character(NA),
+      funding_amount = as.character(NA),
+      disadvantaged = replace_na(disadvantaged, "No Information"),
+      expecting_funding = replace_na(expecting_funding, "No"),
+      principal_forgiveness = dplyr::coalesce(principal_forgiveness.y, principal_forgiveness.x),
+      principal_forgiveness = tidyr::replace_na(principal_forgiveness, "No Information"),
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
+      state = "Louisiana",
+      state_fiscal_year = "2023",
+      list = dplyr::coalesce(list.y, list.x)
+    ) %>%
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
-           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year)
+           disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
 
+  ####### SANITY CHECKS START #######
+
+# Hone in on project id duplication
+####### Decision : No project_id
+
+# Check for disinfection byproduct in description
+#la_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
+####### Decision : No disinfection byproduct string
+
+# Check for lead subtypes: Both
+# la_clean |>
+#     dplyr::filter(project_type=="Lead") |>
+#     dplyr::mutate(
+#       lead_type = dplyr::case_when(
+#         stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+#         stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+#         stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+#         # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+#         stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+#         stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+#         TRUE ~ "unknown"
+#       )
+#     ) |>
+#     dplyr::filter(lead_type == "both")
+
+  ####### Decision: No type both
   
-  # Check pwsid lengths
+  # Check for lead subtypes: Unknown
+  # la_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
+  
+  ######## Decision: No type unknow
+  
+    # Check pwsid lengths
   # la_clean |>
   #   dplyr::mutate(
   #     length_pwsid = stringr::str_length(pwsid)
@@ -206,7 +290,8 @@ clean_la_y1 <- function() {
         borrower == "City of Natchitoches" & pwsid == "LA106007" ~ "LA1069007",
         .default = pwsid
       )
-    )                
+    ) 
+  ####### SANITY CHECKS END #######
    
   run_tests(la_clean)
   rm(list=setdiff(ls(), "la_clean"))

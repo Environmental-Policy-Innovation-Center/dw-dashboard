@@ -3,14 +3,14 @@ clean_tn_y5 <- function() {
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "SFY27 Base/IIJA Gen Supp PPL"
+      list = "SFY27 Base/IIJA Gen Supp PPL" #1 new project added to final
     )
 
   tn_ppl_base_unranked <- data.table::fread("year5/TN/data/TN_SFY27_base_PPL_unranked.csv",
                   colClasses = "character", na.strings = "") |>
     janitor::clean_names() |>
     dplyr::mutate(
-      list = "SFY27 Base/IIJA Gen Supp PPL unranked"
+      list = "SFY27 Base/IIJA Gen Supp PPL unranked" 
     )
 
   tn_ppl_lslr <- data.table::fread("year5/TN/data/TN_SFY27_LSLR.csv",
@@ -31,7 +31,7 @@ clean_tn_y5 <- function() {
     )
   
   tn_ppl <- dplyr::bind_rows(tn_ppl_base, tn_ppl_base_unranked, tn_ppl_lslr, tn_ppl_sa_hmw)
-
+  
   tn_clean <- tn_ppl |>
     dplyr::mutate(
       community_served = str_squish(county),
@@ -39,6 +39,7 @@ clean_tn_y5 <- function() {
       pwsid = str_squish(pwsid_number),
       # pwsid = str_replace(pwsid, "NA", "No Information"),
       project_id = str_squish(application_id),
+      project_id = stringr::str_remove(project_id, " "),
       project_name = as.character(NA),
       project_description = str_squish(project_description), 
       project_type = case_when(
@@ -62,6 +63,7 @@ clean_tn_y5 <- function() {
 
       ),
       principal_forgiveness = clean_numeric_string(principal_forgiveness), 
+      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
       population = clean_numeric_string(pop_served),
       disadvantaged = dplyr::case_when(
         as.numeric(atpi) <= 50 ~ "Yes",
@@ -91,27 +93,27 @@ clean_tn_y5 <- function() {
   # tn_clean[stringr::str_count(tn_clean$pwsid) != 9, pwsid]
   # Hone in on project id duplication
   # tn_clean |> dplyr::group_by(project_id) |> dplyr::tally() |> dplyr::arrange(desc(n))
-  ####### Decision: 1 duplicate, different projects 2025-13624
+  ####### Decision: 1 duplicate, different projects 2025-13624; No duplicates after final IUP
   
   # Check for disinfection byproduct in description
   # tn_clean |> dplyr::filter(grepl("disinfection byproduct", project_description))
   ####### Decision: No disinfection byproduct string
   
   # Check for lead subtypes: Both
-  tn_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "both")
+  # tn_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "both")
 
   ####### Decision: 4 projects classified as both --> LSLR
   

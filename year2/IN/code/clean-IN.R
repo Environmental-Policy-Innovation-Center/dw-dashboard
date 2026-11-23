@@ -215,6 +215,10 @@ in_clean <- in_clean |>
       )
     )
 
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      project_id = ifelse(project_id == "DW23261801", "DW232618 01", project_id)
+    )
 
 ####### SANITY CHECKS END #######
   

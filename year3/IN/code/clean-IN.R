@@ -202,12 +202,17 @@ clean_in_y3 <- function() {
   in_clean <- in_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
-        borrower == "Jackson County Water Utility" & pwsid == "IN36003/52360" ~ "IN5236003",
+        borrower == "Jackson County Water Utility" & pwsid == "IN36003/52360" ~ "IN5236003 IN5236008",
         borrower == "Tipton" & pwsid == "IN528004" ~"IN5280004",
         .default = pwsid
       )
     )    
 
+  in_clean <- in_clean |>
+    dplyr::mutate(
+      project_id = ifelse(project_id == "DW23261801", "DW232618 01", project_id)
+    )
+  
 ####### SANITY CHECKS END #######
   
   run_tests(in_clean)

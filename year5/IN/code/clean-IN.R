@@ -97,20 +97,20 @@ clean_in_y5 <- function() {
   ####### Decision: No projects classified as both
   
   # Check for lead subtypes: Unknown
-  in_clean |>
-    dplyr::filter(project_type=="Lead") |>
-    dplyr::mutate(
-      lead_type = dplyr::case_when(
-        stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
-        stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
-        stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
-        # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
-        stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
-        stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
-        TRUE ~ "unknown"
-      )
-    ) |>
-    dplyr::filter(lead_type == "unknown") 
+  # in_clean |>
+  #   dplyr::filter(project_type=="Lead") |>
+  #   dplyr::mutate(
+  #     lead_type = dplyr::case_when(
+  #       stringr::str_detect(tolower(project_description), lsli_str) & stringr::str_detect(tolower(project_description), lslr_str) ~ "both",
+  #       stringr::str_detect(tolower(project_description), lsli_str) ~ "lsli",
+  #       stringr::str_detect(tolower(project_description), lslr_str) ~ "lslr",
+  #       # catch weird exceptions where replacement/inventory doesn't appear next to LSL but should still be marked lslr/i
+  #       stringr::str_detect(tolower(project_description), "replacement") & stringr::str_detect(tolower(project_description), lead_str) ~ "lslr",
+  #       stringr::str_detect(tolower(project_description), "inventory") & stringr::str_detect(tolower(project_description), lead_str) ~ "lsli",
+  #       TRUE ~ "unknown"
+  #     )
+  #   ) |>
+  #   dplyr::filter(lead_type == "unknown") 
   ######## Decision: DW250443 00 --> LSLR
 
     in_clean <- in_clean |>
@@ -133,7 +133,7 @@ clean_in_y5 <- function() {
   in_clean <- in_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
-        borrower == "Jackson County Water Utility" & pwsid == "IN5236003/, IN5236008" ~ "IN5236003",
+        borrower == "Jackson County Water Utility" & pwsid == "IN5236003/, IN5236008" ~ "IN5236003 IN5236008",
         borrower == "Indiana American Water- Gary" & pwsid == "IN524015" ~ "IN5245015",
         .default = pwsid
       )

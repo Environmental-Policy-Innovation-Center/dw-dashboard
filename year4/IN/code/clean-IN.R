@@ -79,7 +79,7 @@ clean_in_y4 <- function() {
         TRUE ~ "General"),
       project_cost = as.character(NA),
       requested_amount = dplyr::case_when(
-        is.na(requested_funds) ~ "No Information",
+        is.na(requested_funds) ~ clean_numeric_string(estimated_total_project_cost),
         .default = clean_numeric_string(requested_funds)
       ),
       funding_amount = as.character(NA),
@@ -100,7 +100,7 @@ clean_in_y4 <- function() {
     ),
     state = "Indiana",
     state_fiscal_year = "2025",
-    ) %>%
+    ) |>
     select(community_served, borrower, pwsid, project_id, project_name, project_type, project_cost,
            requested_amount, funding_amount, principal_forgiveness, population, project_description,
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
@@ -170,7 +170,7 @@ clean_in_y4 <- function() {
   in_clean <- in_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
-        borrower == "Jackson County Water Utility" & pwsid == "IN5236003/, IN5236008" ~ "IN5236003",
+        borrower == "Jackson County Water Utility" & pwsid == "IN5236003/, IN5236008" ~ "IN5236003 IN5236008",
         .default = pwsid
       )
     )    

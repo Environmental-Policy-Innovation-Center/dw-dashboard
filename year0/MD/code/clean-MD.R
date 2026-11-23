@@ -66,10 +66,20 @@ clean_md_y0 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
-
+# Check pwsid lengths
+# md_clean |> dplyr::mutate(length_pwsid = stringr::str_count(pwsid)) |> dplyr::filter(!length_pwsid == 9)  |> dplyr::filter(!pwsid == "No Information") 
+ 
+  md_clean <- md_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+        borrower == "MAYOR & CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+        .default = pwsid
+      )
+    ) 
+   
 # Hone in on project id duplication
 # md_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-
 ####### Decision : No project_id
 
 # Check for disinfection byproduct in description
@@ -91,7 +101,6 @@ clean_md_y0 <- function() {
 #       )
 #     ) |>
 #     dplyr::filter(lead_type == "both")
-
 ####### Decision: No projects classified as both
   
 # Check for lead subtypes: Unknown
@@ -109,25 +118,8 @@ clean_md_y0 <- function() {
 #     )
 #   ) |>
 #   dplyr::filter(lead_type == "unknown") 
-  
 ######## Decision: No projects classified as unknown
   
-    # Check pwsid lengths
-  # md_clean |>
-  #   dplyr::mutate(
-  #     length_pwsid = stringr::str_length(pwsid)
-  #   ) |> 
-  #   dplyr::filter(!length_pwsid == 9) |>
-  #   dplyr::filter(!pwsid == "No Information")   
-
-  md_clean <- md_clean |>
-    dplyr::mutate(
-      pwsid = dplyr::case_when(
-        borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
-        borrower == "MAYOR & CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
-        .default = pwsid
-      )
-    ) 
   
 ####### SANITY CHECKS END #######
   

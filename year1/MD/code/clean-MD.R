@@ -51,7 +51,8 @@ clean_md_y1 <- function() {
       funding_amount = clean_numeric_string(dwsrf_total_funding),
       funding_amount = ifelse(funding_amount == "0", "No Information", funding_amount),
       principal_forgiveness = clean_numeric_string(principal_forgiveness),
-      principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
+      principal_forgiveness = ifelse(funding_amount == "No Information", "No Information", principal_forgiveness),
+      # principal_forgiveness = ifelse(principal_forgiveness == "0", "No Information", principal_forgiveness),
       population = ifelse(benefited_population=="?", "No Information", benefited_population),
       # Disadv was encoded as 1 and 0 for Yes and No, respectively
       disadvantaged = ifelse(disadvantaged == "1", "Yes", "No"),
@@ -66,10 +67,29 @@ clean_md_y1 <- function() {
            disadvantaged, project_rank, project_score, expecting_funding, state, state_fiscal_year, list)
   
 ####### SANITY CHECKS START #######
+# Check pwsid lengths
+# md_clean |>
+#   dplyr::mutate(
+#     length_pwsid = stringr::str_length(pwsid)
+#   ) |> 
+#   dplyr::filter(!length_pwsid == 9) |>
+#   dplyr::filter(!pwsid == "No Information")   
+
+# Decision: there are 9 inconsistent length pwsid
+  
+md_clean <- md_clean |>
+  dplyr::mutate(
+    pwsid = dplyr::case_when(
+      borrower == "POCOMOKE CITY" & pwsid == "MD023006" ~ "MD0230006",
+      borrower == "CITY OF HAGERSTOWN -- UTILITIES DEPARTMENT" & pwsid == "MD210010" ~ "MD0210010",
+      borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+      borrower == "BOARD OF CARROLL CO COMMISSIONERS" & pwsid == "MD006002" ~ "MD0060002", #https://mdesdwis.mde.state.md.us/DWW/JSP/WaterSystemDetail.jsp?tinwsys_is_number=231&tinwsys_st_code=MD&wsnumber=MD0060002
+      .default = pwsid
+    )
+  ) 
 
 # Hone in on project id duplication
 # md_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
-
 ####### Decision : No project_id
 
 # Check for disinfection byproduct in description
@@ -119,25 +139,6 @@ clean_md_y1 <- function() {
       .default = project_description
     )
   ) 
- 
-     # Check pwsid lengths
-  # md_clean |>
-  #   dplyr::mutate(
-  #     length_pwsid = stringr::str_length(pwsid)
-  #   ) |> 
-  #   dplyr::filter(!length_pwsid == 9) |>
-  #   dplyr::filter(!pwsid == "No Information")   
-
-  md_clean <- md_clean |>
-    dplyr::mutate(
-      pwsid = dplyr::case_when(
-        borrower == "POCOMOKE CITY" & pwsid == "MD023006" ~ "MD0230006",
-        borrower == "CITY OF HAGERSTOWN -- UTILITIES DEPARTMENT" & pwsid == "MD210010" ~ "MD0210010",
-        borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
-        .default = pwsid
-      )
-    ) 
-  
   
 ####### SANITY CHECKS END #######
   

@@ -86,7 +86,11 @@ clean_md_y2 <- function() {
       disadvantaged = ifelse(disadvantaged == "1", "Yes", "No"),
       project_rank = stringr::str_squish(rank),
       project_score = stringr::str_squish(points),
-      expecting_funding = ifelse(is.na(expecting_funding), "No", expecting_funding),
+      expecting_funding = dplyr::case_when(
+        funding_amount == "No Information" & grepl("fundable", list, ignore.case = TRUE) ~ "No Information",
+        !is.na(expecting_funding) ~ expecting_funding,
+        .default = "No"
+      ),
       state = "Maryland",
       state_fiscal_year = "2025",
     ) |>
@@ -115,6 +119,16 @@ clean_md_y2 <- function() {
     
 ####### SANITY CHECKS START #######
 
+ # Check pwsid lengths
+# md_clean |>
+#   dplyr::mutate(
+#     length_pwsid = stringr::str_length(pwsid)
+#   ) |> 
+#   dplyr::filter(!length_pwsid == 9) |>
+#   dplyr::filter(!pwsid == "No Information")   
+
+# Decision: consistent
+  
 # Hone in on project id duplication
 # md_clean |> dplyr::distinct() |> dplyr::group_by(project_id) |> dplyr::summarise(counts = n()) |> dplyr::arrange(dplyr::desc(counts))
 
@@ -162,7 +176,6 @@ clean_md_y2 <- function() {
   
 ####### SANITY CHECKS END #######
   
-
   run_tests(md_clean)
 
   rm(list=setdiff(ls(), "md_clean"))

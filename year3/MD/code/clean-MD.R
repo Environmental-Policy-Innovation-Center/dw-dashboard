@@ -87,7 +87,11 @@ clean_md_y3 <- function() {
       project_rank = stringr::str_squish(rank),
       project_score = stringr::str_squish(points),
       # [keep] all bypassed projects are on the comprehensive list and not in the fundable list, therefore NOT expecting funding
-      expecting_funding = ifelse(is.na(expecting_funding), "No", expecting_funding),
+      expecting_funding = dplyr::case_when(
+        funding_amount == "No Information" & grepl("fundable", list, ignore.case = TRUE) ~ "No Information",
+        !is.na(expecting_funding) ~ expecting_funding,
+        .default = "No"
+      ),
       state = "Maryland",
       state_fiscal_year = "2026",
     ) |>

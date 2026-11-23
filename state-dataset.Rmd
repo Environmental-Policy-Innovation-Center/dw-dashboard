@@ -66,6 +66,7 @@ feature_coverage <- create_status_cols(all_projects,
 
 ```
 
+
 ## Create Numeric Columns
 
 ### Project Counts
@@ -106,6 +107,9 @@ project_counts <- all_projects %>%
 # subset to Lead projects to identify inventory and replacement projects
 # 2025-07-11: added survey to lead_type designation for lsli
 # see: https://enviropolicyinno.slack.com/archives/C08LXGF02AE/p1752240945744229?thread_ts=1752092342.154789&cid=C08LXGF02AE
+# 2026-07-22 analyst review unknown subtypes
+#see: https://docs.google.com/spreadsheets/d/1E4oxz1HU1gtVckEavCyFGoRi_ZvBPzJvZGkgdaTtgQk/edit?gid=259040596#gid=259040596
+
 lsl_projects <- all_projects |>
   dplyr::filter(project_type %in% c("Lead", "Both Lead and EC")) |>
   dplyr::mutate(
@@ -134,6 +138,44 @@ lsl_projects <- all_projects |>
       lead_type_new_TX = c("lsli", "lsli", "lsli", "lsli", "lsli", "lsli", "lslr", "lslr", "lsli", "lsli", "lslr", "lslr")
     ) 
   ) |>
+
+  #TX 2023
+   dplyr::left_join(
+    tibble::tibble(
+      borrower = c("Alto", "Westwood Shores MUD", "Huntington", "River Acres WSC", "D & M WSC", "Marlow WSC", "Lincoln WSC", "Highland Park WSC", "Axtell WSC", "Danbury", "Castroville"),
+      pwsid = c("TX0370001", "TX2280016", "TX0030002", "TX1780013", "TX1740010", "TX1660014", "TX1440006", "TX0180071", "TX1550016", "TX0200011", "TX1630005"),
+      list = rep("SFY23 LSLR PPL", 11),
+      state = rep("Texas", 11),
+      state_fiscal_year = rep("2023", 11),
+      lead_type_new_TX_2 = rep("both", 11)
+    )
+   ) |>
+
+  # TX 2025
+  dplyr::left_join(
+    tibble::tibble(
+      borrower	= c("Kenedy", "McCoy WSC"),
+      pwsid	= c("TX1280002", "TX0070023"),
+      project_id = c("15725", "15785"),
+      project_type = c("Lead", "Lead"),
+      state = c("Texas", "Texas"),
+      state_fiscal_year = c("2025", "2025"),
+      lead_type_new_TX_3 = c("both", "both")
+    )
+  ) |>
+
+  # TX 2026
+  dplyr::left_join(
+    tibble::tibble(
+      pwsid	= c("TX1280002"),
+      project_id = c("17045"),
+      project_type = c("Lead"),
+      state = c("Texas"),
+      state_fiscal_year = c("2026"),
+      lead_type_new_TX_4 = c("both")
+    )
+  ) |>
+  
   # PA  
   dplyr::left_join(
     data.frame(
@@ -187,10 +229,10 @@ lsl_projects <- all_projects |>
     )
   ) |>
   dplyr::mutate(
-    lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL),
-    lead_type = dplyr::if_else(lead_type == "both" & !is.na(lead_type_new), lead_type_new, lead_type)
+    lead_type_new = coalesce(lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL, lead_type_new_TX_2, lead_type_new_TX_3, lead_type_new_TX_4),
+    lead_type = dplyr::if_else(lead_type %in% c("both", "unknown") & !is.na(lead_type_new), lead_type_new, lead_type)
     ) |>
-    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL))
+    dplyr::select(-c(lead_type_new, lead_type_new_TX, lead_type_new_PA, lead_type_new_MD, lead_type_new_TN, lead_type_new_AL, lead_type_new_TX_2, lead_type_new_TX_3, lead_type_new_TX_4))
 
 
 lead_type_count_summary <- lsl_projects |>

@@ -64,7 +64,7 @@ clean_tn_y4 <- function() {
       project_score = replace_na(project_score, "No Information"),
       expecting_funding = dplyr::case_when(
         list == "SFY26 EC PPL" ~ "Yes",
-        list == "SFY26 Base/IIJA Gen Supp PPL" ~ "Yes",
+        list == "SFY26 Base/IIJA Gen Supp PPL" ~ "Yes", #note this corresponds to 14 projects in tn_ppl_base
         .default = "No"
         ), 
       state = "Tennessee",

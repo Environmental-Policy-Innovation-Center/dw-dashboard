@@ -344,7 +344,7 @@ clean_il_y5 <- function() {
         borrower == "Annawan" & pwsid == "IL 0730150" ~ "IL0730150",
         borrower == "Essex" & pwsid == "IL000" ~ "No Information",
         borrower == "Grand Prairie Sanitary Dist." & pwsid == "tbd" ~ "No Information",
-        # borrower == "Timber Ridge Water Association" & pwsid == "IL07395470" ~ "",
+        borrower == "Timber Ridge Water Association" & pwsid == "IL07395470" ~ "IL0735470", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=716667&tinwsys_st_code=IL&wsnumber=IL0735470
         borrower == "West Chicago" & pwsid == "IL04330900" ~ "IL0430900",   
 	 
         .default = pwsid

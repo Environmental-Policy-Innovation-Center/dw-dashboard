@@ -279,6 +279,14 @@ clean_il_y1 <- function() {
         borrower == "Broughton" & pwsid == "IL0550100" & project_id == "5820" ~ "IL0650100",
         pwsid == "ILl350050" ~ "IL1350050",
         borrower == "Coal City" & pwsid == "IL0530050" & project_id == "6111" ~ "IL0630060",
+
+        pwsid == "IL03il650" ~ "IL0311650",
+        pwsid == "IL03147io" ~ "IL0314710", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=716217&tinwsys_st_code=IL&wsnumber=IL0314710
+        pwsid == "ILl550050" ~ "IL1550050",
+        pwsid == "ILl190300" ~ "IL1190700", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=717346&tinwsys_st_code=IL&wsnumber=IL1190700; this corresponds to marine, 
+        pwsid == "ILl410250" ~ "IL1410250",
+        pwsid == "ILl395150" ~ "IL1395150",
+
         .default = pwsid
       )
     )

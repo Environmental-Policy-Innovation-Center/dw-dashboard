@@ -230,6 +230,13 @@ clean_il_y0 <- function() {
 
   ####### Decision: No lead projects classified as unknonw
     
+  il_clean <- il_clean |>
+    dplyr::mutate(
+      pwsid = dplyr::case_when(
+        borrower == "Ivesdate" & pwsid == "IL0194550" & project_id == "5884" ~ "IL0194560", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=715995&tinwsys_st_code=IL&wsnumber=IL0194560
+        .default = pwsid
+      )
+    )
   ####### SANITY CHECKS END #######
 
   run_tests(il_clean)

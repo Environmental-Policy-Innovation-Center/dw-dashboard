@@ -211,6 +211,9 @@ in_clean <- in_clean |>
     dplyr::mutate(
       pwsid = dplyr::case_when(
         borrower == "Tipton" & pwsid == "IN528004" ~"IN5280004",
+
+        borrower == "Knightstown" & pwsid == "IN5236001" & project_id == "DW231833 01" ~ "IN5233005", #likely a typo in the list using the pwsid from Crothersville immediately above; this pwsid is consistent with the project id and info of subsequent years. 
+
         .default = pwsid
       )
     )

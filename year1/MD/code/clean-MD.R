@@ -83,6 +83,7 @@ md_clean <- md_clean |>
       borrower == "POCOMOKE CITY" & pwsid == "MD023006" ~ "MD0230006",
       borrower == "CITY OF HAGERSTOWN -- UTILITIES DEPARTMENT" & pwsid == "MD210010" ~ "MD0210010",
       borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+      borrower %in% c("BALTIMORE COUNTY, MARYLAND", "MAYOR & CITY COUNCIL OF BALTIMORE", "BALTIMORE COUNTY, MARYLAND") & pwsid == "MD3000002" ~ "MD0300002",
       borrower == "BOARD OF CARROLL CO COMMISSIONERS" & pwsid == "MD006002" ~ "MD0060002", #https://mdesdwis.mde.state.md.us/DWW/JSP/WaterSystemDetail.jsp?tinwsys_is_number=231&tinwsys_st_code=MD&wsnumber=MD0060002
       .default = pwsid
     )

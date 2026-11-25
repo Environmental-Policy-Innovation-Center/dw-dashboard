@@ -280,6 +280,18 @@ clean_il_y3 <- function() {
         borrower =="Forreston" & pwsid == "IL730200" ~ "IL0730200",
         borrower =="Downers Grove" & pwsid == "IL251605030" ~ "IL0430300", 
  
+        borrower == "Freeport" & pwsid == "No Information" & project_id == "5643" ~ "IL1770200",
+        borrower == "Gibson City" & pwsid == "No Information" & project_id == "6381" ~ "IL0530100",
+        borrower == "Seaton" & pwsid == "No Information" & project_id == "6541" ~ "IL1310350",
+        borrower == "Delavan" & pwsid == "No Information" & project_id == "6545" ~ "IL1790150",
+        borrower == "Belvidere*" & pwsid == "No Information" & project_id == "6580" ~ "IL0070050",
+        borrower == "Peoria Heights" & pwsid == "No Information" & project_id == "6810" ~ "IL1434750",
+
+        borrower == "Posen" & pwsid == "IL1034600" & project_id == "5723" ~ "IL0312520", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=716188&tinwsys_st_code=IL&wsnumber=IL0312520
+        
+        borrower == "Yates City" & pwsid == "IL0905700" & project_id == "6114" ~ "IL0950700", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=716906&tinwsys_st_code=IL&wsnumber=IL0950700
+        borrower == "Emington" & pwsid == "IL1050330" & project_id == "6140" ~ "IL1050300", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=717133&tinwsys_st_code=IL&wsnumber=IL1050300 		
+        		
         .default = pwsid
       )
     )

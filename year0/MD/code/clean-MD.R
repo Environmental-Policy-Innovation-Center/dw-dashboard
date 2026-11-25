@@ -74,6 +74,7 @@ clean_md_y0 <- function() {
       pwsid = dplyr::case_when(
         borrower == "MAYOR AND CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
         borrower == "MAYOR & CITY COUNCIL OF BALTIMORE" & pwsid == "MD300002" ~ "MD0300002",
+        borrower %in% c("BALTIMORE COUNTY, MARYLAND", "MAYOR & CITY COUNCIL OF BALTIMORE", "BALTIMORE COUNTY, MARYLAND") & pwsid == "MD3000002" ~ "MD0300002",
         .default = pwsid
       )
     ) 

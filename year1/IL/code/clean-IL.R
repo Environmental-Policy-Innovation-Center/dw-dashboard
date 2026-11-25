@@ -276,6 +276,9 @@ clean_il_y1 <- function() {
       pwsid = dplyr::case_when(
          borrower == "Cicero" & pwsid == "IL03010510" ~ "IL0310510",
          borrower == "Stickney" & pwsid == "IL03013000" ~ "IL0313000",
+        borrower == "Broughton" & pwsid == "IL0550100" & project_id == "5820" ~ "IL0650100",
+        pwsid == "ILl350050" ~ "IL1350050",
+        borrower == "Coal City" & pwsid == "IL0530050" & project_id == "6111" ~ "IL0630060",
         .default = pwsid
       )
     )

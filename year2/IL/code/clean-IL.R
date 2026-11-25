@@ -303,6 +303,18 @@ clean_il_y2 <- function() {
       pwsid = dplyr::case_when(
          borrower == "Cissna Park" & pwsid == "IL07500200" ~ "IL0750200",
          borrower == "Powers Water Company" & pwsid == "IL00895550" ~ "IL0895550",
+        borrower == "Edinburg" & pwsid == "No Information" & project_id == "3922" ~ "IL0210150",
+        borrower == "Warren" & pwsid == "No Information" & project_id == "4419" ~ "IL0210150",
+        borrower == "Chicago" & pwsid == "No Information" & project_id == "5652" ~ "IL0316000",
+        borrower == "Murrayville Woodson Water Commission" & pwsid == "No Information" & project_id == "6063" ~ "IL1375150",
+        borrower == "East Dubuque" & pwsid == "No Information" & project_id == "6365" ~ "IL0850100",
+        borrower == "Genoa" & pwsid == "No Information" & project_id == "6374" ~ "IL0370150",
+
+        borrower == "Moultrie County Rural Pwd" & pwsid == "ILl395150" & project_id == "5875" ~ "IL1395150",
+        
+        borrower == "Kincaid" & pwsid == "IL0340600" & project_id == "6167" ~ "IL1034600", #https://water.epa.state.il.us/dww/JSP/WaterSystemDetail.jsp?tinwsys_is_number=717117&tinwsys_st_code=IL&wsnumber=IL1034600; other years have the Lee  pwsid associated with the project_id and it's consistent with population; Kincaid System id is: IL0210250, the borrower is very likely Lee
+        		
+        		       
         .default = pwsid
       )
     )
